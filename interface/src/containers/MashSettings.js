@@ -48,8 +48,6 @@ class MashSettings extends Component {
   }
 
   render() {
-    const { classes } = this.props;
-
     return (
       <SectionContent title="Mash Settings">
         <MashForm callbackItemAdded={this.itemAdded} />
