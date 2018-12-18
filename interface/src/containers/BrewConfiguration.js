@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MenuAppBar from '../components/MenuAppBar';
-import BrewSettings from './BrewSettings';
+import MashSettings from './MashSettings';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
@@ -8,7 +8,7 @@ class BrewConfiguration extends Component {
   constructor() {
     super();
     this.state = {
-      selectedTab: 'BrewSettings'
+      selectedTab: 'MashSettings'
     }
   }
 
@@ -23,10 +23,12 @@ class BrewConfiguration extends Component {
     return (
       <MenuAppBar sectionTitle="Brew Settings">
         <Tabs value={selectedTab} onChange={this.handleTabChange} indicatorColor="primary" textColor="primary" fullWidth scrollable>
-          <Tab value="BrewSettings" label="Brew Settings" />
+          <Tab value="MashSettings" label="Mash Settings" />
+          <Tab value="BoilSettings" label="Boil Settings" />
           <Tab value="Configuration" label="Brew Configuration" />
+          <Tab value="Brew" label="Brew" />
         </Tabs>
-        {selectedTab === "BrewSettings" && <BrewSettings />}
+        {selectedTab === "MashSettings" && <MashSettings />}
         {selectedTab === "Configuration" && <div />}
       </MenuAppBar>
     )
