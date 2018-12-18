@@ -6,9 +6,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 
-
 class MashForm extends Component {
-
   constructor(props) {
     super(props)
 
