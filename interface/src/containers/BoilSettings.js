@@ -1,16 +1,8 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
-import BrewSettingsForm from '../forms/BrewSettingsForm';
+import BoilSettingsForm from '../forms/MashBoilSettingsForm';
 import SortableList from '../components/SortableList';
-
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-});
 
 class BoilSettings extends Component {
   constructor() {
@@ -25,19 +17,15 @@ class BoilSettings extends Component {
         { name: 'Whirfloc', time: 10 },
       ]),
     }
-    console.log(this.state.items)
   }
 
   itemAdded = (newelement) => {
-    console.log(this.state.items)
     this.setState({
       items: this.orderArray([...this.state.items, newelement])
     })
   }
 
   itemDeleted = (index) => {
-    console.log(index)
-    console.log(this.state.items)
     var array = [...this.state.items];
     array.splice(index, 1);
 
@@ -47,15 +35,13 @@ class BoilSettings extends Component {
   }
 
   orderArray = (array) => {
-    return array.sort((a, b) => parseInt(b.time) - parseInt(a.time));
+    return array.sort((a, b) => b.time - a.time);
   }
 
   render() {
-    const { classes } = this.props;
-
     return (
       <SectionContent title="Boil Settings">
-        <BrewSettingsForm callbackItemAdded={this.itemAdded} boil={true} />
+        <BoilSettingsForm callbackItemAdded={this.itemAdded} boil={true} />
         <Divider />
         <SortableList 
           items={this.state.items}
@@ -68,4 +54,4 @@ class BoilSettings extends Component {
   }
 }
 
-export default withStyles(styles)(BoilSettings);
+export default BoilSettings;
