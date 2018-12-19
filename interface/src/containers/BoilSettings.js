@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
-import MashForm from '../forms/MashForm';
+import BrewSettingsForm from '../forms/BrewSettingsForm';
 import SortableList from '../components/SortableList';
 
 const styles = theme => ({
@@ -33,12 +33,6 @@ class BoilSettings extends Component {
     })
   }
 
-  itemsSorted = (items) => {
-    this.setState({
-      items: items
-    })
-  }
-
   itemDeleted = (index) => {
     var array = [...this.state.items];
     array.splice(index, 1);
@@ -52,13 +46,14 @@ class BoilSettings extends Component {
     const { classes } = this.props;
 
     return (
-      <SectionContent title="Mash Settings">
-        <MashForm callbackItemAdded={this.itemAdded} />
+      <SectionContent title="Boil Settings">
+        <BrewSettingsForm callbackItemAdded={this.itemAdded} boil={true} />
         <Divider />
         <SortableList 
-          items={this.state.items} 
-          callbackItemsSorted={this.itemsSorted} 
+          items={this.state.items}
           callbackItemDeleted={this.itemDeleted}
+          dragHandle={false}
+          boil={true}
         />
       </SectionContent>
     )

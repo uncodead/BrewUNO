@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator'
 import Typography from '@material-ui/core/Typography'
 
-class OrderedList extends Component {
+class SortableList extends Component {
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.props.callbackItemsSorted(arrayMove(this.props.items, oldIndex, newIndex))
   };
@@ -18,17 +18,24 @@ class OrderedList extends Component {
     this.props.callbackItemDeleted(index)
   }
 
+  getItemText = (item) => {
+    if (this.props.boil) {
+      return 'at ' + item.time + ' min';
+    }
+    return item.time + ' mins at ' + item.temperature + ' ºC'
+  }
+
   render() {
     const DragHandle = SortableHandle(() => <DragIndicatorIcon />);
     const SortableItem = SortableElement(({ value, itemIndex }) =>
       <ListItem>
-        <DragHandle />
+        {this.props.dragHandle ? <DragHandle /> : null}
         <ListItemText
           primary={value.name}
-          secondary={<Typography>{value.time} mins at {value.temperature} ºC</Typography>}
+          secondary={<Typography>{this.getItemText(value)}</Typography>}
         />
-        <Switch checked={value.recirculation} />
-        <IconButton aria-label="Delete" 
+        {!this.props.boil ? <Switch checked={value.recirculation} /> : null}
+        <IconButton aria-label="Delete"
           onClick={() => this.deleteItem(itemIndex)}
           disabled={this.props.items.length <= 1}>
           <DeleteIcon fontSize="madium" />
@@ -50,4 +57,4 @@ class OrderedList extends Component {
   }
 }
 
-export default (OrderedList);
+export default (SortableList);

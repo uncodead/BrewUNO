@@ -6,7 +6,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 
-class MashForm extends Component {
+class BrewSettingsForm extends Component {
   constructor(props) {
     super(props)
 
@@ -43,15 +43,23 @@ class MashForm extends Component {
         <FormGroup>
           <TextField required label="Name" margin="normal" fullWidth
             value={this.state.name} onChange={this.handleNameChange} />
-          <TextField required label="Temperature" type="number" margin="normal" fullWidth
-            InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
-            value={this.state.temprerature} onChange={this.handleTemperatureChange}
-          />
+          {
+            !this.props.boil ?
+              <TextField required label="Temperature" type="number" margin="normal" fullWidth
+                InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
+                value={this.state.temprerature} onChange={this.handleTemperatureChange}
+              />
+              : null
+          }
           <TextField required label="Time" type="number" margin="normal" fullWidth
             InputProps={{ endAdornment: <InputAdornment position="start">min</InputAdornment> }}
             value={this.state.time} onChange={this.handeTimeChange}
           />
-          <FormControlLabel control={<Switch ref="recirculation" checked={this.state.recirculation} onChange={this.handleRecirculationChange} />} label="Recirculation" />
+          {
+            !this.props.boil ?
+              <FormControlLabel control={<Switch ref="recirculation" checked={this.state.recirculation} onChange={this.handleRecirculationChange} />} label="Recirculation" />
+              : null
+          }
           <Button variant="contained" color="primary" onClick={this.addItem}>Add</Button>
         </FormGroup>
       </form>
@@ -59,4 +67,4 @@ class MashForm extends Component {
   }
 }
 
-export default (MashForm);
+export default (BrewSettingsForm);

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
-import MashForm from '../forms/MashForm';
+import BrewSettingsForm from '../forms/BrewSettingsForm';
 import SortableList from '../components/SortableList';
 
 const styles = theme => ({
@@ -50,12 +50,14 @@ class MashSettings extends Component {
   render() {
     return (
       <SectionContent title="Mash Settings">
-        <MashForm callbackItemAdded={this.itemAdded} />
+        <BrewSettingsForm callbackItemAdded={this.itemAdded} />
         <Divider />
         <SortableList 
           items={this.state.items} 
           callbackItemsSorted={this.itemsSorted} 
           callbackItemDeleted={this.itemDeleted}
+          dragHandle={true}
+          boil={false}
         />
       </SectionContent>
     )
