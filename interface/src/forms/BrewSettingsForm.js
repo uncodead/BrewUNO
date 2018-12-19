@@ -30,7 +30,7 @@ class BrewSettingsForm extends Component {
   }
 
   handeTimeChange = (e) => {
-    this.setState({ time: e.target.value })
+    this.setState({ time: parseInt(e.target.value) })
   }
 
   handleRecirculationChange = (e, checked) => {

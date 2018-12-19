@@ -17,29 +17,37 @@ class BoilSettings extends Component {
     super()
 
     this.state = {
-      items: [
+      items:  this.orderArray([
         { name: 'Amarillo', time: 60 },
         { name: 'Galaxy', time: 30 },
         { name: 'Cascade', time: 20 },
         { name: 'Citra', time: 20 },
         { name: 'Whirfloc', time: 10 },
-      ],
+      ]),
     }
+    console.log(this.state.items)
   }
 
   itemAdded = (newelement) => {
+    console.log(this.state.items)
     this.setState({
-      items: [...this.state.items, newelement]
+      items: this.orderArray([...this.state.items, newelement])
     })
   }
 
   itemDeleted = (index) => {
+    console.log(index)
+    console.log(this.state.items)
     var array = [...this.state.items];
     array.splice(index, 1);
 
     this.setState({
-      items: array
+      items: this.orderArray(array)
     });
+  }
+
+  orderArray = (array) => {
+    return array.sort((a, b) => parseInt(b.time) - parseInt(a.time));
   }
 
   render() {
