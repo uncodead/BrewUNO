@@ -5,6 +5,9 @@ import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { Divider } from '@material-ui/core';
+
 
 class MashBoilSettingsForm extends Component {
   constructor(props) {
@@ -19,6 +22,7 @@ class MashBoilSettingsForm extends Component {
   }
   addItem = (event) => {
     this.props.callbackItemAdded(this.state)
+    this.setState({name:'',  temperature:'', time:'', recirculation:''})
   }
 
   handleNameChange = (e) => {
@@ -30,7 +34,7 @@ class MashBoilSettingsForm extends Component {
   }
 
   handeTimeChange = (e) => {
-    this.setState({ time: parseInt(e.target.value,10) })
+    this.setState({ time: e.target.value })
   }
 
   handleRecirculationChange = (e, checked) => {
@@ -39,28 +43,49 @@ class MashBoilSettingsForm extends Component {
 
   render() {
     return (
-        <FormGroup>
-          <TextField required label="Name" margin="normal" fullWidth
-            value={this.state.name} onChange={this.handleNameChange} />
-          {
-            !this.props.boil ?
-              <TextField required label="Temperature" type="number" margin="normal" fullWidth
-                InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
-                value={this.state.temprerature} onChange={this.handleTemperatureChange}
-              />
-              : null
-          }
-          <TextField required label="Time" type="number" margin="normal" fullWidth
-            InputProps={{ endAdornment: <InputAdornment position="start">min</InputAdornment> }}
-            value={this.state.time} onChange={this.handeTimeChange}
-          />
-          {
-            !this.props.boil ?
-              <FormControlLabel control={<Switch ref="recirculation" checked={this.state.recirculation} onChange={this.handleRecirculationChange} />} label="Recirculation" />
-              : null
-          }
-          <Button variant="contained" color="primary" onClick={this.addItem}>Add</Button>
-        </FormGroup>
+      <ValidatorForm ref="form" onSubmit={this.addItem} onError={error => console.log(error)}>
+        <TextValidator 
+          label="Name" 
+          fullWidth
+          name="name"
+          value={this.state.name} 
+          onChange={this.handleNameChange} 
+          validators={['required']} 
+          errorMessages={['this field is required']} />
+        {
+          !this.props.boil ?
+            <TextValidator 
+              name="temperature" 
+              validators={['required']}  
+              label="Temperature" 
+              type="number" 
+              fullWidth
+              InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
+              value={this.state.temperature} 
+              onChange={this.handleTemperatureChange}
+              errorMessages={['this field is required']}
+            />
+            : null
+        }
+        <TextValidator 
+          name="time" 
+          validators={['required']} 
+          label="Time" 
+          type="number"
+          fullWidth
+          InputProps={{ endAdornment: <InputAdornment position="start">min</InputAdornment> }}
+          value={this.state.time} 
+          onChange={this.handeTimeChange}
+          errorMessages={['this field is required']}
+        />
+        {
+          !this.props.boil ?
+            <FormControlLabel control={<Switch ref="recirculation" checked={this.state.recirculation} onChange={this.handleRecirculationChange} />} label="Recirculation" />
+            : null
+        }
+        <Divider/>
+        <Button type="submit" variant="contained" fullWidth color="primary">Add</Button>
+      </ValidatorForm>
     )
   }
 }

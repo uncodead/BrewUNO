@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Switch from '@material-ui/core/Switch';
+import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 class BrewSettingsForm extends Component {
@@ -31,6 +31,7 @@ class BrewSettingsForm extends Component {
         <TextField required label="kD" type="number" margin="normal" fullWidth
           value={this.state.kD} onChange={this.handeTimeChange}
         />
+        <Button variant="contained" color="primary" onClick={this.addItem}>Save</Button>
       </FormGroup>
     )
   }
