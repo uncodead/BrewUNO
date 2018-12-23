@@ -9,5 +9,6 @@ export const LIST_NETWORKS_ENDPOINT = ENDPOINT_ROOT + "listNetworks";
 export const WIFI_SETTINGS_ENDPOINT = ENDPOINT_ROOT + "wifiSettings";
 export const WIFI_STATUS_ENDPOINT = ENDPOINT_ROOT + "wifiStatus";
 export const OTA_SETTINGS_ENDPOINT = ENDPOINT_ROOT + "otaSettings";
+export const SAVE_MASH_SETUP_SERVICE_PATH = ENDPOINT_ROOT + "saveMashSettings"
 
 export const BREW_ENDPOINT = ENDPOINT_ROOT + 'brew';

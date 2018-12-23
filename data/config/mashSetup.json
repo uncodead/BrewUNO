@@ -1,0 +1,16 @@
+{
+    "steps":[
+        {
+            "name": "test",
+            "temperature": 65,
+            "time": 5,
+            "recirculation": true
+        },
+        {
+            "name": "test",
+            "temperature": 65,
+            "time": 5,
+            "recirculation": true
+        }
+    ]
+}

@@ -3,6 +3,7 @@ import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
 import MashSettingsForm from '../forms/MashBoilSettingsForm';
 import SortableList from '../components/SortableList';
+import { SAVE_MASH_SETUP_SERVICE_PATH }  from  '../constants/Endpoints';
 
 class MashSettings extends Component {
   constructor() {
@@ -22,6 +23,15 @@ class MashSettings extends Component {
     this.setState({
       items: [...this.state.items, newelement]
     })
+
+    fetch(SAVE_MASH_SETUP_SERVICE_PATH, {method:'POST'}).then(response => {
+      if (response.status === 200) {
+        return;
+      }
+      throw Error("Mash Setings service returned unexpected response code: " + response.status);
+    }).catch(error => {
+        console.log(error)
+    });
   }
 
   itemsSorted = (items) => {

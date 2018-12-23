@@ -19,6 +19,8 @@
 #include <OTASettingsService.h>
 #include <APStatus.h>
 
+#include <MashSettingsService.h>
+
 #define SERIAL_BAUD_RATE 9600
 
 AsyncWebServer server(80);
@@ -32,6 +34,9 @@ WiFiScanner wifiScanner = WiFiScanner(&server);
 WiFiStatus wifiStatus = WiFiStatus(&server);
 NTPStatus ntpStatus = NTPStatus(&server);
 APStatus apStatus = APStatus(&server);
+
+// biabrewEx
+MashSettingsService mashSettings = MashSettingsService(&server);
 
 void setup() {
     // Disable wifi config persistance
