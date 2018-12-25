@@ -36,7 +36,8 @@ NTPStatus ntpStatus = NTPStatus(&server);
 APStatus apStatus = APStatus(&server);
 
 // biabrewEx
-MashSettingsService mashSettings = MashSettingsService(&server);
+MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
+
 
 void setup() {
     // Disable wifi config persistance

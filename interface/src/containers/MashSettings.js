@@ -3,41 +3,66 @@ import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
 import MashSettingsForm from '../forms/MashBoilSettingsForm';
 import SortableList from '../components/SortableList';
-import { SAVE_MASH_SETUP_SERVICE_PATH }  from  '../constants/Endpoints';
+import { withNotifier } from '../components/SnackbarNotification';
+import { SAVE_MASH_SETTINGS_SERVICE_PATH, GET_MASH_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
 
 class MashSettings extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+    this.state = { items: [] }
+    this.getMashSettings();
+  }
 
-    this.state = {
-      items: [
-        { name: 'Mash In', temperature: 65, time: 5, recirculation: false },
-        { name: 'Protein Stop', temperature: 68, time: 60, recirculation: true },
-        { name: 'Sacarification', temperature: 68, time: 60, recirculation: true },
-        { name: 'Mash out', temperature: 68, time: 60, recirculation: true },
-      ],
-    }
+  getMashSettings = () => {
+    fetch(GET_MASH_SETTINGS_SERVICE_PATH, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then(response => {
+      if (response.ok) {
+        response.json().then(json => {
+          this.setState({ items: json.steps })
+        });
+        return;
+      }
+      throw Error("Mash Setings service returned unexpected response code: " + response.status);
+    }).catch(error => {
+      this.props.raiseNotification("Problem getting Mash Settings: " + error.message);
+      this.setState({ items: [] })
+    });
+  }
+
+  saveMashSettings = () => {
+    fetch(SAVE_MASH_SETTINGS_SERVICE_PATH, {
+      method: 'POST',
+      body: JSON.stringify({ "steps": this.state.items }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then(response => {
+      if (response.ok) {
+        return;
+      }
+      throw Error("Mash Setings service returned unexpected response code: " + response.status);
+    }).catch(error => {
+      this.props.raiseNotification("Problem saving Mash Settings: " + error.message);
+      this.getMashSettings();
+    });
   }
 
   itemAdded = (newelement) => {
     this.setState({
       items: [...this.state.items, newelement]
-    })
-
-    fetch(SAVE_MASH_SETUP_SERVICE_PATH, {method:'POST'}).then(response => {
-      if (response.status === 200) {
-        return;
-      }
-      throw Error("Mash Setings service returned unexpected response code: " + response.status);
-    }).catch(error => {
-        console.log(error)
-    });
+    }, this.saveMashSettings)
   }
 
   itemsSorted = (items) => {
     this.setState({
       items: items
-    })
+    }, this.saveMashSettings)
   }
 
   itemDeleted = (index) => {
@@ -46,7 +71,7 @@ class MashSettings extends Component {
 
     this.setState({
       items: array
-    });
+    }, this.saveMashSettings);
   }
 
   render() {
@@ -54,9 +79,9 @@ class MashSettings extends Component {
       <SectionContent title="Mash Settings">
         <MashSettingsForm callbackItemAdded={this.itemAdded} />
         <Divider />
-        <SortableList 
-          items={this.state.items} 
-          callbackItemsSorted={this.itemsSorted} 
+        <SortableList
+          items={this.state.items}
+          callbackItemsSorted={this.itemsSorted}
           callbackItemDeleted={this.itemDeleted}
           dragHandle={true}
           boil={false}
@@ -66,4 +91,4 @@ class MashSettings extends Component {
   }
 }
 
-export default MashSettings;
+export default withNotifier(MashSettings);

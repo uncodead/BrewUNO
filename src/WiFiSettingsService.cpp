@@ -1,6 +1,7 @@
 #include <WiFiSettingsService.h>
 
-WiFiSettingsService::WiFiSettingsService(AsyncWebServer* server, FS* fs) : SettingsService(server, fs, WIFI_SETTINGS_SERVICE_PATH, WIFI_SETTINGS_FILE) {}
+WiFiSettingsService::WiFiSettingsService(AsyncWebServer* server, FS* fs) 
+: SettingsService(server, fs, WIFI_SETTINGS_SERVICE_PATH, WIFI_SETTINGS_FILE) {}
 
 WiFiSettingsService::~WiFiSettingsService() {}
 
