@@ -14,7 +14,8 @@ void MashSettingsService::save(AsyncWebServerRequest *request, JsonVariant &json
         File configFile = _fs->open(MASH_SETTINGS_FILE, "w");
         if (!configFile)
         {
-            request->send(400);
+            request->send(500, "Error at config file");
+            return;
         }
         jsonObj.printTo(configFile);
         configFile.close();
