@@ -20,6 +20,7 @@
 #include <APStatus.h>
 
 #include <MashSettingsService.h>
+#include <BoilSettingsService.h>
 #include <BrewSettingsService.h>
 
 #define SERIAL_BAUD_RATE 9600
@@ -38,6 +39,7 @@ APStatus apStatus = APStatus(&server);
 
 // biabrewEx
 MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
+BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS);
 BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS);
 
 
