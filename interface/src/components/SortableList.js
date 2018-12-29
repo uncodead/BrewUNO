@@ -20,7 +20,7 @@ class SortableList extends Component {
 
   getItemText = (item) => {
     if (this.props.boil) {
-      return 'at ' + item.time + ' min';
+      return item.amount + 'g at ' + item.time + ' min';
     }
     return item.time + ' mins at ' + item.temperature + ' ºC'
   }

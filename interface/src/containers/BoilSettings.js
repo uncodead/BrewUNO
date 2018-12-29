@@ -4,17 +4,18 @@ import SectionContent from '../components/SectionContent';
 import BoilSettingsForm from '../forms/MashBoilSettingsForm';
 import SortableList from '../components/SortableList';
 
+
 class BoilSettings extends Component {
   constructor() {
     super()
 
     this.state = {
-      items:  this.orderArray([
-        { name: 'Amarillo', time: 60 },
-        { name: 'Galaxy', time: 30 },
-        { name: 'Cascade', time: 20 },
-        { name: 'Citra', time: 20 },
-        { name: 'Whirfloc', time: 10 },
+      items: this.orderArray([
+        { name: 'Amarillo', time: 60, amount: 10 },
+        { name: 'Galaxy', time: 30, amount: 10 },
+        { name: 'Cascade', time: 20, amount: 10 },
+        { name: 'Citra', time: 20, amount: 10 },
+        { name: 'Whirfloc', time: 10, amount: 10 },
       ]),
     }
   }
@@ -43,7 +44,7 @@ class BoilSettings extends Component {
       <SectionContent title="Boil Settings">
         <BoilSettingsForm callbackItemAdded={this.itemAdded} boil={true} />
         <Divider />
-        <SortableList 
+        <SortableList
           items={this.state.items}
           callbackItemDeleted={this.itemDeleted}
           dragHandle={false}

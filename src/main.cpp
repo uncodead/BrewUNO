@@ -20,6 +20,7 @@
 #include <APStatus.h>
 
 #include <MashSettingsService.h>
+#include <BrewSettingsService.h>
 
 #define SERIAL_BAUD_RATE 9600
 
@@ -37,6 +38,7 @@ APStatus apStatus = APStatus(&server);
 
 // biabrewEx
 MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
+BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS);
 
 
 void setup() {
@@ -51,6 +53,8 @@ void setup() {
     otaSettingsService.begin();
     apSettingsService.begin();
     wifiSettingsService.begin();
+
+    brewSettingsService.begin();
 
     // Serving static resources from /www/
     server.serveStatic("/js/", SPIFFS, "/www/js/");

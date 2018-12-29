@@ -1,0 +1,8 @@
+{
+    "boilPercent": 90,
+    "boilTime": 60,
+    "sampleTime": 1,
+    "kP": 100,
+    "kI": 100,
+    "kD": 0.1
+}

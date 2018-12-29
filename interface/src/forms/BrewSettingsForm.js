@@ -1,102 +1,113 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import FormGroup from '@material-ui/core/FormGroup';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 class BrewSettingsForm extends Component {
-  constructor() {
-    super()
-
-    this.state = {
-      boilPercent: 90,
-      sampleTime: 1,
-      kP: 100,
-      kI: 100,
-      kD: 100
-    }
-  }
-
-  handleBoilPercent = (e) => {
-    this.setState({ boilPercent: e.target.value })
-  }
-
-  handlesampleTime = (e) => {
-    this.setState({ sampleTime: e.target.value })
-  }
-
-  handleKp = (e) => {
-    this.setState({ kP: e.target.value })
-  }
-
-  handleKi = (e) => {
-    this.setState({ kI: e.target.value })
-  }
-
-  handleKd = (e) => {
-    this.setState({ kD: e.target.value })
-  }
-
   render() {
+    const { classes, formRef, brewSettingsFetched, brewSettings, errorMessage, handleValueChange, onSubmit, onReset } = this.props;
+
     return (
-      <ValidatorForm ref="form" onSubmit={this.saveSettings} onError={error => console.log(error)}>
-        <TextValidator 
-          name="boilPercent"
-          validators={['required']}  
-          label="Boil %" 
-          type="number" 
-          fullWidth
-          InputProps={{ endAdornment: <InputAdornment position="start">%</InputAdornment> }}
-          value={this.state.boilPercent} 
-          onChange={this.handleBoilPercent}
-          errorMessages={['this field is required']}
-        />
-        <TextValidator 
-          name="sampleTime"
-          validators={['required']}  
-          label="Sample Time PID" 
-          type="number" 
-          fullWidth
-          InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
-          value={this.state.sampleTime} 
-          onChange={this.handleSampleTime}
-          errorMessages={['this field is required']}
-        />
-        <TextValidator 
-          name="kp"
-          label="kP"
-          type="number"
-          validators={['required']}  
-          fullWidth
-          value={this.state.kP} 
-          onChange={this.handleKp}
-          errorMessages={['this field is required']}
-        />
-        <TextValidator 
-          name="ki"
-          label="kI"
-          type="number"
-          validators={['required']}
-          fullWidth
-          value={this.state.kI}
-          onChange={this.handleKi}
-          errorMessages={['this field is required']}
-        />
-        <TextValidator 
-          name="kd"
-          label="kD"
-          type="number"
-          validators={['required']}
-          fullWidth
-          value={this.state.kD}
-          onChange={this.handleKd}
-          errorMessages={['this field is required']}
-        />
-        <Button type="submit" variant="contained" fullWidth color="primary" onClick={this.addItem}>Save</Button>
-      </ValidatorForm>
+      <div>
+        {
+          !this.props.brewSettingsFetched ?
+            <div>
+              <LinearProgress />
+              <Typography>
+                Loading...
+              </Typography>
+            </div>
+            : brewSettings ?
+              <ValidatorForm onSubmit={onSubmit} ref="BrewSettingsForm">
+                <TextValidator
+                  name="boilPercent"
+                  validators={['required']}
+                  label="Boil %"
+                  type="number"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">%</InputAdornment> }}
+                  value={brewSettings.boilPercent}
+                  onChange={handleValueChange("boilPercent")}
+                  errorMessages={['this field is required']}
+                />
+                <TextValidator
+                  name="boilTime"
+                  validators={['required']}
+                  label="Boil time"
+                  type="number"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">min</InputAdornment> }}
+                  value={brewSettings.boilTime}
+                  onChange={handleValueChange("boilTime")}
+                  errorMessages={['this field is required']}
+                />
+                <TextValidator
+                  name="sampleTime"
+                  validators={['required']}
+                  label="Sample Time PID"
+                  type="number"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
+                  value={brewSettings.sampleTime}
+                  onChange={handleValueChange("sampleTime")}
+                  errorMessages={['this field is required']}
+                />
+                <TextValidator
+                  name="kp"
+                  label="kP"
+                  type="number"
+                  validators={['required']}
+                  fullWidth
+                  value={brewSettings.kP}
+                  onChange={handleValueChange("kP")}
+                  errorMessages={['this field is required']}
+                />
+                <TextValidator
+                  name="ki"
+                  label="kI"
+                  type="number"
+                  validators={['required']}
+                  fullWidth
+                  value={brewSettings.kI}
+                  onChange={handleValueChange("kI")}
+                  errorMessages={['this field is required']}
+                />
+                <TextValidator
+                  name="kd"
+                  label="kD"
+                  type="number"
+                  validators={['required']}
+                  fullWidth
+                  value={brewSettings.kD}
+                  onChange={handleValueChange("kD")}
+                  errorMessages={['this field is required']}
+                />
+                <Button variant="raised" color="primary" type="submit">
+                  Save
+              </Button>
+              </ValidatorForm>
+              :
+              <div>
+                <Typography>
+                  {errorMessage}
+                </Typography>
+              </div>
+        }
+      </div>
     )
   }
 }
+
+BrewSettingsForm.propTypes = {
+  brewSettingsFetched: PropTypes.bool.isRequired,
+  brewSettings: PropTypes.object,
+  errorMessage: PropTypes.string,
+  onSubmit: PropTypes.func.isRequired,
+  handleValueChange: PropTypes.func.isRequired,
+};
 
 export default BrewSettingsForm;
