@@ -3,27 +3,61 @@ import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
 import BoilSettingsForm from '../forms/MashBoilSettingsForm';
 import SortableList from '../components/SortableList';
-
+import { withNotifier } from '../components/SnackbarNotification';  
+import { SAVE_BOIL_SETTINGS_SERVICE_PATH, GET_BOIL_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
 
 class BoilSettings extends Component {
   constructor() {
     super()
 
-    this.state = {
-      items: this.orderArray([
-        { name: 'Amarillo', time: 60, amount: 10 },
-        { name: 'Galaxy', time: 30, amount: 10 },
-        { name: 'Cascade', time: 20, amount: 10 },
-        { name: 'Citra', time: 20, amount: 10 },
-        { name: 'Whirfloc', time: 10, amount: 10 },
-      ]),
-    }
+    this.state = { items: [] }
+    this.getBoilSettings();
+  }
+
+  getBoilSettings = () => {
+    fetch(GET_BOIL_SETTINGS_SERVICE_PATH, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then(response => {
+      if (response.ok) {
+        response.json().then(json => {
+          this.setState({ items: json.steps })
+        });
+        return;
+      }
+      throw Error("Boil Setings service returned unexpected response code: " + response.status);
+    }).catch(error => {
+      this.props.raiseNotification("Problem getting Boil Settings: " + error.message);
+      this.setState({ items: [] })
+    });
+  }
+
+  saveBoilSettings = () => {
+    fetch(SAVE_BOIL_SETTINGS_SERVICE_PATH, {
+      method: 'POST',
+      body: JSON.stringify({ "steps": this.state.items }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then(response => {
+      if (response.ok) {
+        return;
+      }
+      throw Error("Boil Setings service returned unexpected response code: " + response.status);
+    }).catch(error => {
+      this.props.raiseNotification("Problem saving Boil Settings: " + error.message);
+      this.getBoilSettings();
+    });
   }
 
   itemAdded = (newelement) => {
     this.setState({
       items: this.orderArray([...this.state.items, newelement])
-    })
+    }, this.saveBoilSettings)
   }
 
   itemDeleted = (index) => {
@@ -32,7 +66,7 @@ class BoilSettings extends Component {
 
     this.setState({
       items: this.orderArray(array)
-    });
+    }, this.saveBoilSettings);
   }
 
   orderArray = (array) => {
@@ -55,4 +89,4 @@ class BoilSettings extends Component {
   }
 }
 
-export default BoilSettings;
+export default withNotifier(BoilSettings);

@@ -20,7 +20,7 @@ bool BoilSettingsService::jsonSchemaIsValid(JsonObject &jsonObj)
         JsonObject &step = steps[i];
         validJson = validJson &&
                     step["name"] != "" &&
-                    step["temperature"] > 0 &&
+                    step["amount"] > 0 &&
                     step["time"] > 0;
     }
     return validJson;

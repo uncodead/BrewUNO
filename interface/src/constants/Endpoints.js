@@ -10,7 +10,11 @@ export const WIFI_SETTINGS_ENDPOINT = ENDPOINT_ROOT + "wifiSettings";
 export const BREW_SETTINGS_ENDPOINT = ENDPOINT_ROOT + "brewSettings";
 export const WIFI_STATUS_ENDPOINT = ENDPOINT_ROOT + "wifiStatus";
 export const OTA_SETTINGS_ENDPOINT = ENDPOINT_ROOT + "otaSettings";
+
 export const SAVE_MASH_SETTINGS_SERVICE_PATH = ENDPOINT_ROOT + "saveMashSettings"
 export const GET_MASH_SETTINGS_SERVICE_PATH = ENDPOINT_ROOT + "getMashSettings"
+
+export const SAVE_BOIL_SETTINGS_SERVICE_PATH = ENDPOINT_ROOT + "saveBoilSettings"
+export const GET_BOIL_SETTINGS_SERVICE_PATH = ENDPOINT_ROOT + "getBoilSettings"
 
 export const BREW_ENDPOINT = ENDPOINT_ROOT + 'brew';
