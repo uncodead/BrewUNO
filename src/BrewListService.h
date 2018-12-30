@@ -27,7 +27,7 @@ public:
   }
 
 protected:
-  virtual bool jsonSchemaIsValid(JsonObject &jsonObj) {}
+  virtual bool jsonSchemaIsValid(JsonObject &jsonObj, String& messages) {}
 
 private:
   FS *_fs;
@@ -37,12 +37,19 @@ private:
   void save(AsyncWebServerRequest *request, JsonVariant &json)
   {
     JsonObject &jsonObj = json.as<JsonObject>();
-    if (jsonObj.success() && jsonSchemaIsValid(jsonObj))
+    if (jsonObj.success())
     {
+      String messages = "";
+      if (!jsonSchemaIsValid(jsonObj, messages))
+      {
+        request->send(500, "text/plain charset=utf-8", "Error validating json: " + messages);
+        return;
+      }
+
       File configFile = _fs->open(_settingsFile, "w");
       if (!configFile)
       {
-        request->send(500, "Error at config file");
+        request->send(500, "text/plain charset=utf-8", "Error at config file");
         return;
       }
       jsonObj.printTo(configFile);
@@ -54,7 +61,7 @@ private:
     }
     else
     {
-      request->send(400);
+      request->send(400, "text/plain charset=utf-8", "Invalid Json");
     }
   }
 

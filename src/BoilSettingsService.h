@@ -17,6 +17,7 @@
 #include <AsyncJsonCallbackResponse.h>
 #include <SettingsService.h>
 #include <BrewListService.h>
+#include <BrewSettingsService.h>
 
 #define POST_BOIL_SETTINGS_SERVICE_PATH "/rest/saveBoilSettings"
 #define GET_BOIL_SETTINGS_SERVICE_PATH "/rest/getBoilSettings"
@@ -25,10 +26,11 @@
 class BoilSettingsService : public BrewListService
 {
   public:
-    BoilSettingsService(AsyncWebServer *server, FS *fs);
+    BoilSettingsService(AsyncWebServer *server, FS *fs, BrewSettingsService *brewSettings);
 
   protected:
-    bool jsonSchemaIsValid(JsonObject &jsonObj);
+    bool jsonSchemaIsValid(JsonObject &jsonObj, String& messages);
+    BrewSettingsService *_brewSettings;
 };
 
 #endif

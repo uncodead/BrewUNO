@@ -16,6 +16,8 @@ class BrewSettingsService : public SettingsService {
 
     void begin();
 
+    int BoilTime;
+
   protected:
 
     void readFromJsonObject(JsonObject& root);
@@ -23,9 +25,8 @@ class BrewSettingsService : public SettingsService {
     void onConfigUpdated();
 
   private:
-    // connection settings
+
     double _boilPercent;
-    int _boilTime;
     int _sampleTime;
     double _kP;
     double _kI;

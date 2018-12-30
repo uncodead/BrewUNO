@@ -3,7 +3,7 @@ import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
 import BoilSettingsForm from '../forms/MashBoilSettingsForm';
 import SortableList from '../components/SortableList';
-import { withNotifier } from '../components/SnackbarNotification';  
+import { withNotifier } from '../components/SnackbarNotification';
 import { SAVE_BOIL_SETTINGS_SERVICE_PATH, GET_BOIL_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
 
 class BoilSettings extends Component {
@@ -45,12 +45,15 @@ class BoilSettings extends Component {
       },
     }).then(response => {
       if (response.ok) {
+        this.props.raiseNotification("Boil settings saved.");
         return;
       }
-      throw Error("Boil Setings service returned unexpected response code: " + response.status);
-    }).catch(error => {
-      this.props.raiseNotification("Problem saving Boil Settings: " + error.message);
-      this.getBoilSettings();
+      response.text().then(function (data) {
+        throw Error("Boil Setings service returned unexpected response code: " + response.status + " Message: " + data);
+      }).catch(error => {
+        this.props.raiseNotification(error.message);
+        this.getBoilSettings();
+      });
     });
   }
 

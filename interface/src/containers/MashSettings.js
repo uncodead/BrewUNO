@@ -44,12 +44,15 @@ class MashSettings extends Component {
       },
     }).then(response => {
       if (response.ok) {
+        this.props.raiseNotification("Mash settings saved.");
         return;
       }
-      throw Error("Mash Setings service returned unexpected response code: " + response.status);
-    }).catch(error => {
-      this.props.raiseNotification("Problem saving Mash Settings: " + error.message);
-      this.getMashSettings();
+      response.text().then(function (data) {
+        throw Error("Mash Setings service returned unexpected response code: " + response.status + " Message: " + data);
+      }).catch(error => {
+        this.props.raiseNotification(error.message);
+        this.getMashSettings();
+      });
     });
   }
 

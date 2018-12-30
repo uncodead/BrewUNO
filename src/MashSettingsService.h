@@ -27,7 +27,7 @@ public:
   MashSettingsService(AsyncWebServer *server, FS *fs);
 
 protected:
-  bool jsonSchemaIsValid(JsonObject &jsonObj);
+  bool jsonSchemaIsValid(JsonObject &jsonObj, String& messages);
 };
 
 #endif
