@@ -27,6 +27,7 @@ class BrewSettingsService : public SettingsService {
   private:
 
     double _boilPercent;
+    int _boilTemperature;
     int _sampleTime;
     double _kP;
     double _kI;

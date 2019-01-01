@@ -1,16 +1,22 @@
 {
     "steps": [
         {
-            "name": "test",
-            "temperature": 65,
+            "name": "Mash in",
+            "temperature": 70,
             "time": 5,
+            "recirculation": false
+        },
+        {
+            "name": "Sacarification",
+            "temperature": 65,
+            "time": 60,
             "recirculation": true
         },
         {
-            "name": "test",
-            "temperature": 65,
-            "time": 5,
-            "recirculation": true
+            "name": "Mash out",
+            "temperature": 78,
+            "time": 10,
+            "recirculation": false
         }
     ]
 }

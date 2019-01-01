@@ -1,0 +1,9 @@
+{
+    "active_step": "boil",
+    "active_step_index": 0,
+
+    "start_time": null,
+    "end_time": null,
+
+    "target_temperature": null
+}
