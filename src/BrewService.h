@@ -15,13 +15,40 @@
 #include <IPAddress.h>
 #include <AsyncJsonRequestWebHandler.h>
 #include <AsyncJsonCallbackResponse.h>
+#include <TimeLib.h>
+#include <NtpClientLib.h>
+
+#define MASH_SETTINGS_FILE "/config/mashSettings.json"
+#define BOIL_SETTINGS_FILE "/config/boilSettings.json"
 
 class BrewService
 {
-  public:
-    BrewService(AsyncWebServer *server, FS *fs);
+public:
+  BrewService(AsyncWebServer *server, FS *fs) : _server(server), _fs(fs) {}
 
-    void loop();
+  void loop();
+
+private:
+  FS *_fs;
+  AsyncWebServer *_server;
+
+  typedef enum StepType
+  {
+    mash,
+    boil,
+    none
+  };
+
+  StepType ActiveStep;
+  int ActiveStepIndex;
+  float TargetTemperature;
+  time_t EndTime;
+  time_t StartTime;
+
+  void LoadSettings(String settingsFile);
+  void LoadBoilSettings();
+
+  bool ExistsStepAtMoment(time_t);
 };
 
 #endif

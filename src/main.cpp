@@ -22,6 +22,7 @@
 #include <MashSettingsService.h>
 #include <BoilSettingsService.h>
 #include <BrewSettingsService.h>
+#include <BrewService.h>
 
 #define SERIAL_BAUD_RATE 9600
 
@@ -41,6 +42,7 @@ APStatus apStatus = APStatus(&server);
 BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS);
 MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
+BrewService brewService = BrewService(&server, &SPIFFS);
 
 void setup() {
     // Disable wifi config persistance
@@ -89,4 +91,6 @@ void loop() {
   apSettingsService.loop();
   ntpSettingsService.loop();
   otaSettingsService.loop();
+
+  brewService.loop();
 }
