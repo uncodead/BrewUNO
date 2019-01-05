@@ -1,8 +1,10 @@
 #include <BrewService.h>
 
-BrewService::BrewService(AsyncWebServer *server, FS *fs)
+BrewService::BrewService(AsyncWebServer *server, FS *fs) : _server(server), _fs(fs)
 {
 }
+
+BrewService::~BrewService() {}
 
 void BrewService::LoadBoilSettings()
 {
@@ -13,13 +15,27 @@ void BrewService::LoadSettings(String settingsFile)
 {
     File configFile = _fs->open(settingsFile, "r");
     DynamicJsonBuffer jsonBuffer;
-    //BoilSettings = jsonBuffer.parseObject(configFile);
+    JsonObject &root = jsonBuffer.parseObject(configFile);
+    BoilSettings = &root;
     configFile.close();
 }
 
-bool BrewService::ExistsStepAtMoment(time_t momment)
+void BrewService::SetBoiIndexStep(time_t moment)
 {
-    return true;
+    int index = 0;
+    int arrayIndex = 0;
+
+    JsonArray &steps = BoilSettings->get<JsonArray>("steps");
+
+    for (auto step : steps)
+    {
+        if (step["time"] == moment)
+        {
+            boilStepIndex[arrayIndex] = index;
+            arrayIndex += 1;
+        }
+        index += 1;
+    }
 }
 
 void BrewService::loop()
@@ -78,6 +94,7 @@ void BrewService::loop()
         Serial.println("Boil started");
         Serial.println(StartTime);
         Serial.println(EndTime);
+        LoadBoilSettings();
     }
     if (timeNow >= EndTime)
     {
@@ -88,8 +105,6 @@ void BrewService::loop()
         return;
     }
 
-    time_t momment = EndTime - timeNow;
-    if (ExistsStepAtMoment(momment))
-    {
-    }
+    time_t moment = EndTime - timeNow;
+    SetBoiIndexStep(moment);
 }

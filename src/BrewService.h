@@ -24,13 +24,16 @@
 class BrewService
 {
 public:
-  BrewService(AsyncWebServer *server, FS *fs) : _server(server), _fs(fs) {}
+  BrewService(AsyncWebServer *server, FS *fs);
+
+  ~BrewService();
 
   void loop();
 
 private:
-  FS *_fs;
   AsyncWebServer *_server;
+  FS *_fs;
+  JsonObject *BoilSettings;
 
   typedef enum StepType
   {
@@ -48,7 +51,8 @@ private:
   void LoadSettings(String settingsFile);
   void LoadBoilSettings();
 
-  bool ExistsStepAtMoment(time_t);
+  void SetBoiIndexStep(time_t);
+  int boilStepIndex[];
 };
 
 #endif
