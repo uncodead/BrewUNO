@@ -1,5 +1,7 @@
 #include <BrewService.h>
 
+DynamicJsonBuffer jsonBuffer;
+
 BrewService::BrewService(AsyncWebServer *server, FS *fs) : _server(server), _fs(fs)
 {
 }
@@ -8,27 +10,70 @@ BrewService::~BrewService() {}
 
 void BrewService::LoadBoilSettings()
 {
-    JsonObject &json = LoadSettings(BOIL_SETTINGS_FILE);
-    JsonObject *pointer;
-    pointer = &json;
-    BoilSettings = pointer;
+    _boilSettings = &LoadSettings(BOIL_SETTINGS_FILE);
 }
 
-JsonObject& BrewService::LoadSettings(String settingsFile)
+JsonObject &BrewService::LoadSettings(String settingsFile)
 {
     File configFile = _fs->open(settingsFile, "r");
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject &root = jsonBuffer.parseObject(configFile);
+    JsonObject *root = &(jsonBuffer.parseObject(configFile));
     configFile.close();
-    return root;
+    return *root;
+}
+
+void BrewService::loop()
+{
+    // temporary
+    _activeStep = boil;
+    _targetTemperature = 95;
+
+    time_t timeNow = now();
+    timeStatus_t status = timeStatus();
+    if (status != 2)
+    {
+        return;
+    }
+
+    loopMash(timeNow);
+    loopBoil(timeNow);
+
+    delay(30000);
+}
+
+void BrewService::loopBoil(time_t timeNow)
+{
+    if (_activeStep != boil)
+    {
+        return;
+    }
+
+    if (_startTime == 0 && _targetTemperature >= 95) //get from settings
+    {
+        LoadBoilSettings();
+        _startTime = timeNow;
+        _endTime = _startTime + 300; //get from settings im seconds
+        Serial.println("Boil started");
+        Serial.println(_startTime);
+        Serial.println(_endTime);
+    }
+    if (timeNow >= _endTime)
+    {
+        Serial.println("Boil ended");
+        _startTime = 0;
+        _endTime = 0;
+        _activeStep = none;
+        return;
+    }
+
+    time_t moment = _endTime - timeNow;
+    SetBoiIndexStep(moment / 60);
 }
 
 void BrewService::SetBoiIndexStep(time_t moment)
 {
-    LoadBoilSettings();
     int index = 0;
     String currentStep = "";
-    JsonArray &steps = BoilSettings->get<JsonArray>("steps");
+    JsonArray &steps = _boilSettings->get<JsonArray>("steps");
     for (auto step : steps)
     {
         if (step["time"] == moment)
@@ -37,53 +82,17 @@ void BrewService::SetBoiIndexStep(time_t moment)
         }
         index += 1;
     }
-    if (currentStep != "" && currentStep != boilStepIndex)
+    if (currentStep != "" && currentStep != _boilStepIndex)
     {
-        boilStepIndex = currentStep;
+        _boilStepIndex = currentStep;
         Serial.println(currentStep);
-        Serial.println(boilStepIndex);
+        Serial.println(_boilStepIndex);
         Serial.println("buzzer... ");
     }
 }
 
-void BrewService::loop()
+void BrewService::loopMash(time_t timeNow)
 {
-    StepType step = boil;
-    if (step != boil)
-    {
-        return;
-    }
-
-    TargetTemperature = 95;
-
-    time_t timeNow = now();
-    timeStatus_t status = timeStatus();
-    if (status != 2)
-    {
-        return;
-    }
-    if (StartTime == NULL && TargetTemperature >= 95) //get from settings
-    {
-        StartTime = timeNow;
-        EndTime = StartTime + 300; //get from settings im seconds
-        Serial.println("Boil started");
-        Serial.println(StartTime);
-        Serial.println(EndTime);
-    }
-    if (timeNow >= EndTime)
-    {
-        Serial.println("Boil ended");
-        StartTime = NULL;
-        EndTime = NULL;
-        ActiveStep = none;
-        return;
-    }
-
-    time_t moment = EndTime - timeNow;
-    SetBoiIndexStep(moment / 60);
-
-    delay(30000);
-
     // Obter estado atual
     // se nao iniciou a brassagem, sai do programa
     //

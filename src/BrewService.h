@@ -33,7 +33,7 @@ public:
 private:
   AsyncWebServer *_server;
   FS *_fs;
-  JsonObject *BoilSettings;
+  JsonObject *_boilSettings;
 
   typedef enum StepType
   {
@@ -42,17 +42,19 @@ private:
     none
   };
 
-  StepType ActiveStep;
-  int ActiveStepIndex;
-  float TargetTemperature;
-  time_t EndTime;
-  time_t StartTime;
+  StepType _activeStep;
+  int _activeMashStepIndex;
+  float _targetTemperature;
+  time_t _endTime;
+  time_t _startTime;
 
-  JsonObject &LoadSettings(String settingsFile);
+  String _boilStepIndex;
+
+  void loopBoil(time_t timeNow);
+  void loopMash(time_t timeNow);
   void LoadBoilSettings();
-
   void SetBoiIndexStep(time_t);
-  String boilStepIndex;
+  JsonObject &LoadSettings(String settingsFile);
 };
 
 #endif
