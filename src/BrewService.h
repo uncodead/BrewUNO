@@ -48,11 +48,11 @@ private:
   time_t EndTime;
   time_t StartTime;
 
-  void LoadSettings(String settingsFile);
+  JsonObject &LoadSettings(String settingsFile);
   void LoadBoilSettings();
 
   void SetBoiIndexStep(time_t);
-  int boilStepIndex[];
+  String boilStepIndex;
 };
 
 #endif
