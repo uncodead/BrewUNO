@@ -4,13 +4,32 @@ DynamicJsonBuffer jsonBuffer;
 
 BrewService::BrewService(AsyncWebServer *server, FS *fs) : _server(server), _fs(fs)
 {
+    _activeStep = none;
+    _startTime = 0;
+    _endTime = 0;
+
+    //temp
+    _temperature = 30;
+    _server->on("/rest/temp", HTTP_GET, std::bind(&BrewService::temp, this, std::placeholders::_1));
 }
 
 BrewService::~BrewService() {}
 
+void BrewService::temp(AsyncWebServerRequest *request)
+{
+    _temperature += 0.5;
+    _brewStarted = true;
+    request->send(200, "text/plain charset=utf-8", String(_temperature));
+}
+
 void BrewService::LoadBoilSettings()
 {
     _boilSettings = &LoadSettings(BOIL_SETTINGS_FILE);
+}
+
+void BrewService::LoadMashSettings()
+{
+    _mashSettings = &LoadSettings(MASH_SETTINGS_FILE);
 }
 
 JsonObject &BrewService::LoadSettings(String settingsFile)
@@ -21,17 +40,23 @@ JsonObject &BrewService::LoadSettings(String settingsFile)
     return *root;
 }
 
+float BrewService::getTemperature()
+{
+    return _temperature;
+}
+
 void BrewService::loop()
 {
-    // temporary
-    _activeStep = boil;
-    _targetTemperature = 95;
-
     time_t timeNow = now();
     timeStatus_t status = timeStatus();
     if (status != 2)
     {
         return;
+    }
+
+    if (_activeStep == 2)
+    {
+        _activeStep = mash;
     }
 
     loopMash(timeNow);
@@ -40,9 +65,61 @@ void BrewService::loop()
     delay(30000);
 }
 
+void BrewService::loopMash(time_t timeNow)
+{
+    if (!_brewStarted || _activeStep != 0)
+    {
+        return;
+    }
+
+    if (_mashSettings == NULL)
+    {
+        Serial.println("Load Mash Settings");
+        LoadMashSettings();
+    }
+
+    if (_endTime > 0 && timeNow > _endTime)
+    {
+        Serial.println("Step over");
+        unsigned int nextMashStep = _activeMashStepIndex + 1;
+        if (_mashSettings->get<JsonArray>("steps").size() >= nextMashStep)
+        {
+            Serial.println("Next step: ");
+            JsonObject &step = _mashSettings->get<JsonArray>("steps")[nextMashStep];
+            _activeMashStepIndex = nextMashStep;
+            _startTime = 0;
+            _endTime = 0;
+            _targetTemperature = step["temperature"];
+            Serial.println(_activeMashStepIndex);
+        }
+        else
+        {
+            Serial.println("Boil Time");
+            _activeStep = boil;
+            _targetTemperature = 95; //check
+            _startTime = 0;
+            _endTime = 0;
+        }
+    }
+    else
+    {
+        if (_startTime = 0 && (getTemperature() >= (_targetTemperature - 0.2)))
+        {
+            Serial.println("Step Started");
+            JsonObject &step = _mashSettings->get<JsonArray>("steps")[_activeMashStepIndex];
+            _startTime = timeNow;
+            _endTime = timeNow + int(step["time"]);
+            // recirculation
+        }
+        else {
+            Serial.println("Temperature fail");
+        }
+    }
+}
+
 void BrewService::loopBoil(time_t timeNow)
 {
-    if (_activeStep != boil)
+    if (!_brewStarted || _activeStep != 1)
     {
         return;
     }
@@ -56,7 +133,7 @@ void BrewService::loopBoil(time_t timeNow)
         Serial.println(_startTime);
         Serial.println(_endTime);
     }
-    if (timeNow >= _endTime)
+    if (_endTime > 0 && timeNow > _endTime)
     {
         Serial.println("Boil ended");
         _startTime = 0;
@@ -89,37 +166,4 @@ void BrewService::SetBoiIndexStep(time_t moment)
         Serial.println(_boilStepIndex);
         Serial.println("buzzer... ");
     }
-}
-
-void BrewService::loopMash(time_t timeNow)
-{
-    // Obter estado atual
-    // se nao iniciou a brassagem, sai do programa
-    //
-    // espera o sampletime
-
-    // obtem o timer atual
-    // se active_step for mash
-    //   se o end_time não e null e o time atual é maior ou igual ao end_time(acabou o passo)
-    //   sim:
-    //     verifica o proximo step
-    //     se existir:
-    //       seta o active_step_index, start_time = vazio, end_time = vazio, targt_temperature
-    //     se nao existir:
-    //       seta para boil, active_steo_index = 0, start_time=null, end=null, target_temperature = temperatura configurada
-    //    nao:
-    //      verifica se a temperatura esta entre a target_temperature - 0.2 e target_temperature + 0.2 e se o start_time é vazio
-    //        sim
-    //          seta start_time, end_time
-
-    // se for boil
-    //   verifica se a temperatura esta maior ou igual a target_temperature e start_time = vazio
-    //     sim:
-    //       seta start_time, end_time
-    //
-    //   se end_time nao e null e time atual é maior ou igual ao end_time (acabou a fervura)
-    //     sim:
-    //       seta start_time = null, end_time = null, target_temperature = 0, brassagem iniciada = false, step=mash
-    //
-    //
 }
