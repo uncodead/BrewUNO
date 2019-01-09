@@ -30,6 +30,8 @@ void BrewService::LoadBoilSettings()
 void BrewService::LoadMashSettings()
 {
     _mashSettings = &LoadSettings(MASH_SETTINGS_FILE);
+    JsonObject &step = _mashSettings->get<JsonArray>("steps")[0];
+    _targetTemperature = step["temperature"];
 }
 
 JsonObject &BrewService::LoadSettings(String settingsFile)
@@ -90,7 +92,8 @@ void BrewService::loopMash(time_t timeNow)
             _startTime = 0;
             _endTime = 0;
             _targetTemperature = step["temperature"];
-            Serial.println(_activeMashStepIndex);
+            Serial.print("Next step: ");
+            Serial.println(nextMashStep);
         }
         else
         {
@@ -103,16 +106,24 @@ void BrewService::loopMash(time_t timeNow)
     }
     else
     {
-        if (_startTime = 0 && (getTemperature() >= (_targetTemperature - 0.2)))
+        Serial.print("Temperature: ");
+        Serial.println(getTemperature());
+        Serial.println("");
+        Serial.print("Target: ");
+        Serial.println(_targetTemperature);
+        if (_startTime == 0 && (getTemperature() >= (_targetTemperature - 0.2)))
         {
             Serial.println("Step Started");
             JsonObject &step = _mashSettings->get<JsonArray>("steps")[_activeMashStepIndex];
             _startTime = timeNow;
             _endTime = timeNow + int(step["time"]);
+
+            Serial.print("Start time: ");
+            Serial.println(_startTime);
+            Serial.print("End Time: ");
+            Serial.println(_endTime);
+            Serial.println("");
             // recirculation
-        }
-        else {
-            Serial.println("Temperature fail");
         }
     }
 }
