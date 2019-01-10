@@ -84,16 +84,18 @@ void BrewService::loopMash(time_t timeNow)
     {
         Serial.println("Step over");
         unsigned int nextMashStep = _activeMashStepIndex + 1;
-        if (_mashSettings->get<JsonArray>("steps").size() >= nextMashStep)
+        if (_mashSettings->get<JsonArray>("steps").size() > nextMashStep)
         {
-            Serial.println("Next step: ");
             JsonObject &step = _mashSettings->get<JsonArray>("steps")[nextMashStep];
             _activeMashStepIndex = nextMashStep;
             _startTime = 0;
             _endTime = 0;
             _targetTemperature = step["temperature"];
-            Serial.print("Next step: ");
-            Serial.println(nextMashStep);
+            Serial.print("Next step name: ");
+            Serial.printf(step["name"]);
+            Serial.println("");
+            Serial.println("Next step temperature: ");
+            Serial.printf(step["temperature"]);
         }
         else
         {
@@ -108,7 +110,6 @@ void BrewService::loopMash(time_t timeNow)
     {
         Serial.print("Temperature: ");
         Serial.println(getTemperature());
-        Serial.println("");
         Serial.print("Target: ");
         Serial.println(_targetTemperature);
         if (_startTime == 0 && (getTemperature() >= (_targetTemperature - 0.2)))
@@ -116,13 +117,12 @@ void BrewService::loopMash(time_t timeNow)
             Serial.println("Step Started");
             JsonObject &step = _mashSettings->get<JsonArray>("steps")[_activeMashStepIndex];
             _startTime = timeNow;
-            _endTime = timeNow + int(step["time"]);
+            _endTime = timeNow + (int(step["time"]) * 60);
 
             Serial.print("Start time: ");
             Serial.println(_startTime);
             Serial.print("End Time: ");
             Serial.println(_endTime);
-            Serial.println("");
             // recirculation
         }
     }
@@ -135,7 +135,7 @@ void BrewService::loopBoil(time_t timeNow)
         return;
     }
 
-    if (_startTime == 0 && _targetTemperature >= 95) //get from settings
+    if (_startTime == 0 && getTemperature() >= _targetTemperature) //get from settings
     {
         LoadBoilSettings();
         _startTime = timeNow;
@@ -150,6 +150,7 @@ void BrewService::loopBoil(time_t timeNow)
         _startTime = 0;
         _endTime = 0;
         _activeStep = none;
+        _brewStarted = false;
         return;
     }
 
