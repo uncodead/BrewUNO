@@ -45,16 +45,15 @@ private:
   };
 
   boolean _brewStarted;
-
   StepType _activeStep;
+
   int _activeMashStepIndex;
+  String _boilStepIndex;
+
   float _targetTemperature;
   float _temperature;
-
   time_t _endTime;
   time_t _startTime;
-
-  String _boilStepIndex;
 
   void loopBoil(time_t timeNow);
   void loopMash(time_t timeNow);
@@ -66,5 +65,8 @@ private:
 
   //temp
   void temp(AsyncWebServerRequest *request);
+
+  void getActiveStep(AsyncWebServerRequest *request);
+  void startBrew(AsyncWebServerRequest *request);
 };
 #endif

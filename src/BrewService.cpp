@@ -22,6 +22,28 @@ void BrewService::temp(AsyncWebServerRequest *request)
     request->send(200, "text/plain charset=utf-8", String(_temperature));
 }
 
+void BrewService::startBrew(AsyncWebServerRequest *request)
+{
+    /*
+    Load mash
+    Load Boil
+    _brewstarted = true
+    _activeStep = mash;
+    _startTime = 0;
+    _endTime = 0;
+    return json {mash,boil}
+    */
+}
+
+void BrewService::getActiveStep(AsyncWebServerRequest *request)
+{
+    /*
+    _activeStep:
+    _activeMashStepIndex:
+    _boilStepIndex:
+    */
+}
+
 void BrewService::LoadBoilSettings()
 {
     _boilSettings = &LoadSettings(BOIL_SETTINGS_FILE);
