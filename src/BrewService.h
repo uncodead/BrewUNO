@@ -17,54 +17,42 @@
 #include <AsyncJsonCallbackResponse.h>
 #include <TimeLib.h>
 #include <NtpClientLib.h>
+#include <enum.h>
+#include <MashService.h>
+#include <BoilService.h>
+#include <KettleHeaterService.h>
+#include <BrewSettingsService.h>
 
 #define MASH_SETTINGS_FILE "/config/mashSettings.json"
-#define BOIL_SETTINGS_FILE "/config/boilSettings.json"
+#define START_BREW_SERVICE_PATH "/rest/startbrew"
+#define GET_ACTIVE_STEP_SERVICE_PATH "/rest/getactivestep"
 
 class BrewService
 {
 public:
-  BrewService(AsyncWebServer *server, FS *fs);
+  BrewService(AsyncWebServer *server,
+              FS *fs,
+              MashService *mashService,
+              BoilService *boilService,
+              BrewSettingsService *brewSettingsService,
+              KettleHeaterService *kettleHeaterService);
 
   ~BrewService();
 
   void loop();
 
 private:
-  AsyncWebServer *_server;
   FS *_fs;
+  AsyncWebServer *_server;
+  BoilService *_boilService;
+  MashService *_mashService;
+  BrewSettingsService *_brewSettingsService;
+  KettleHeaterService *_kettleHeaterService;
 
-  JsonObject *_boilSettings;
-  JsonObject *_mashSettings;
-
-  typedef enum StepType
-  {
-    mash,
-    boil,
-    none
-  };
+  double _setPoint;
 
   boolean _brewStarted;
   StepType _activeStep;
-
-  int _activeMashStepIndex;
-  String _boilStepIndex;
-
-  float _targetTemperature;
-  float _temperature;
-  time_t _endTime;
-  time_t _startTime;
-
-  void loopBoil(time_t timeNow);
-  void loopMash(time_t timeNow);
-  void LoadBoilSettings();
-  void LoadMashSettings();
-  void SetBoiIndexStep(time_t);
-  JsonObject &LoadSettings(String settingsFile);
-  float getTemperature();
-
-  //temp
-  void temp(AsyncWebServerRequest *request);
 
   void getActiveStep(AsyncWebServerRequest *request);
   void startBrew(AsyncWebServerRequest *request);

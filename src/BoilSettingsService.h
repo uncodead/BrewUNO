@@ -32,5 +32,4 @@ class BoilSettingsService : public BrewListService
     bool jsonSchemaIsValid(JsonObject &jsonObj, String& messages);
     BrewSettingsService *_brewSettings;
 };
-
 #endif
