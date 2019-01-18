@@ -23,7 +23,9 @@ BrewService::~BrewService() {}
 void BrewService::startBrew(AsyncWebServerRequest *request)
 {
     _mashService->LoadMashSettings();
-    _boilService->LoadBoilSettings(_brewSettingsService->BoilTemperature, _brewSettingsService->BoilTime);
+    _boilService->LoadBoilSettings();
+    _boilService->SetTemperature(_brewSettingsService->BoilTemperature);
+    _boilService->SetTime(_brewSettingsService->BoilTime);
 
     _brewStarted = true;
     _activeStep = mash;

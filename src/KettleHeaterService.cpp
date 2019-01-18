@@ -8,7 +8,6 @@ PID kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 2, 5, 1, DIREC
 KettleHeaterService::KettleHeaterService(TemperatureService *temperatureService) : _temperatureService(temperatureService)
 {
   KettleSetpoint = 0;
-  kettlePID.SetMode(AUTOMATIC);
 }
 
 KettleHeaterService::~KettleHeaterService() {}

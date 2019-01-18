@@ -16,11 +16,14 @@ void BoilService::LoadBoilSettings()
     _boilSettings = &LoadSettings(BOIL_SETTINGS_FILE);
 }
 
-void BoilService::LoadBoilSettings(float targetTemperature, int boilTime)
+void BoilService::SetTemperature(float temperature)
 {
-    _boilSettings = &LoadSettings(BOIL_SETTINGS_FILE);
-    _targetTemperature = targetTemperature;
-    _boilTime = boilTime;
+    _targetTemperature = temperature;
+}
+
+void BoilService::SetTime(int time)
+{
+    _boilTime = time * 60;
 }
 
 JsonObject &BoilService::LoadSettings(String settingsFile)
@@ -41,7 +44,7 @@ String BoilService::GetBoilStepIndex()
     return _boilStepIndex;
 }
 
-void BoilService::loop(time_t timeNow, boolean &_brewStarted, StepType &_activeStep, double &_setPoint)
+void BoilService::loop(time_t timeNow, boolean &_brewStarted, StepType &_activeStep, float &_setPoint)
 {
     if (!_brewStarted || _activeStep != 1)
     {

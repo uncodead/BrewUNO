@@ -29,8 +29,9 @@ public:
 
   ~BoilService();
 
-  void loop(time_t timeNow, boolean &_brewStarted, StepType &_activeStep, double &_setPoint);
-  void LoadBoilSettings(float targetTemperature, int boilTime);
+  void loop(time_t timeNow, boolean &_brewStarted, StepType &_activeStep, float &_setPoint);
+  void SetTemperature(float temperature);
+  void SetTime(int time);
   void LoadBoilSettings();
   String GetBoilStepIndex();
 

@@ -36,7 +36,7 @@ int MashService::GetActiveStep()
     return _activeMashStepIndex;
 }
 
-void MashService::loop(time_t timeNow, boolean &_brewStarted, StepType &_activeStep, double &_setPoint)
+void MashService::loop(time_t timeNow, boolean &_brewStarted, StepType &_activeStep, float &_setPoint)
 {
     if (!_brewStarted || _activeStep != 0)
     {

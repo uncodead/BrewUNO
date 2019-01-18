@@ -49,7 +49,7 @@ private:
   BrewSettingsService *_brewSettingsService;
   KettleHeaterService *_kettleHeaterService;
 
-  double _setPoint;
+  float _setPoint;
 
   boolean _brewStarted;
   StepType _activeStep;

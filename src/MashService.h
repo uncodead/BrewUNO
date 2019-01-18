@@ -28,7 +28,7 @@ public:
   MashService(FS *fs, TemperatureService *temperatureService);
   ~MashService();
 
-  void loop(time_t timeNow, boolean &_brewStarted, StepType &_activeStep, double &_setPoint);
+  void loop(time_t timeNow, boolean &_brewStarted, StepType &_activeStep, float &_setPoint);
   void LoadMashSettings();
   int GetActiveStep();
 
