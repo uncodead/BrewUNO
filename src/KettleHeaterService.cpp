@@ -46,5 +46,5 @@ void KettleHeaterService::Compute(boolean boil)
     KettleOutput = (KettleOutput * _boilPercent) / 100;
   }
 
-  analogWrite(HEATER_BUS, 1023 - KettleOutput);
+  analogWrite(HEATER_BUS, KettleOutput);
 }
