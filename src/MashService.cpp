@@ -43,12 +43,6 @@ void MashService::loop(time_t timeNow, boolean &_brewStarted, StepType &_activeS
         return;
     }
 
-    if (_mashSettings == NULL)
-    {
-        Serial.println("Load Mash Settings");
-        LoadMashSettings();
-    }
-
     if (_endTime > 0 && timeNow > _endTime)
     {
         Serial.println("Step over");

@@ -16,6 +16,14 @@ void BoilService::LoadBoilSettings()
     _boilSettings = &LoadSettings(BOIL_SETTINGS_FILE);
 }
 
+JsonObject &BoilService::LoadSettings(String settingsFile)
+{
+    File configFile = _fs->open(settingsFile, "r");
+    JsonObject *root = &(jsonBufferBoil.parseObject(configFile));
+    configFile.close();
+    return *root;
+}
+
 void BoilService::SetTemperature(float temperature)
 {
     _targetTemperature = temperature;
@@ -24,14 +32,6 @@ void BoilService::SetTemperature(float temperature)
 void BoilService::SetTime(int time)
 {
     _boilTime = time * 60;
-}
-
-JsonObject &BoilService::LoadSettings(String settingsFile)
-{
-    File configFile = _fs->open(settingsFile, "r");
-    JsonObject *root = &(jsonBufferBoil.parseObject(configFile));
-    configFile.close();
-    return *root;
 }
 
 float BoilService::getTemperature()

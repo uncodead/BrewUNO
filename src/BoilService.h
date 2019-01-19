@@ -43,7 +43,6 @@ private:
   String _boilStepIndex;
 
   float _targetTemperature;
-  float _temperature;
   time_t _endTime;
   time_t _startTime;
   int _boilTime;

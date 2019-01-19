@@ -40,7 +40,6 @@ private:
   int _activeMashStepIndex;
   
   float _targetTemperature;
-  float _temperature;
   time_t _endTime;
   time_t _startTime;
 
