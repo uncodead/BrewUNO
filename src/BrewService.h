@@ -22,6 +22,7 @@
 #include <BoilService.h>
 #include <KettleHeaterService.h>
 #include <BrewSettingsService.h>
+#include <ActiveStatus.h>
 
 #define MASH_SETTINGS_FILE "/config/mashSettings.json"
 #define START_BREW_SERVICE_PATH "/rest/startbrew"
@@ -35,7 +36,8 @@ public:
               MashService *mashService,
               BoilService *boilService,
               BrewSettingsService *brewSettingsService,
-              KettleHeaterService *kettleHeaterService);
+              KettleHeaterService *kettleHeaterService,
+              ActiveStatus *activeStatus);
 
   ~BrewService();
 
@@ -48,6 +50,7 @@ private:
   MashService *_mashService;
   BrewSettingsService *_brewSettingsService;
   KettleHeaterService *_kettleHeaterService;
+  ActiveStatus *_activeStatus;
 
   float _setPoint;
 
@@ -56,5 +59,6 @@ private:
 
   void getActiveStep(AsyncWebServerRequest *request);
   void startBrew(AsyncWebServerRequest *request);
+  void stopBrew(AsyncWebServerRequest *request);
 };
 #endif

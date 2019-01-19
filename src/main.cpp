@@ -31,6 +31,7 @@
 #include <BoilService.h>
 #include <TemperatureService.h>
 #include <KettleHeaterService.h>
+#include <ActiveStatus.h>
 
 // GPIO 5
 #define ONE_WIRE_BUS 5
@@ -57,10 +58,11 @@ BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS);
 MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
 
+ActiveStatus activeStatus = ActiveStatus(&SPIFFS);
 KettleHeaterService kettleHeaterService = KettleHeaterService(&temperatureService);
 MashService mashService = MashService(&SPIFFS, &temperatureService);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService);
-BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &kettleHeaterService);
+BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &kettleHeaterService, &activeStatus);
 
 void setup()
 {

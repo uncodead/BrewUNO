@@ -1,0 +1,16 @@
+{
+    "active_step": 0,
+
+    "active_mash_step_index": 0,
+    
+    "active_boil_step_index": "",
+    "boil_time": 0,
+    "boil_target_temperature": 0,
+
+    "start_time": 0,
+    "end_time": 0,
+    "time_now": 0,
+
+    "target_temperature": 0,
+    "brew_started": false
+}

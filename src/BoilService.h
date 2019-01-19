@@ -19,6 +19,7 @@
 #include <NtpClientLib.h>
 #include <enum.h>
 #include <TemperatureService.h>
+#include <ActiveStatus.h>
 
 #define BOIL_SETTINGS_FILE "/config/boilSettings.json"
 
@@ -29,26 +30,15 @@ public:
 
   ~BoilService();
 
-  void loop(time_t timeNow, boolean &_brewStarted, StepType &_activeStep, float &_setPoint);
-  void SetTemperature(float temperature);
-  void SetTime(int time);
+  void loop(ActiveStatus *activeStatus);
   void LoadBoilSettings();
-  String GetBoilStepIndex();
 
 private:
   FS *_fs;
   JsonObject *_boilSettings;
   TemperatureService *_temperatureService;
 
-  String _boilStepIndex;
-
-  float _targetTemperature;
-  time_t _endTime;
-  time_t _startTime;
-  int _boilTime;
-
-  void SetBoiIndexStep(time_t);
+  void SetBoiIndexStep(ActiveStatus *activeStatus, time_t);
   JsonObject &LoadSettings(String settingsFile);
-  float getTemperature();
 };
 #endif

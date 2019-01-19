@@ -5,15 +5,18 @@ BrewService::BrewService(AsyncWebServer *server,
                          MashService *mashService,
                          BoilService *boilService,
                          BrewSettingsService *brewSettingsService,
-                         KettleHeaterService *kettleHeaterService) : _server(server),
-                                                                     _fs(fs),
-                                                                     _mashService(mashService),
-                                                                     _boilService(boilService),
-                                                                     _brewSettingsService(brewSettingsService),
-                                                                     _kettleHeaterService(kettleHeaterService)
+                         KettleHeaterService *kettleHeaterService,
+                         ActiveStatus *activeStatus) : _server(server),
+                                                       _fs(fs),
+                                                       _mashService(mashService),
+                                                       _boilService(boilService),
+                                                       _brewSettingsService(brewSettingsService),
+                                                       _kettleHeaterService(kettleHeaterService),
+                                                       _activeStatus(activeStatus)
 
 {
-    _activeStep = none;
+    // TODO: Implement auto resume brew
+    _activeStatus->SaveActiveStatus(0, 0, 0, 0, 0, "", 0, 0, none, false);
     _server->on(START_BREW_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::startBrew, this, std::placeholders::_1));
     _server->on(GET_ACTIVE_STEP_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::getActiveStep, this, std::placeholders::_1));
 }
@@ -22,42 +25,54 @@ BrewService::~BrewService() {}
 
 void BrewService::startBrew(AsyncWebServerRequest *request)
 {
+    String json = "";
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
-    
-    _boilService->SetTemperature(_brewSettingsService->BoilTemperature);
-    _boilService->SetTime(_brewSettingsService->BoilTime);
 
-    _brewStarted = true;
-    _activeStep = mash;
+    _activeStatus->TimeNow = now();
+    _activeStatus->BoilTime = _brewSettingsService->BoilTime * 60;
+    _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
+    _activeStatus->ActiveStep = mash;
+    _activeStatus->BrewStarted = true;
+    _activeStatus->SaveActiveStatus();
 
     _kettleHeaterService->SetK(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _kettleHeaterService->SetBoilPercent(_brewSettingsService->BoilPercent);
-    
-    request->send(200, "application/json", "{ brew_started: true }");
+
+    _activeStatus->GetJson()->printTo(json);
+    request->send(200, "application/json", json);
+}
+
+void BrewService::stopBrew(AsyncWebServerRequest *request)
+{
+    String json = "";
+    _activeStatus->SaveActiveStatus(0, 0, 0, 0, 0, "", 0, 0, none, false);
+    _activeStatus->GetJson()->printTo(json);
+    request->send(200, "application/json", json);
 }
 
 void BrewService::getActiveStep(AsyncWebServerRequest *request)
 {
-    int mashStepIndex = _mashService->GetActiveStep();
-    String boilStepIndex = _boilService->GetBoilStepIndex();
-    request->send(200, "application/json", "{ active_step: " + String(_activeStep) + ", active_mash_step_index: " + mashStepIndex + ", boil_step_index:" + boilStepIndex + " }");
+    String json = "";
+    _activeStatus->GetJson()->printTo(json);
+    request->send(200, "application/json", json);
 }
 
 void BrewService::loop()
 {
-    time_t timeNow = now();
     timeStatus_t status = timeStatus();
-    if (status != 2)
+    if (status != timeSet)
     {
         return;
     }
 
-    _mashService->loop(timeNow, _brewStarted, _activeStep, _setPoint);
-    _boilService->loop(timeNow, _brewStarted, _activeStep, _setPoint);
+    _mashService->loop(_activeStatus);
+    _boilService->loop(_activeStatus);
 
-    _kettleHeaterService->SetSetpoint(_setPoint);
+    _kettleHeaterService->SetSetpoint(_activeStatus->TargetTemperature);
     _kettleHeaterService->Compute(_activeStep == 1);
+
+    _activeStatus->SaveActiveStatus();
 
     delay(30000);
 }

@@ -5,8 +5,6 @@ DynamicJsonBuffer jsonBufferMash;
 MashService::MashService(FS *fs, TemperatureService *temperatureService) : _fs(fs),
                                                                            _temperatureService(temperatureService)
 {
-    _startTime = 0;
-    _endTime = 0;
 }
 
 MashService::~MashService() {}
@@ -24,37 +22,32 @@ JsonObject &MashService::LoadSettings(String settingsFile)
     return *root;
 }
 
-float MashService::getTemperature()
+void MashService::loop(ActiveStatus *activeStatus)
 {
-    return _temperatureService->GetTemperature();
-}
-
-int MashService::GetActiveStep()
-{
-    return _activeMashStepIndex;
-}
-
-void MashService::loop(time_t timeNow, boolean &_brewStarted, StepType &_activeStep, float &_setPoint)
-{
-    if (!_brewStarted || _activeStep != 0)
+    if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
     {
         return;
     }
 
-    JsonObject &step = _mashSettings->get<JsonArray>("steps")[0];
-    _targetTemperature = step["temperature"];
+    time_t timeNow = now();
 
-    if (_endTime > 0 && timeNow > _endTime)
+    if (activeStatus->TargetTemperature == 0)
+    {
+        JsonObject &step = _mashSettings->get<JsonArray>("steps")[0];
+        activeStatus->TargetTemperature = step["temperature"];
+    }
+
+    if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)
     {
         Serial.println("Step over");
-        unsigned int nextMashStep = _activeMashStepIndex + 1;
+        unsigned int nextMashStep = activeStatus->ActiveMashStepIndex + 1;
         if (_mashSettings->get<JsonArray>("steps").size() > nextMashStep)
         {
             JsonObject &step = _mashSettings->get<JsonArray>("steps")[nextMashStep];
-            _activeMashStepIndex = nextMashStep;
-            _startTime = 0;
-            _endTime = 0;
-            _targetTemperature = step["temperature"];
+            activeStatus->ActiveMashStepIndex = nextMashStep;
+            activeStatus->StartTime = 0;
+            activeStatus->EndTime = 0;
+            activeStatus->TargetTemperature = step["temperature"];
             Serial.print("Next step name: ");
             Serial.printf(step["name"]);
             Serial.println("");
@@ -64,31 +57,29 @@ void MashService::loop(time_t timeNow, boolean &_brewStarted, StepType &_activeS
         else
         {
             Serial.println("Boil Time");
-            _activeStep = boil;
-            _startTime = 0;
-            _endTime = 0;
+            activeStatus->ActiveStep = boil;
+            activeStatus->StartTime = 0;
+            activeStatus->EndTime = 0;
         }
     }
     else
     {
         Serial.print("Temperature: ");
-        Serial.println(getTemperature());
+        Serial.println(_temperatureService->GetTemperature());
         Serial.print("Target: ");
-        Serial.println(_targetTemperature);
-        if (_startTime == 0 && (getTemperature() >= (_targetTemperature - 0.2)))
+        Serial.println(activeStatus->TargetTemperature);
+        if (activeStatus->StartTime == 0 && (_temperatureService->GetTemperature() >= (activeStatus->TargetTemperature - 0.2)))
         {
             Serial.println("Step Started");
-            JsonObject &step = _mashSettings->get<JsonArray>("steps")[_activeMashStepIndex];
-            _startTime = timeNow;
-            _endTime = timeNow + (int(step["time"]) * 60);
+            JsonObject &step = _mashSettings->get<JsonArray>("steps")[activeStatus->ActiveMashStepIndex];
+            activeStatus->StartTime = timeNow;
+            activeStatus->EndTime = timeNow + (int(step["time"]) * 60);
 
             Serial.print("Start time: ");
-            Serial.println(_startTime);
+            Serial.println(activeStatus->StartTime);
             Serial.print("End Time: ");
-            Serial.println(_endTime);
+            Serial.println(activeStatus->EndTime);
             // recirculation
         }
     }
-
-    _setPoint = _targetTemperature;
 }

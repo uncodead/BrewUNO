@@ -5,8 +5,6 @@ DynamicJsonBuffer jsonBufferBoil;
 BoilService::BoilService(FS *fs, TemperatureService *temperatureService) : _fs(fs),
                                                                            _temperatureService(temperatureService)
 {
-    _startTime = 0;
-    _endTime = 0;
 }
 
 BoilService::~BoilService() {}
@@ -24,57 +22,38 @@ JsonObject &BoilService::LoadSettings(String settingsFile)
     return *root;
 }
 
-void BoilService::SetTemperature(float temperature)
+void BoilService::loop(ActiveStatus *activeStatus)
 {
-    _targetTemperature = temperature;
-}
-
-void BoilService::SetTime(int time)
-{
-    _boilTime = time * 60;
-}
-
-float BoilService::getTemperature()
-{
-    return _temperatureService->GetTemperature();
-}
-
-String BoilService::GetBoilStepIndex()
-{
-    return _boilStepIndex;
-}
-
-void BoilService::loop(time_t timeNow, boolean &_brewStarted, StepType &_activeStep, float &_setPoint)
-{
-    if (!_brewStarted || _activeStep != 1)
+    if (!activeStatus->BrewStarted || activeStatus->ActiveStep != boil)
     {
         return;
     }
 
-    if (_startTime == 0 && getTemperature() >= _targetTemperature)
+    time_t timeNow = now();
+
+    if (activeStatus->StartTime == 0 && _temperatureService->GetTemperature() >= activeStatus->BoilTargetTemperature)
     {
-        _startTime = timeNow;
-        _endTime = _startTime + _boilTime; //get from settings im seconds
+        activeStatus->StartTime = timeNow;
+        activeStatus->EndTime = activeStatus->StartTime + activeStatus->BoilTime; //get from settings im seconds
         Serial.println("Boil started");
-        Serial.println(_startTime);
-        Serial.println(_endTime);
+        Serial.println(activeStatus->StartTime);
+        Serial.println(activeStatus->EndTime);
     }
-    if (_endTime > 0 && timeNow > _endTime)
+    if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)
     {
         Serial.println("Boil ended");
-        _startTime = 0;
-        _endTime = 0;
-        _activeStep = none;
-        _brewStarted = false;
+        activeStatus->StartTime = 0;
+        activeStatus->EndTime = 0;
+        activeStatus->ActiveStep = none;
+        activeStatus->BrewStarted = false;
         return;
     }
 
-    time_t moment = _endTime - timeNow;
-    SetBoiIndexStep(moment / 60);
-    _setPoint = _targetTemperature;
+    time_t moment = activeStatus->EndTime - timeNow;
+    SetBoiIndexStep(activeStatus, moment / 60);
 }
 
-void BoilService::SetBoiIndexStep(time_t moment)
+void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, time_t moment)
 {
     int index = 0;
     String currentStep = "";
@@ -87,11 +66,11 @@ void BoilService::SetBoiIndexStep(time_t moment)
         }
         index += 1;
     }
-    if (currentStep != "" && currentStep != _boilStepIndex)
+    if (currentStep != "" && currentStep != activeStatus->ActiveBoilStepIndex)
     {
-        _boilStepIndex = currentStep;
+        activeStatus->ActiveBoilStepIndex = currentStep;
         Serial.println(currentStep);
-        Serial.println(_boilStepIndex);
+        Serial.println(activeStatus->ActiveBoilStepIndex);
         Serial.println("buzzer... ");
     }
 }

@@ -19,6 +19,7 @@
 #include <NtpClientLib.h>
 #include <enum.h>
 #include <TemperatureService.h>
+#include <ActiveStatus.h>
 
 #define MASH_SETTINGS_FILE "/config/mashSettings.json"
 
@@ -28,22 +29,14 @@ public:
   MashService(FS *fs, TemperatureService *temperatureService);
   ~MashService();
 
-  void loop(time_t timeNow, boolean &_brewStarted, StepType &_activeStep, float &_setPoint);
+  void loop(ActiveStatus *activeStatus);
   void LoadMashSettings();
-  int GetActiveStep();
 
 private:
   FS *_fs;
   JsonObject *_mashSettings;
   TemperatureService *_temperatureService;
 
-  int _activeMashStepIndex;
-  
-  float _targetTemperature;
-  time_t _endTime;
-  time_t _startTime;
-
   JsonObject &LoadSettings(String settingsFile);
-  float getTemperature();
 };
 #endif
