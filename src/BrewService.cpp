@@ -36,7 +36,7 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _activeStatus->BrewStarted = true;
     _activeStatus->SaveActiveStatus();
 
-    _kettleHeaterService->SetK(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
+    _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _kettleHeaterService->SetBoilPercent(_brewSettingsService->BoilPercent);
 
     _activeStatus->GetJson()->printTo(json);
@@ -69,8 +69,7 @@ void BrewService::loop()
     _mashService->loop(_activeStatus);
     _boilService->loop(_activeStatus);
 
-    _kettleHeaterService->SetSetpoint(_activeStatus->TargetTemperature);
-    _kettleHeaterService->Compute(_activeStep == 1);
+    _kettleHeaterService->Compute(_activeStatus);
 
     _activeStatus->SaveActiveStatus();
 

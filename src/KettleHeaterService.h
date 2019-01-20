@@ -2,7 +2,9 @@
 #define KettleHeaterService_h
 
 #include <TemperatureService.h>
+#include <ActiveStatus.h>
 #include <PID_v1.h>
+#include <enum.h>
 
 class KettleHeaterService
 {
@@ -10,10 +12,9 @@ public:
   KettleHeaterService(TemperatureService *temperatureService);
   ~KettleHeaterService();
 
-  void SetK(double kp, double ki, double kd);
+  void SetTunings(double kp, double ki, double kd);
   void SetBoilPercent(double percent);
-  void SetSetpoint(double setpoint);
-  void Compute(boolean);
+  void Compute(ActiveStatus *activeStatus);
 
 private:
   TemperatureService *_temperatureService;

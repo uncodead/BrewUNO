@@ -34,7 +34,7 @@
 #include <ActiveStatus.h>
 
 // GPIO 5
-#define ONE_WIRE_BUS 5
+#define ONE_WIRE_BUS D5
 #define SERIAL_BAUD_RATE 9600
 
 OneWire oneWire(ONE_WIRE_BUS);

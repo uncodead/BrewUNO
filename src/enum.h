@@ -3,9 +3,9 @@
 
 enum StepType
 {
+  none,
   mash,
-  boil,
-  none
+  boil
 };
 
 #endif

@@ -51,8 +51,9 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.print("Next step name: ");
             Serial.printf(step["name"]);
             Serial.println("");
-            Serial.println("Next step temperature: ");
+            Serial.print("Next step temperature: ");
             Serial.printf(step["temperature"]);
+            Serial.println("");
         }
         else
         {
