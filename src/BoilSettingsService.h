@@ -21,6 +21,7 @@
 
 #define POST_BOIL_SETTINGS_SERVICE_PATH "/rest/saveBoilSettings"
 #define GET_BOIL_SETTINGS_SERVICE_PATH "/rest/getBoilSettings"
+
 #define BOIL_SETTINGS_FILE "/config/boilSettings.json"
 
 class BoilSettingsService : public BrewListService

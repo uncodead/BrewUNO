@@ -19,6 +19,7 @@
 
 #define POST_MASH_SETTINGS_SERVICE_PATH "/rest/saveMashSettings"
 #define GET_MASH_SETTINGS_SERVICE_PATH "/rest/getMashSettings"
+
 #define MASH_SETTINGS_FILE "/config/mashSettings.json"
 
 class MashSettingsService : public BrewListService

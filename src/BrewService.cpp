@@ -18,7 +18,8 @@ BrewService::BrewService(AsyncWebServer *server,
     // TODO: Implement auto resume brew
     _activeStatus->SaveActiveStatus(0, 0, 0, 0, 0, "", 0, 0, none, false);
     _server->on(START_BREW_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::startBrew, this, std::placeholders::_1));
-    _server->on(GET_ACTIVE_STATUS_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::getActiveStep, this, std::placeholders::_1));
+    _server->on(STOP_BREW_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::stopBrew, this, std::placeholders::_1));
+    _server->on(GET_ACTIVE_STATUS_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::getActiveStatus, this, std::placeholders::_1));
 }
 
 BrewService::~BrewService() {}
@@ -35,6 +36,7 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _activeStatus->ActiveStep = mash;
     _activeStatus->BrewStarted = true;
     _activeStatus->ActiveMashStepIndex = -1;
+    _activeStatus->ActiveBoilStepIndex = "";
     _activeStatus->SaveActiveStatus();
 
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
@@ -47,12 +49,12 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
 void BrewService::stopBrew(AsyncWebServerRequest *request)
 {
     String json = "";
-    _activeStatus->SaveActiveStatus(0, 0, 0, 0, 0, "", 0, 0, none, false);
+    _activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
     _activeStatus->GetJson()->printTo(json);
     request->send(200, "application/json", json);
 }
 
-void BrewService::getActiveStep(AsyncWebServerRequest *request)
+void BrewService::getActiveStatus(AsyncWebServerRequest *request)
 {
     String json = "";
     _activeStatus->GetJson()->printTo(json);

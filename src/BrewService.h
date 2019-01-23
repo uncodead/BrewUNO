@@ -24,8 +24,8 @@
 #include <BrewSettingsService.h>
 #include <ActiveStatus.h>
 
-#define MASH_SETTINGS_FILE "/config/mashSettings.json"
 #define START_BREW_SERVICE_PATH "/rest/startBrew"
+#define STOP_BREW_SERVICE_PATH "/rest/stopBrew"
 #define GET_ACTIVE_STATUS_SERVICE_PATH "/rest/getActiveStatus"
 
 class BrewService
@@ -57,7 +57,7 @@ private:
   boolean _brewStarted;
   StepType _activeStep;
 
-  void getActiveStep(AsyncWebServerRequest *request);
+  void getActiveStatus(AsyncWebServerRequest *request);
   void startBrew(AsyncWebServerRequest *request);
   void stopBrew(AsyncWebServerRequest *request);
 };
