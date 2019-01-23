@@ -4,7 +4,7 @@ import SectionContent from '../components/SectionContent';
 import MashSettingsForm from '../forms/MashBoilSettingsForm';
 import SortableList from '../components/SortableList';
 import { withNotifier } from '../components/SnackbarNotification';
-import { SAVE_MASH_SETTINGS_SERVICE_PATH, GET_MASH_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
+import { SAVE_MASH_SETTINGS_SERVICE_PATH, GET_MASH_SETTINGS_SERVICE_PATH, ExecuteRestCall } from '../constants/Endpoints';
 
 class MashSettings extends Component {
   constructor(props) {
@@ -14,24 +14,7 @@ class MashSettings extends Component {
   }
 
   getMashSettings = () => {
-    fetch(GET_MASH_SETTINGS_SERVICE_PATH, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }).then(response => {
-      if (response.ok) {
-        response.json().then(json => {
-          this.setState({ items: json.steps })
-        });
-        return;
-      }
-      throw Error("Mash Setings service returned unexpected response code: " + response.status);
-    }).catch(error => {
-      this.props.raiseNotification("Problem getting Mash Settings: " + error.message);
-      this.setState({ items: [] })
-    });
+    ExecuteRestCall(GET_MASH_SETTINGS_SERVICE_PATH, 'GET', (json) => { this.setState({ items: json.steps }) }, this.setState({ items: [] }), this.props)
   }
 
   saveMashSettings = () => {

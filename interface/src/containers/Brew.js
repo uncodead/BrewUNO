@@ -23,11 +23,11 @@ class Brew extends Component {
   constructor(props) {
     super(props)
     this.state = { status: {} }
-    ExecuteRestCall(GET_ACTIVE_STATUS, 'GET', (json) => { this.setState({ status: json }) }, this.props)
+    ExecuteRestCall(GET_ACTIVE_STATUS, 'GET', (json) => { this.setState({ status: json }) }, null, this.props)
 
     interval = setInterval(() => {
       if (this.state.status.active_step > 0) {
-        ExecuteRestCall(GET_ACTIVE_STATUS, 'GET', (json) => { this.setState({ status: json }) }, this.props)
+        ExecuteRestCall(GET_ACTIVE_STATUS, 'GET', (json) => { this.setState({ status: json }) }, null, this.props)
       }
     }, 1000);
   }

@@ -24,7 +24,7 @@ export const NEXT_STEP_BREW = ENDPOINT_ROOT + "nextStepBrew"
 export const BREW_ENDPOINT = ENDPOINT_ROOT + 'brew';
 
 
-export const ExecuteRestCall = (url, method, callback, props) => {
+export const ExecuteRestCall = (url, method, callback, callbackError, props) => {
   fetch(url, {
     method: method,
     headers: {
@@ -41,5 +41,8 @@ export const ExecuteRestCall = (url, method, callback, props) => {
     throw Error(response.status);
   }).catch(error => {
     props.raiseNotification("Problem getting resource: " + error.message);
+    if (callbackError){
+      callbackError
+    }
   });
 }
