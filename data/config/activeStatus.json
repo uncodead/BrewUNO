@@ -1,7 +1,7 @@
 {
     "active_step": 0,
 
-    "active_mash_step_index": 0,
+    "active_mash_step_index": -1,
     
     "active_boil_step_index": "",
     "boil_time": 0,

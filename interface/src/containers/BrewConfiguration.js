@@ -3,6 +3,7 @@ import MenuAppBar from '../components/MenuAppBar';
 import MashSettings from './MashSettings';
 import BoilSettings from './BoilSettings';
 import BrewSettings from './BrewSettings'
+import Brew from './Brew'
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
@@ -33,6 +34,7 @@ class BrewConfiguration extends Component {
         {selectedTab === "MashSettings" && <MashSettings />}
         {selectedTab === "BoilSettings" && <BoilSettings />}
         {selectedTab === "BrewSettings" && <BrewSettings />}
+        {selectedTab === "Brew" && <Brew />}
       </MenuAppBar>
     )
   }

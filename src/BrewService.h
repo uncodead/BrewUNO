@@ -25,8 +25,8 @@
 #include <ActiveStatus.h>
 
 #define MASH_SETTINGS_FILE "/config/mashSettings.json"
-#define START_BREW_SERVICE_PATH "/rest/startbrew"
-#define GET_ACTIVE_STEP_SERVICE_PATH "/rest/getactivestep"
+#define START_BREW_SERVICE_PATH "/rest/startBrew"
+#define GET_ACTIVE_STATUS_SERVICE_PATH "/rest/getActiveStatus"
 
 class BrewService
 {

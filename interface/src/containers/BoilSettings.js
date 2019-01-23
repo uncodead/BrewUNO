@@ -79,13 +79,15 @@ class BoilSettings extends Component {
   render() {
     return (
       <SectionContent title="Boil Settings">
-        <BoilSettingsForm callbackItemAdded={this.itemAdded} boil={true} />
+        {!this.props.listOnly ? <BoilSettingsForm callbackItemAdded={this.itemAdded} boil={true} /> : null}
         <Divider />
         <SortableList
           items={this.state.items}
           callbackItemDeleted={this.itemDeleted}
           dragHandle={false}
           boil={true}
+          brewDay={this.props.brewDay}
+          selectedIndex={this.props.selectedIndex}
         />
       </SectionContent>
     )

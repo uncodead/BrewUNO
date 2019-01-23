@@ -61,6 +61,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->ActiveStep = boil;
             activeStatus->StartTime = 0;
             activeStatus->EndTime = 0;
+            activeStatus->ActiveMashStepIndex = -1;
         }
     }
     else
@@ -80,6 +81,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.println(activeStatus->StartTime);
             Serial.print("End Time: ");
             Serial.println(activeStatus->EndTime);
+            Serial.println("buzzer... ");
             // recirculation
         }
     }

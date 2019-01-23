@@ -80,14 +80,16 @@ class MashSettings extends Component {
   render() {
     return (
       <SectionContent title="Mash Settings">
-        <MashSettingsForm callbackItemAdded={this.itemAdded} />
+        {!this.props.listOnly ? <MashSettingsForm callbackItemAdded={this.itemAdded} /> : null}
         <Divider />
         <SortableList
           items={this.state.items}
           callbackItemsSorted={this.itemsSorted}
           callbackItemDeleted={this.itemDeleted}
-          dragHandle={true}
+          dragHandle={!this.props.brewDay}
           boil={false}
+          brewDay={this.props.brewDay}
+          selectedIndex={this.props.selectedIndex}
         />
       </SectionContent>
     )

@@ -28,18 +28,22 @@ class SortableList extends Component {
   render() {
     const DragHandle = SortableHandle(() => <DragIndicatorIcon />);
     const SortableItem = SortableElement(({ value, itemIndex }) =>
-      <ListItem>
+      <ListItem
+        selected={ !this.props.boil && this.props.selectedIndex === itemIndex || this.props.boil && this.props.selectedIndex.includes(itemIndex) }
+      >
         {this.props.dragHandle ? <DragHandle /> : null}
         <ListItemText
           primary={value.name}
           secondary={<Typography>{this.getItemText(value)}</Typography>}
         />
         {!this.props.boil ? <Switch checked={value.recirculation} /> : null}
-        <IconButton aria-label="Delete"
-          onClick={() => this.deleteItem(itemIndex)}
-          disabled={this.props.items.length <= 1}>
-          <DeleteIcon fontSize="madium" />
-        </IconButton>
+        {!this.props.brewDay ?
+          <IconButton aria-label="Delete"
+            onClick={() => this.deleteItem(itemIndex)}
+            disabled={this.props.items.length <= 1}>
+            <DeleteIcon fontSize="madium" />
+          </IconButton>
+          : null}
       </ListItem>
     );
 
