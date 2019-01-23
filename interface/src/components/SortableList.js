@@ -29,7 +29,10 @@ class SortableList extends Component {
     const DragHandle = SortableHandle(() => <DragIndicatorIcon />);
     const SortableItem = SortableElement(({ value, itemIndex }) =>
       <ListItem
-        selected={ !this.props.boil && this.props.selectedIndex === itemIndex || this.props.boil && this.props.selectedIndex && this.props.selectedIndex.includes(itemIndex) }
+        selected={
+          !this.props.boil && this.props.selectedIndex === itemIndex ||
+          this.props.boil && this.props.selectedIndex && this.props.selectedIndex.includes(itemIndex)
+        }
       >
         {this.props.dragHandle ? <DragHandle /> : null}
         <ListItemText
