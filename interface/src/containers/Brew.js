@@ -32,55 +32,24 @@ class Brew extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { status: {} }
+    this.state = {
+      status: {},
+      data: [
+        { name: '0', Target: 70, Current: 40 },
+        { name: '5', Target: 70, Current: 41 },
+        { name: '10', Target: 70, Current: 42 },
+        { name: '15', Target: 70, Current: 43 },
+        { name: '20', Target: 70, Current: 44 },
+        { name: '25', Target: 70, Current: 45 },
+        { name: '30', Target: 70, Current: 46 }
+      ]
+    }
     this.getStatus()
     interval = setInterval(() => {
       if (this.state.status.active_step > 0) {
         this.getStatus()
       }
-
-      this.setState({
-        data: [
-          { name: '0', Target: 70, Current: 40 },
-          { name: '1', Target: 70, Current: 41 },
-          { name: '2', Target: 70, Current: 42 },
-          { name: '3', Target: 70, Current: 43 },
-          { name: '4', Target: 70, Current: 44 },
-          { name: '5', Target: 70, Current: 45 },
-          { name: '7', Target: 70, Current: 46 },
-          { name: '8', Target: 70, Current: 47 },
-          { name: '9', Target: 70, Current: 48 },
-          { name: '10', Target: 70, Current: 49 },
-          { name: '11', Target: 70, Current: 50 },
-          { name: '12', Target: 70, Current: 51 },
-          { name: '13', Target: 70, Current: 52 },
-          { name: '14', Target: 70, Current: 53 },
-          { name: '15', Target: 70, Current: 54 },
-          { name: '16', Target: 70, Current: 55 },
-          { name: '17', Target: 70, Current: 56 },
-          { name: '18', Target: 70, Current: 57 },
-          { name: '19', Target: 70, Current: 58 },
-          { name: '20', Target: 70, Current: 65 },
-          { name: '21', Target: 70, Current: 70 },
-          { name: '22', Target: 70, Current: 70 },
-          { name: '23', Target: 70, Current: 70 },
-          { name: '24', Target: 70, Current: 70 },
-          { name: '25', Target: 70, Current: 70 },
-          { name: '26', Target: 70, Current: 70 },
-          { name: '27', Target: 70, Current: 70.5 },
-          { name: '28', Target: 70, Current: 71 },
-          { name: '29', Target: 70, Current: 70 },
-          { name: '30', Target: 70, Current: 71 },
-          { name: '31', Target: 70, Current: 70 },
-          { name: '32', Target: 70, Current: 70.1 },
-          { name: '33', Target: 70, Current: 70.2 },
-          { name: '34', Target: 70, Current: 69.9 },
-          { name: '35', Target: 70, Current: 70 },
-          { name: '36', Target: 70, Current: 70 },
-          { name: '37', Target: 70, Current: 70 },
-        ]
-      })
-    }, 1000);
+    }, 30000);
   }
 
   getStatus() {
@@ -118,7 +87,7 @@ class Brew extends Component {
           <LineChart data={this.state.data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
             <XAxis dataKey="name" />
             <YAxis />
-            <CartesianGrid strokeDasharray="3 3"/>
+            <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <Tooltip />
             <Legend />
             <Line type="monotone" dataKey="Target" stroke="#82ca9d" />

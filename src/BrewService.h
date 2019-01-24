@@ -24,9 +24,9 @@
 #include <BrewSettingsService.h>
 #include <ActiveStatus.h>
 
-#define START_BREW_SERVICE_PATH "/rest/startBrew"
-#define STOP_BREW_SERVICE_PATH "/rest/stopBrew"
-#define GET_ACTIVE_STATUS_SERVICE_PATH "/rest/getActiveStatus"
+#define START_BREW_SERVICE_PATH "/rest/startbrew"
+#define STOP_BREW_SERVICE_PATH "/rest/stopbrew"
+#define GET_ACTIVE_STATUS_SERVICE_PATH "/rest/getactivestatus"
 
 class BrewService
 {

@@ -38,6 +38,7 @@ void BoilService::loop(ActiveStatus *activeStatus)
         Serial.println("Boil started");
         Serial.println(activeStatus->StartTime);
         Serial.println(activeStatus->EndTime);
+        Serial.println("buzzer...  D0");
     }
     if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)
     {
@@ -46,6 +47,7 @@ void BoilService::loop(ActiveStatus *activeStatus)
         activeStatus->EndTime = 0;
         activeStatus->ActiveStep = none;
         activeStatus->BrewStarted = false;
+        Serial.println("buzzer...  D0");
         return;
     }
 
@@ -71,6 +73,6 @@ void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, time_t moment)
         activeStatus->ActiveBoilStepIndex = currentStep;
         Serial.println(currentStep);
         Serial.println(activeStatus->ActiveBoilStepIndex);
-        Serial.println("buzzer... ");
+        Serial.println("buzzer...  D0");
     }
 }

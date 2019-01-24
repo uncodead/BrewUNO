@@ -16,10 +16,11 @@ export const GET_MASH_SETTINGS_SERVICE_PATH = ENDPOINT_ROOT + "getMashSettings"
 
 export const SAVE_BOIL_SETTINGS_SERVICE_PATH = ENDPOINT_ROOT + "saveBoilSettings"
 export const GET_BOIL_SETTINGS_SERVICE_PATH = ENDPOINT_ROOT + "getBoilSettings"
-export const GET_ACTIVE_STATUS = ENDPOINT_ROOT + "getActiveStatus"
-export const START_BREW = ENDPOINT_ROOT + "startBrew"
-export const STOP_BREW = ENDPOINT_ROOT + "stopBrew"
-export const NEXT_STEP_BREW = ENDPOINT_ROOT + "nextStepBrew"
+
+export const GET_ACTIVE_STATUS = ENDPOINT_ROOT + "getactivestatus"
+export const START_BREW = ENDPOINT_ROOT + "startbrew"
+export const STOP_BREW = ENDPOINT_ROOT + "stopbrew"
+export const NEXT_STEP_BREW = ENDPOINT_ROOT + "nextstepbrew"
 
 export const BREW_ENDPOINT = ENDPOINT_ROOT + 'brew';
 

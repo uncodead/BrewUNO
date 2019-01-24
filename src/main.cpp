@@ -33,7 +33,7 @@
 #include <KettleHeaterService.h>
 #include <ActiveStatus.h>
 
-// GPIO 5
+// Trocar para D6 
 #define ONE_WIRE_BUS D5
 #define SERIAL_BAUD_RATE 9600
 
@@ -71,6 +71,7 @@ void setup()
 
   Serial.begin(SERIAL_BAUD_RATE);
   SPIFFS.begin();
+  //SPIFFS.format();
 
   // start services
   ntpSettingsService.begin();

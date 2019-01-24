@@ -54,6 +54,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.print("Next step temperature: ");
             Serial.printf(step["temperature"]);
             Serial.println("");
+            Serial.println("buzzer...  D0");
         }
         else
         {
@@ -62,6 +63,8 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->StartTime = 0;
             activeStatus->EndTime = 0;
             activeStatus->ActiveMashStepIndex = -1;
+            Serial.println("buzzer...  D0");
+            // recirculation off D5
         }
     }
     else
@@ -81,8 +84,8 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.println(activeStatus->StartTime);
             Serial.print("End Time: ");
             Serial.println(activeStatus->EndTime);
-            Serial.println("buzzer... ");
-            // recirculation
+            Serial.println("buzzer...  D0");
+            // recirculation on D5
         }
     }
 }

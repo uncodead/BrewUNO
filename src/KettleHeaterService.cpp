@@ -1,6 +1,6 @@
 #include <KettleHeaterService.h>
 
-#define HEATER_BUS D3
+#define HEATER_BUS D7
 
 double KettleSetpoint, KettleInput, KettleOutput;
 PID kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 2, 5, 1, DIRECT);
@@ -31,19 +31,11 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
   }
 
   kettlePID.SetMode(AUTOMATIC);
+  kettlePID.SetOutputLimits(0, 1023);
   KettleSetpoint = activeStatus->TargetTemperature;
 
   KettleInput = _temperatureService->GetTemperature();
   kettlePID.Compute();
-
-  if (KettleOutput < 0)
-  {
-    KettleOutput = 0;
-  }
-  if (KettleOutput > 1023)
-  {
-    KettleOutput = 1023;
-  }
 
   if (activeStatus->ActiveStep == boil)
   {

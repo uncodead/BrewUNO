@@ -15,10 +15,9 @@ BrewService::BrewService(AsyncWebServer *server,
                                                        _activeStatus(activeStatus)
 
 {
-    // TODO: Implement auto resume brew
-    _activeStatus->SaveActiveStatus(0, 0, 0, 0, 0, "", 0, 0, none, false);
-    _server->on(START_BREW_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::startBrew, this, std::placeholders::_1));
-    _server->on(STOP_BREW_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::stopBrew, this, std::placeholders::_1));
+    _activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
+    _server->on(START_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBrew, this, std::placeholders::_1));
+    _server->on(STOP_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::stopBrew, this, std::placeholders::_1));
     _server->on(GET_ACTIVE_STATUS_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::getActiveStatus, this, std::placeholders::_1));
 }
 
