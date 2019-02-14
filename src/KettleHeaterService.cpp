@@ -35,6 +35,9 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
   KettleSetpoint = activeStatus->TargetTemperature;
 
   KettleInput = _temperatureService->GetTemperature();
+  activeStatus->Temperature = KettleInput;
+  activeStatus->LogTemperature(KettleInput);
+
   kettlePID.Compute();
 
   if (activeStatus->ActiveStep == boil)

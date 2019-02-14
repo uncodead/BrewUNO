@@ -44,10 +44,14 @@ class Brew extends Component {
         { name: '30', Target: 70, Current: 46 }
       ]
     }
+    
     this.getStatus()
     interval = setInterval(() => {
       if (this.state.status.active_step > 0) {
-        this.getStatus()
+        this.getStatus();
+        this.setState({
+          data: [...this.state.data, { name: '0', Target: 70, Current: 40 }]
+        })
       }
     }, 30000);
   }

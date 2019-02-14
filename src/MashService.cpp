@@ -63,6 +63,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->StartTime = 0;
             activeStatus->EndTime = 0;
             activeStatus->ActiveMashStepIndex = -1;
+            activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
             Serial.println("buzzer...  D0");
             // recirculation off D5
         }

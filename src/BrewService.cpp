@@ -34,7 +34,7 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
     _activeStatus->ActiveStep = mash;
     _activeStatus->BrewStarted = true;
-    _activeStatus->ActiveMashStepIndex = -1;
+    _activeStatus->ActiveMashStepIndex = 0;
     _activeStatus->ActiveBoilStepIndex = "";
     _activeStatus->SaveActiveStatus();
 

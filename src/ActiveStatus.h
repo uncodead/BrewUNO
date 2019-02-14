@@ -33,10 +33,13 @@ public:
   float BoilTargetTemperature;
 
   float TargetTemperature;
+  float Temperature;
 
   time_t EndTime;
   time_t StartTime;
   time_t TimeNow;
+
+  String Temperatures;
 
   void LoadActiveStatusSettings();
   void SaveActiveStatus(time_t StartTime,
@@ -50,6 +53,7 @@ public:
                         int ActiveStep,
                         boolean brewStarted);
   void SaveActiveStatus();
+  void LogTemperature(float temperature);
   JsonObject *GetJson();
 
 private:
