@@ -3,7 +3,6 @@ import SectionContent from '../components/SectionContent';
 import MashSettings from './MashSettings';
 import BoilSettings from './BoilSettings';
 import Button from '@material-ui/core/Button';
-import { Divider } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { withNotifier } from '../components/SnackbarNotification';
 import { GET_ACTIVE_STATUS, START_BREW, NEXT_STEP_BREW, STOP_BREW, ExecuteRestCall } from '../constants/Endpoints';
@@ -32,32 +31,42 @@ class Brew extends Component {
 
   constructor(props) {
     super(props)
+    this.getStatus();
     this.state = {
       status: {},
-      data: [
-        { name: '0', Target: 70, Current: 40 },
-        { name: '5', Target: 70, Current: 41 },
-        { name: '10', Target: 70, Current: 42 },
-        { name: '15', Target: 70, Current: 43 },
-        { name: '20', Target: 70, Current: 44 },
-        { name: '25', Target: 70, Current: 45 },
-        { name: '30', Target: 70, Current: 46 }
-      ]
+      data: [],
+      fetched: false
     }
-    
-    this.getStatus()
+
     interval = setInterval(() => {
-      if (this.state.status.active_step > 0) {
-        this.getStatus();
+      this.getStatus();
+    }, 15000);
+  }
+
+
+  updateStatus() {
+    if (this.state.status.active_step > 0) {
+      if (!this.state.fetched) {
+        var json = eval("[" + this.state.status.temperatures + "]")
+        var firstValues = [];
+        json.forEach(element => {
+          firstValues.push({ name: '', Target: element.t, Current: element.c })
+        });
         this.setState({
-          data: [...this.state.data, { name: '0', Target: 70, Current: 40 }]
+          data: firstValues,
+          fetched: true
         })
       }
-    }, 30000);
+      else {
+        this.setState({
+          data: [...this.state.data, { name: '', Target: this.state.status.target_temperature, Current: this.state.status.temperature }]
+        })
+      }
+    }
   }
 
   getStatus() {
-    ExecuteRestCall(GET_ACTIVE_STATUS, 'GET', (json) => { this.setState({ status: json }) }, null, this.props)
+    ExecuteRestCall(GET_ACTIVE_STATUS, 'GET', (json) => { this.setState({ status: json }, this.updateStatus) }, null, this.props)
   }
 
   componentWillUnmount() {

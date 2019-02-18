@@ -53,12 +53,10 @@ public:
                         int ActiveStep,
                         boolean brewStarted);
   void SaveActiveStatus();
-  void LogTemperature(float temperature);
-  JsonObject *GetJson();
+  void LogTemperature(float , float);
+  JsonObject &GetJson();
 
 private:
   FS *_fs;
-
-  JsonObject *_activeStatus;
 };
 #endif

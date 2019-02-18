@@ -64,6 +64,10 @@ MashService mashService = MashService(&SPIFFS, &temperatureService);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService);
 BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &kettleHeaterService, &activeStatus);
 
+//java -jar EspStackTraceDecoder.jar C:\Users\bruno\.platformio\packages\toolchain-xtensa\bin\xtensa-lx106-elf-addr2line.exe G:\Projetos\biabrewex\.pioenvs\esp12e\firmware.elf exeption.txt
+//C:\Users\bruno\.platformio\packages\framework-arduinoespressif8266\tools\sdk\lwip\include\lwipopts.h
+//#define TCP_LISTEN_BACKLOG              1
+
 void setup()
 {
   // Disable wifi config persistance

@@ -36,7 +36,7 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
 
   KettleInput = _temperatureService->GetTemperature();
   activeStatus->Temperature = KettleInput;
-  activeStatus->LogTemperature(KettleInput);
+  activeStatus->LogTemperature(KettleInput, KettleSetpoint);
 
   kettlePID.Compute();
 

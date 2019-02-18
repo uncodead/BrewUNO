@@ -1,52 +1,30 @@
 #include <ActiveStatus.h>
 
-DynamicJsonBuffer jsonBufferActiveStatus;
-
 ActiveStatus::ActiveStatus(FS *fs) : _fs(fs)
 {
 }
 
 ActiveStatus::~ActiveStatus() {}
 
-JsonObject *ActiveStatus::GetJson()
+JsonObject &ActiveStatus::GetJson()
 {
-    LoadActiveStatusSettings();
+    File configFile = _fs->open(ACTIVE_STATUS_FILE, "r");
+    StaticJsonBuffer<1000> jsonBuffer;
+    JsonObject& _activeStatus = jsonBuffer.parseObject(configFile);
+    configFile.close();
     return _activeStatus;
 }
 
-void ActiveStatus::LoadActiveStatusSettings()
-{
-    File configFile = _fs->open(ACTIVE_STATUS_FILE, "r");
-    _activeStatus = &(jsonBufferActiveStatus.parseObject(configFile));
-    _activeStatus->prettyPrintTo(Serial);
-    configFile.close();
-
-    ActiveStep = _activeStatus->get<int>("active_step");
-
-    ActiveMashStepIndex = _activeStatus->get<int>("active_mash_step_index");
-
-    ActiveBoilStepIndex = _activeStatus->get<String>("active_boil_step_index");
-    BoilTime = _activeStatus->get<time_t>("boil_time");
-    BoilTargetTemperature = _activeStatus->get<float>("boil_target_temperature");
-
-    TargetTemperature = _activeStatus->get<float>("target_temperature");
-
-    EndTime = _activeStatus->get<time_t>("start_time");
-    StartTime = _activeStatus->get<time_t>("end_time");
-    TimeNow = _activeStatus->get<time_t>("time_now");
-
-    BrewStarted = _activeStatus->get<boolean>("brew_started");
-
-    //Temperatures = _activeStatus->get<JsonVariant>("temperatures");
-}
-
-void ActiveStatus::LogTemperature(float temperature){
+void ActiveStatus::LogTemperature(float current, float target){
     if (Temperatures == "") {
-        Temperatures = temperature;
+        Temperatures =  "{c:" + String(current) + ",t:" + String(target) +"}";
     }
     else
     {
-        Temperatures = Temperatures + ',' + temperature;
+        Temperatures = Temperatures + ',' + "{c:" + current + ",t:" + target +"}";;
+    }
+    if (Temperatures.length() >= 179) {
+        Temperatures.remove(0, 18);
     }
 }
 
@@ -73,6 +51,8 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     EndTime = endTime;
     TimeNow = timeNow;
     BrewStarted = brewStarted;
+    Temperature = 0;
+    Temperatures = "";
 
     SaveActiveStatus();
 }
@@ -98,7 +78,6 @@ void ActiveStatus::SaveActiveStatus()
     object["brew_started"] = BrewStarted;
 
     object["temperature"] = Temperature;
-
     object["temperatures"] = Temperatures;
 
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "w");
