@@ -54,7 +54,7 @@ public:
                         boolean brewStarted);
   void SaveActiveStatus();
   void LogTemperature(float , float);
-  JsonObject &GetJson();
+  String GetJson();
 
 private:
   FS *_fs;

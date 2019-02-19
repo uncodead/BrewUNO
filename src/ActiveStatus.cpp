@@ -6,24 +6,35 @@ ActiveStatus::ActiveStatus(FS *fs) : _fs(fs)
 
 ActiveStatus::~ActiveStatus() {}
 
-JsonObject &ActiveStatus::GetJson()
+String ActiveStatus::GetJson()
 {
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "r");
-    StaticJsonBuffer<1000> jsonBuffer;
-    JsonObject& _activeStatus = jsonBuffer.parseObject(configFile);
-    configFile.close();
-    return _activeStatus;
+    String data;
+    if (configFile && configFile.size())
+    {
+        int i;
+        for (i   = 0; i < configFile.size(); i++) //Read upto complete file size
+        {
+            data += ((char)configFile.read());
+        }
+        configFile.close(); //Close file
+    }
+
+    return data;
 }
 
-void ActiveStatus::LogTemperature(float current, float target){
-    if (Temperatures == "") {
-        Temperatures =  "{c:" + String(current) + ",t:" + String(target) +"}";
+void ActiveStatus::LogTemperature(float current, float target)
+{
+    if (Temperatures == "")
+    {
+        Temperatures = "{c:" + String(current) + ",t:" + String(target) + "}";
     }
     else
     {
-        Temperatures = Temperatures + ',' + "{c:" + current + ",t:" + target +"}";;
+        Temperatures = Temperatures + ',' + "{c:" + current + ",t:" + target + "}";
     }
-    if (Temperatures.length() >= 179) {
+    if (Temperatures.length() >= 179)
+    {
         Temperatures.remove(0, 18);
     }
 }
@@ -60,7 +71,7 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
 void ActiveStatus::SaveActiveStatus()
 {
     StaticJsonBuffer<1000> jsonBuffer;
-    JsonObject& object = jsonBuffer.createObject();
+    JsonObject &object = jsonBuffer.createObject();
 
     object["active_step"] = ActiveStep;
 
@@ -81,7 +92,8 @@ void ActiveStatus::SaveActiveStatus()
     object["temperatures"] = Temperatures;
 
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "w");
-    if (configFile) {
+    if (configFile)
+    {
         object.printTo(configFile);
     }
     configFile.close();

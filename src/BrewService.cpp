@@ -41,24 +41,20 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _kettleHeaterService->SetBoilPercent(_brewSettingsService->BoilPercent);
 
-    _activeStatus->GetJson().printTo(json);
-    request->send(200, "application/json", json);
+    request->send(200, "application/json", _activeStatus->GetJson());
 }
 
 void BrewService::stopBrew(AsyncWebServerRequest *request)
 {
-    String json = "";
     _activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
-    _activeStatus->GetJson().printTo(json);
+    String json = _activeStatus->GetJson();
     request->send(200, "application/json", json);
 }
 
 void BrewService::getActiveStatus(AsyncWebServerRequest *request)
 {
-    String json = "";
-    _activeStatus->GetJson().printTo(json);
     //String json = "{\"active_step\": 0,\"active_mash_step_index\": -1,\"active_boil_step_index\": \"\",\"boil_time\": 0,\"boil_target_temperature\": 0,\"target_temperature\": 0,\"start_time\": 0,\"end_time\": 0,\"time_now\": 0,\"brew_started\": 0,\"temperature\": 0,\"temperatures\": \"\"}";
-    request->send(200, " application/json ", json);
+    request->send(200, " application/json ", _activeStatus->GetJson());
 }
 
 void BrewService::loop()
