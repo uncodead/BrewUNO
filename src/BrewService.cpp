@@ -19,6 +19,7 @@ BrewService::BrewService(AsyncWebServer *server,
     _server->on(START_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBrew, this, std::placeholders::_1));
     _server->on(STOP_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::stopBrew, this, std::placeholders::_1));
     _server->on(GET_ACTIVE_STATUS_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::getActiveStatus, this, std::placeholders::_1));
+    _server->on(NEXT_STEP_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::nextStep, this, std::placeholders::_1));
 }
 
 BrewService::~BrewService() {}
@@ -51,10 +52,16 @@ void BrewService::stopBrew(AsyncWebServerRequest *request)
     request->send(200, "application/json", json);
 }
 
+void BrewService::nextStep(AsyncWebServerRequest *request)
+{
+    _activeStatus->EndTime = now();
+    _activeStatus->SaveActiveStatus();
+    request->send(200, "application/json ", _activeStatus->GetJson());
+}
+
 void BrewService::getActiveStatus(AsyncWebServerRequest *request)
 {
-    //String json = "{\"active_step\": 0,\"active_mash_step_index\": -1,\"active_boil_step_index\": \"\",\"boil_time\": 0,\"boil_target_temperature\": 0,\"target_temperature\": 0,\"start_time\": 0,\"end_time\": 0,\"time_now\": 0,\"brew_started\": 0,\"temperature\": 0,\"temperatures\": \"\"}";
-    request->send(200, " application/json ", _activeStatus->GetJson());
+    request->send(200, "application/json ", _activeStatus->GetJson());
 }
 
 void BrewService::loop()
@@ -70,5 +77,5 @@ void BrewService::loop()
 
     _activeStatus->SaveActiveStatus();
 
-    delay(30000);
+    delay(5000);
 }

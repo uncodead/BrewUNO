@@ -43,11 +43,8 @@ void BoilService::loop(ActiveStatus *activeStatus)
     if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)
     {
         Serial.println("Boil ended");
-        activeStatus->StartTime = 0;
-        activeStatus->EndTime = 0;
-        activeStatus->ActiveStep = none;
-        activeStatus->BrewStarted = false;
         Serial.println("buzzer...  D0");
+        activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
         return;
     }
 

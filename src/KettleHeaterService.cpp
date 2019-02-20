@@ -40,7 +40,7 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
 
   kettlePID.Compute();
 
-  if (activeStatus->ActiveStep == boil)
+  if (activeStatus->ActiveStep == boil && activeStatus->StartTime > 0)
   {
     KettleOutput = (KettleOutput * _boilPercent) / 100;
   }
