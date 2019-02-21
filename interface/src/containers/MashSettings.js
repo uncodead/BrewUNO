@@ -62,7 +62,7 @@ class MashSettings extends Component {
 
   render() {
     return (
-      <SectionContent title="Mash Settings">
+      <SectionContent title="Mash Settings" selected={this.props.selectedIndex >= 0}>
         {!this.props.listOnly ? <MashSettingsForm callbackItemAdded={this.itemAdded} /> : null}
         <Divider />
         <SortableList

@@ -22,6 +22,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
@@ -31,7 +36,7 @@ const styles = theme => ({
   },
 });
 
-let interval;
+let interval, timer;
 
 class Brew extends Component {
 
@@ -42,12 +47,16 @@ class Brew extends Component {
       status: {},
       data: [],
       fetched: false,
-      confirmDialogOpen: false
+      confirmDialogOpen: false,
     }
 
     interval = setInterval(() => {
       this.getStatus();
     }, 5000);
+
+    timer = setInterval(() => {
+      this.timeBetweenDates();
+    }, 1000);
   }
 
   updateStatus() {
@@ -65,7 +74,6 @@ class Brew extends Component {
       }
       else {
         if (this.state.data.length >= 100) {
-          // remove the first one
           var array = this.state.data
           array.splice(0, 1);
           this.setState({ data: array });
@@ -92,6 +100,55 @@ class Brew extends Component {
 
   componentWillUnmount() {
     clearInterval(interval);
+  }
+
+  getActiveStep() {
+    switch (this.state.status.active_step) {
+      case 1:
+        return "Mash";
+      case 2:
+        return "Boil"
+      default:
+        return "stopped"
+    }
+  }
+
+  getDateTime(seconds) {
+    var date = new Date(0);
+    date.setUTCSeconds(seconds);
+    return date;
+  }
+
+  timeBetweenDates() {
+    debugger
+    var dateEntered = this.getDateTime(this.state.status.end_time);
+    var now = new Date();
+    var difference = dateEntered.getTime() - now.getTime();
+
+    if (difference <= 0) {
+      this.setState({
+        countdown: '00:00:00'
+      })
+    } else {
+      var seconds = Math.floor(difference / 1000);
+      var minutes = Math.floor(seconds / 60);
+      var hours = Math.floor(minutes / 60);
+      var days = Math.floor(hours / 24);
+
+      hours %= 24;
+      minutes %= 60;
+      seconds %= 60;
+
+      this.setState({
+        countdown: this.pad(hours, 2) + ':' + this.pad(minutes, 2) + ':' + this.pad(seconds, 2)
+      })
+    }
+  }
+
+  pad(n, width, z) {
+    z = z || '0';
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
   }
 
   render() {
@@ -143,7 +200,6 @@ class Brew extends Component {
         >
           Next Step
       </Button>
-
         <Dialog
           open={this.state.confirmDialogOpen}
           onClose={this.confirmHandleClose}
@@ -166,7 +222,6 @@ class Brew extends Component {
           </DialogActions>
         </Dialog>
 
-
         <ResponsiveContainer width="100%" height={320} >
           <LineChart data={this.state.data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
             <XAxis dataKey="name" />
@@ -178,6 +233,34 @@ class Brew extends Component {
             <Line type="monotone" dataKey="Current" stroke="#8884d8" dot={null} activeDot={{ r: 10 }} />
           </LineChart>
         </ResponsiveContainer>
+
+        <SectionContent title="Status">
+          <List component="nav">
+            <ListItem button>
+              <ListItemText primary="Active Step" secondary={this.getActiveStep()} />
+            </ListItem>
+            <ListItem button>
+              <ListItemText primary="Boil time" secondary={this.state.status.boil_time} />
+            </ListItem>
+            <ListItem button>
+              <ListItemText primary="Start of step" secondary={
+                this.state.status.start_time > 0
+                  ? this.getDateTime(this.state.status.start_time).toLocaleString()
+                  : null
+              } />
+            </ListItem>
+            <ListItem button>
+              <ListItemText primary="End of step" secondary={
+                this.state.status.end_time > 0
+                  ? this.getDateTime(this.state.status.end_time).toLocaleString()
+                  : null
+              } />
+            </ListItem>
+            <ListItem button>
+              <ListItemText primary="Countdown" secondary={this.state.countdown} />
+            </ListItem>
+          </List>
+        </SectionContent>
 
         <MashSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_mash_step_index} />
         <BoilSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_boil_step_index} />
