@@ -5,6 +5,7 @@ import BoilSettings from './BoilSettings';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { withNotifier } from '../components/SnackbarNotification';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { GET_ACTIVE_STATUS, START_BREW, NEXT_STEP_BREW, STOP_BREW, ExecuteRestCall } from '../constants/Endpoints';
 
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
@@ -36,7 +37,7 @@ const styles = theme => ({
   },
 });
 
-let interval, timer;
+let interval, timerProgress;
 
 class Brew extends Component {
 
@@ -48,14 +49,15 @@ class Brew extends Component {
       data: [],
       fetched: false,
       confirmDialogOpen: false,
+      progressCompleted: 0,
     }
 
     interval = setInterval(() => {
       this.getStatus();
     }, 5000);
 
-    timer = setInterval(() => {
-      this.timeBetweenDates();
+    timerProgress = setInterval(() => {
+      this.brewProgress();
     }, 1000);
   }
 
@@ -119,15 +121,15 @@ class Brew extends Component {
     return date;
   }
 
-  timeBetweenDates() {
-    debugger
+  brewProgress() {
     var dateEntered = this.getDateTime(this.state.status.end_time);
     var now = new Date();
     var difference = dateEntered.getTime() - now.getTime();
 
     if (difference <= 0) {
       this.setState({
-        countdown: '00:00:00'
+        countdown: '00:00:00',
+        progressCompleted: 100
       })
     } else {
       var seconds = Math.floor(difference / 1000);
@@ -140,7 +142,8 @@ class Brew extends Component {
       seconds %= 60;
 
       this.setState({
-        countdown: this.pad(hours, 2) + ':' + this.pad(minutes, 2) + ':' + this.pad(seconds, 2)
+        countdown: this.pad(hours, 2) + ':' + this.pad(minutes, 2) + ':' + this.pad(seconds, 2),
+        progressCompleted: Math.round(((now - this.getDateTime(this.state.status.start_time)) / (this.getDateTime(this.state.status.end_time) - this.getDateTime(this.state.status.start_time))) * 100)
       })
     }
   }
@@ -234,6 +237,7 @@ class Brew extends Component {
           </LineChart>
         </ResponsiveContainer>
 
+        <LinearProgress variant="determinate" value={this.state.progressCompleted} />
         <SectionContent title="Status">
           <List component="nav">
             <ListItem button>
