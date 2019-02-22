@@ -6,6 +6,34 @@ ActiveStatus::ActiveStatus(FS *fs) : _fs(fs)
 
 ActiveStatus::~ActiveStatus() {}
 
+void ActiveStatus::LoadActiveStatusSettings()
+{
+    DynamicJsonBuffer jsonBufferActiveStatus;
+    File configFile = _fs->open(ACTIVE_STATUS_FILE, "r");
+    JsonObject &_activeStatus = (jsonBufferActiveStatus.parseObject(configFile));
+    Serial.println('json:');
+    _activeStatus.prettyPrintTo(Serial);
+    configFile.close();
+
+    ActiveStep = _activeStatus.get<int>("active_step");
+
+    ActiveMashStepIndex = _activeStatus.get<int>("active_mash_step_index");
+
+    ActiveBoilStepIndex = _activeStatus.get<String>("active_boil_step_index");
+    BoilTime = _activeStatus.get<time_t>("boil_time");
+    BoilTargetTemperature = _activeStatus.get<float>("boil_target_temperature");
+
+    TargetTemperature = _activeStatus.get<float>("target_temperature");
+
+    EndTime = _activeStatus.get<time_t>("start_time");
+    StartTime = _activeStatus.get<time_t>("end_time");
+    TimeNow = _activeStatus.get<time_t>("time_now");
+
+    BrewStarted = _activeStatus.get<boolean>("brew_started");
+
+    Temperatures = _activeStatus.get<String>("temperatures");
+}
+
 String ActiveStatus::GetJson()
 {
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "r");
@@ -13,7 +41,7 @@ String ActiveStatus::GetJson()
     if (configFile && configFile.size())
     {
         int i;
-        for (i   = 0; i < configFile.size(); i++) //Read upto complete file size
+        for (i = 0; i < configFile.size(); i++) //Read upto complete file size
         {
             data += ((char)configFile.read());
         }

@@ -23,9 +23,8 @@ void KettleHeaterService::SetBoilPercent(double percent)
 
 void KettleHeaterService::Compute(ActiveStatus *activeStatus)
 {
-  if (activeStatus->ActiveStep == none)
+  if (!activeStatus->BrewStarted || activeStatus->ActiveStep == none)
   {
-    kettlePID.SetMode(MANUAL);
     analogWrite(HEATER_BUS, 0);
     return;
   }

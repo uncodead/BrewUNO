@@ -21,6 +21,7 @@ export const GET_ACTIVE_STATUS = ENDPOINT_ROOT + "getactivestatus"
 export const START_BREW = ENDPOINT_ROOT + "startbrew"
 export const STOP_BREW = ENDPOINT_ROOT + "stopbrew"
 export const NEXT_STEP_BREW = ENDPOINT_ROOT + "nextstepbrew"
+export const RESUME_BREW = ENDPOINT_ROOT + "resumebrew"
 
 export const BREW_ENDPOINT = ENDPOINT_ROOT + 'brew';
 

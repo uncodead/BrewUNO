@@ -27,6 +27,7 @@
 #define START_BREW_SERVICE_PATH "/rest/startbrew"
 #define STOP_BREW_SERVICE_PATH "/rest/stopbrew"
 #define NEXT_STEP_SERVICE_PATH "/rest/nextstepbrew"
+#define RESUME_BREW_SERVICE_PATH "/rest/resumebrew"
 #define GET_ACTIVE_STATUS_SERVICE_PATH "/rest/getactivestatus"
 
 class BrewService
@@ -43,6 +44,7 @@ public:
   ~BrewService();
 
   void loop();
+  void begin();
 
 private:
   FS *_fs;
@@ -62,5 +64,6 @@ private:
   void startBrew(AsyncWebServerRequest *request);
   void stopBrew(AsyncWebServerRequest *request);
   void nextStep(AsyncWebServerRequest *request);
+  void resumeBrew(AsyncWebServerRequest *request);
 };
 #endif

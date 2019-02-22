@@ -33,7 +33,7 @@
 #include <KettleHeaterService.h>
 #include <ActiveStatus.h>
 
-// Trocar para D6 
+// Trocar para D6
 #define ONE_WIRE_BUS D5
 #define SERIAL_BAUD_RATE 9600
 
@@ -84,6 +84,8 @@ void setup()
   wifiSettingsService.begin();
 
   brewSettingsService.begin();
+
+  brewService.begin();
 
   // Serving static resources from /www/
   server.serveStatic("/js/", SPIFFS, "/www/js/");

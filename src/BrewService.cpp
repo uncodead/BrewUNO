@@ -15,11 +15,11 @@ BrewService::BrewService(AsyncWebServer *server,
                                                        _activeStatus(activeStatus)
 
 {
-    _activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
     _server->on(START_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBrew, this, std::placeholders::_1));
     _server->on(STOP_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::stopBrew, this, std::placeholders::_1));
     _server->on(GET_ACTIVE_STATUS_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::getActiveStatus, this, std::placeholders::_1));
     _server->on(NEXT_STEP_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::nextStep, this, std::placeholders::_1));
+    _server->on(RESUME_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::resumeBrew, this, std::placeholders::_1));
 }
 
 BrewService::~BrewService() {}
@@ -52,6 +52,19 @@ void BrewService::stopBrew(AsyncWebServerRequest *request)
     request->send(200, "application/json", json);
 }
 
+void BrewService::resumeBrew(AsyncWebServerRequest *request)
+{
+    _activeStatus->BrewStarted = true;
+    /*
+    int timeTotal = _activeStatus->EndTime - _activeStatus->StartTime;
+    int timeSpent = _activeStatus->TimeNow - _activeStatus->StartTime;
+    int timeLeft = timeTotal - timeSpent;
+    _activeStatus->EndTime = now() + timeLeft;
+    */
+    _activeStatus->SaveActiveStatus();
+    request->send(200, "application/json ", _activeStatus->GetJson());
+}
+
 void BrewService::nextStep(AsyncWebServerRequest *request)
 {
     _activeStatus->EndTime = now();
@@ -62,6 +75,15 @@ void BrewService::nextStep(AsyncWebServerRequest *request)
 void BrewService::getActiveStatus(AsyncWebServerRequest *request)
 {
     request->send(200, "application/json ", _activeStatus->GetJson());
+}
+
+void BrewService::begin()
+{
+    Serial.print(_activeStatus->GetJson());
+    _activeStatus->LoadActiveStatusSettings();
+    _activeStatus->BrewStarted = false;
+    _activeStatus->SaveActiveStatus();
+    Serial.print(_activeStatus->GetJson());
 }
 
 void BrewService::loop()

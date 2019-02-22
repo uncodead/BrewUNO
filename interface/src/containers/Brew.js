@@ -6,7 +6,8 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { withNotifier } from '../components/SnackbarNotification';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { GET_ACTIVE_STATUS, START_BREW, NEXT_STEP_BREW, STOP_BREW, ExecuteRestCall } from '../constants/Endpoints';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { GET_ACTIVE_STATUS, START_BREW, NEXT_STEP_BREW, STOP_BREW, RESUME_BREW, ExecuteRestCall } from '../constants/Endpoints';
 
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import LineChart from 'recharts/lib/chart/LineChart';
@@ -16,12 +17,6 @@ import YAxis from 'recharts/lib/cartesian/YAxis';
 import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
 import Tooltip from 'recharts/lib/component/Tooltip';
 import Legend from 'recharts/lib/component/Legend';
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -40,7 +35,6 @@ const styles = theme => ({
 let interval, timerProgress;
 
 class Brew extends Component {
-
   constructor(props) {
     super(props)
     this.getStatus();
@@ -48,8 +42,8 @@ class Brew extends Component {
       status: {},
       data: [],
       fetched: false,
-      confirmDialogOpen: false,
       progressCompleted: 0,
+      confirmDialogOpen: false
     }
 
     interval = setInterval(() => {
@@ -91,23 +85,10 @@ class Brew extends Component {
     ExecuteRestCall(GET_ACTIVE_STATUS, 'GET', (json) => { this.setState({ status: json }, this.updateStatus) }, null, this.props)
   }
 
-  confirmHandleClose = (confirm) => {
-    if (confirm === true)
-      this.state.confirmAction();
-
-    this.setState({
-      confirmDialogOpen: false
-    });
-  };
-
-  componentWillUnmount() {
-    clearInterval(interval);
-  }
-
   getActiveStep() {
     switch (this.state.status.active_step) {
       case 1:
-        return "Mash";
+        return "Mash"
       case 2:
         return "Boil"
       default:
@@ -154,6 +135,10 @@ class Brew extends Component {
     return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
   }
 
+  componentWillUnmount() {
+    clearInterval(interval);
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -163,10 +148,11 @@ class Brew extends Component {
           onClick={() => {
             this.setState({
               confirmDialogOpen: true,
-              confirmDialogMessage: 'Do you want to start brew?',
-              confirmAction: () => {
-                ExecuteRestCall(START_BREW, 'POST', (json) => { this.setState({ status: json }) }, this.props)
-                this.setState({ data: [] })
+              confirmDialogMessage: 'Do you want start brew?',
+              confirmAction: (confirm) => {
+                if (confirm)
+                  ExecuteRestCall(START_BREW, 'POST', (json) => { this.setState({ status: json, data: [] }) }, this.props)
+                this.setState({ confirmDialogOpen: false })
               }
             });
           }
@@ -174,15 +160,35 @@ class Brew extends Component {
         >
           Start
       </Button>
+        <Button variant="contained" color="primary" className={classes.button}
+          disabled={this.state.status.active_step != 0 && this.state.status.brew_started != 0}
+          onClick={() => {
+            this.setState({
+              confirmDialogOpen: true,
+              confirmDialogMessage: 'Do you want resume brew?',
+              confirmAction: (confirm) => {
+                if (confirm)
+                  ExecuteRestCall(RESUME_BREW, 'POST', (json) => { this.setState({ status: json }) }, this.props)
+                else
+                  ExecuteRestCall(STOP_BREW, 'POST', (json) => { this.setState({ data: [], status: json }) }, this.props)
+                this.setState({ confirmDialogOpen: false })
+              }
+            });
+          }
+          }
+        >
+          Resume
+      </Button>
         <Button variant="contained" color="secondary" className={classes.button}
           disabled={this.state.status.active_step <= 0}
           onClick={() => {
             this.setState({
               confirmDialogOpen: true,
-              confirmDialogMessage: 'Do you want to stop brew?',
-              confirmAction: () => {
-                ExecuteRestCall(STOP_BREW, 'POST', (json) => { this.setState({ status: json }) }, this.props)
-                this.setState({ data: [] })
+              confirmDialogMessage: 'Do you want stop brew?',
+              confirmAction: (confirm) => {
+                if (confirm)
+                  ExecuteRestCall(STOP_BREW, 'POST', (json) => { this.setState({ data: [], status: json }) }, this.props)
+                this.setState({ confirmDialogOpen: false })
               }
             });
           }
@@ -191,39 +197,22 @@ class Brew extends Component {
           Stop
       </Button>
         <Button variant="contained" color="secondary" className={classes.button}
-          disabled={this.state.status.active_step != 1}
+          disabled={this.state.status.active_step != 1 || (this.state.status.brew_started == 0)}
           onClick={() => {
             this.setState({
               confirmDialogOpen: true,
-              confirmDialogMessage: 'Do you want to skip the current step?',
-              confirmAction: () => { ExecuteRestCall(NEXT_STEP_BREW, 'POST', (json) => { this.setState({ status: json }) }, this.props) }
+              confirmDialogMessage: 'Do you want skip the current step?',
+              confirmAction: (confirm) => {
+                if (confirm)
+                  ExecuteRestCall(NEXT_STEP_BREW, 'POST', (json) => { this.setState({ status: json }) }, this.props)
+                this.setState({ confirmDialogOpen: false })
+              }
             });
           }
           }
         >
           Next Step
       </Button>
-        <Dialog
-          open={this.state.confirmDialogOpen}
-          onClose={this.confirmHandleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{"Confirmation Dialog"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {this.state.confirmDialogMessage}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => { this.confirmHandleClose(false) }} color="primary">
-              No
-            </Button>
-            <Button onClick={() => { this.confirmHandleClose(true) }} color="primary" autoFocus>
-              Yes
-            </Button>
-          </DialogActions>
-        </Dialog>
 
         <ResponsiveContainer width="100%" height={320} >
           <LineChart data={this.state.data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
@@ -266,9 +255,15 @@ class Brew extends Component {
           </List>
         </SectionContent>
 
+        <ConfirmDialog
+          confirmAction={this.state.confirmAction}
+          confirmDialogOpen={this.state.confirmDialogOpen}
+          confirmDialogMessage={this.state.confirmDialogMessage}
+        />
+
         <MashSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_mash_step_index} />
         <BoilSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_boil_step_index} />
-      </SectionContent>
+      </SectionContent >
     )
   }
 }
