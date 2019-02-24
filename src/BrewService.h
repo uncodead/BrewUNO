@@ -29,6 +29,7 @@
 #define NEXT_STEP_SERVICE_PATH "/rest/nextstepbrew"
 #define RESUME_BREW_SERVICE_PATH "/rest/resumebrew"
 #define GET_ACTIVE_STATUS_SERVICE_PATH "/rest/getactivestatus"
+#define SAMPLE_TIME 5000
 
 class BrewService
 {
