@@ -31,6 +31,9 @@ public:
 
   void loop(ActiveStatus *activeStatus);
   void LoadMashSettings();
+  void TurnPump(bool on);
+  void TurnPumpOn();
+  void TurnPumpOff();
 
 private:
   FS *_fs;

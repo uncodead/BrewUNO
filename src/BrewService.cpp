@@ -27,15 +27,16 @@ BrewService::~BrewService() {}
 void BrewService::startBrew(AsyncWebServerRequest *request)
 {
     _activeStatus->TimeNow = now();
-    _activeStatus->BoilTime = _brewSettingsService->BoilTime * 60;
-    _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
     _activeStatus->ActiveStep = mash;
     _activeStatus->BrewStarted = true;
     _activeStatus->ActiveMashStepIndex = 0;
     _activeStatus->ActiveBoilStepIndex = "";
+    _activeStatus->BoilTime = _brewSettingsService->BoilTime * 60;
+    _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
     _activeStatus->SaveActiveStatus();
 
-    _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD, SAMPLE_TIME);
+    _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
+    _kettleHeaterService->SetSampleTime(SAMPLE_TIME);
     _kettleHeaterService->SetBoilPercent(_brewSettingsService->BoilPercent);
 
     request->send(200, "application/json", _activeStatus->GetJson());
@@ -44,11 +45,9 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
 void BrewService::stopBrew(AsyncWebServerRequest *request)
 {
     _activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
-    
-    _kettleHeaterService->RestartPID();
-    _kettleHeaterService->SetMode(MANUAL);
-    
+    _kettleHeaterService->DisablePID();
     String json = _activeStatus->GetJson();
+    _mashService->TurnPumpOff();
     request->send(200, "application/json", json);
 }
 
@@ -71,9 +70,10 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
     }
     _activeStatus->SaveActiveStatus();
 
-    _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD, SAMPLE_TIME);
+    _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
+    _kettleHeaterService->SetSampleTime(SAMPLE_TIME);
     _kettleHeaterService->SetBoilPercent(_brewSettingsService->BoilPercent);
-
+    //Check recirculation
     request->send(200, "application/json ", _activeStatus->GetJson());
 }
 
@@ -103,6 +103,8 @@ void BrewService::begin()
     _activeStatus->LoadActiveStatusSettings();
     _activeStatus->BrewStarted = false;
     _activeStatus->SaveActiveStatus();
+
+    _kettleHeaterService->DisablePID();
 }
 
 void BrewService::loop()

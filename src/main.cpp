@@ -33,8 +33,7 @@
 #include <KettleHeaterService.h>
 #include <ActiveStatus.h>
 
-// Trocar para D6
-#define ONE_WIRE_BUS D5
+#define ONE_WIRE_BUS D6
 #define SERIAL_BAUD_RATE 9600
 
 OneWire oneWire(ONE_WIRE_BUS);
@@ -118,6 +117,9 @@ void setup()
 #endif
 
   server.begin();
+
+  pinMode(D5, OUTPUT);
+  mashService.TurnPumpOff();
 }
 
 void loop()

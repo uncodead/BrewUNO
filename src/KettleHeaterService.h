@@ -12,10 +12,12 @@ public:
   KettleHeaterService(TemperatureService *temperatureService);
   ~KettleHeaterService();
 
-  void SetTunings(double kp, double ki, double kd, int sampleTime);
+  void SetTunings(double kp, double ki, double kd);
+  void SetSampleTime(int sampleTime);
   void SetBoilPercent(double percent);
   void Compute(ActiveStatus *activeStatus);
-  void SetMode(int mode);
+  void EnablePID();
+  void DisablePID();
   void RestartPID();
 
 private:

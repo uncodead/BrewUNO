@@ -55,6 +55,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.printf(step["temperature"]);
             Serial.println("");
             Serial.println("buzzer...  D0");
+            TurnPump(step["recirculation"] == "true");
         }
         else
         {
@@ -65,7 +66,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->ActiveMashStepIndex = -1;
             activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
             Serial.println("buzzer...  D0");
-            // recirculation off D5
+            TurnPumpOff();
         }
     }
     else
@@ -86,7 +87,31 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.print("End Time: ");
             Serial.println(activeStatus->EndTime);
             Serial.println("buzzer...  D0");
-            // recirculation on D5
+
+            TurnPump(step["recirculation"] == "true");
         }
+    }
+}
+
+void MashService::TurnPumpOn()
+{
+    TurnPump(true);
+}
+void MashService::TurnPumpOff()
+{
+    TurnPump(false);
+}
+
+void MashService::TurnPump(bool on)
+{
+    if (on)
+    {
+        digitalWrite(D5, LOW);
+        Serial.println("Recirculation on");
+    }
+    else
+    {
+        digitalWrite(D5, HIGH);
+        Serial.println("Recirculation off");
     }
 }

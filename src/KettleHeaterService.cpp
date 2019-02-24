@@ -11,21 +11,36 @@ KettleHeaterService::KettleHeaterService(TemperatureService *temperatureService)
 
 KettleHeaterService::~KettleHeaterService() {}
 
-void KettleHeaterService::SetTunings(double kp, double ki, double kd, int sampleTime)
+void KettleHeaterService::SetSampleTime(int sampleTime)
 {
-  kettlePID.SetMode(MANUAL);
-  kettlePID.SetTunings(kp, ki, kd);
   kettlePID.SetSampleTime(sampleTime);
+}
+
+void KettleHeaterService::SetTunings(double kp, double ki, double kd)
+{
+  kettlePID.SetTunings(kp, ki, kd);
 }
 
 void KettleHeaterService::RestartPID()
 {
-  kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 2, 5, 1, DIRECT);
+  kettlePID.SetMode(AUTOMATIC);
+
+  kettlePID.SetOutputLimits(0.0, 1.0);  // Forces minimum up to 0.0
+  kettlePID.SetOutputLimits(-1.0, 0.0);  // Forces maximum down to 0.0
+  kettlePID.SetOutputLimits(0, 1023);
+
+  kettlePID.SetMode(MANUAL);
 }
 
-void KettleHeaterService::SetMode(int mode)
+void KettleHeaterService::DisablePID()
 {
-  kettlePID.SetMode(mode);
+  RestartPID();
+  analogWrite(HEATER_BUS, 0);
+}
+
+void KettleHeaterService::EnablePID()
+{
+  kettlePID.SetMode(AUTOMATIC);
 }
 
 void KettleHeaterService::SetBoilPercent(double percent)
@@ -37,12 +52,11 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
 {
   if (!activeStatus->BrewStarted || activeStatus->ActiveStep == none)
   {
-    kettlePID.SetMode(MANUAL);
-    analogWrite(HEATER_BUS, 0);
+    DisablePID();
     return;
   }
 
-  kettlePID.SetMode(AUTOMATIC);
+  EnablePID();
   kettlePID.SetOutputLimits(0, 1023);
   KettleSetpoint = activeStatus->TargetTemperature;
 
