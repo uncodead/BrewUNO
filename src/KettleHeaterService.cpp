@@ -44,6 +44,7 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
     KettleOutput = (KettleOutput * _boilPercent) / 100;
   }
 
+  activeStatus->PWM = KettleOutput;
   Serial.println(KettleOutput);
 
   analogWrite(HEATER_BUS, KettleOutput);

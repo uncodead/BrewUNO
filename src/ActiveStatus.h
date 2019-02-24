@@ -30,6 +30,7 @@ public:
   String ActiveBoilStepIndex;
   int ActiveMashStepIndex;
   int BoilTime;
+  int PWM;
   float BoilTargetTemperature;
 
   float TargetTemperature;

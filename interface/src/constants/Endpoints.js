@@ -37,7 +37,8 @@ export const ExecuteRestCall = (url, method, callback, callbackError, props) => 
     if (response.ok) {
       response.json()
       .catch(() => {
-        props.raiseNotification("Invalid json result");
+        if (props != undefined && props.raiseNotification != undefined)
+          props.raiseNotification("Invalid json result");
       })
       .then(json => {
         callback(json)

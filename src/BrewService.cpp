@@ -26,10 +26,6 @@ BrewService::~BrewService() {}
 
 void BrewService::startBrew(AsyncWebServerRequest *request)
 {
-    String json = "";
-    _mashService->LoadMashSettings();
-    _boilService->LoadBoilSettings();
-
     _activeStatus->TimeNow = now();
     _activeStatus->BoilTime = _brewSettingsService->BoilTime * 60;
     _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
@@ -54,19 +50,35 @@ void BrewService::stopBrew(AsyncWebServerRequest *request)
 
 void BrewService::resumeBrew(AsyncWebServerRequest *request)
 {
+    timeStatus_t status = timeStatus();
+    if (status != timeSet)
+    {
+        request->send(200, "application/json ", _activeStatus->GetJson());
+        return;
+    }
+
     _activeStatus->BrewStarted = true;
-    /*
-    int timeTotal = _activeStatus->EndTime - _activeStatus->StartTime;
-    int timeSpent = _activeStatus->TimeNow - _activeStatus->StartTime;
-    int timeLeft = timeTotal - timeSpent;
-    _activeStatus->EndTime = now() + timeLeft;
-    */
+    if (_activeStatus->StartTime > 0 && _activeStatus->EndTime > 0)
+    {
+        int timeTotal = _activeStatus->EndTime - _activeStatus->StartTime;
+        int timeSpent = _activeStatus->TimeNow - _activeStatus->StartTime;
+        int timeLeft = timeTotal - timeSpent;
+        _activeStatus->EndTime = now() + timeLeft;
+    }
+    _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _activeStatus->SaveActiveStatus();
     request->send(200, "application/json ", _activeStatus->GetJson());
 }
 
 void BrewService::nextStep(AsyncWebServerRequest *request)
 {
+    timeStatus_t status = timeStatus();
+    if (status != timeSet)
+    {
+        request->send(200, "application/json ", _activeStatus->GetJson());
+        return;
+    }
+
     _activeStatus->EndTime = now();
     _activeStatus->SaveActiveStatus();
     request->send(200, "application/json ", _activeStatus->GetJson());
@@ -79,11 +91,12 @@ void BrewService::getActiveStatus(AsyncWebServerRequest *request)
 
 void BrewService::begin()
 {
-    Serial.print(_activeStatus->GetJson());
+    _mashService->LoadMashSettings();
+    _boilService->LoadBoilSettings();
+
     _activeStatus->LoadActiveStatusSettings();
     _activeStatus->BrewStarted = false;
     _activeStatus->SaveActiveStatus();
-    Serial.print(_activeStatus->GetJson());
 }
 
 void BrewService::loop()

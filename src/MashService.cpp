@@ -39,7 +39,7 @@ void MashService::loop(ActiveStatus *activeStatus)
 
     if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)
     {
-        Serial.println("Step over");
+        Serial.println("Step over, next step: ");
         unsigned int nextMashStep = activeStatus->ActiveMashStepIndex + 1;
         if (_mashSettings->get<JsonArray>("steps").size() > nextMashStep)
         {
