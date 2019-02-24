@@ -31,7 +31,7 @@ void BoilService::loop(ActiveStatus *activeStatus)
 
     time_t timeNow = now();
 
-    if (activeStatus->StartTime == 0 && _temperatureService->GetTemperature() >= activeStatus->BoilTargetTemperature)
+    if (activeStatus->StartTime == 0 && activeStatus->Temperature >= activeStatus->BoilTargetTemperature)
     {
         activeStatus->StartTime = timeNow;
         activeStatus->EndTime = activeStatus->StartTime + activeStatus->BoilTime; //get from settings im seconds

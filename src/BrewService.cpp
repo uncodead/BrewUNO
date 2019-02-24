@@ -6,13 +6,15 @@ BrewService::BrewService(AsyncWebServer *server,
                          BoilService *boilService,
                          BrewSettingsService *brewSettingsService,
                          KettleHeaterService *kettleHeaterService,
-                         ActiveStatus *activeStatus) : _server(server),
-                                                       _fs(fs),
-                                                       _mashService(mashService),
-                                                       _boilService(boilService),
-                                                       _brewSettingsService(brewSettingsService),
-                                                       _kettleHeaterService(kettleHeaterService),
-                                                       _activeStatus(activeStatus)
+                         ActiveStatus *activeStatus,
+                         TemperatureService *temperatureService) : _server(server),
+                                                                   _fs(fs),
+                                                                   _mashService(mashService),
+                                                                   _boilService(boilService),
+                                                                   _brewSettingsService(brewSettingsService),
+                                                                   _kettleHeaterService(kettleHeaterService),
+                                                                   _activeStatus(activeStatus),
+                                                                   _temperatureService(temperatureService)
 
 {
     _server->on(START_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBrew, this, std::placeholders::_1));
@@ -73,7 +75,7 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _kettleHeaterService->SetSampleTime(SAMPLE_TIME);
     _kettleHeaterService->SetBoilPercent(_brewSettingsService->BoilPercent);
-    //Check recirculation
+    //TODO: Check recirculation
     request->send(200, "application/json ", _activeStatus->GetJson());
 }
 
@@ -112,6 +114,8 @@ void BrewService::loop()
     timeStatus_t status = timeStatus();
     if (status != timeSet)
         return;
+
+    _activeStatus->Temperature = _temperatureService->GetTemperature();
 
     _mashService->loop(_activeStatus);
     _boilService->loop(_activeStatus);

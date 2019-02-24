@@ -40,7 +40,8 @@ public:
               BoilService *boilService,
               BrewSettingsService *brewSettingsService,
               KettleHeaterService *kettleHeaterService,
-              ActiveStatus *activeStatus);
+              ActiveStatus *activeStatus,
+              TemperatureService *temperatureService);
 
   ~BrewService();
 
@@ -54,6 +55,7 @@ private:
   MashService *_mashService;
   BrewSettingsService *_brewSettingsService;
   KettleHeaterService *_kettleHeaterService;
+  TemperatureService *_temperatureService;
   ActiveStatus *_activeStatus;
 
   float _setPoint;

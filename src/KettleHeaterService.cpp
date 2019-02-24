@@ -59,9 +59,8 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
   EnablePID();
   kettlePID.SetOutputLimits(0, 1023);
   KettleSetpoint = activeStatus->TargetTemperature;
-
-  KettleInput = _temperatureService->GetTemperature();
-  activeStatus->Temperature = KettleInput;
+  KettleInput = activeStatus->Temperature;
+  
   activeStatus->LogTemperature(KettleInput, KettleSetpoint);
 
   kettlePID.Compute();

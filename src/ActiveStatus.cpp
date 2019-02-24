@@ -54,6 +54,7 @@ void ActiveStatus::LogTemperature(float current, float target)
     {
         Temperatures = Temperatures + ',' + "{c:" + current + ",t:" + target + "}";
     }
+    // TODO: Corrigir erro quando loga 100º
     if (Temperatures.length() >= 179)
     {
         Temperatures.remove(0, 18);

@@ -61,7 +61,7 @@ ActiveStatus activeStatus = ActiveStatus(&SPIFFS);
 KettleHeaterService kettleHeaterService = KettleHeaterService(&temperatureService);
 MashService mashService = MashService(&SPIFFS, &temperatureService);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService);
-BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &kettleHeaterService, &activeStatus);
+BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &kettleHeaterService, &activeStatus, &temperatureService);
 
 //java -jar EspStackTraceDecoder.jar C:\Users\bruno\.platformio\packages\toolchain-xtensa\bin\xtensa-lx106-elf-addr2line.exe G:\Projetos\biabrewex\.pioenvs\esp12e\firmware.elf exeption.txt
 //\.platformio\packages\framework-arduinoespressif8266\tools\sdk\lwip\include\lwipopts.h

@@ -72,10 +72,10 @@ void MashService::loop(ActiveStatus *activeStatus)
     else
     {
         Serial.print("Temperature: ");
-        Serial.println(_temperatureService->GetTemperature());
+        Serial.println(activeStatus->Temperature);
         Serial.print("Target: ");
         Serial.println(activeStatus->TargetTemperature);
-        if (activeStatus->StartTime == 0 && (_temperatureService->GetTemperature() >= (activeStatus->TargetTemperature - 0.2)))
+        if (activeStatus->StartTime == 0 && (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.2)))
         {
             Serial.println("Step Started");
             JsonObject &step = _mashSettings->get<JsonArray>("steps")[activeStatus->ActiveMashStepIndex];
