@@ -13,7 +13,13 @@ KettleHeaterService::~KettleHeaterService() {}
 
 void KettleHeaterService::SetTunings(double kp, double ki, double kd)
 {
+  kettlePID.SetMode(MANUAL);
   kettlePID.SetTunings(kp, ki, kd);
+}
+
+void KettleHeaterService::SetMode(int mode)
+{
+  kettlePID.SetMode(mode);
 }
 
 void KettleHeaterService::SetBoilPercent(double percent)
@@ -25,6 +31,7 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
 {
   if (!activeStatus->BrewStarted || activeStatus->ActiveStep == none)
   {
+    kettlePID.SetMode(MANUAL);
     analogWrite(HEATER_BUS, 0);
     return;
   }

@@ -15,6 +15,7 @@ public:
   void SetTunings(double kp, double ki, double kd);
   void SetBoilPercent(double percent);
   void Compute(ActiveStatus *activeStatus);
+  void SetMode(int mode);
 
 private:
   TemperatureService *_temperatureService;

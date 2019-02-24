@@ -12,7 +12,7 @@ float TemperatureService::GetTemperature()
   _dallasTemperature.requestTemperatures();
   while (tempC <= 0) {
     tempC = _dallasTemperature.getTempCByIndex(0);
-    yield();
+    delay(100);
   }
   return tempC;
 }
