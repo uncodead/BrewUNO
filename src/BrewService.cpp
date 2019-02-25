@@ -105,6 +105,7 @@ void BrewService::begin()
     _activeStatus->LoadActiveStatusSettings();
     _activeStatus->BrewStarted = false;
     _activeStatus->SaveActiveStatus();
+    Serial.print(_activeStatus->GetJson());
 
     _kettleHeaterService->DisablePID();
 }

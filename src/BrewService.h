@@ -58,11 +58,6 @@ private:
   TemperatureService *_temperatureService;
   ActiveStatus *_activeStatus;
 
-  float _setPoint;
-
-  boolean _brewStarted;
-  StepType _activeStep;
-
   void getActiveStatus(AsyncWebServerRequest *request);
   void startBrew(AsyncWebServerRequest *request);
   void stopBrew(AsyncWebServerRequest *request);

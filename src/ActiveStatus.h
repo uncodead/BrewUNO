@@ -42,7 +42,7 @@ public:
 
   String Temperatures;
 
-  void LoadActiveStatusSettings();
+  boolean LoadActiveStatusSettings();
   void SaveActiveStatus(time_t StartTime,
                         time_t EndTime,
                         time_t TimeNow,

@@ -6,11 +6,13 @@ ActiveStatus::ActiveStatus(FS *fs) : _fs(fs)
 
 ActiveStatus::~ActiveStatus() {}
 
-void ActiveStatus::LoadActiveStatusSettings()
+boolean ActiveStatus::LoadActiveStatusSettings()
 {
     DynamicJsonBuffer jsonBufferActiveStatus;
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "r");
     JsonObject &_activeStatus = (jsonBufferActiveStatus.parseObject(configFile));
+    Serial.println(_activeStatus.success());
+    _activeStatus.prettyPrintTo(Serial);
     configFile.close();
 
     ActiveStep = _activeStatus.get<int>("active_step");
@@ -25,6 +27,8 @@ void ActiveStatus::LoadActiveStatusSettings()
     BrewStarted = _activeStatus.get<boolean>("brew_started");
     Temperatures = _activeStatus.get<String>("temperatures");
     PWM = _activeStatus.get<int>("pwm");
+
+    return _activeStatus.success();
 }
 
 String ActiveStatus::GetJson()
