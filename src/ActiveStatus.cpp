@@ -9,8 +9,20 @@ ActiveStatus::~ActiveStatus() {}
 boolean ActiveStatus::LoadActiveStatusSettings()
 {
     DynamicJsonBuffer jsonBufferActiveStatus;
+
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "r");
-    JsonObject &_activeStatus = (jsonBufferActiveStatus.parseObject(configFile));
+    String data;
+    if (configFile && configFile.size())
+    {
+        int i;
+        for (i = 0; i < configFile.size(); i++)
+        {
+            data += ((char)configFile.read());
+        }
+        configFile.close();
+    }
+
+    JsonObject &_activeStatus = (jsonBufferActiveStatus.parseObject(data));
     Serial.println(_activeStatus.success());
     _activeStatus.prettyPrintTo(Serial);
     configFile.close();
@@ -33,35 +45,48 @@ boolean ActiveStatus::LoadActiveStatusSettings()
 
 String ActiveStatus::GetJson()
 {
-    File configFile = _fs->open(ACTIVE_STATUS_FILE, "r");
-    String data;
-    if (configFile && configFile.size())
-    {
-        int i;
-        for (i = 0; i < configFile.size(); i++)
-        {
-            data += ((char)configFile.read());
-        }
-        configFile.close();
-    }
-
-    return data;
+    Serial.println("GET Json:");
+    String status = "{\"active_step\":" + String(ActiveStep) + "," +
+                    "\"active_mash_step_index\":" + String(ActiveMashStepIndex) + "," +
+                    "\"active_boil_step_index\":\"" + String(ActiveBoilStepIndex) + "\"" + "," +
+                    "\"boil_time\":" + String(BoilTime) + "," +
+                    "\"boil_target_temperature\":" + String(BoilTargetTemperature) + "," +
+                    "\"target_temperature\":" + String(TargetTemperature) + "," +
+                    "\"start_time\":" + String(StartTime) + "," +
+                    "\"end_time\":" + String(EndTime) + "," +
+                    "\"time_now\":" + String(TimeNow) + "," +
+                    "\"brew_started\":" + String(BrewStarted) + "," +
+                    "\"temperature\":" + String(Temperature) + "," +
+                    "\"temperatures\":\"" + String(Temperatures) + "\"" + "," +
+                    "\"pwm\":" + String(PWM) + "}";
+    Serial.println(status);
+    return status;
 }
 
 void ActiveStatus::LogTemperature(float current, float target)
 {
+    String strCurrent = String(current);
+    String strTarget = String(target);
+    if (current < 100)
+    {
+        strCurrent = " " + String(current);
+    }
+    if (target < 100)
+    {
+        strTarget = " " + String(target);
+    }
+
     if (Temperatures == "")
     {
-        Temperatures = "{c:" + String(current) + ",t:" + String(target) + "}";
+        Temperatures = "{c:" + strCurrent + ",t:" + strTarget + "}";
     }
     else
     {
-        Temperatures = Temperatures + ',' + "{c:" + current + ",t:" + target + "}";
+        Temperatures = Temperatures + ',' + "{c:" + strCurrent + ",t:" + strTarget + "}";
     }
-    // TODO: Corrigir erro quando loga 100º
-    if (Temperatures.length() >= 179)
+    if (Temperatures.length() >= 220)
     {
-        Temperatures.remove(0, 18);
+        Temperatures.remove(0, 20);
     }
 }
 
