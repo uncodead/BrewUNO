@@ -59,9 +59,13 @@ String ActiveStatus::GetJson()
                     "\"brew_started\":" + String(BrewStarted) + "," +
                     "\"temperature\":" + String(Temperature) + "," +
                     "\"temperatures\":\"" + String(Temperatures) + "\"" + "," +
+<<<<<<< HEAD
                     "\"pwm\":" + String(PWM) + ',' +
                     "\"recirculation\":" + String(Recirculation) +
                     "}";
+=======
+                    "\"pwm\":" + String(PWM) + "}";
+>>>>>>> 6f493085996fb190edde18a5660aa38ff49e1939
     Serial.println(status);
     return status;
 }
