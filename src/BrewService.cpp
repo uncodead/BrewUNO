@@ -58,7 +58,7 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
     timeStatus_t status = timeStatus();
     if (status != timeSet)
     {
-        request->send(200, "application/json ", _activeStatus->GetJson());
+        request->send(500, "application/json ", "{ \"error\": true, \"message\":\"NTP server not reachable\"}");
         return;
     }
 
@@ -75,7 +75,9 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _kettleHeaterService->SetSampleTime(SAMPLE_TIME);
     _kettleHeaterService->SetBoilPercent(_brewSettingsService->BoilPercent);
-    //TODO: Check recirculation
+
+    _mashService->TurnPump(_activeStatus->Recirculation);
+
     request->send(200, "application/json ", _activeStatus->GetJson());
 }
 
@@ -84,7 +86,7 @@ void BrewService::nextStep(AsyncWebServerRequest *request)
     timeStatus_t status = timeStatus();
     if (status != timeSet)
     {
-        request->send(200, "application/json ", _activeStatus->GetJson());
+        request->send(500, "application/json ", "{ \"error\": true, \"message\":\"NTP server not reachable\"}");
         return;
     }
     _activeStatus->EndTime = now();

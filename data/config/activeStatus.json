@@ -14,5 +14,7 @@
     "target_temperature": 0,
     "brew_started": false,
 
-    "temperatures": ""
+    "temperatures": "",
+
+    "recirculation": false
 }
