@@ -34,7 +34,7 @@ void BoilService::loop(ActiveStatus *activeStatus)
     if (activeStatus->StartTime == 0 && activeStatus->Temperature >= activeStatus->BoilTargetTemperature)
     {
         activeStatus->StartTime = timeNow;
-        activeStatus->EndTime = activeStatus->StartTime + activeStatus->BoilTime; //get from settings im seconds
+        activeStatus->EndTime = activeStatus->StartTime + activeStatus->BoilTime;
         activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
         Serial.println("Boil started");
         Serial.println(activeStatus->StartTime);
