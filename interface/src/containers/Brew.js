@@ -162,7 +162,7 @@ class Brew extends Component {
                 confirmDialogMessage: 'Do you want start brew?',
                 confirmAction: (confirm) => {
                   if (confirm)
-                    ExecuteRestCall(START_BREW, 'POST', (json) => { this.setState({ status: json, data: [] }) }, this.props)
+                    ExecuteRestCall(START_BREW, 'POST', (json) => { this.setState({ status: json, data: [] }) }, null, this.props)
                   this.setState({ confirmDialogOpen: false })
                 }
               });
@@ -180,7 +180,7 @@ class Brew extends Component {
                 confirmDialogMessage: 'Do you want resume brew?',
                 confirmAction: (confirm) => {
                   if (confirm)
-                    ExecuteRestCall(RESUME_BREW, 'POST', (json) => { this.setState({ status: json }) }, this.props)
+                    ExecuteRestCall(RESUME_BREW, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
                   this.setState({ confirmDialogOpen: false })
                 }
               });
@@ -198,7 +198,7 @@ class Brew extends Component {
                 confirmDialogMessage: 'Do you want stop brew?',
                 confirmAction: (confirm) => {
                   if (confirm)
-                    ExecuteRestCall(STOP_BREW, 'POST', (json) => { this.setState({ data: [], status: json }) }, this.props)
+                    ExecuteRestCall(STOP_BREW, 'POST', (json) => { this.setState({ data: [], status: json }) }, null, this.props)
                   this.setState({ confirmDialogOpen: false })
                 }
               });
@@ -216,7 +216,7 @@ class Brew extends Component {
                 confirmDialogMessage: 'Do you want skip the current step?',
                 confirmAction: (confirm) => {
                   if (confirm)
-                    ExecuteRestCall(NEXT_STEP_BREW, 'POST', (json) => { this.setState({ status: json }) }, this.props)
+                    ExecuteRestCall(NEXT_STEP_BREW, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
                   this.setState({ confirmDialogOpen: false })
                 }
               });

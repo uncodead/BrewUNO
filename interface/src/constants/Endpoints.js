@@ -36,20 +36,19 @@ export const ExecuteRestCall = (url, method, callback, callbackError, props) => 
   }).then(response => {
     if (response.ok) {
       response.json()
-      .catch(() => {
-        if (props != undefined && props.raiseNotification != undefined)
-          props.raiseNotification("Invalid json result");
-      })
-      .then(json => {
-        callback(json)
-      });
+        .catch(() => {
+          if (props != undefined && props.raiseNotification != undefined)
+            props.raiseNotification("Invalid json result");
+        })
+        .then(json => callback(json));
       return;
     }
-    throw Error(response.status);
+    if (props != undefined && props.raiseNotification != undefined)
+      response.json().then(json => props.raiseNotification(json.message));
   }).catch(error => {
     if (props != undefined && props.raiseNotification != undefined)
       props.raiseNotification("Problem getting resource: " + error.message);
-    if (callbackError){
+    if (callbackError) {
       callbackError
     }
   });
