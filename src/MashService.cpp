@@ -48,6 +48,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->StartTime = 0;
             activeStatus->EndTime = 0;
             activeStatus->TargetTemperature = step["temperature"];
+            activeStatus->Recirculation = step["recirculation"] == "true";
             Serial.print("Next step name: ");
             Serial.printf(step["name"]);
             Serial.println("");
@@ -55,10 +56,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.printf(step["temperature"]);
             Serial.println("");
             Serial.println("buzzer...  D0");
-
-            activeStatus->Recirculation = step["recirculation"] == "true";
-
-            TurnPump(activeStatus->Recirculation);
+            //TurnPump(activeStatus->Recirculation);
         }
         else
         {
@@ -79,6 +77,13 @@ void MashService::loop(ActiveStatus *activeStatus)
         Serial.println(activeStatus->Temperature);
         Serial.print("Target: ");
         Serial.println(activeStatus->TargetTemperature);
+
+        if (activeStatus->StartTime == 0)
+        {
+            // Recirculation while brew not started
+            TurnPumpOn();
+        }
+
         if (activeStatus->StartTime == 0 && (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.2)))
         {
             Serial.println("Step Started");
