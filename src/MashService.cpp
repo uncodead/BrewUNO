@@ -1,5 +1,7 @@
 #include <MashService.h>
 
+#define PUMP_BUS D5
+
 DynamicJsonBuffer jsonBufferMash;
 
 MashService::MashService(FS *fs, TemperatureService *temperatureService) : _fs(fs),
@@ -117,12 +119,12 @@ void MashService::TurnPump(bool on)
 {
     if (on)
     {
-        digitalWrite(D5, LOW);
+        digitalWrite(PUMP_BUS, LOW);
         Serial.println("Recirculation on");
     }
     else
     {
-        digitalWrite(D5, HIGH);
+        digitalWrite(PUMP_BUS, HIGH);
         Serial.println("Recirculation off");
     }
 }
