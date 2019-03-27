@@ -22,7 +22,7 @@ public:
   double KD;
 
   int BoilTime;
-  double BoilPercent;
+  double RampPowerPercentage;
   int BoilTemperature;
   int SampleTime;
 

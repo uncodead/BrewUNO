@@ -8,7 +8,7 @@ BrewSettingsService::~BrewSettingsService() {}
 void BrewSettingsService::readFromJsonObject(JsonObject &root)
 {
     BoilTemperature = root["boilTemperature"];
-    BoilPercent = root["boilPercent"];
+    RampPowerPercentage = root["rampPowerPercentage"];
     BoilTime = root["boilTime"];
     SampleTime = root["sampleTime"];
     KP = root["kP"];
@@ -20,7 +20,7 @@ void BrewSettingsService::writeToJsonObject(JsonObject &root)
 {
     // connection settings
     root["boilTemperature"] = BoilTemperature;
-    root["boilPercent"] = BoilPercent;
+    root["rampPowerPercentage"] = RampPowerPercentage;
     root["boilTime"] = BoilTime;
     root["sampleTime"] = SampleTime;
     root["kP"] = KP;

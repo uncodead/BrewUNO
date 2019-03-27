@@ -14,7 +14,7 @@ public:
 
   void SetTunings(double kp, double ki, double kd);
   void SetSampleTime(int sampleTime);
-  void SetBoilPercent(double percent);
+  void SetRampPowerPercentage(double percent);
   void Compute(ActiveStatus *activeStatus);
   void EnablePID();
   void DisablePID();
@@ -22,6 +22,6 @@ public:
 
 private:
   TemperatureService *_temperatureService;
-  double _boilPercent;
+  double _rampPowerPercentage;
 };
 #endif

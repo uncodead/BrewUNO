@@ -45,7 +45,7 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
 
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _kettleHeaterService->SetSampleTime(SAMPLE_TIME);
-    _kettleHeaterService->SetBoilPercent(_brewSettingsService->BoilPercent);
+    _kettleHeaterService->SetRampPowerPercentage(_brewSettingsService->RampPowerPercentage);
 
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
@@ -81,7 +81,10 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
 
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _kettleHeaterService->SetSampleTime(SAMPLE_TIME);
-    _kettleHeaterService->SetBoilPercent(_brewSettingsService->BoilPercent);
+    _kettleHeaterService->SetRampPowerPercentage(_brewSettingsService->RampPowerPercentage);
+
+    _mashService->LoadMashSettings();
+    _boilService->LoadBoilSettings();
 
     Pump().TurnPump(_activeStatus->Recirculation);
 

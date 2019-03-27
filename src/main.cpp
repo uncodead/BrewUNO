@@ -1,7 +1,3 @@
-// Mash in 100% da resistencia
-// Uma vez a rampa iniciada: 100% da resistencia
-// Transicao de rampas: % escolhida
-
 #include <Arduino.h>
 
 #if defined(ESP8266)

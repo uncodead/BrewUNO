@@ -30,7 +30,6 @@
 #define NEXT_STEP_SERVICE_PATH "/rest/nextstepbrew"
 #define RESUME_BREW_SERVICE_PATH "/rest/resumebrew"
 #define GET_ACTIVE_STATUS_SERVICE_PATH "/rest/getactivestatus"
-#define SAMPLE_TIME 5000
 
 #define APPLICATION_JSON_TYPE "application/json"
 #define NPT_JSON_ERROR_MESSAGE "{ \"error\": true, \"message\":\"NTP server not reachable\"}"

@@ -18,7 +18,8 @@ class MashBoilSettingsForm extends Component {
       temperature: '',
       time: '',
       amount: '',
-      recirculation: false
+      recirculation: true,
+      totalHeaterPower: false
     }
   }
   addItem = (event) => {
@@ -44,6 +45,10 @@ class MashBoilSettingsForm extends Component {
 
   handleRecirculationChange = (e, checked) => {
     this.setState({ recirculation: checked })
+  }
+
+  handletotalHeaterPowerChange = (e, checked) => {
+    this.setState({ totalHeaterPower: checked })
   }
 
   render() {
@@ -101,6 +106,10 @@ class MashBoilSettingsForm extends Component {
         {
           !this.props.boil ?
             <FormControlLabel control={<Switch ref="recirculation" checked={this.state.recirculation} onChange={this.handleRecirculationChange} />} label="Recirculation" />
+            : null
+        }{
+          !this.props.boil ?
+            <FormControlLabel control={<Switch ref="totalHeaterPower" checked={this.state.totalHeaterPower} onChange={this.handletotalHeaterPowerChange} />} label="Total Heater Power" />
             : null
         }
         <Divider />

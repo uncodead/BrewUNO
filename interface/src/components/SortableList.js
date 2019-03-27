@@ -5,9 +5,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Switch from '@material-ui/core/Switch';
+import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator'
 import Typography from '@material-ui/core/Typography'
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Divider from '@material-ui/core/Divider';
 
 class SortableList extends Component {
   onSortEnd = ({ oldIndex, newIndex }) => {
@@ -28,26 +31,48 @@ class SortableList extends Component {
   render() {
     const DragHandle = SortableHandle(() => <DragIndicatorIcon />);
     const SortableItem = SortableElement(({ value, itemIndex }) =>
-      <ListItem
-        selected={
-          !this.props.boil && this.props.selectedIndex === itemIndex ||
-          this.props.boil && this.props.selectedIndex && this.props.selectedIndex.includes(itemIndex)
-        }
-      >
-        {this.props.dragHandle ? <DragHandle /> : null}
-        <ListItemText
-          primary={value.name}
-          secondary={<Typography>{this.getItemText(value)}</Typography>}
-        />
-        {!this.props.boil ? <Switch checked={value.recirculation} /> : null}
-        {!this.props.brewDay ?
-          <IconButton aria-label="Delete"
-            onClick={() => this.deleteItem(itemIndex)}
-            disabled={this.props.items.length <= 1}>
-            <DeleteIcon fontSize="madium" />
-          </IconButton>
-          : null}
-      </ListItem>
+      <List component="nav">
+        <ListItem
+          selected={
+            !this.props.boil && this.props.selectedIndex === itemIndex ||
+            this.props.boil && this.props.selectedIndex && this.props.selectedIndex.includes(itemIndex)
+          }
+        >
+          {this.props.dragHandle ? <DragHandle /> : null}
+          <ListItemText
+            primary={value.name}
+            secondary={<Typography>{this.getItemText(value)}</Typography>}
+          />
+          {!this.props.brewDay ?
+            <IconButton aria-label="Delete"
+              onClick={() => this.deleteItem(itemIndex)}
+              disabled={this.props.items.length <= 1}>
+              <DeleteIcon fontSize="madium" />
+            </IconButton>
+            : null}
+        </ListItem>
+        <ListItem color="black">
+          {!this.props.boil ?
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={value.recirculation}
+                />
+              }
+              label="Recirculation"
+            /> : null}
+          {!this.props.boil ?
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={value.totalHeaterPower}
+                />
+              }
+              label="Total Heater Power"
+            /> : null}
+        </ListItem>
+        <Divider middle />
+      </List>
     );
 
     const SortableList = SortableContainer(({ items }) => {
