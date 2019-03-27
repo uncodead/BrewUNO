@@ -20,6 +20,8 @@
 #include <enum.h>
 #include <TemperatureService.h>
 #include <ActiveStatus.h>
+#include <Buzzer.h>
+#include <Pump.h>
 
 #define MASH_SETTINGS_FILE "/config/mashSettings.json"
 
@@ -31,9 +33,6 @@ public:
 
   void loop(ActiveStatus *activeStatus);
   void LoadMashSettings();
-  void TurnPump(bool on);
-  void TurnPumpOn();
-  void TurnPumpOff();
 
 private:
   FS *_fs;

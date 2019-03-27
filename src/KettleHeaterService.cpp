@@ -1,7 +1,5 @@
 #include <KettleHeaterService.h>
 
-#define HEATER_BUS D7
-
 double KettleSetpoint, KettleInput, KettleOutput;
 PID kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 2, 5, 1, DIRECT);
 

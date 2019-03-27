@@ -1,9 +1,6 @@
-// Colocar hora no grafico
-// Tempreratura negativa?
 // Mash in 100% da resistencia
 // Uma vez a rampa iniciada: 100% da resistencia
 // Transicao de rampas: % escolhida
-// Criar classe do buzzer
 
 #include <Arduino.h>
 
@@ -39,15 +36,12 @@
 #include <TemperatureService.h>
 #include <KettleHeaterService.h>
 #include <ActiveStatus.h>
-
-// define once
-#define ONE_WIRE_BUS D6
-#define PUMP_BUS D5
-#define BUZZER_BUS D0
+#include <Buzzer.h>
+#include <Pump.h>
 
 #define SERIAL_BAUD_RATE 9600
 
-OneWire oneWire(ONE_WIRE_BUS);
+OneWire oneWire(TEMPERATURE_BUS);
 DallasTemperature DS18B20(&oneWire);
 
 AsyncWebServer server(80);
@@ -132,7 +126,7 @@ void setup()
   pinMode(PUMP_BUS, OUTPUT);
   pinMode(BUZZER_BUS, OUTPUT);
   digitalWrite(BUZZER_BUS, LOW);
-  mashService.TurnPumpOff();
+  Pump().TurnPumpOff();
 }
 
 void loop()

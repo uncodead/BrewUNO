@@ -20,6 +20,7 @@
 #include <enum.h>
 #include <TemperatureService.h>
 #include <ActiveStatus.h>
+#include <Buzzer.h>
 
 #define BOIL_SETTINGS_FILE "/config/boilSettings.json"
 

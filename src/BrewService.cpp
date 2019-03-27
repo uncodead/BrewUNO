@@ -57,7 +57,7 @@ void BrewService::stopBrew(AsyncWebServerRequest *request)
 {
     _activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
     _kettleHeaterService->DisablePID();
-    _mashService->TurnPumpOff();
+    Pump().TurnPumpOff();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
@@ -83,7 +83,7 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
     _kettleHeaterService->SetSampleTime(SAMPLE_TIME);
     _kettleHeaterService->SetBoilPercent(_brewSettingsService->BoilPercent);
 
-    _mashService->TurnPump(_activeStatus->Recirculation);
+    Pump().TurnPump(_activeStatus->Recirculation);
 
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }

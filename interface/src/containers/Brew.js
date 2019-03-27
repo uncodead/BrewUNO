@@ -79,8 +79,10 @@ class Brew extends Component {
           array.splice(0, 1);
           this.setState({ data: array });
         }
+        var now = this.getDateTime(this.state.status.time_now);
+        var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
         this.setState({
-          data: [...this.state.data, { name: '', Target: this.state.status.target_temperature, Current: this.state.status.temperature }]
+          data: [...this.state.data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature }]
         })
       }
     }

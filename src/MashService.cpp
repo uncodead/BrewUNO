@@ -1,9 +1,5 @@
 #include <MashService.h>
 
-// define once
-#define PUMP_BUS D5
-#define BUZZER_BUS D0
-
 DynamicJsonBuffer jsonBufferMash;
 
 MashService::MashService(FS *fs, TemperatureService *temperatureService) : _fs(fs),
@@ -59,12 +55,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.print("Next step temperature: ");
             Serial.printf(step["temperature"]);
             Serial.println("");
-
-            digitalWrite(BUZZER_BUS, HIGH);
-            delay(500);
-            digitalWrite(BUZZER_BUS, LOW);
-
-            //TurnPump(activeStatus->Recirculation);
+            Buzzer().Ring();
         }
         else
         {
@@ -75,12 +66,8 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->ActiveMashStepIndex = -1;
             activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
             activeStatus->Recirculation = false;
-
-            digitalWrite(BUZZER_BUS, HIGH);
-            delay(500);
-            digitalWrite(BUZZER_BUS, LOW);
-
-            TurnPumpOff();
+            Buzzer().Ring();
+            Pump().TurnPumpOff();
         }
     }
     else
@@ -93,7 +80,7 @@ void MashService::loop(ActiveStatus *activeStatus)
         if (activeStatus->StartTime == 0)
         {
             // Recirculation while brew not started
-            TurnPumpOn();
+            Pump().TurnPumpOn();
         }
 
         if (activeStatus->StartTime == 0 && (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.2)))
@@ -107,37 +94,9 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.println(activeStatus->StartTime);
             Serial.print("End Time: ");
             Serial.println(activeStatus->EndTime);
-
-            digitalWrite(BUZZER_BUS, HIGH);
-            delay(500);
-            digitalWrite(BUZZER_BUS, LOW);
-
+            Buzzer().Ring();
             activeStatus->Recirculation = step["recirculation"] == "true";
-
-            TurnPump(activeStatus->Recirculation);
+            Pump().TurnPump(activeStatus->Recirculation);
         }
-    }
-}
-
-void MashService::TurnPumpOn()
-{
-    TurnPump(true);
-}
-void MashService::TurnPumpOff()
-{
-    TurnPump(false);
-}
-
-void MashService::TurnPump(bool on)
-{
-    if (on)
-    {
-        digitalWrite(PUMP_BUS, LOW);
-        Serial.println("Recirculation on");
-    }
-    else
-    {
-        digitalWrite(PUMP_BUS, HIGH);
-        Serial.println("Recirculation off");
     }
 }

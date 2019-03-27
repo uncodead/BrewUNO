@@ -23,6 +23,7 @@
 #include <KettleHeaterService.h>
 #include <BrewSettingsService.h>
 #include <ActiveStatus.h>
+#include <Pump.h>
 
 #define START_BREW_SERVICE_PATH "/rest/startbrew"
 #define STOP_BREW_SERVICE_PATH "/rest/stopbrew"
