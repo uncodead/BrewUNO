@@ -1,3 +1,6 @@
+// Colocar hora no grafico
+// Tempreratura negativa?
+
 #include <Arduino.h>
 
 #if defined(ESP8266)
@@ -33,7 +36,11 @@
 #include <KettleHeaterService.h>
 #include <ActiveStatus.h>
 
+// define once
 #define ONE_WIRE_BUS D6
+#define PUMP_BUS D5
+#define BUZZER_BUS D0
+
 #define SERIAL_BAUD_RATE 9600
 
 OneWire oneWire(ONE_WIRE_BUS);
@@ -118,7 +125,9 @@ void setup()
 
   server.begin();
 
-  pinMode(D5, OUTPUT);
+  pinMode(PUMP_BUS, OUTPUT);
+  pinMode(BUZZER_BUS, OUTPUT);
+  digitalWrite(BUZZER_BUS, LOW);
   mashService.TurnPumpOff();
 }
 

@@ -26,7 +26,7 @@ void KettleHeaterService::RestartPID()
   kettlePID.SetMode(AUTOMATIC);
 
   kettlePID.SetOutputLimits(0.0, 1.0);  // Forces minimum up to 0.0
-  kettlePID.SetOutputLimits(-1.0, 0.0);  // Forces maximum down to 0.0
+  kettlePID.SetOutputLimits(-1.0, 0.0); // Forces maximum down to 0.0
   kettlePID.SetOutputLimits(0, 1023);
 
   kettlePID.SetMode(MANUAL);
@@ -60,15 +60,15 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
   kettlePID.SetOutputLimits(0, 1023);
   KettleSetpoint = activeStatus->TargetTemperature;
   KettleInput = activeStatus->Temperature;
-  
+
   activeStatus->LogTemperature(KettleInput, KettleSetpoint);
 
   kettlePID.Compute();
 
-  if (activeStatus->ActiveStep == boil && activeStatus->StartTime > 0)
-  {
-    KettleOutput = (KettleOutput * _boilPercent) / 100;
-  }
+  //if (activeStatus->ActiveStep == boil && activeStatus->StartTime > 0)
+  //{
+  KettleOutput = (KettleOutput * _boilPercent) / 100;
+  //}
 
   activeStatus->PWM = KettleOutput;
   Serial.println(KettleOutput);

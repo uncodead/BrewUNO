@@ -1,5 +1,7 @@
 #include <BoilService.h>
 
+#define BUZZER_BUS D0
+
 DynamicJsonBuffer jsonBufferBoil;
 
 BoilService::BoilService(FS *fs, TemperatureService *temperatureService) : _fs(fs),
@@ -71,6 +73,9 @@ void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, time_t moment)
         activeStatus->ActiveBoilStepIndex = currentStep;
         Serial.println(currentStep);
         Serial.println(activeStatus->ActiveBoilStepIndex);
-        Serial.println("buzzer...  D0");
+
+        digitalWrite(BUZZER_BUS, HIGH);
+        delay(500);
+        digitalWrite(BUZZER_BUS, LOW);
     }
 }

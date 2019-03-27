@@ -47,6 +47,9 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _kettleHeaterService->SetSampleTime(SAMPLE_TIME);
     _kettleHeaterService->SetBoilPercent(_brewSettingsService->BoilPercent);
 
+    _mashService->LoadMashSettings();
+    _boilService->LoadBoilSettings();
+
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 

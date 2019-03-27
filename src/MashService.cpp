@@ -1,6 +1,8 @@
 #include <MashService.h>
 
+// define once
 #define PUMP_BUS D5
+#define BUZZER_BUS D0
 
 DynamicJsonBuffer jsonBufferMash;
 
@@ -57,7 +59,11 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.print("Next step temperature: ");
             Serial.printf(step["temperature"]);
             Serial.println("");
-            Serial.println("buzzer...  D0");
+
+            digitalWrite(BUZZER_BUS, HIGH);
+            delay(500);
+            digitalWrite(BUZZER_BUS, LOW);
+
             //TurnPump(activeStatus->Recirculation);
         }
         else
@@ -69,7 +75,11 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->ActiveMashStepIndex = -1;
             activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
             activeStatus->Recirculation = false;
-            Serial.println("buzzer...  D0");
+
+            digitalWrite(BUZZER_BUS, HIGH);
+            delay(500);
+            digitalWrite(BUZZER_BUS, LOW);
+
             TurnPumpOff();
         }
     }
@@ -97,7 +107,10 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.println(activeStatus->StartTime);
             Serial.print("End Time: ");
             Serial.println(activeStatus->EndTime);
-            Serial.println("buzzer...  D0");
+
+            digitalWrite(BUZZER_BUS, HIGH);
+            delay(500);
+            digitalWrite(BUZZER_BUS, LOW);
 
             activeStatus->Recirculation = step["recirculation"] == "true";
 
