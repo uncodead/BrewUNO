@@ -43,6 +43,7 @@ public:
   String Temperatures;
 
   boolean Recirculation;
+  boolean TotalHeaterPower;
 
   boolean LoadActiveStatusSettings();
   void SaveActiveStatus(time_t StartTime,

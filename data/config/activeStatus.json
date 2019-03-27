@@ -16,5 +16,6 @@
 
     "temperatures": "",
 
-    "recirculation": false
+    "recirculation": false,
+    "totalHeaterPower": false
 }

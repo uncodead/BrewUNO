@@ -49,6 +49,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->EndTime = 0;
             activeStatus->TargetTemperature = step["temperature"];
             activeStatus->Recirculation = step["recirculation"] == "true";
+            activeStatus->TotalHeaterPower = step["totalHeaterPower"] == "true";
             Serial.print("Next step name: ");
             Serial.printf(step["name"]);
             Serial.println("");
@@ -66,6 +67,8 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->ActiveMashStepIndex = -1;
             activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
             activeStatus->Recirculation = false;
+            activeStatus->Recirculation = false;
+            activeStatus->TotalHeaterPower = false;
             Buzzer().Ring();
             Pump().TurnPumpOff();
         }
@@ -96,6 +99,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.println(activeStatus->EndTime);
             Buzzer().Ring();
             activeStatus->Recirculation = step["recirculation"] == "true";
+            activeStatus->TotalHeaterPower = step["totalHeaterPower"] == "true";
             Pump().TurnPump(activeStatus->Recirculation);
         }
     }

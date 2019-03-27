@@ -68,7 +68,7 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
   // Transicao de rampas: % escolhida
 
 
-  if (activeStatus->StartTime <= 0) {
+  if (!activeStatus->TotalHeaterPower && activeStatus->StartTime <= 0) {
     KettleOutput = (KettleOutput * _rampPowerPercentage) / 100;
   }
 

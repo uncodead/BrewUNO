@@ -40,6 +40,7 @@ boolean ActiveStatus::LoadActiveStatusSettings()
     Temperatures = _activeStatus.get<String>("temperatures");
     PWM = _activeStatus.get<int>("pwm");
     Recirculation = _activeStatus.get<boolean>("recirculation");
+    TotalHeaterPower = _activeStatus.get<boolean>("totalHeaterPower");
 
     return _activeStatus.success();
 }
@@ -60,7 +61,8 @@ String ActiveStatus::GetJson()
                     "\"temperature\":" + String(Temperature) + "," +
                     "\"temperatures\":\"" + String(Temperatures) + "\"" + "," +
                     "\"pwm\":" + String(PWM) + ',' +
-                    "\"recirculation\":" + String(Recirculation) +
+                    "\"recirculation\":" + String(Recirculation) + "," +
+                    "\"totalHeaterPower\":" + String(TotalHeaterPower) +
                     "}";
     Serial.println(status);
     return status;
@@ -120,6 +122,7 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     Temperatures = "";
     PWM = 0;
     Recirculation = false;
+    TotalHeaterPower = false;
 
     SaveActiveStatus();
 }
@@ -143,6 +146,7 @@ void ActiveStatus::SaveActiveStatus()
     object["temperatures"] = Temperatures;
     object["pwm"] = PWM;
     object["recirculation"] = Recirculation;
+    object["totalHeaterPower"] = TotalHeaterPower;
 
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "w");
     if (configFile)
