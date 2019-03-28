@@ -65,13 +65,17 @@ class Brew extends Component {
       confirmDialogOpen: false
     }
 
-    interval = setInterval(() => {
-      this.getStatus();
-    }, 10000);
+    this.setStatusInterval();
 
     timerProgress = setInterval(() => {
       this.brewProgress();
     }, 1000);
+  }
+
+  setStatusInterval() {
+    interval = setInterval(() => {
+      this.getStatus();
+    }, 5000);
   }
 
   updateStatus() {
