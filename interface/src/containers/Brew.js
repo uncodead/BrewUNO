@@ -7,7 +7,16 @@ import { withStyles } from '@material-ui/core/styles';
 import { withNotifier } from '../components/SnackbarNotification';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { GET_ACTIVE_STATUS, START_BREW, NEXT_STEP_BREW, STOP_BREW, RESUME_BREW, ExecuteRestCall } from '../constants/Endpoints';
+import {
+  GET_ACTIVE_STATUS,
+  START_BREW,
+  NEXT_STEP_BREW,
+  STOP_BREW,
+  RESUME_BREW,
+  ExecuteRestCall,
+  CHANGE_BOIL_PERCENTAGE,
+  START_BOIL
+} from '../constants/Endpoints';
 
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import LineChart from 'recharts/lib/chart/LineChart';
@@ -23,12 +32,22 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import Typography from '@material-ui/core/Typography';
+
+import Slider from '@material-ui/lab/Slider';
+
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
   },
   input: {
     display: 'none',
+  },
+  root: {
+    width: 200,
+  },
+  slider: {
+    padding: '22px 0px'
   },
 });
 
@@ -48,7 +67,7 @@ class Brew extends Component {
 
     interval = setInterval(() => {
       this.getStatus();
-    }, 5000);
+    }, 10000);
 
     timerProgress = setInterval(() => {
       this.brewProgress();
@@ -151,6 +170,33 @@ class Brew extends Component {
     return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
   }
 
+  handleChangeBoilPowerPercentage = (event, value) => {
+    var status = this.state.status;
+    status.boil_power_percentage = value;
+    this.setState({ status });
+  }
+
+  handleSaveChangeBoilPowerPercentage = (event, value) => {
+    fetch(CHANGE_BOIL_PERCENTAGE, {
+      method: 'POST',
+      body: JSON.stringify({ "boil_power_percentage": this.state.status.boil_power_percentage }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then(response => {
+      if (response.ok) {
+        this.props.raiseNotification("Boil % seted (not persisted).");
+        return;
+      }
+      response.text().then(function (data) {
+        throw Error(data);
+      }).catch(error => {
+        this.props.raiseNotification(error.message);
+      });
+    });
+  };
+
   componentWillUnmount() {
     clearInterval(interval);
   }
@@ -230,7 +276,23 @@ class Brew extends Component {
           >
             Next Step
       </Button> : null}
-
+        {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
+          <Button variant="contained" color="primary" className={classes.button}
+            onClick={() => {
+              this.setState({
+                confirmDialogOpen: true,
+                confirmDialogMessage: 'Do you want start boil?',
+                confirmAction: (confirm) => {
+                  if (confirm)
+                    ExecuteRestCall(START_BOIL, 'POST', (json) => { this.setState({ status: json, data: [] }) }, null, this.props)
+                  this.setState({ confirmDialogOpen: false })
+                }
+              });
+            }
+            }
+          >
+            Boil
+      </Button> : null}
         <ResponsiveContainer width="100%" height={320} >
           <LineChart data={this.state.data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
             <XAxis dataKey="name" />
@@ -244,8 +306,20 @@ class Brew extends Component {
             <Line type="monotone" yAxisId="left" dataKey="PWM" stroke="#FF0000" dot={null} />
           </LineChart>
         </ResponsiveContainer>
-
-        <LinearProgress variant="determinate" value={this.state.progressCompleted} />
+        <SectionContent title="Progress">
+          <LinearProgress variant="determinate" value={this.state.progressCompleted} />
+        </SectionContent>
+        <SectionContent title="Boil Power %">
+          <div className={classes.root}>
+            <Slider
+              classes={{ container: classes.slider }}
+              value={this.state.status.boil_power_percentage}
+              onChange={this.handleChangeBoilPowerPercentage}
+              onDragEnd={this.handleSaveChangeBoilPowerPercentage}
+            />
+          </div>
+          <Typography id="label">{this.state.status.boil_power_percentage}%</Typography>
+        </SectionContent>
         <SectionContent title="Status">
           <List component="nav">
             <ListItem button>

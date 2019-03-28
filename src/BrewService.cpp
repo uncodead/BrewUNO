@@ -21,6 +21,7 @@ BrewService::BrewService(AsyncWebServer *server,
     _server->on(GET_ACTIVE_STATUS_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::getActiveStatus, this, std::placeholders::_1));
     _server->on(NEXT_STEP_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::nextStep, this, std::placeholders::_1));
     _server->on(RESUME_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::resumeBrew, this, std::placeholders::_1));
+    _server->on(START_BOIL_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBoil, this, std::placeholders::_1));
     _server->addHandler(new AsyncCallbackJsonWebHandler(CHANGE_BOIL_PERCENTAGE_SERVICE_PATH, std::bind(&BrewService::changeBoilPercentage, this, std::placeholders::_1, std::placeholders::_2)));
 }
 
@@ -106,14 +107,37 @@ void BrewService::nextStep(AsyncWebServerRequest *request)
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
+void BrewService::startBoil(AsyncWebServerRequest *request)
+{
+    if (timeStatus() != timeSet)
+    {
+        request->send(500, APPLICATION_JSON_TYPE, NPT_JSON_ERROR_MESSAGE);
+        return;
+    }
+    _activeStatus->TimeNow = now();
+    _activeStatus->ActiveStep = boil;
+    _activeStatus->BrewStarted = true;
+    _activeStatus->ActiveBoilStepIndex = "";
+    _activeStatus->BoilTime = _brewSettingsService->BoilTime * 60;
+    _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
+    _activeStatus->BoilPowerPercentage = _brewSettingsService->BoilPowerPercentage;
+    _activeStatus->SaveActiveStatus();
+
+    _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
+    _kettleHeaterService->SetSampleTime(SAMPLE_TIME);
+
+    _boilService->LoadBoilSettings();
+
+    request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
+}
+
 void BrewService::changeBoilPercentage(AsyncWebServerRequest *request, JsonVariant &json)
 {
     JsonObject &jsonObj = json.as<JsonObject>();
     if (jsonObj.success())
     {
-        _activeStatus->BoilPowerPercentage = jsonObj.get<double>("boil_power_percentage");;
+        _activeStatus->BoilPowerPercentage = jsonObj.get<double>("boil_power_percentage");
         _activeStatus->SaveActiveStatus();
-
         request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
     }
     else

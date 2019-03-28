@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^3.7.0",
     "@material-ui/icons": "^3.0.1",
+    "@material-ui/lab": "^3.0.0-alpha.30",
     "compression-webpack-plugin": "^1.1.12",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",

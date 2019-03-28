@@ -17,5 +17,7 @@
     "temperatures": "",
 
     "recirculation": false,
-    "totalHeaterPower": false
+    "totalHeaterPower": false,
+    "ramp_power_percentage": 0,
+    "boil_power_percentage": 0
 }
