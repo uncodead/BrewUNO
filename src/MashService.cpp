@@ -35,6 +35,7 @@ void MashService::loop(ActiveStatus *activeStatus)
     {
         JsonObject &step = _mashSettings->get<JsonArray>("steps")[0];
         activeStatus->TargetTemperature = step["temperature"];
+        activeStatus->TotalHeaterPower = step["totalHeaterPower"] == "true";
     }
 
     if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)

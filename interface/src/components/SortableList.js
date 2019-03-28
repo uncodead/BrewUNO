@@ -57,6 +57,7 @@ class SortableList extends Component {
               control={
                 <Checkbox
                   checked={value.recirculation}
+                  disabled
                 />
               }
               label="Recirculation"
@@ -66,6 +67,7 @@ class SortableList extends Component {
               control={
                 <Checkbox
                   checked={value.totalHeaterPower}
+                  disabled
                 />
               }
               label="Total Heater Power"
