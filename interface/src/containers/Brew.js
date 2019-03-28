@@ -71,6 +71,9 @@ class Brew extends Component {
         }
         catch (e) {
           this.props.raiseNotification("Invalid temperatures json result");
+          this.setState({
+            fetched: true
+          })
         }
       }
       else {
@@ -82,7 +85,7 @@ class Brew extends Component {
         var now = this.getDateTime(this.state.status.time_now);
         var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
         this.setState({
-          data: [...this.state.data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature }]
+          data: [...this.state.data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature, PWM: this.state.status.pwm / 100 }]
         })
       }
     }
@@ -102,7 +105,7 @@ class Brew extends Component {
       case 2:
         return "Boil"
       default:
-        return "stopped"
+        return "Stopped"
     }
   }
 
@@ -231,12 +234,14 @@ class Brew extends Component {
         <ResponsiveContainer width="100%" height={320} >
           <LineChart data={this.state.data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
             <XAxis dataKey="name" />
-            <YAxis />
+            <YAxis yAxisId="left" />
+            <YAxis yAxisId="right" orientation="right" />
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="Target" stroke="#82ca9d" dot={null} />
-            <Line type="monotone" dataKey="Current" stroke="#8884d8" dot={null} activeDot={{ r: 10 }} />
+            <Line type="monotone" yAxisId="left" dataKey="Target" stroke="#82ca9d" dot={null} />
+            <Line type="monotone" yAxisId="left" dataKey="Current" stroke="#8884d8" dot={null} activeDot={{ r: 10 }} />
+            <Line type="monotone" yAxisId="left" dataKey="PWM" stroke="#FF0000" dot={null} />
           </LineChart>
         </ResponsiveContainer>
 

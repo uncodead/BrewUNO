@@ -63,11 +63,6 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
 
   kettlePID.Compute();
 
-  // Mash in 100% da resistencia
-  // Uma vez a rampa iniciada: 100% da resistencia
-  // Transicao de rampas: % escolhida
-
-
   if (!activeStatus->TotalHeaterPower && activeStatus->StartTime <= 0) {
     KettleOutput = (KettleOutput * _rampPowerPercentage) / 100;
   }
