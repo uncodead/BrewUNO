@@ -23,6 +23,7 @@ public:
 
   int BoilTime;
   double RampPowerPercentage;
+  double BoilPowerPercentage;
   int BoilTemperature;
   int SampleTime;
 

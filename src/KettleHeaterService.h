@@ -14,7 +14,6 @@ public:
 
   void SetTunings(double kp, double ki, double kd);
   void SetSampleTime(int sampleTime);
-  void SetRampPowerPercentage(double percent);
   void Compute(ActiveStatus *activeStatus);
   void EnablePID();
   void DisablePID();

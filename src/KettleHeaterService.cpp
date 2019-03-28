@@ -23,7 +23,7 @@ void KettleHeaterService::RestartPID()
 {
   kettlePID.SetMode(AUTOMATIC);
 
-  kettlePID.SetOutputLimits(0.0, 1.0); 
+  kettlePID.SetOutputLimits(0.0, 1.0);
   kettlePID.SetOutputLimits(-1.0, 0.0);
   kettlePID.SetOutputLimits(0, 1023);
 
@@ -39,11 +39,6 @@ void KettleHeaterService::DisablePID()
 void KettleHeaterService::EnablePID()
 {
   kettlePID.SetMode(AUTOMATIC);
-}
-
-void KettleHeaterService::SetRampPowerPercentage(double percent)
-{
-  _rampPowerPercentage = percent;
 }
 
 void KettleHeaterService::Compute(ActiveStatus *activeStatus)
@@ -63,13 +58,13 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
 
   kettlePID.Compute();
 
-  // Mash in 100% da resistencia
-  // Uma vez a rampa iniciada: 100% da resistencia
-  // Transicao de rampas: % escolhida
-
-
-  if (!activeStatus->TotalHeaterPower && activeStatus->StartTime <= 0) {
-    KettleOutput = (KettleOutput * _rampPowerPercentage) / 100;
+  if (activeStatus->ActiveStep == boil)
+  {
+    KettleOutput = (KettleOutput * activeStatus->BoilPowerPercentage) / 100;
+  }
+  else if (!activeStatus->TotalHeaterPower && activeStatus->StartTime <= 0)
+  {
+    KettleOutput = (KettleOutput * activeStatus->RampPowerPercentage) / 100;
   }
 
   activeStatus->PWM = KettleOutput;

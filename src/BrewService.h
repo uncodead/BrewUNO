@@ -30,9 +30,11 @@
 #define NEXT_STEP_SERVICE_PATH "/rest/nextstepbrew"
 #define RESUME_BREW_SERVICE_PATH "/rest/resumebrew"
 #define GET_ACTIVE_STATUS_SERVICE_PATH "/rest/getactivestatus"
+#define CHANGE_BOIL_PERCENTAGE_SERVICE_PATH "/rest/changeboilpercentage"
 
 #define APPLICATION_JSON_TYPE "application/json"
 #define NPT_JSON_ERROR_MESSAGE "{ \"error\": true, \"message\":\"NTP server not reachable\"}"
+#define INVALID_JSON_ERROR "Error validating json."
 
 class BrewService
 {
@@ -66,5 +68,6 @@ private:
   void stopBrew(AsyncWebServerRequest *request);
   void nextStep(AsyncWebServerRequest *request);
   void resumeBrew(AsyncWebServerRequest *request);
+  void changeBoilPercentage(AsyncWebServerRequest *request, JsonVariant &json);
 };
 #endif

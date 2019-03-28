@@ -1,5 +1,6 @@
 {
-    "rampPowerPercentage": 90,
+    "rampPowerPercentage": 66,
+    "boilPowerPercentage": 90,
     "boilTemperature": 100,
     "boilTime": 60,
     "sampleTime": 1,

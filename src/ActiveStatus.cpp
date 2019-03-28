@@ -41,6 +41,8 @@ boolean ActiveStatus::LoadActiveStatusSettings()
     PWM = _activeStatus.get<int>("pwm");
     Recirculation = _activeStatus.get<boolean>("recirculation");
     TotalHeaterPower = _activeStatus.get<boolean>("totalHeaterPower");
+    RampPowerPercentage = _activeStatus.get<double>("ramp_power_percentage");
+    BoilPowerPercentage = _activeStatus.get<double>("boil_power_percentage");
 
     return _activeStatus.success();
 }
@@ -62,7 +64,9 @@ String ActiveStatus::GetJson()
                     "\"temperatures\":\"" + String(Temperatures) + "\"" + "," +
                     "\"pwm\":" + String(PWM) + ',' +
                     "\"recirculation\":" + String(Recirculation) + "," +
-                    "\"totalHeaterPower\":" + String(TotalHeaterPower) +
+                    "\"totalHeaterPower\":" + String(TotalHeaterPower) + "," +
+                    "\"ramp_power_percentage\":" + String(RampPowerPercentage) + "," +
+                    "\"boil_power_percentage\":" + String(BoilPowerPercentage) + "," +
                     "}";
     Serial.println(status);
     return status;
@@ -123,6 +127,8 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     PWM = 0;
     Recirculation = false;
     TotalHeaterPower = false;
+    RampPowerPercentage = 0;
+    BoilPowerPercentage = 0;
 
     SaveActiveStatus();
 }
@@ -147,6 +153,8 @@ void ActiveStatus::SaveActiveStatus()
     object["pwm"] = PWM;
     object["recirculation"] = Recirculation;
     object["totalHeaterPower"] = TotalHeaterPower;
+    object["ramp_power_percentage"] = RampPowerPercentage;
+    object["boil_power_percentage"] = BoilPowerPercentage;
 
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "w");
     if (configFile)

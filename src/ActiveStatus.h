@@ -32,6 +32,8 @@ public:
   int BoilTime;
   int PWM;
   float BoilTargetTemperature;
+  double RampPowerPercentage;
+  double BoilPowerPercentage;
 
   float TargetTemperature;
   float Temperature;
