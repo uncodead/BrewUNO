@@ -29,7 +29,6 @@ import Legend from 'recharts/lib/component/Legend';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import Typography from '@material-ui/core/Typography';
@@ -44,7 +43,7 @@ const styles = theme => ({
     display: 'none',
   },
   root: {
-    width: 200,
+    
   },
   slider: {
     padding: '22px 0px'
@@ -62,11 +61,10 @@ class Brew extends Component {
       data: [],
       fetched: false,
       progressCompleted: 0,
-      confirmDialogOpen: false
+      confirmDialogOpen: false,
+      boilPower: 0
     }
-
     this.setStatusInterval();
-
     timerProgress = setInterval(() => {
       this.brewProgress();
     }, 1000);
@@ -108,8 +106,13 @@ class Brew extends Component {
         var now = this.getDateTime(this.state.status.time_now);
         var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
         this.setState({
-          data: [...this.state.data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature, PWM: this.state.status.pwm / 100 }]
+          data: [...this.state.data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature, PWM: this.state.status.pwm / 100 }],
         })
+        if (this.state.boilPower == 0) {
+          this.setState({
+            boilPower: this.state.status.boil_power_percentage
+          })
+        }
       }
     }
   }
@@ -175,22 +178,20 @@ class Brew extends Component {
   }
 
   handleChangeBoilPowerPercentage = (event, value) => {
-    var status = this.state.status;
-    status.boil_power_percentage = value;
-    this.setState({ status });
+    this.setState({ boilPower: value });
   }
 
-  handleSaveChangeBoilPowerPercentage = (event, value) => {
+  handleSaveChangeBoilPowerPercentage = () => {
     fetch(CHANGE_BOIL_PERCENTAGE, {
       method: 'POST',
-      body: JSON.stringify({ "boil_power_percentage": this.state.status.boil_power_percentage }),
+      body: JSON.stringify({ "boil_power_percentage": this.state.boilPower }),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
     }).then(response => {
       if (response.ok) {
-        this.props.raiseNotification("Boil % seted (not persisted).");
+        this.props.raiseNotification("Boiling power configured.");
         return;
       }
       response.text().then(function (data) {
@@ -313,16 +314,16 @@ class Brew extends Component {
         <SectionContent title="Progress">
           <LinearProgress variant="determinate" value={this.state.progressCompleted} />
         </SectionContent>
-        <SectionContent title="Boil Power %">
+        <SectionContent title="Boiling power %">
           <div className={classes.root}>
             <Slider
               classes={{ container: classes.slider }}
-              value={this.state.status.boil_power_percentage}
+              value={this.state.boilPower}
               onChange={this.handleChangeBoilPowerPercentage}
               onDragEnd={this.handleSaveChangeBoilPowerPercentage}
             />
           </div>
-          <Typography id="label">{this.state.status.boil_power_percentage}%</Typography>
+          <Typography id="label">{this.state.boilPower}%</Typography>
         </SectionContent>
         <SectionContent title="Status">
           <List component="nav">

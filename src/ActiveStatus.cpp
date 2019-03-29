@@ -66,7 +66,7 @@ String ActiveStatus::GetJson()
                     "\"recirculation\":" + String(Recirculation) + "," +
                     "\"totalHeaterPower\":" + String(TotalHeaterPower) + "," +
                     "\"ramp_power_percentage\":" + String(RampPowerPercentage) + "," +
-                    "\"boil_power_percentage\":" + String(BoilPowerPercentage) + "," +
+                    "\"boil_power_percentage\":" + String(BoilPowerPercentage) +
                     "}";
     Serial.println(status);
     return status;
