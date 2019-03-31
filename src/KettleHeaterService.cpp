@@ -49,6 +49,11 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
     return;
   }
 
+  if (activeStatus->RestartPID) {
+    DisablePID();
+    activeStatus->RestartPID = false;
+  }
+  
   EnablePID();
   kettlePID.SetOutputLimits(0, 1023);
   KettleSetpoint = activeStatus->TargetTemperature;
