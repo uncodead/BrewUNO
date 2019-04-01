@@ -61,6 +61,7 @@ public:
                         boolean brewStarted);
   void SaveActiveStatus();
   void LogTemperature(float , float);
+  void SetTemperature(float);
   String GetJson();
 
 private:

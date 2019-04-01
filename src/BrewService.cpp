@@ -168,7 +168,7 @@ void BrewService::loop()
     if (!_activeStatus->BrewStarted && status != timeSet)
         return;
     
-    _activeStatus->Temperature = _temperatureService->GetTemperature();
+    _activeStatus->SetTemperature(_temperatureService->GetTemperature());
 
     _mashService->loop(_activeStatus);
     _boilService->loop(_activeStatus);

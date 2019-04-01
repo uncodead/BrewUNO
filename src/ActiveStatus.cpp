@@ -163,3 +163,9 @@ void ActiveStatus::SaveActiveStatus()
     }
     configFile.close();
 }
+
+void ActiveStatus::SetTemperature(float temperature)
+{
+    if (temperature > 0)
+        Temperature = temperature;
+}

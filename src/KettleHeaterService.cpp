@@ -65,7 +65,7 @@ void KettleHeaterService::Compute(ActiveStatus *activeStatus)
 
   if (activeStatus->ActiveStep == boil)
   {
-    KettleOutput = (KettleOutput * activeStatus->BoilPowerPercentage) / 100;
+    KettleOutput = (1023 * activeStatus->BoilPowerPercentage) / 100;
   }
   else if (!activeStatus->TotalHeaterPower && activeStatus->StartTime <= 0)
   {

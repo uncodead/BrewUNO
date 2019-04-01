@@ -40,5 +40,6 @@ private:
   TemperatureService *_temperatureService;
 
   JsonObject &LoadSettings(String settingsFile);
+  boolean checkTemperaturePID(ActiveStatus *activeStatus);
 };
 #endif
