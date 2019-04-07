@@ -1,9 +1,13 @@
 #include <KettleHeaterService.h>
+#include <PID_AutoTune_v0.h>
+
+boolean heatOff = true;
 
 double KettleSetpoint, KettleInput, KettleOutput;
-PID kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 2, 5, 1, DIRECT);
+PID kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 100, 40, 0, DIRECT);
 
-KettleHeaterService::KettleHeaterService(TemperatureService *temperatureService) : _temperatureService(temperatureService)
+KettleHeaterService::KettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus) : _temperatureService(temperatureService),
+                                                                                                               _activeStatus(activeStatus)
 {
 }
 
@@ -12,6 +16,7 @@ KettleHeaterService::~KettleHeaterService() {}
 void KettleHeaterService::SetSampleTime(int sampleTime)
 {
   kettlePID.SetSampleTime(sampleTime);
+  kettlePID.SetOutputLimits(0, 1023);
 }
 
 void KettleHeaterService::SetTunings(double kp, double ki, double kd)
@@ -32,6 +37,7 @@ void KettleHeaterService::RestartPID()
 
 void KettleHeaterService::DisablePID()
 {
+  heatOff = true;
   RestartPID();
   analogWrite(HEATER_BUS, 0);
 }
@@ -41,39 +47,39 @@ void KettleHeaterService::EnablePID()
   kettlePID.SetMode(AUTOMATIC);
 }
 
-void KettleHeaterService::Compute(ActiveStatus *activeStatus)
+void KettleHeaterService::Compute()
 {
-  if (!activeStatus->BrewStarted || activeStatus->ActiveStep == none)
+  if (!_activeStatus->BrewStarted || _activeStatus->ActiveStep == none)
   {
+    Serial.print("PID DISABLED.");
     DisablePID();
     return;
   }
 
-  if (activeStatus->RestartPID) {
-    DisablePID();
-    activeStatus->RestartPID = false;
+  if (heatOff)
+  {
+    Serial.print("Heat Off, turn on... ");
+    EnablePID();
+    heatOff = false;
   }
-  
-  EnablePID();
-  kettlePID.SetOutputLimits(0, 1023);
-  KettleSetpoint = activeStatus->TargetTemperature;
-  KettleInput = activeStatus->Temperature;
 
-  activeStatus->LogTemperature(KettleInput, KettleSetpoint);
+  if (_activeStatus->Temperature >= _activeStatus->TargetTemperature - 0.4)
+  {
+    RestartPID();
+    kettlePID.SetMode(AUTOMATIC);
+  }
+
+  KettleInput = _activeStatus->Temperature;
+  KettleSetpoint = _activeStatus->TargetTemperature;
 
   kettlePID.Compute();
+  _activeStatus->PWM = KettleOutput;
 
-  if (activeStatus->ActiveStep == boil)
+  if (_activeStatus->ActiveStep == boil)
   {
-    KettleOutput = (1023 * activeStatus->BoilPowerPercentage) / 100;
+    analogWrite(HEATER_BUS, (1023 * _activeStatus->BoilPowerPercentage) / 100);
+    return;
   }
-  else if (!activeStatus->TotalHeaterPower && activeStatus->StartTime <= 0)
-  {
-    KettleOutput = (KettleOutput * activeStatus->RampPowerPercentage) / 100;
-  }
-
-  activeStatus->PWM = KettleOutput;
-  Serial.println(KettleOutput);
 
   analogWrite(HEATER_BUS, KettleOutput);
 }

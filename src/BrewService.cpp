@@ -172,7 +172,7 @@ void BrewService::loop()
 
     _mashService->loop(_activeStatus);
     _boilService->loop(_activeStatus);
-    _kettleHeaterService->Compute(_activeStatus);
+    _kettleHeaterService->Compute();
     _activeStatus->SaveActiveStatus();
 
     _activeStatus->TimeNow = now();

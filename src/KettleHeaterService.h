@@ -9,12 +9,12 @@
 class KettleHeaterService
 {
 public:
-  KettleHeaterService(TemperatureService *temperatureService);
+  KettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus);
   ~KettleHeaterService();
 
   void SetTunings(double kp, double ki, double kd);
   void SetSampleTime(int sampleTime);
-  void Compute(ActiveStatus *activeStatus);
+  void Compute();
   void EnablePID();
   void DisablePID();
   void RestartPID();
@@ -22,5 +22,11 @@ public:
 private:
   TemperatureService *_temperatureService;
   double _rampPowerPercentage;
+
+void endAutoTune();
+void cancelAutoTune();
+void startAutoTune();
+
+  ActiveStatus *_activeStatus;
 };
 #endif

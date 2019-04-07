@@ -59,7 +59,7 @@ MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
 
 ActiveStatus activeStatus = ActiveStatus(&SPIFFS);
-KettleHeaterService kettleHeaterService = KettleHeaterService(&temperatureService);
+KettleHeaterService kettleHeaterService = KettleHeaterService(&temperatureService, &activeStatus);
 MashService mashService = MashService(&SPIFFS, &temperatureService);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService);
 BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &kettleHeaterService, &activeStatus, &temperatureService);
