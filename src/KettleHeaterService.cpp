@@ -1,10 +1,9 @@
 #include <KettleHeaterService.h>
-#include <PID_AutoTune_v0.h>
 
 boolean heatOff = true;
 
 double KettleSetpoint, KettleInput, KettleOutput;
-PID kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 100, 40, 0, DIRECT);
+PID kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 1, 1, 1, DIRECT);
 
 KettleHeaterService::KettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus) : _temperatureService(temperatureService),
                                                                                                                _activeStatus(activeStatus)
@@ -51,7 +50,6 @@ void KettleHeaterService::Compute()
 {
   if (!_activeStatus->BrewStarted || _activeStatus->ActiveStep == none)
   {
-    Serial.print("PID DISABLED.");
     DisablePID();
     return;
   }
@@ -61,12 +59,6 @@ void KettleHeaterService::Compute()
     Serial.print("Heat Off, turn on... ");
     EnablePID();
     heatOff = false;
-  }
-
-  if (_activeStatus->Temperature >= _activeStatus->TargetTemperature - 0.4)
-  {
-    RestartPID();
-    kettlePID.SetMode(AUTOMATIC);
   }
 
   KettleInput = _activeStatus->Temperature;

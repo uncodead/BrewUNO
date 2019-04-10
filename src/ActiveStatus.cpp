@@ -14,8 +14,7 @@ boolean ActiveStatus::LoadActiveStatusSettings()
     String data;
     if (configFile && configFile.size())
     {
-        int i;
-        for (i = 0; i < configFile.size(); i++)
+        for (int i = 0; i < configFile.size(); i++)
         {
             data += ((char)configFile.read());
         }
@@ -133,8 +132,18 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     SaveActiveStatus();
 }
 
+time_t lastRead = now();
+
 void ActiveStatus::SaveActiveStatus()
 {
+    if (!BrewStarted)
+        return;
+
+    if (now() - lastRead < 60)
+        return;
+        
+    lastRead = now();
+
     StaticJsonBuffer<1000> jsonBuffer;
     JsonObject &object = jsonBuffer.createObject();
 
@@ -164,8 +173,19 @@ void ActiveStatus::SaveActiveStatus()
     configFile.close();
 }
 
+float RawHigh = 99.3;
+float RawLow = 0.3;
+float ReferenceHigh = 99.9;
+float ReferenceLow = 0;
+float RawRange = RawHigh - RawLow;
+float ReferenceRange = ReferenceHigh - ReferenceLow;
+
 void ActiveStatus::SetTemperature(float temperature)
 {
-    if (temperature > 0)
+    if (temperature > 0 && temperature >= Temperature - 10)
+    {
+        float CorrectedValue = (((temperature - RawLow) * ReferenceRange) / RawRange) + ReferenceLow;
+        // =(((55.00 - 0.3) * 99.9 - 0) / 99.3 - 0.3) + 0
         Temperature = temperature;
+    }
 }
