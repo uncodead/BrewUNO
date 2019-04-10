@@ -1,10 +1,10 @@
 {
     "rampPowerPercentage": 100,
     "boilPowerPercentage": 100,
-    "boilTemperature": 100,
+    "boilTemperature": 99.1,
     "boilTime": 60,
     "sampleTime": 1,
-    "kP": 100,
-    "kI": 100,
-    "kD": 100
+    "kP": 0,
+    "kI": 0.08,
+    "kD": 0
 }

@@ -51,7 +51,6 @@ void KettleHeaterService::Compute()
 {
   if (!_activeStatus->BrewStarted || _activeStatus->ActiveStep == none)
   {
-    Serial.print("PID DISABLED.");
     DisablePID();
     return;
   }
@@ -65,8 +64,8 @@ void KettleHeaterService::Compute()
 
   if (_activeStatus->Temperature >= _activeStatus->TargetTemperature - 0.4)
   {
-    RestartPID();
-    kettlePID.SetMode(AUTOMATIC);
+    //RestartPID();
+    //kettlePID.SetMode(AUTOMATIC);
   }
 
   KettleInput = _activeStatus->Temperature;

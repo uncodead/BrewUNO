@@ -2,22 +2,22 @@
     "steps": [
         {
             "name": "Amarillo",
-            "time": 5,
+            "time": 55,
             "amount": 10
         },
         {
             "name": "Galaxy",
-            "time": 3,
+            "time": 50,
             "amount": 10
         },
         {
             "name": "Cascade",
-            "time": 1,
+            "time": 40,
             "amount": 10
         },
         {
             "name": "Citra",
-            "time": 1,
+            "time": 30,
             "amount": 10
         }
     ]

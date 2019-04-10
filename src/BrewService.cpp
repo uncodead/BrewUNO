@@ -47,7 +47,7 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _activeStatus->SaveActiveStatus();
 
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
-    _kettleHeaterService->SetSampleTime(SAMPLE_TIME);
+    _kettleHeaterService->SetSampleTime(_brewSettingsService->SampleTime * 1000);
 
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
@@ -76,7 +76,7 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
     _activeStatus->SaveActiveStatus();
 
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
-    _kettleHeaterService->SetSampleTime(SAMPLE_TIME);
+    _kettleHeaterService->SetSampleTime(_brewSettingsService->SampleTime * 1000);
 
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
@@ -125,7 +125,7 @@ void BrewService::startBoil(AsyncWebServerRequest *request)
     _activeStatus->SaveActiveStatus();
 
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
-    _kettleHeaterService->SetSampleTime(SAMPLE_TIME);
+    _kettleHeaterService->SetSampleTime(_brewSettingsService->SampleTime* 1000);
 
     _boilService->LoadBoilSettings();
 
@@ -176,5 +176,5 @@ void BrewService::loop()
     _activeStatus->SaveActiveStatus();
 
     _activeStatus->TimeNow = now();
-    delay(SAMPLE_TIME);
+    delay(_brewSettingsService->SampleTime * 1000);
 }

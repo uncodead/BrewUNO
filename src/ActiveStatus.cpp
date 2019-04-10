@@ -166,6 +166,9 @@ void ActiveStatus::SaveActiveStatus()
 
 void ActiveStatus::SetTemperature(float temperature)
 {
-    if (temperature > 0)
+    if (temperature > 0 && temperature >= Temperature - 10)
+    {
+
         Temperature = temperature;
+    }
 }
