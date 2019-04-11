@@ -87,8 +87,9 @@ void MashService::loop(ActiveStatus *activeStatus)
             Pump().TurnPumpOn();
         }
 
-        if (checkTemperaturePID(activeStatus) && activeStatus->StartTime == 0)
+        if (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.2) && activeStatus->StartTime == 0)
         {
+            activeStatus->RestartPID = true;
             Serial.println("Step Started");
             JsonObject &step = _mashSettings->get<JsonArray>("steps")[activeStatus->ActiveMashStepIndex];
             activeStatus->StartTime = timeNow;
@@ -104,14 +105,4 @@ void MashService::loop(ActiveStatus *activeStatus)
             Pump().TurnPump(activeStatus->Recirculation);
         }
     }
-}
-
-boolean MashService::checkTemperaturePID(ActiveStatus *activeStatus)
-{
-    if (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.5))
-    {
-        activeStatus->RestartPID = true;
-        return true;
-    }
-    return false;
 }

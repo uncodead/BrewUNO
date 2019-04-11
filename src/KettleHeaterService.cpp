@@ -4,6 +4,7 @@ boolean heatOff = true;
 
 double KettleSetpoint, KettleInput, KettleOutput;
 PID kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 1, 1, 1, DIRECT);
+double _kp, _ki, _kd;
 
 KettleHeaterService::KettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus) : _temperatureService(temperatureService),
                                                                                                                _activeStatus(activeStatus)
@@ -20,6 +21,10 @@ void KettleHeaterService::SetSampleTime(int sampleTime)
 
 void KettleHeaterService::SetTunings(double kp, double ki, double kd)
 {
+  // save tunings
+  _kp = kp;
+  _ki = ki;
+  _kd = kd;
   kettlePID.SetTunings(kp, ki, kd);
 }
 
@@ -61,11 +66,33 @@ void KettleHeaterService::Compute()
     heatOff = false;
   }
 
+  if (_activeStatus->StartTime <= 0)
+  {
+    // restore tunings
+    kettlePID.SetTunings(_kp, _ki, _kd);
+    Serial.println("PID original");
+  }
+
+  if (_activeStatus->RestartPID)
+  {
+    RestartPID();
+    heatOff = true;
+    _activeStatus->RestartPID = false;
+    // set agressives tunings
+    kettlePID.SetTunings(100, 100, 100);
+    Serial.println("PID Agressive");
+  }
+
   KettleInput = _activeStatus->Temperature;
   KettleSetpoint = _activeStatus->TargetTemperature;
 
   kettlePID.Compute();
   _activeStatus->PWM = KettleOutput;
+  Serial.print("PWM: ");
+  Serial.println(_activeStatus->PWM);
+
+  Serial.print("KPID: ");
+  Serial.println(kettlePID.GetKp() + ' ' + kettlePID.GetKi() + ' ' + kettlePID.GetKd());
 
   if (_activeStatus->ActiveStep == boil)
   {

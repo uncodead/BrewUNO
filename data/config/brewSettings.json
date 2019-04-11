@@ -4,7 +4,7 @@
     "boilTemperature": 99.1,
     "boilTime": 60,
     "sampleTime": 1,
-    "kP": 0,
-    "kI": 0.08,
-    "kD": 0
+    "kP": 40,
+    "kI": 0.25,
+    "kD": 40
 }
