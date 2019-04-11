@@ -87,6 +87,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             Pump().TurnPumpOn();
         }
 
+        // toddo: colocar em configuracao
         if (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.2) && activeStatus->StartTime == 0)
         {
             activeStatus->RestartPID = true;

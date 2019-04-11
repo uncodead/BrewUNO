@@ -59,6 +59,7 @@ void KettleHeaterService::Compute()
     return;
   }
 
+  // renomear varialve
   if (heatOff)
   {
     Serial.print("Heat Off, turn on... ");
@@ -68,20 +69,21 @@ void KettleHeaterService::Compute()
 
   if (_activeStatus->StartTime <= 0)
   {
-    // restore tunings
     kettlePID.SetTunings(_kp, _ki, _kd);
     Serial.println("PID original");
   }
 
+  //todo: trocar nome, verificar se e usado em outros lugares. restart por atingir setpoint
   if (_activeStatus->RestartPID)
   {
     RestartPID();
     heatOff = true;
     _activeStatus->RestartPID = false;
-    // set agressives tunings
     kettlePID.SetTunings(100, 100, 100);
-    Serial.println("PID Agressive");
+    Serial.println("PID agressive");
   }
+
+  //todo de 5 em 5 minutos, enquanto nao iniciar o step, restart no pid
 
   KettleInput = _activeStatus->Temperature;
   KettleSetpoint = _activeStatus->TargetTemperature;
