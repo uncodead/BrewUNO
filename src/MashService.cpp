@@ -90,7 +90,7 @@ void MashService::loop(ActiveStatus *activeStatus)
         // toddo: colocar em configuracao
         if (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.2) && activeStatus->StartTime == 0)
         {
-            activeStatus->RestartPID = true;
+            activeStatus->StepReached = true;
             Serial.println("Step Started");
             JsonObject &step = _mashSettings->get<JsonArray>("steps")[activeStatus->ActiveMashStepIndex];
             activeStatus->StartTime = timeNow;

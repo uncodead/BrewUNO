@@ -1,9 +1,9 @@
 #include <KettleHeaterService.h>
 
-boolean heatOff = true;
-
+boolean _heatOff = true;
+boolean _PIDPause = true;
 double KettleSetpoint, KettleInput, KettleOutput;
-PID kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 1, 1, 1, DIRECT);
+PID _kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 1, 1, 1, DIRECT);
 double _kp, _ki, _kd;
 
 KettleHeaterService::KettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus) : _temperatureService(temperatureService),
@@ -15,40 +15,86 @@ KettleHeaterService::~KettleHeaterService() {}
 
 void KettleHeaterService::SetSampleTime(int sampleTime)
 {
-  kettlePID.SetSampleTime(sampleTime);
-  kettlePID.SetOutputLimits(0, 1023);
+  _kettlePID.SetSampleTime(sampleTime);
+  _kettlePID.SetOutputLimits(0, 1023);
 }
 
 void KettleHeaterService::SetTunings(double kp, double ki, double kd)
 {
-  // save tunings
+  _PIDPause = true;
   _kp = kp;
   _ki = ki;
   _kd = kd;
-  kettlePID.SetTunings(kp, ki, kd);
+  _kettlePID.SetTunings(kp, ki, kd);
 }
 
 void KettleHeaterService::RestartPID()
 {
-  kettlePID.SetMode(AUTOMATIC);
+  _kettlePID.SetMode(AUTOMATIC);
 
-  kettlePID.SetOutputLimits(0.0, 1.0);
-  kettlePID.SetOutputLimits(-1.0, 0.0);
-  kettlePID.SetOutputLimits(0, 1023);
+  _kettlePID.SetOutputLimits(0.0, 1.0);
+  _kettlePID.SetOutputLimits(-1.0, 0.0);
+  _kettlePID.SetOutputLimits(0, 1023);
 
-  kettlePID.SetMode(MANUAL);
+  _kettlePID.SetMode(MANUAL);
 }
 
 void KettleHeaterService::DisablePID()
 {
-  heatOff = true;
   RestartPID();
+  _heatOff = true;
   analogWrite(HEATER_BUS, 0);
 }
 
 void KettleHeaterService::EnablePID()
 {
-  kettlePID.SetMode(AUTOMATIC);
+  _kettlePID.SetMode(AUTOMATIC);
+}
+
+void KettleHeaterService::checkHeatOff()
+{
+  if (_heatOff)
+  {
+    Serial.print("Heat Off, turn on... ");
+    EnablePID();
+    _heatOff = false;
+  }
+}
+
+void KettleHeaterService::checkPauseMashPID()
+{
+  if (_activeStatus->ActiveStep == mash && _activeStatus->StartTime <= 0 && (_activeStatus->TargetTemperature - _activeStatus->Temperature) <= 2 && _PIDPause)
+  {
+    RestartPID();
+    _heatOff = true;
+    _PIDPause = false;
+    _activeStatus->PWM = -1;
+    KettleInput = _activeStatus->TargetTemperature + 5;
+    analogWrite(HEATER_BUS, 0);
+    delay(10000);
+  }
+}
+
+void KettleHeaterService::setOriginalTuning()
+{
+  if (_activeStatus->StartTime <= 0)
+  {
+    _kettlePID.SetTunings(_kp, _ki, _kd);
+    Serial.println("PID original");
+  }
+}
+
+void KettleHeaterService::checkStepReached()
+{
+  if (_activeStatus->StepReached)
+  {
+    RestartPID();
+    _heatOff = true;
+    _PIDPause = true;
+    _activeStatus->StepReached = false;
+    _kettlePID.SetTunings(_kp + 10, _ki + 10, _kd + 10);
+    Serial.println("PID agressive");
+  }
 }
 
 void KettleHeaterService::Compute()
@@ -59,42 +105,22 @@ void KettleHeaterService::Compute()
     return;
   }
 
-  // renomear varialve
-  if (heatOff)
-  {
-    Serial.print("Heat Off, turn on... ");
-    EnablePID();
-    heatOff = false;
-  }
-
-  if (_activeStatus->StartTime <= 0)
-  {
-    kettlePID.SetTunings(_kp, _ki, _kd);
-    Serial.println("PID original");
-  }
-
-  //todo: trocar nome, verificar se e usado em outros lugares. restart por atingir setpoint
-  if (_activeStatus->RestartPID)
-  {
-    RestartPID();
-    heatOff = true;
-    _activeStatus->RestartPID = false;
-    kettlePID.SetTunings(100, 100, 100);
-    Serial.println("PID agressive");
-  }
-
-  //todo de 5 em 5 minutos, enquanto nao iniciar o step, restart no pid
-
   KettleInput = _activeStatus->Temperature;
   KettleSetpoint = _activeStatus->TargetTemperature;
 
-  kettlePID.Compute();
+  checkHeatOff();
+  checkPauseMashPID();
+  setOriginalTuning();
+  checkStepReached();
+
+  _kettlePID.Compute();
+
   _activeStatus->PWM = KettleOutput;
   Serial.print("PWM: ");
   Serial.println(_activeStatus->PWM);
 
   Serial.print("KPID: ");
-  Serial.println(kettlePID.GetKp() + ' ' + kettlePID.GetKi() + ' ' + kettlePID.GetKd());
+  Serial.println(_kettlePID.GetKp() + ' ' + _kettlePID.GetKi() + ' ' + _kettlePID.GetKd());
 
   if (_activeStatus->ActiveStep == boil)
   {

@@ -23,9 +23,13 @@ private:
   TemperatureService *_temperatureService;
   double _rampPowerPercentage;
 
-void endAutoTune();
-void cancelAutoTune();
-void startAutoTune();
+  void endAutoTune();
+  void cancelAutoTune();
+  void startAutoTune();
+  void checkPauseMashPID();
+  void setOriginalTuning();
+  void checkStepReached();
+  void checkHeatOff();
 
   ActiveStatus *_activeStatus;
 };

@@ -46,7 +46,7 @@ public:
 
   boolean Recirculation;
   boolean TotalHeaterPower;
-  boolean RestartPID;
+  boolean StepReached;
 
   boolean LoadActiveStatusSettings();
   void SaveActiveStatus(time_t StartTime,
