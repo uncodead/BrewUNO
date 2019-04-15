@@ -70,6 +70,7 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
         int timeLeft = timeTotal - timeSpent;
         _activeStatus->EndTime = now() + timeLeft;
     }
+    
     _activeStatus->BoilPowerPercentage = _brewSettingsService->BoilPowerPercentage;
     _activeStatus->RampPowerPercentage = _brewSettingsService->RampPowerPercentage;
     _activeStatus->BrewStarted = true;
@@ -114,6 +115,7 @@ void BrewService::startBoil(AsyncWebServerRequest *request)
         request->send(500, APPLICATION_JSON_TYPE, NPT_JSON_ERROR_MESSAGE);
         return;
     }
+
     _activeStatus->TimeNow = now();
     _activeStatus->ActiveStep = boil;
     _activeStatus->BrewStarted = true;
@@ -142,9 +144,7 @@ void BrewService::changeBoilPercentage(AsyncWebServerRequest *request, JsonVaria
         request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
     }
     else
-    {
         request->send(500, APPLICATION_JSON_TYPE, INVALID_JSON_ERROR);
-    }
 }
 
 void BrewService::getActiveStatus(AsyncWebServerRequest *request)
@@ -169,11 +169,10 @@ void BrewService::loop()
         return;
     
     _activeStatus->SetTemperature(_temperatureService->GetTemperature());
-
     _mashService->loop(_activeStatus);
     _boilService->loop(_activeStatus);
     _kettleHeaterService->Compute();
     _activeStatus->TimeNow = now();
-    _activeStatus->SaveActiveStatus();
+    _activeStatus->SaveActiveStatusLoop();
     delay(_brewSettingsService->SampleTime * 1000);
 }

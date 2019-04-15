@@ -134,14 +134,16 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
 
 time_t lastRead = now();
 
-void ActiveStatus::SaveActiveStatus()
+void ActiveStatus::SaveActiveStatusLoop()
 {
-    if (!BrewStarted)
+    if ((!BrewStarted) || (now() - lastRead < 60))
         return;
 
-    if (now() - lastRead < 60)
-        return;
-        
+    SaveActiveStatus();
+}
+
+void ActiveStatus::SaveActiveStatus()
+{
     lastRead = now();
 
     StaticJsonBuffer<1000> jsonBuffer;

@@ -60,6 +60,7 @@ public:
                         int ActiveStep,
                         boolean brewStarted);
   void SaveActiveStatus();
+  void SaveActiveStatusLoop();
   void LogTemperature(float , float);
   void SetTemperature(float);
   String GetJson();

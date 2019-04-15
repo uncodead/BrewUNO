@@ -17,7 +17,7 @@ public:
   void Compute();
   void EnablePID();
   void DisablePID();
-  void RestartPID();
+  void StopPID();
 
 private:
   TemperatureService *_temperatureService;
@@ -27,6 +27,7 @@ private:
   void cancelAutoTune();
   void startAutoTune();
   void checkHeatOff();
+  void generatePWM();
 
   ActiveStatus *_activeStatus;
 };

@@ -1,10 +1,8 @@
 #include <KettleHeaterService.h>
 
 boolean _heatOff = true;
-boolean _PIDPause = true;
 double KettleSetpoint, KettleInput, KettleOutput;
 PID _kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 1, 1, 1, DIRECT);
-double _kp, _ki, _kd;
 
 KettleHeaterService::KettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus) : _temperatureService(temperatureService),
                                                                                                                _activeStatus(activeStatus)
@@ -21,15 +19,11 @@ void KettleHeaterService::SetSampleTime(int sampleTime)
 
 void KettleHeaterService::SetTunings(double kp, double ki, double kd)
 {
-  _PIDPause = true;
   _heatOff = true;
-  _kp = kp;
-  _ki = ki;
-  _kd = kd;
   _kettlePID.SetTunings(kp, ki, kd);
 }
 
-void KettleHeaterService::RestartPID()
+void KettleHeaterService::StopPID()
 {
   _kettlePID.SetMode(AUTOMATIC);
 
@@ -42,7 +36,7 @@ void KettleHeaterService::RestartPID()
 
 void KettleHeaterService::DisablePID()
 {
-  RestartPID();
+  StopPID();
   _heatOff = true;
   analogWrite(HEATER_BUS, 0);
 }
@@ -62,18 +56,10 @@ void KettleHeaterService::checkHeatOff()
   }
 }
 
-void KettleHeaterService::Compute()
+void KettleHeaterService::generatePWM()
 {
-  if (!_activeStatus->BrewStarted || _activeStatus->ActiveStep == none)
-  {
-    DisablePID();
-    return;
-  }
-
   KettleInput = _activeStatus->Temperature;
   KettleSetpoint = _activeStatus->TargetTemperature;
-
-  checkHeatOff();
 
   if (_activeStatus->ActiveStep == mash)
   {
@@ -81,7 +67,7 @@ void KettleHeaterService::Compute()
       if (KettleInput >= KettleSetpoint)
       {
         KettleOutput = 0;
-        RestartPID();
+        StopPID();
         _heatOff = true;
       }
       else
@@ -90,21 +76,28 @@ void KettleHeaterService::Compute()
       KettleOutput = 1023;
 
     KettleOutput = (KettleOutput * _activeStatus->RampPowerPercentage) / 100;
+    _activeStatus->PWM = KettleOutput;
+    Serial.print("PWM: ");
+    Serial.println(_activeStatus->PWM);
   }
+}
 
-  _activeStatus->PWM = KettleOutput;
-  Serial.print("PWM: ");
-  Serial.println(_activeStatus->PWM);
-
-  Serial.print("KPID: ");
-  Serial.println(_kettlePID.GetKp() + ' ' + _kettlePID.GetKi() + ' ' + _kettlePID.GetKd());
-
+void KettleHeaterService::Compute()
+{
+  if (!_activeStatus->BrewStarted || _activeStatus->ActiveStep == none)
+  {
+    DisablePID();
+    return;
+  }
   if (_activeStatus->ActiveStep == boil)
   {
     _activeStatus->PWM = ((1023 * _activeStatus->BoilPowerPercentage) / 100);
     analogWrite(HEATER_BUS, _activeStatus->PWM);
     return;
   }
+
+  checkHeatOff();
+  generatePWM();
 
   analogWrite(HEATER_BUS, KettleOutput);
 }
