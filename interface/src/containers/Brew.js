@@ -7,17 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { withNotifier } from '../components/SnackbarNotification';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import ConfirmDialog from '../components/ConfirmDialog';
-import {
-  GET_ACTIVE_STATUS,
-  START_BREW,
-  NEXT_STEP_BREW,
-  STOP_BREW,
-  RESUME_BREW,
-  ExecuteRestCall,
-  CHANGE_BOIL_PERCENTAGE,
-  START_BOIL
-} from '../constants/Endpoints';
-
+import { GET_ACTIVE_STATUS, START_BREW, NEXT_STEP_BREW, STOP_BREW, RESUME_BREW, ExecuteRestCall, CHANGE_BOIL_PERCENTAGE, START_BOIL } from '../constants/Endpoints';
+import { getDateTime, pad } from '../components/Utils';
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import LineChart from 'recharts/lib/chart/LineChart';
 import Line from 'recharts/lib/cartesian/Line';
@@ -26,13 +17,10 @@ import YAxis from 'recharts/lib/cartesian/YAxis';
 import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
 import Tooltip from 'recharts/lib/component/Tooltip';
 import Legend from 'recharts/lib/component/Legend';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-
 import Typography from '@material-ui/core/Typography';
-
 import Slider from '@material-ui/lab/Slider';
 
 const styles = theme => ({
@@ -43,7 +31,7 @@ const styles = theme => ({
     display: 'none',
   },
   root: {
-    
+
   },
   slider: {
     padding: '22px 0px'
@@ -59,7 +47,6 @@ class Brew extends Component {
     this.state = {
       status: {},
       data: [],
-      fetched: false,
       progressCompleted: 0,
       confirmDialogOpen: false,
       boilPower: 0
@@ -78,41 +65,15 @@ class Brew extends Component {
 
   updateStatus() {
     if (this.state.status.active_step > 0 && this.state.status.brew_started == 1) {
-      if (!this.state.fetched) {
-        try {
-          var json = eval("[" + this.state.status.temperatures + "]")
-          var firstValues = [];
-          json.forEach(element => {
-            firstValues.push({ name: '', Target: element.t, Current: element.c })
-          });
-          this.setState({
-            data: firstValues,
-            fetched: true
-          })
-        }
-        catch (e) {
-          this.props.raiseNotification("Invalid temperatures json result");
-          this.setState({
-            fetched: true
-          })
-        }
-      }
-      else {
-        if (this.state.data.length >= 100) {
-          var array = this.state.data
-          array.splice(0, 1);
-          this.setState({ data: array });
-        }
-        var now = this.getDateTime(this.state.status.time_now);
-        var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
+      var now = this.getDateTime(this.state.status.time_now);
+      var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
+      this.setState({
+        data: [...this.state.data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature, PWM: this.state.status.pwm / 100 }],
+      })
+      if (this.state.boilPower == 0) {
         this.setState({
-          data: [...this.state.data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature, PWM: this.state.status.pwm / 100 }],
+          boilPower: this.state.status.boil_power_percentage
         })
-        if (this.state.boilPower == 0) {
-          this.setState({
-            boilPower: this.state.status.boil_power_percentage
-          })
-        }
       }
     }
   }
@@ -133,12 +94,6 @@ class Brew extends Component {
       default:
         return "Stopped"
     }
-  }
-
-  getDateTime(seconds) {
-    var date = new Date(0);
-    date.setUTCSeconds(seconds);
-    return date;
   }
 
   brewProgress() {
@@ -171,12 +126,6 @@ class Brew extends Component {
     }
   }
 
-  pad(n, width, z) {
-    z = z || '0';
-    n = n + '';
-    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-  }
-
   handleChangeBoilPowerPercentage = (event, value) => {
     this.setState({ boilPower: value });
   }
@@ -202,6 +151,18 @@ class Brew extends Component {
     });
   };
 
+  actionBrew = (message, url) => {
+    this.setState({
+      confirmDialogOpen: true,
+      confirmDialogMessage: message,
+      confirmAction: (confirm) => {
+        if (confirm)
+          ExecuteRestCall(url, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
+        this.setState({ confirmDialogOpen: false })
+      }
+    });
+  }
+
   componentWillUnmount() {
     clearInterval(interval);
   }
@@ -210,94 +171,23 @@ class Brew extends Component {
     const { classes } = this.props;
     return (
       <SectionContent title="Brew">
+
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="primary" className={classes.button}
-            onClick={() => {
-              this.setState({
-                confirmDialogOpen: true,
-                confirmDialogMessage: 'Do you want start brew?',
-                confirmAction: (confirm) => {
-                  if (confirm)
-                    ExecuteRestCall(START_BREW, 'POST', (json) => { this.setState({ status: json, data: [] }) }, null, this.props)
-                  this.setState({ confirmDialogOpen: false })
-                }
-              });
-            }
-            }
-          >
-            Start
-      </Button> : null}
-
+            onClick={() => { this.actionBrew('Do you want start brew?', START_BREW) }}>Start</Button> : null}
         {this.state.status.active_step > 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="primary" className={classes.button}
-            onClick={() => {
-              this.setState({
-                confirmDialogOpen: true,
-                confirmDialogMessage: 'Do you want resume brew?',
-                confirmAction: (confirm) => {
-                  if (confirm)
-                    ExecuteRestCall(RESUME_BREW, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
-                  this.setState({ confirmDialogOpen: false })
-                }
-              });
-            }
-            }
-          >
-            Resume
-      </Button> : null}
-
+            onClick={() => { this.actionBrew('Do you want resume brew?', RESUME_BREW) }}>Resume</Button> : null}
         {this.state.status.active_step > 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => {
-              this.setState({
-                confirmDialogOpen: true,
-                confirmDialogMessage: 'Do you want stop brew?',
-                confirmAction: (confirm) => {
-                  if (confirm)
-                    ExecuteRestCall(STOP_BREW, 'POST', (json) => { this.setState({ data: [], status: json }) }, null, this.props)
-                  this.setState({ confirmDialogOpen: false })
-                }
-              });
-            }
-            }
-          >
-            Stop
-      </Button> : null}
-
+            onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW) }}>Stop</Button> : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => {
-              this.setState({
-                confirmDialogOpen: true,
-                confirmDialogMessage: 'Do you want skip the current step?',
-                confirmAction: (confirm) => {
-                  if (confirm)
-                    ExecuteRestCall(NEXT_STEP_BREW, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
-                  this.setState({ confirmDialogOpen: false })
-                }
-              });
-            }
-            }
-          >
-            Next Step
-      </Button> : null}
+            onClick={() => { this.actionBrew('Do you want skip the current step?', NEXT_STEP_BREW) }}>Next Step</Button> : null}
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="primary" className={classes.button}
-            onClick={() => {
-              this.setState({
-                confirmDialogOpen: true,
-                confirmDialogMessage: 'Do you want start boil?',
-                confirmAction: (confirm) => {
-                  if (confirm)
-                    ExecuteRestCall(START_BOIL, 'POST', (json) => { this.setState({ status: json, data: [] }) }, null, this.props)
-                  this.setState({ confirmDialogOpen: false })
-                }
-              });
-            }
-            }
-          >
-            Boil
-      </Button> : null}
+            onClick={() => { this.actionBrew('Do you want start boil?', START_BOIL) }}>Boil</Button> : null}
+
         <ResponsiveContainer width="100%" height={320} >
           <LineChart data={this.state.data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
             <XAxis dataKey="name" />
@@ -311,9 +201,11 @@ class Brew extends Component {
             <Line type="monotone" yAxisId="left" dataKey="PWM" stroke="#FF0000" dot={null} />
           </LineChart>
         </ResponsiveContainer>
+
         <SectionContent title="Progress">
           <LinearProgress variant="determinate" value={this.state.progressCompleted} />
         </SectionContent>
+
         <SectionContent title="Boiling power %">
           <div className={classes.root}>
             <Slider
@@ -325,6 +217,7 @@ class Brew extends Component {
           </div>
           <Typography id="label">{this.state.boilPower}%</Typography>
         </SectionContent>
+
         <SectionContent title="Status">
           <List component="nav">
             <ListItem button>

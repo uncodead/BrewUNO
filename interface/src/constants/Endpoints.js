@@ -51,7 +51,7 @@ export const ExecuteRestCall = (url, method, callback, callbackError, props) => 
     if (props != undefined && props.raiseNotification != undefined)
       props.raiseNotification("Problem getting resource: " + error.message);
     if (callbackError) {
-      callbackError
+      callbackError()
     }
   });
 }
