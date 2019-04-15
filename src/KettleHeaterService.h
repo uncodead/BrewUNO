@@ -26,9 +26,6 @@ private:
   void endAutoTune();
   void cancelAutoTune();
   void startAutoTune();
-  void checkPauseMashPID();
-  void setOriginalTuning();
-  void checkStepReached();
   void checkHeatOff();
 
   ActiveStatus *_activeStatus;
