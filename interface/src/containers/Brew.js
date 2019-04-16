@@ -65,7 +65,7 @@ class Brew extends Component {
 
   updateStatus() {
     if (this.state.status.active_step > 0 && this.state.status.brew_started == 1) {
-      var now = this.getDateTime(this.state.status.time_now);
+      var now = getDateTime(this.state.status.time_now);
       var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
       this.setState({
         data: [...this.state.data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature, PWM: this.state.status.pwm / 100 }],
@@ -121,7 +121,7 @@ class Brew extends Component {
 
       this.setState({
         countdown: this.pad(hours, 2) + ':' + this.pad(minutes, 2) + ':' + this.pad(seconds, 2),
-        progressCompleted: Math.round(((now - this.getDateTime(this.state.status.start_time)) / (this.getDateTime(this.state.status.end_time) - this.getDateTime(this.state.status.start_time))) * 100)
+        progressCompleted: Math.round(((now - getDateTime(this.state.status.start_time)) / (getDateTime(this.state.status.end_time) - getDateTime(this.state.status.start_time))) * 100)
       })
     }
   }
@@ -229,14 +229,14 @@ class Brew extends Component {
             <ListItem button>
               <ListItemText primary="Start of step" secondary={
                 this.state.status.start_time > 0
-                  ? this.getDateTime(this.state.status.start_time).toLocaleString()
+                  ? getDateTime(this.state.status.start_time).toLocaleString()
                   : null
               } />
             </ListItem>
             <ListItem button>
               <ListItemText primary="End of step" secondary={
                 this.state.status.end_time > 0
-                  ? this.getDateTime(this.state.status.end_time).toLocaleString()
+                  ? getDateTime(this.state.status.end_time).toLocaleString()
                   : null
               } />
             </ListItem>

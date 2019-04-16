@@ -1,7 +1,7 @@
-const ManifestPlugin = require('webpack-manifest-plugin');
-const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require("compression-webpack-plugin");
+const ManifestPlugin = require('webpack-manifest-plugin');
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const path = require('path');
 const fs = require('fs');
@@ -9,21 +9,21 @@ const fs = require('fs');
 module.exports = function override(config, env) {
   if (env === "production") {
     // rename the ouput file, we need it's path to be short, for SPIFFS
-    config.output.filename = 'js/[id].[chunkhash:4].js';
-    config.output.chunkFilename = 'js/[id].[chunkhash:4].js';
+    config.output.filename = 'js/[name].[chunkhash:4].js';
 
-    // take out the manifest and service worker plugins
+    // disable sourcemap for production build
+    config.devtool = false;
+
+    // take out the manifest and service worker
     config.plugins = config.plugins.filter(plugin => !(plugin instanceof ManifestPlugin));
-    config.plugins = config.plugins.filter(plugin => !(plugin instanceof WorkboxWebpackPlugin.GenerateSW));
+    config.plugins = config.plugins.filter(plugin => !(plugin instanceof SWPrecacheWebpackPlugin));
 
-    // shorten css filenames
-    const miniCssExtractPlugin = config.plugins.find((plugin) => plugin instanceof MiniCssExtractPlugin);
-    miniCssExtractPlugin.options.filename = "css/[id].[contenthash:4].css";
-    miniCssExtractPlugin.options.chunkFilename = "css/[id].[contenthash:4].c.css";
+    const extractTextPlugin = config.plugins.find((plugin) => plugin instanceof ExtractTextPlugin);
+    extractTextPlugin.filename = "css/[name].[contenthash:4].css";
 
     // add compression plugin, compress javascript
     config.plugins.push(new CompressionPlugin({
-      filename: "[path].gz[query]",
+      asset: "[path].gz[query]",
       algorithm: "gzip",
       test: /\.(js)$/,
       deleteOriginalAssets: true

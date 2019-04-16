@@ -108,31 +108,31 @@ class MenuAppBar extends React.Component {
             <ListItemIcon>
               <LocalDrink />
             </ListItemIcon>
-            <ListItemText primary="Brew Setting" />
+            <ListItemText primary="Brew Settings" />
           </ListItem>
           <ListItem button component={Link} to='/wifi-configuration'>
             <ListItemIcon>
               <WifiIcon />
             </ListItemIcon>
-            <ListItemText primary="WiFi Setting" />
+            <ListItemText primary="WiFi Settings" />
           </ListItem>
           <ListItem button component={Link} to='/ap-configuration'>
             <ListItemIcon>
               <SettingsInputAntennaIcon />
             </ListItemIcon>
-            <ListItemText primary="AP Mode" />
+            <ListItemText primary="AP Mode Settings" />
           </ListItem>
           <ListItem button component={Link} to='/ntp-configuration'>
             <ListItemIcon>
               <AccessTimeIcon />
             </ListItemIcon>
-            <ListItemText primary="NTP Setting" />
+            <ListItemText primary="NTP Settings" />
           </ListItem>
           <ListItem button component={Link} to='/ota-configuration'>
             <ListItemIcon>
               <SystemUpdateIcon />
             </ListItemIcon>
-            <ListItemText primary="OTA Update" />
+            <ListItemText primary="OTA Settings" />
           </ListItem>
         </List>
       </div>
