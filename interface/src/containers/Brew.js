@@ -100,7 +100,7 @@ class Brew extends Component {
     if (this.state.status.brew_started != 1)
       return;
 
-    var dateEntered = this.getDateTime(this.state.status.end_time);
+    var dateEntered = getDateTime(this.state.status.end_time);
     var now = new Date();
     var difference = dateEntered.getTime() - now.getTime();
 
@@ -120,7 +120,7 @@ class Brew extends Component {
       seconds %= 60;
 
       this.setState({
-        countdown: this.pad(hours, 2) + ':' + this.pad(minutes, 2) + ':' + this.pad(seconds, 2),
+        countdown: pad(hours, 2) + ':' + pad(minutes, 2) + ':' + pad(seconds, 2),
         progressCompleted: Math.round(((now - getDateTime(this.state.status.start_time)) / (getDateTime(this.state.status.end_time) - getDateTime(this.state.status.start_time))) * 100)
       })
     }
