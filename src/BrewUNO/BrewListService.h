@@ -10,11 +10,9 @@
 #endif
 
 #include <ESPAsyncWebServer.h>
-#include <ArduinoJson.h>
-#include <AsyncJson.h>
+#include <AsyncArduinoJson6.h>
 #include <IPAddress.h>
 #include <AsyncJsonRequestWebHandler.h>
-#include <AsyncJsonCallbackResponse.h>
 
 class BrewListService
 {
@@ -23,24 +21,29 @@ public:
   BrewListService(AsyncWebServer *server, FS *fs, char const *getServicePath, char const *postServicePath, String settingsFile) : _server(server), _fs(fs), _settingsFile(settingsFile)
   {
     _server->on(getServicePath, HTTP_GET, std::bind(&BrewListService::get, this, std::placeholders::_1));
-    _server->addHandler(new AsyncCallbackJsonWebHandler(postServicePath, std::bind(&BrewListService::save, this, std::placeholders::_1, std::placeholders::_2)));
+    // configure update settings handler
+    _updateHandler.setUri(postServicePath);
+    _updateHandler.setMethod(HTTP_POST);
+    _updateHandler.setMaxContentLength(1024);
+    _updateHandler.onRequest(std::bind(&BrewListService::save, this, std::placeholders::_1, std::placeholders::_2));
+    _server->addHandler(&_updateHandler);
   }
 
 protected:
-  virtual bool jsonSchemaIsValid(JsonObject &jsonObj, String& messages) {}
+  virtual bool jsonSchemaIsValid(JsonDocument &jsonObj, String &messages) {}
 
 private:
   FS *_fs;
   AsyncWebServer *_server;
   String _settingsFile;
+  AsyncJsonRequestWebHandler _updateHandler;
 
-  void save(AsyncWebServerRequest *request, JsonVariant &json)
+  void save(AsyncWebServerRequest *request, JsonDocument &json)
   {
-    JsonObject &jsonObj = json.as<JsonObject>();
-    if (jsonObj.success())
+    if (json.is<JsonObject>())
     {
       String messages = "";
-      if (!jsonSchemaIsValid(jsonObj, messages))
+      if (!jsonSchemaIsValid(json, messages))
       {
         request->send(500, "text/plain charset=utf-8", "Error validating json: " + messages);
         return;
@@ -52,10 +55,12 @@ private:
         request->send(500, "text/plain charset=utf-8", "Error at config file");
         return;
       }
-      jsonObj.printTo(configFile);
+
+      serializeJson(json, configFile);
+
       configFile.close();
 
-      AsyncJsonResponse *response = new AsyncJsonResponse();
+      AsyncJsonResponse *response = new AsyncJsonResponse(1024);
       response->setLength();
       request->send(response);
     }
@@ -67,15 +72,28 @@ private:
 
   void get(AsyncWebServerRequest *request)
   {
-    AsyncJsonResponse *response = new AsyncJsonResponse();
-
     File configFile = _fs->open(_settingsFile, "r");
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject &root = jsonBuffer.parseObject(configFile);
-    configFile.close();
 
-    JsonObject &jsonResponse = response->getRoot();
-    jsonResponse["steps"] = root["steps"];
+    AsyncJsonResponse *response = new AsyncJsonResponse(1024);
+    JsonObject root = response->getRoot();
+
+    if (configFile)
+    {
+      size_t size = configFile.size();
+      if (size <= 1024)
+      {
+        DynamicJsonDocument _jsonDocument = DynamicJsonDocument(1024);
+        DeserializationError error = deserializeJson(_jsonDocument, configFile);
+        if (error == DeserializationError::Ok && _jsonDocument.is<JsonObject>())
+        {
+          JsonObject json = _jsonDocument.as<JsonObject>();
+          root["steps"] = json["steps"];
+          configFile.close();
+        }
+      }
+      configFile.close();
+    }
+
     response->setLength();
     request->send(response);
   }

@@ -1,4 +1,4 @@
 {
-  "server":"a.st1.ntp.br",
+  "server":"pool.ntp.org",
   "interval":60
 }

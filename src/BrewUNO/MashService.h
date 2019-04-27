@@ -10,18 +10,16 @@
 #endif
 
 #include <ESPAsyncWebServer.h>
-#include <ArduinoJson.h>
-#include <AsyncJson.h>
+#include <AsyncArduinoJson6.h>
 #include <IPAddress.h>
 #include <AsyncJsonRequestWebHandler.h>
-#include <AsyncJsonCallbackResponse.h>
 #include <TimeLib.h>
 #include <NtpClientLib.h>
-#include <enum.h>
-#include <TemperatureService.h>
-#include <ActiveStatus.h>
-#include <Buzzer.h>
-#include <Pump.h>
+#include <BrewUNO/enum.h>
+#include <BrewUNO/TemperatureService.h>
+#include <BrewUNO/ActiveStatus.h>
+#include <BrewUNO/Buzzer.h>
+#include <BrewUNO/Pump.h>
 
 #define MASH_SETTINGS_FILE "/config/mashSettings.json"
 
@@ -36,10 +34,10 @@ public:
 
 private:
   FS *_fs;
-  JsonObject *_mashSettings;
+  JsonDocument *_mashSettings;
   TemperatureService *_temperatureService;
 
-  JsonObject &LoadSettings(String settingsFile);
+  JsonDocument &LoadSettings(String settingsFile);
   boolean checkTemperaturePID(ActiveStatus *activeStatus);
 };
 #endif

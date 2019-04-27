@@ -1,4 +1,4 @@
-#include <MashSettingsService.h>
+#include <BrewUNO/MashSettingsService.h>
 
 MashSettingsService::MashSettingsService(AsyncWebServer *server, FS *fs)
     : BrewListService(server, fs,
@@ -6,9 +6,9 @@ MashSettingsService::MashSettingsService(AsyncWebServer *server, FS *fs)
                       POST_MASH_SETTINGS_SERVICE_PATH,
                       MASH_SETTINGS_FILE) {}
 
-bool MashSettingsService::jsonSchemaIsValid(JsonObject &jsonObj, String &messages)
+bool MashSettingsService::jsonSchemaIsValid(JsonDocument jsonObj, String &messages)
 {
-    JsonArray &steps = jsonObj["steps"];
+    JsonArray steps = jsonObj["steps"].as<JsonArray>();;
     if (steps.size() <= 0)
     {
         return false;
@@ -17,7 +17,7 @@ bool MashSettingsService::jsonSchemaIsValid(JsonObject &jsonObj, String &message
     bool validJson = true;
     for (int i = 0; i < steps.size(); i++)
     {
-        JsonObject &step = steps[i];
+        JsonObject step = steps[i];
         if (step["name"] == "")
         {
             validJson = false;

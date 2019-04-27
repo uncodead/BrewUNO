@@ -10,17 +10,15 @@
 #endif
 
 #include <ESPAsyncWebServer.h>
-#include <ArduinoJson.h>
-#include <AsyncJson.h>
+#include <AsyncArduinoJson6.h>
 #include <IPAddress.h>
 #include <AsyncJsonRequestWebHandler.h>
-#include <AsyncJsonCallbackResponse.h>
 #include <TimeLib.h>
 #include <NtpClientLib.h>
-#include <enum.h>
-#include <TemperatureService.h>
-#include <ActiveStatus.h>
-#include <Buzzer.h>
+#include <BrewUNO/enum.h>
+#include <BrewUNO/TemperatureService.h>
+#include <BrewUNO/ActiveStatus.h>
+#include <BrewUNO/Buzzer.h>
 
 #define BOIL_SETTINGS_FILE "/config/boilSettings.json"
 
@@ -36,10 +34,10 @@ public:
 
 private:
   FS *_fs;
-  JsonObject *_boilSettings;
+  JsonDocument *_boilSettings;
   TemperatureService *_temperatureService;
 
   void SetBoiIndexStep(ActiveStatus *activeStatus, time_t);
-  JsonObject &LoadSettings(String settingsFile);
+  JsonDocument &LoadSettings(String settingsFile);
 };
 #endif

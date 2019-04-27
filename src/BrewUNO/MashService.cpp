@@ -1,6 +1,4 @@
-#include <MashService.h>
-
-DynamicJsonBuffer jsonBufferMash;
+#include <BrewUNO/MashService.h>
 
 MashService::MashService(FS *fs, TemperatureService *temperatureService) : _fs(fs),
                                                                            _temperatureService(temperatureService)
@@ -14,12 +12,19 @@ void MashService::LoadMashSettings()
     _mashSettings = &LoadSettings(MASH_SETTINGS_FILE);
 }
 
-JsonObject &MashService::LoadSettings(String settingsFile)
+JsonDocument &MashService::LoadSettings(String settingsFile)
 {
     File configFile = _fs->open(settingsFile, "r");
-    JsonObject *root = &(jsonBufferMash.parseObject(configFile));
-    configFile.close();
-    return *root;
+    if (configFile)
+    {
+        size_t size = configFile.size();
+        if (size <= MAX_ACTIVESTATUS_SIZE)
+        {
+            DynamicJsonDocument jsonDocument = DynamicJsonDocument(MAX_ACTIVESTATUS_SIZE);
+            deserializeJson(jsonDocument, configFile);
+            return jsonDocument;
+        }
+    }
 }
 
 void MashService::loop(ActiveStatus *activeStatus)
@@ -31,9 +36,10 @@ void MashService::loop(ActiveStatus *activeStatus)
 
     time_t timeNow = now();
 
+    JsonArray steps = _mashSettings->getMember("steps").as<JsonArray>();
     if (activeStatus->TargetTemperature == 0)
     {
-        JsonObject &step = _mashSettings->get<JsonArray>("steps")[0];
+        JsonObject step = steps[0];
         activeStatus->TargetTemperature = step["temperature"];
         activeStatus->TotalHeaterPower = step["totalHeaterPower"] == "true";
     }
@@ -42,9 +48,9 @@ void MashService::loop(ActiveStatus *activeStatus)
     {
         Serial.println("Step over, next step: ");
         unsigned int nextMashStep = activeStatus->ActiveMashStepIndex + 1;
-        if (_mashSettings->get<JsonArray>("steps").size() > nextMashStep)
+        if (steps.size() > nextMashStep)
         {
-            JsonObject &step = _mashSettings->get<JsonArray>("steps")[nextMashStep];
+            JsonObject step = steps[nextMashStep];
             activeStatus->ActiveMashStepIndex = nextMashStep;
             activeStatus->StartTime = 0;
             activeStatus->EndTime = 0;
@@ -92,7 +98,7 @@ void MashService::loop(ActiveStatus *activeStatus)
         {
             activeStatus->StepReached = true;
             Serial.println("Step Started");
-            JsonObject &step = _mashSettings->get<JsonArray>("steps")[activeStatus->ActiveMashStepIndex];
+            JsonObject step = steps[activeStatus->ActiveMashStepIndex];
             activeStatus->StartTime = timeNow;
             activeStatus->EndTime = timeNow + (int(step["time"]) * 60);
 

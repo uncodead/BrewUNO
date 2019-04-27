@@ -11,19 +11,17 @@
 
 #include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
-#include <AsyncJson.h>
 #include <IPAddress.h>
 #include <AsyncJsonRequestWebHandler.h>
-#include <AsyncJsonCallbackResponse.h>
 #include <TimeLib.h>
 #include <NtpClientLib.h>
-#include <enum.h>
-#include <MashService.h>
-#include <BoilService.h>
-#include <KettleHeaterService.h>
-#include <BrewSettingsService.h>
-#include <ActiveStatus.h>
-#include <Pump.h>
+#include <BrewUNO/enum.h>
+#include <BrewUNO/MashService.h>
+#include <BrewUNO/BoilService.h>
+#include <BrewUNO/KettleHeaterService.h>
+#include <BrewUNO/BrewSettingsService.h>
+#include <BrewUNO/ActiveStatus.h>
+#include <BrewUNO/Pump.h>
 
 #define START_BREW_SERVICE_PATH "/rest/startbrew"
 #define STOP_BREW_SERVICE_PATH "/rest/stopbrew"
@@ -64,12 +62,14 @@ private:
   TemperatureService *_temperatureService;
   ActiveStatus *_activeStatus;
 
+  AsyncJsonRequestWebHandler _updateHandler;
+
   void getActiveStatus(AsyncWebServerRequest *request);
   void startBrew(AsyncWebServerRequest *request);
   void stopBrew(AsyncWebServerRequest *request);
   void nextStep(AsyncWebServerRequest *request);
   void resumeBrew(AsyncWebServerRequest *request);
   void startBoil(AsyncWebServerRequest *request);
-  void changeBoilPercentage(AsyncWebServerRequest *request, JsonVariant &json);
+  void changeBoilPercentage(AsyncWebServerRequest *request, JsonDocument &json);
 };
 #endif
