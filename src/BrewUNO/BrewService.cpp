@@ -1,4 +1,4 @@
-#include <BrewService.h>
+#include <BrewUNO/BrewService.h>
 
 BrewService::BrewService(AsyncWebServer *server,
                          FS *fs,
@@ -22,7 +22,13 @@ BrewService::BrewService(AsyncWebServer *server,
     _server->on(NEXT_STEP_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::nextStep, this, std::placeholders::_1));
     _server->on(RESUME_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::resumeBrew, this, std::placeholders::_1));
     _server->on(START_BOIL_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBoil, this, std::placeholders::_1));
-    _server->addHandler(new AsyncCallbackJsonWebHandler(CHANGE_BOIL_PERCENTAGE_SERVICE_PATH, std::bind(&BrewService::changeBoilPercentage, this, std::placeholders::_1, std::placeholders::_2)));
+
+    // configure update settings handler
+    _updateHandler.setUri(CHANGE_BOIL_PERCENTAGE_SERVICE_PATH);
+    _updateHandler.setMethod(HTTP_POST);
+    _updateHandler.setMaxContentLength(1024);
+    _updateHandler.onRequest(std::bind(&BrewService::changeBoilPercentage, this, std::placeholders::_1, std::placeholders::_2));
+    _server->addHandler(&_updateHandler);
 }
 
 BrewService::~BrewService() {}
@@ -70,7 +76,7 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
         int timeLeft = timeTotal - timeSpent;
         _activeStatus->EndTime = now() + timeLeft;
     }
-    
+
     _activeStatus->BoilPowerPercentage = _brewSettingsService->BoilPowerPercentage;
     _activeStatus->RampPowerPercentage = _brewSettingsService->RampPowerPercentage;
     _activeStatus->BrewStarted = true;
@@ -127,19 +133,18 @@ void BrewService::startBoil(AsyncWebServerRequest *request)
     _activeStatus->SaveActiveStatus();
 
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
-    _kettleHeaterService->SetSampleTime(_brewSettingsService->SampleTime* 1000);
+    _kettleHeaterService->SetSampleTime(_brewSettingsService->SampleTime * 1000);
 
     _boilService->LoadBoilSettings();
 
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
-void BrewService::changeBoilPercentage(AsyncWebServerRequest *request, JsonVariant &json)
+void BrewService::changeBoilPercentage(AsyncWebServerRequest *request, JsonDocument &json)
 {
-    JsonObject &jsonObj = json.as<JsonObject>();
-    if (jsonObj.success())
+    if (json.is<JsonObject>())
     {
-        _activeStatus->BoilPowerPercentage = jsonObj.get<double>("boil_power_percentage");
+        _activeStatus->BoilPowerPercentage = json["boil_power_percentage"];
         _activeStatus->SaveActiveStatus();
         request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
     }
@@ -167,7 +172,7 @@ void BrewService::loop()
     timeStatus_t status = timeStatus();
     if (!_activeStatus->BrewStarted && status != timeSet)
         return;
-    
+
     _activeStatus->SetTemperature(_temperatureService->GetTemperature());
     _mashService->loop(_activeStatus);
     _boilService->loop(_activeStatus);

@@ -11,11 +11,12 @@
 
 #include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
-#include <AsyncJson.h>
+#include <AsyncArduinoJson6.h>
 #include <TimeLib.h>
 #include <NtpClientLib.h>
-#include <enum.h>
+#include <BrewUNO/enum.h>
 
+#define MAX_ACTIVESTATUS_SIZE 1024
 #define ACTIVE_STATUS_FILE "/config/activeStatus.json"
 
 class ActiveStatus
@@ -61,7 +62,6 @@ public:
                         boolean brewStarted);
   void SaveActiveStatus();
   void SaveActiveStatusLoop();
-  void LogTemperature(float , float);
   void SetTemperature(float);
   String GetJson();
 

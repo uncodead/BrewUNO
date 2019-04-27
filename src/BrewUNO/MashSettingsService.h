@@ -10,12 +10,10 @@
 #endif
 
 #include <ESPAsyncWebServer.h>
-#include <ArduinoJson.h>
-#include <AsyncJson.h>
+#include <AsyncArduinoJson6.h>
 #include <IPAddress.h>
 #include <AsyncJsonRequestWebHandler.h>
-#include <AsyncJsonCallbackResponse.h>
-#include <BrewListService.h>
+#include <BrewUno/BrewListService.h>
 
 #define POST_MASH_SETTINGS_SERVICE_PATH "/rest/saveMashSettings"
 #define GET_MASH_SETTINGS_SERVICE_PATH "/rest/getMashSettings"
@@ -28,7 +26,7 @@ public:
   MashSettingsService(AsyncWebServer *server, FS *fs);
 
 protected:
-  bool jsonSchemaIsValid(JsonObject &jsonObj, String& messages);
+  bool jsonSchemaIsValid(JsonDocument jsonObj, String& messages);
 };
 
 #endif

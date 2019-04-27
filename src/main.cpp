@@ -23,19 +23,19 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-#include <MashSettingsService.h>
-#include <BoilSettingsService.h>
-#include <BrewSettingsService.h>
-#include <BrewService.h>
-#include <MashService.h>
-#include <BoilService.h>
-#include <TemperatureService.h>
-#include <KettleHeaterService.h>
-#include <ActiveStatus.h>
-#include <Buzzer.h>
-#include <Pump.h>
+#include <BrewUNO/MashSettingsService.h>
+#include <BrewUNO/BoilSettingsService.h>
+#include <BrewUNO/BrewSettingsService.h>
+#include <BrewUNO/BrewService.h>
+#include <BrewUNO/MashService.h>
+#include <BrewUNO/BoilService.h>
+#include <BrewUNO/TemperatureService.h>
+#include <BrewUNO/KettleHeaterService.h>
+#include <BrewUNO/ActiveStatus.h>
+#include <BrewUNO/Buzzer.h>
+#include <BrewUNO/Pump.h>
 
-#define SERIAL_BAUD_RATE 9600
+#define SERIAL_BAUD_RATE 115200
 
 OneWire oneWire(TEMPERATURE_BUS);
 DallasTemperature DS18B20(&oneWire);
@@ -52,7 +52,7 @@ WiFiStatus wifiStatus = WiFiStatus(&server);
 NTPStatus ntpStatus = NTPStatus(&server);
 APStatus apStatus = APStatus(&server);
 
-// biabrewEx
+//brewUNO
 TemperatureService temperatureService = TemperatureService(DS18B20);
 BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS);
 MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
@@ -63,10 +63,6 @@ KettleHeaterService kettleHeaterService = KettleHeaterService(&temperatureServic
 MashService mashService = MashService(&SPIFFS, &temperatureService);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService);
 BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &kettleHeaterService, &activeStatus, &temperatureService);
-
-//java -jar EspStackTraceDecoder.jar C:\Users\bruno\.platformio\packages\toolchain-xtensa\bin\xtensa-lx106-elf-addr2line.exe G:\Projetos\biabrewex\.pioenvs\esp12e\firmware.elf exeption.txt
-//\.platformio\packages\framework-arduinoespressif8266\tools\sdk\lwip\include\lwipopts.h
-//#define TCP_LISTEN_BACKLOG              1
 
 void setup()
 {
@@ -84,7 +80,6 @@ void setup()
   wifiSettingsService.begin();
 
   brewSettingsService.begin();
-
   brewService.begin();
 
   // Serving static resources from /www/
@@ -130,6 +125,5 @@ void loop()
   apSettingsService.loop();
   ntpSettingsService.loop();
   otaSettingsService.loop();
-
   brewService.loop();
 }

@@ -1,7 +1,6 @@
 #include <WiFiSettingsService.h>
 
-WiFiSettingsService::WiFiSettingsService(AsyncWebServer* server, FS* fs) 
-: SettingsService(server, fs, WIFI_SETTINGS_SERVICE_PATH, WIFI_SETTINGS_FILE) {}
+WiFiSettingsService::WiFiSettingsService(AsyncWebServer* server, FS* fs) : SettingsService(server, fs, WIFI_SETTINGS_SERVICE_PATH, WIFI_SETTINGS_FILE) {}
 
 WiFiSettingsService::~WiFiSettingsService() {}
 
@@ -78,7 +77,7 @@ void WiFiSettingsService::reconfigureWiFiConnection() {
 }
 
 void WiFiSettingsService::readIP(JsonObject& root, String key, IPAddress& _ip){
-  if (!root[key] || !_ip.fromString(root[key].as<String>())){
+  if ( root[key].isNull() || !_ip.fromString(root[key].as<String>())){
     _ip = INADDR_NONE;
   }
 }

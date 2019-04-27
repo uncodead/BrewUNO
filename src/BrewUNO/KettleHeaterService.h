@@ -1,10 +1,10 @@
 #ifndef KettleHeaterService_h
 #define KettleHeaterService_h
 
-#include <TemperatureService.h>
-#include <ActiveStatus.h>
+#include <BrewUNO/TemperatureService.h>
+#include <BrewUNO/ActiveStatus.h>
 #include <PID_v1.h>
-#include <enum.h>
+#include <BrewUNO/enum.h>
 
 class KettleHeaterService
 {

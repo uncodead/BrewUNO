@@ -1,4 +1,4 @@
-#include <ActiveStatus.h>
+#include <BrewUNO/ActiveStatus.h>
 
 ActiveStatus::ActiveStatus(FS *fs) : _fs(fs)
 {
@@ -8,42 +8,40 @@ ActiveStatus::~ActiveStatus() {}
 
 boolean ActiveStatus::LoadActiveStatusSettings()
 {
-    DynamicJsonBuffer jsonBufferActiveStatus;
-
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "r");
-    String data;
-    if (configFile && configFile.size())
+    if (configFile)
     {
-        for (int i = 0; i < configFile.size(); i++)
+        size_t size = configFile.size();
+        if (size <= MAX_ACTIVESTATUS_SIZE)
         {
-            data += ((char)configFile.read());
+            DynamicJsonDocument _activeStatusJsonDocument = DynamicJsonDocument(MAX_ACTIVESTATUS_SIZE);
+            DeserializationError error = deserializeJson(_activeStatusJsonDocument, configFile);
+            if (error == DeserializationError::Ok && _activeStatusJsonDocument.is<JsonObject>())
+            {
+                JsonObject _activeStatus = _activeStatusJsonDocument.as<JsonObject>();
+                ActiveStep = _activeStatus["active_step"];
+                ActiveMashStepIndex = _activeStatus["active_mash_step_index"];
+                ActiveBoilStepIndex = _activeStatus["active_boil_step_index"] | "";
+                BoilTime = _activeStatus["boil_time"];
+                BoilTargetTemperature = _activeStatus["boil_target_temperature"];
+                TargetTemperature = _activeStatus["target_temperature"];
+                EndTime = _activeStatus["end_time"];
+                StartTime = _activeStatus["start_time"];
+                TimeNow = _activeStatus["time_now"];
+                BrewStarted = _activeStatus["brew_started"];
+                Temperatures = _activeStatus["temperatures"] | "";
+                PWM = _activeStatus["pwm"];
+                Recirculation = _activeStatus["recirculation"];
+                TotalHeaterPower = _activeStatus["totalHeaterPower"];
+                RampPowerPercentage = _activeStatus["ramp_power_percentage"];
+                BoilPowerPercentage = _activeStatus["boil_power_percentage"];
+                configFile.close();
+            }
         }
         configFile.close();
     }
 
-    JsonObject &_activeStatus = (jsonBufferActiveStatus.parseObject(data));
-    Serial.println(_activeStatus.success());
-    _activeStatus.prettyPrintTo(Serial);
-    configFile.close();
-
-    ActiveStep = _activeStatus.get<int>("active_step");
-    ActiveMashStepIndex = _activeStatus.get<int>("active_mash_step_index");
-    ActiveBoilStepIndex = _activeStatus.get<String>("active_boil_step_index");
-    BoilTime = _activeStatus.get<time_t>("boil_time");
-    BoilTargetTemperature = _activeStatus.get<float>("boil_target_temperature");
-    TargetTemperature = _activeStatus.get<float>("target_temperature");
-    EndTime = _activeStatus.get<time_t>("end_time");
-    StartTime = _activeStatus.get<time_t>("start_time");
-    TimeNow = _activeStatus.get<time_t>("time_now");
-    BrewStarted = _activeStatus.get<boolean>("brew_started");
-    Temperatures = _activeStatus.get<String>("temperatures");
-    PWM = _activeStatus.get<int>("pwm");
-    Recirculation = _activeStatus.get<boolean>("recirculation");
-    TotalHeaterPower = _activeStatus.get<boolean>("totalHeaterPower");
-    RampPowerPercentage = _activeStatus.get<double>("ramp_power_percentage");
-    BoilPowerPercentage = _activeStatus.get<double>("boil_power_percentage");
-
-    return _activeStatus.success();
+    return true;
 }
 
 String ActiveStatus::GetJson()
@@ -69,33 +67,6 @@ String ActiveStatus::GetJson()
                     "}";
     Serial.println(status);
     return status;
-}
-
-void ActiveStatus::LogTemperature(float current, float target)
-{
-    String strCurrent = String(current);
-    String strTarget = String(target);
-    if (current < 100)
-    {
-        strCurrent = " " + String(current);
-    }
-    if (target < 100)
-    {
-        strTarget = " " + String(target);
-    }
-
-    if (Temperatures == "")
-    {
-        Temperatures = "{c:" + strCurrent + ",t:" + strTarget + "}";
-    }
-    else
-    {
-        Temperatures = Temperatures + ',' + "{c:" + strCurrent + ",t:" + strTarget + "}";
-    }
-    if (Temperatures.length() >= 220)
-    {
-        Temperatures.remove(0, 20);
-    }
 }
 
 void ActiveStatus::SaveActiveStatus(time_t startTime,
@@ -132,11 +103,11 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     SaveActiveStatus();
 }
 
-time_t lastRead = now();
+time_t lastWrite = now();
 
 void ActiveStatus::SaveActiveStatusLoop()
 {
-    if ((!BrewStarted) || (now() - lastRead < 60))
+    if ((!BrewStarted) || (now() - lastWrite < 60))
         return;
 
     SaveActiveStatus();
@@ -144,33 +115,33 @@ void ActiveStatus::SaveActiveStatusLoop()
 
 void ActiveStatus::SaveActiveStatus()
 {
-    lastRead = now();
+    lastWrite = now();
 
-    StaticJsonBuffer<1000> jsonBuffer;
-    JsonObject &object = jsonBuffer.createObject();
+    DynamicJsonDocument _activeStatusJsonDocument = DynamicJsonDocument(MAX_ACTIVESTATUS_SIZE);
+    JsonObject _activeStatus = _activeStatusJsonDocument.to<JsonObject>();
 
-    object["active_step"] = ActiveStep;
-    object["active_mash_step_index"] = ActiveMashStepIndex;
-    object["active_boil_step_index"] = ActiveBoilStepIndex;
-    object["boil_time"] = BoilTime;
-    object["boil_target_temperature"] = BoilTargetTemperature;
-    object["target_temperature"] = TargetTemperature;
-    object["start_time"] = StartTime;
-    object["end_time"] = EndTime;
-    object["time_now"] = now();
-    object["brew_started"] = BrewStarted;
-    object["temperature"] = Temperature;
-    object["temperatures"] = Temperatures;
-    object["pwm"] = PWM;
-    object["recirculation"] = Recirculation;
-    object["totalHeaterPower"] = TotalHeaterPower;
-    object["ramp_power_percentage"] = RampPowerPercentage;
-    object["boil_power_percentage"] = BoilPowerPercentage;
+    _activeStatus["active_step"] = ActiveStep;
+    _activeStatus["active_mash_step_index"] = ActiveMashStepIndex;
+    _activeStatus["active_boil_step_index"] = ActiveBoilStepIndex;
+    _activeStatus["boil_time"] = BoilTime;
+    _activeStatus["boil_target_temperature"] = BoilTargetTemperature;
+    _activeStatus["target_temperature"] = TargetTemperature;
+    _activeStatus["start_time"] = StartTime;
+    _activeStatus["end_time"] = EndTime;
+    _activeStatus["time_now"] = now();
+    _activeStatus["brew_started"] = BrewStarted;
+    _activeStatus["temperature"] = Temperature;
+    _activeStatus["temperatures"] = Temperatures;
+    _activeStatus["pwm"] = PWM;
+    _activeStatus["recirculation"] = Recirculation;
+    _activeStatus["totalHeaterPower"] = TotalHeaterPower;
+    _activeStatus["ramp_power_percentage"] = RampPowerPercentage;
+    _activeStatus["boil_power_percentage"] = BoilPowerPercentage;
 
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "w");
     if (configFile)
     {
-        object.printTo(configFile);
+        serializeJson(_activeStatus, configFile);
     }
     configFile.close();
 }

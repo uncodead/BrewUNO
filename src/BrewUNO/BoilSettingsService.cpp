@@ -1,4 +1,4 @@
-#include <BoilSettingsService.h>
+#include <BrewUno/BoilSettingsService.h>
 
 BoilSettingsService::BoilSettingsService(AsyncWebServer *server, FS *fs, BrewSettingsService *brewSettings)
     : _brewSettings(brewSettings), BrewListService(server, fs,
@@ -6,18 +6,16 @@ BoilSettingsService::BoilSettingsService(AsyncWebServer *server, FS *fs, BrewSet
                                                    POST_BOIL_SETTINGS_SERVICE_PATH,
                                                    BOIL_SETTINGS_FILE) {}
 
-bool BoilSettingsService::jsonSchemaIsValid(JsonObject &jsonObj, String &messages)
+bool BoilSettingsService::jsonSchemaIsValid(JsonDocument &jsonObj, String &messages)
 {
-    JsonArray &steps = jsonObj["steps"];
+    JsonArray steps = jsonObj["steps"];
     if (steps.size() <= 0)
-    {
         return false;
-    }
 
     bool validJson = true;
     for (int i = 0; i < steps.size(); i++)
     {
-        JsonObject &step = steps[i];
+        JsonObject step = steps.getElement(i);
         if (step["name"] == "")
         {
             validJson = false;

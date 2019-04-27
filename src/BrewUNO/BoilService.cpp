@@ -1,6 +1,4 @@
-#include <BoilService.h>
-
-DynamicJsonBuffer jsonBufferBoil;
+#include <BrewUNO/BoilService.h>
 
 BoilService::BoilService(FS *fs, TemperatureService *temperatureService) : _fs(fs),
                                                                            _temperatureService(temperatureService)
@@ -14,12 +12,19 @@ void BoilService::LoadBoilSettings()
     _boilSettings = &LoadSettings(BOIL_SETTINGS_FILE);
 }
 
-JsonObject &BoilService::LoadSettings(String settingsFile)
+JsonDocument &BoilService::LoadSettings(String settingsFile)
 {
     File configFile = _fs->open(settingsFile, "r");
-    JsonObject *root = &(jsonBufferBoil.parseObject(configFile));
-    configFile.close();
-    return *root;
+    if (configFile)
+    {
+        size_t size = configFile.size();
+        if (size <= MAX_ACTIVESTATUS_SIZE)
+        {
+            DynamicJsonDocument jsonDocument = DynamicJsonDocument(MAX_ACTIVESTATUS_SIZE);
+            deserializeJson(jsonDocument, configFile);
+            return jsonDocument;
+        }
+    }
 }
 
 void BoilService::loop(ActiveStatus *activeStatus)
@@ -57,7 +62,7 @@ void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, time_t moment)
 {
     int index = 0;
     String currentStep = "";
-    JsonArray &steps = _boilSettings->get<JsonArray>("steps");
+    JsonArray steps = _boilSettings->getMember("steps").as<JsonArray>();
     for (auto step : steps)
     {
         if (step["time"] == moment)

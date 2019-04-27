@@ -11,13 +11,11 @@
 
 #include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
-#include <AsyncJson.h>
+#include <AsyncArduinoJson6.h>
 #include <IPAddress.h>
-#include <AsyncJsonRequestWebHandler.h>
-#include <AsyncJsonCallbackResponse.h>
 #include <SettingsService.h>
-#include <BrewListService.h>
-#include <BrewSettingsService.h>
+#include <BrewUno/BrewListService.h>
+#include <BrewUno/BrewSettingsService.h>
 
 #define POST_BOIL_SETTINGS_SERVICE_PATH "/rest/saveBoilSettings"
 #define GET_BOIL_SETTINGS_SERVICE_PATH "/rest/getBoilSettings"
@@ -30,7 +28,7 @@ class BoilSettingsService : public BrewListService
     BoilSettingsService(AsyncWebServer *server, FS *fs, BrewSettingsService *brewSettings);
 
   protected:
-    bool jsonSchemaIsValid(JsonObject &jsonObj, String& messages);
+    bool jsonSchemaIsValid(JsonDocument &jsonObj, String& messages);
     BrewSettingsService *_brewSettings;
 };
 #endif
