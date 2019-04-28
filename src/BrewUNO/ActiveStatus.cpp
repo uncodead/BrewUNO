@@ -29,12 +29,10 @@ boolean ActiveStatus::LoadActiveStatusSettings()
                 StartTime = _activeStatus["start_time"];
                 TimeNow = _activeStatus["time_now"];
                 BrewStarted = _activeStatus["brew_started"];
-                Temperatures = _activeStatus["temperatures"] | "";
                 PWM = _activeStatus["pwm"];
                 Recirculation = _activeStatus["recirculation"];
-                TotalHeaterPower = _activeStatus["totalHeaterPower"];
-                RampPowerPercentage = _activeStatus["ramp_power_percentage"];
                 BoilPowerPercentage = _activeStatus["boil_power_percentage"];
+                PIDTuning = _activeStatus["pid_tuning"];
                 configFile.close();
             }
         }
@@ -58,11 +56,9 @@ String ActiveStatus::GetJson()
                     "\"time_now\":" + String(TimeNow) + "," +
                     "\"brew_started\":" + String(BrewStarted) + "," +
                     "\"temperature\":" + String(Temperature) + "," +
-                    "\"temperatures\":\"" + String(Temperatures) + "\"" + "," +
                     "\"pwm\":" + String(PWM) + ',' +
                     "\"recirculation\":" + String(Recirculation) + "," +
-                    "\"totalHeaterPower\":" + String(TotalHeaterPower) + "," +
-                    "\"ramp_power_percentage\":" + String(RampPowerPercentage) + "," +
+                    "\"pid_tuning\":" + String(PIDTuning) + "," +
                     "\"boil_power_percentage\":" + String(BoilPowerPercentage) +
                     "}";
     Serial.println(status);
@@ -93,11 +89,9 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     TimeNow = timeNow;
     BrewStarted = brewStarted;
     Temperature = 0;
-    Temperatures = "";
     PWM = 0;
     Recirculation = false;
-    TotalHeaterPower = false;
-    RampPowerPercentage = 0;
+    PIDTuning = false;
     BoilPowerPercentage = 0;
 
     SaveActiveStatus();
@@ -131,18 +125,15 @@ void ActiveStatus::SaveActiveStatus()
     _activeStatus["time_now"] = now();
     _activeStatus["brew_started"] = BrewStarted;
     _activeStatus["temperature"] = Temperature;
-    _activeStatus["temperatures"] = Temperatures;
     _activeStatus["pwm"] = PWM;
     _activeStatus["recirculation"] = Recirculation;
-    _activeStatus["totalHeaterPower"] = TotalHeaterPower;
-    _activeStatus["ramp_power_percentage"] = RampPowerPercentage;
     _activeStatus["boil_power_percentage"] = BoilPowerPercentage;
+    _activeStatus["pid_tuning"] = PIDTuning;
 
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "w");
     if (configFile)
-    {
         serializeJson(_activeStatus, configFile);
-    }
+
     configFile.close();
 }
 

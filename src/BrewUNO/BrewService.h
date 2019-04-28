@@ -30,6 +30,7 @@
 #define GET_ACTIVE_STATUS_SERVICE_PATH "/rest/getactivestatus"
 #define CHANGE_BOIL_PERCENTAGE_SERVICE_PATH "/rest/changeboilpercentage"
 #define START_BOIL_SERVICE_PATH "/rest/startboil"
+#define START_TUNING_SERVICE_PATH "/rest/starttuning"
 
 #define APPLICATION_JSON_TYPE "application/json"
 #define NPT_JSON_ERROR_MESSAGE "{ \"error\": true, \"message\":\"NTP server not reachable\"}"
@@ -70,6 +71,7 @@ private:
   void nextStep(AsyncWebServerRequest *request);
   void resumeBrew(AsyncWebServerRequest *request);
   void startBoil(AsyncWebServerRequest *request);
+  void startTuning(AsyncWebServerRequest *request);
   void changeBoilPercentage(AsyncWebServerRequest *request, JsonDocument &json);
 };
 #endif

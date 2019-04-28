@@ -22,6 +22,7 @@ BrewService::BrewService(AsyncWebServer *server,
     _server->on(NEXT_STEP_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::nextStep, this, std::placeholders::_1));
     _server->on(RESUME_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::resumeBrew, this, std::placeholders::_1));
     _server->on(START_BOIL_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBoil, this, std::placeholders::_1));
+    _server->on(START_TUNING_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startTuning, this, std::placeholders::_1));
 
     // configure update settings handler
     _updateHandler.setUri(CHANGE_BOIL_PERCENTAGE_SERVICE_PATH);
@@ -49,12 +50,9 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _activeStatus->BoilTime = _brewSettingsService->BoilTime * 60;
     _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
     _activeStatus->BoilPowerPercentage = _brewSettingsService->BoilPowerPercentage;
-    _activeStatus->RampPowerPercentage = _brewSettingsService->RampPowerPercentage;
     _activeStatus->SaveActiveStatus();
-
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
-    _kettleHeaterService->SetSampleTime(_brewSettingsService->SampleTime * 1000);
-
+    //_kettleHeaterService->SetSampleTime(_brewSettingsService->SampleTime * 1000);
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
 
@@ -78,12 +76,11 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
     }
 
     _activeStatus->BoilPowerPercentage = _brewSettingsService->BoilPowerPercentage;
-    _activeStatus->RampPowerPercentage = _brewSettingsService->RampPowerPercentage;
     _activeStatus->BrewStarted = true;
     _activeStatus->SaveActiveStatus();
 
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
-    _kettleHeaterService->SetSampleTime(_brewSettingsService->SampleTime * 1000);
+    //_kettleHeaterService->SetSampleTime(_brewSettingsService->SampleTime * 1000);
 
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
@@ -96,7 +93,7 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
 void BrewService::stopBrew(AsyncWebServerRequest *request)
 {
     _activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
-    _kettleHeaterService->DisablePID();
+    //_kettleHeaterService->DisablePID();
     Pump().TurnPumpOff();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
@@ -133,7 +130,7 @@ void BrewService::startBoil(AsyncWebServerRequest *request)
     _activeStatus->SaveActiveStatus();
 
     _kettleHeaterService->SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
-    _kettleHeaterService->SetSampleTime(_brewSettingsService->SampleTime * 1000);
+    //_kettleHeaterService->SetSampleTime(_brewSettingsService->SampleTime * 1000);
 
     _boilService->LoadBoilSettings();
 
@@ -152,6 +149,13 @@ void BrewService::changeBoilPercentage(AsyncWebServerRequest *request, JsonDocum
         request->send(500, APPLICATION_JSON_TYPE, INVALID_JSON_ERROR);
 }
 
+void BrewService::startTuning(AsyncWebServerRequest *request)
+{
+    _kettleHeaterService->StartAutoTune();
+    _activeStatus->PIDTuning = true;
+    request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
+}
+
 void BrewService::getActiveStatus(AsyncWebServerRequest *request)
 {
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
@@ -164,7 +168,7 @@ void BrewService::begin()
     _activeStatus->LoadActiveStatusSettings();
     _activeStatus->BrewStarted = false;
     _activeStatus->SaveActiveStatus();
-    _kettleHeaterService->DisablePID();
+    //_kettleHeaterService->DisablePID();
 }
 
 void BrewService::loop()
@@ -179,5 +183,5 @@ void BrewService::loop()
     _kettleHeaterService->Compute();
     _activeStatus->TimeNow = now();
     _activeStatus->SaveActiveStatusLoop();
-    delay(_brewSettingsService->SampleTime * 1000);
+    //delay(_brewSettingsService->SampleTime * 1000);
 }

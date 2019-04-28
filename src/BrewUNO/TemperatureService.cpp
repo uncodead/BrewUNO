@@ -6,8 +6,14 @@ TemperatureService::TemperatureService(DallasTemperature dallasTemperature) : _d
 
 TemperatureService::~TemperatureService() {}
 
+time_t lastRead = now();
+
 float TemperatureService::GetTemperature()
 {
+  if (now() - lastRead < 2)
+    return 0;
+
+  lastRead = now();
   float tempC = 0;
   _dallasTemperature.requestTemperatures();
   tempC = _dallasTemperature.getTempCByIndex(0);
