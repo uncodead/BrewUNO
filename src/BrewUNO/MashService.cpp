@@ -45,12 +45,6 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->EndTime = 0;
             activeStatus->TargetTemperature = step["temperature"];
             activeStatus->Recirculation = step["recirculation"] == "true";
-            Serial.print("Next step name: ");
-            Serial.printf(step["name"]);
-            Serial.println("");
-            Serial.print("Next step temperature: ");
-            Serial.printf(step["temperature"]);
-            Serial.println("");
             Buzzer().Ring();
         }
         else

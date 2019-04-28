@@ -62,6 +62,8 @@ void KettleHeaterService::Compute()
     {
       _activeStatus->PIDTuning = false;
       _activeStatus->BrewStarted = false;
+      _activeStatus->StartTime = 0;
+      _activeStatus->EndTime = 0;
       _brewSettingsService->KP = aTune.GetKp();
       _brewSettingsService->KI = aTune.GetKi();
       _brewSettingsService->KD = aTune.GetKd();
