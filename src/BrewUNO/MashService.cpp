@@ -7,41 +7,30 @@ MashService::MashService(FS *fs, TemperatureService *temperatureService) : _fs(f
 
 MashService::~MashService() {}
 
+DynamicJsonDocument jsonDocumentMash = DynamicJsonDocument(MAX_ACTIVESTATUS_SIZE);
+JsonObject _mashSettings;
+
 void MashService::LoadMashSettings()
 {
-    _mashSettings = &LoadSettings(MASH_SETTINGS_FILE);
-}
-
-JsonDocument &MashService::LoadSettings(String settingsFile)
-{
-    File configFile = _fs->open(settingsFile, "r");
-    if (configFile)
-    {
-        size_t size = configFile.size();
-        if (size <= MAX_ACTIVESTATUS_SIZE)
-        {
-            DynamicJsonDocument jsonDocument = DynamicJsonDocument(MAX_ACTIVESTATUS_SIZE);
-            deserializeJson(jsonDocument, configFile);
-            return jsonDocument;
-        }
-    }
+    File configFile = _fs->open(MASH_SETTINGS_FILE, "r");
+    if (configFile &&
+        configFile.size() <= MAX_ACTIVESTATUS_SIZE &&
+        deserializeJson(jsonDocumentMash, configFile) == DeserializationError::Ok && jsonDocumentMash.is<JsonObject>())
+        _mashSettings = jsonDocumentMash.as<JsonObject>();
+    configFile.close();
 }
 
 void MashService::loop(ActiveStatus *activeStatus)
 {
     if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
-    {
         return;
-    }
 
     time_t timeNow = now();
-
-    JsonArray steps = _mashSettings->getMember("steps").as<JsonArray>();
+    JsonArray steps = _mashSettings["steps"].as<JsonArray>();
     if (activeStatus->TargetTemperature == 0)
     {
         JsonObject step = steps[0];
         activeStatus->TargetTemperature = step["temperature"];
-        activeStatus->TotalHeaterPower = step["totalHeaterPower"] == "true";
     }
 
     if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)
@@ -56,7 +45,6 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->EndTime = 0;
             activeStatus->TargetTemperature = step["temperature"];
             activeStatus->Recirculation = step["recirculation"] == "true";
-            activeStatus->TotalHeaterPower = step["totalHeaterPower"] == "true";
             Serial.print("Next step name: ");
             Serial.printf(step["name"]);
             Serial.println("");
@@ -75,7 +63,6 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
             activeStatus->Recirculation = false;
             activeStatus->Recirculation = false;
-            activeStatus->TotalHeaterPower = false;
             Buzzer().Ring();
             Pump().TurnPumpOff();
         }
@@ -96,7 +83,6 @@ void MashService::loop(ActiveStatus *activeStatus)
         // toddo: colocar em configuracao
         if (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.2) && activeStatus->StartTime == 0)
         {
-            activeStatus->StepReached = true;
             Serial.println("Step Started");
             JsonObject step = steps[activeStatus->ActiveMashStepIndex];
             activeStatus->StartTime = timeNow;
@@ -108,7 +94,6 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.println(activeStatus->EndTime);
             Buzzer().Ring();
             activeStatus->Recirculation = step["recirculation"] == "true";
-            activeStatus->TotalHeaterPower = step["totalHeaterPower"] == "true";
             Pump().TurnPump(activeStatus->Recirculation);
         }
     }

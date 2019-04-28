@@ -1,94 +1,53 @@
 #include <BrewUNO/KettleHeaterService.h>
 
-boolean _heatOff = true;
+int WindowSize = 5000;
+unsigned long windowStartTime;
 double KettleSetpoint, KettleInput, KettleOutput;
 PID _kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 1, 1, 1, DIRECT);
 
-KettleHeaterService::KettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus) : _temperatureService(temperatureService),
-                                                                                                               _activeStatus(activeStatus)
+PID_ATune aTune(&KettleInput, &KettleOutput);
+double aTuneStep = 5000, aTuneNoise = 1, aTuneStartValue = 0;
+unsigned int aTuneLookBack = 20;
+byte ATuneModeRemember = 2;
+double kp = 2, ki = 0.5, kd = 2;
+boolean tuning = false;
+
+KettleHeaterService::KettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus, BrewSettingsService *brewSettingsService) : _temperatureService(temperatureService),
+                                                                                                                                                         _activeStatus(activeStatus),
+                                                                                                                                                         _brewSettingsService(brewSettingsService)
 {
 }
 
 KettleHeaterService::~KettleHeaterService() {}
 
-void KettleHeaterService::SetSampleTime(int sampleTime)
-{
-  _kettlePID.SetSampleTime(sampleTime);
-  _kettlePID.SetOutputLimits(0, 1023);
-}
-
 void KettleHeaterService::SetTunings(double kp, double ki, double kd)
 {
-  _heatOff = true;
   _kettlePID.SetTunings(kp, ki, kd);
-}
-
-void KettleHeaterService::StopPID()
-{
-  _kettlePID.SetMode(AUTOMATIC);
-
-  _kettlePID.SetOutputLimits(0.0, 1.0);
-  _kettlePID.SetOutputLimits(-1.0, 0.0);
-  _kettlePID.SetOutputLimits(0, 1023);
-
-  _kettlePID.SetMode(MANUAL);
-}
-
-void KettleHeaterService::DisablePID()
-{
-  StopPID();
-  _heatOff = true;
-  analogWrite(HEATER_BUS, 0);
-}
-
-void KettleHeaterService::EnablePID()
-{
+  _kettlePID.SetOutputLimits(0, WindowSize);
+  windowStartTime = millis();
   _kettlePID.SetMode(AUTOMATIC);
 }
 
-void KettleHeaterService::checkHeatOff()
+void KettleHeaterService::StartAutoTune()
 {
-  if (_heatOff)
-  {
-    Serial.print("Heat Off, turn on... ");
-    EnablePID();
-    _heatOff = false;
-  }
-}
-
-void KettleHeaterService::generatePWM()
-{
-  KettleInput = _activeStatus->Temperature;
-  KettleSetpoint = _activeStatus->TargetTemperature;
-
-  if (_activeStatus->ActiveStep == mash)
-  {
-    if ((KettleSetpoint - KettleInput) < 3)
-      if (KettleInput >= KettleSetpoint)
-      {
-        KettleOutput = 0;
-        StopPID();
-        _heatOff = true;
-      }
-      else
-        _kettlePID.Compute();
-    else
-      KettleOutput = 1023;
-
-    KettleOutput = (KettleOutput * _activeStatus->RampPowerPercentage) / 100;
-    _activeStatus->PWM = KettleOutput;
-    Serial.print("PWM: ");
-    Serial.println(_activeStatus->PWM);
-  }
+  KettleOutput = aTuneStartValue;
+  aTune.SetNoiseBand(aTuneNoise);
+  aTune.SetOutputStep(aTuneStep);
+  aTune.SetLookbackSec((int)aTuneLookBack);
+  ATuneModeRemember = _kettlePID.GetMode();
 }
 
 void KettleHeaterService::Compute()
 {
   if (!_activeStatus->BrewStarted || _activeStatus->ActiveStep == none)
   {
-    DisablePID();
+    analogWrite(HEATER_BUS, 0);
     return;
   }
+
+  KettleInput = _activeStatus->Temperature;
+  KettleSetpoint = _activeStatus->TargetTemperature;
+
   if (_activeStatus->ActiveStep == boil)
   {
     _activeStatus->PWM = ((1023 * _activeStatus->BoilPowerPercentage) / 100);
@@ -96,8 +55,44 @@ void KettleHeaterService::Compute()
     return;
   }
 
-  checkHeatOff();
-  generatePWM();
+  if (_activeStatus->PIDTuning)
+  {
+    Serial.println("tuning..");
+    if (aTune.Runtime() != 0)
+    {
+      _activeStatus->PIDTuning = false;
+      _activeStatus->BrewStarted = false;
+      _brewSettingsService->KP = aTune.GetKp();
+      _brewSettingsService->KI = aTune.GetKi();
+      _brewSettingsService->KD = aTune.GetKd();
+      _brewSettingsService->writeToFS();
+      _kettlePID.SetMode(ATuneModeRemember);
+      _kettlePID.SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
+    }
+  }
+  else
+    _kettlePID.Compute();
 
-  analogWrite(HEATER_BUS, KettleOutput);
+  Serial.print("OUTPUT: ");
+  Serial.println(KettleOutput);
+
+  unsigned long now = millis();
+  if (now - windowStartTime > WindowSize)
+  {
+    windowStartTime += WindowSize;
+    Serial.println("time to shift the Relay Window");
+  }
+
+  if (KettleOutput > now - windowStartTime)
+  {
+    digitalWrite(HEATER_BUS, HIGH);
+    _activeStatus->PWM = 1023;
+    Serial.println("on");
+  }
+  else
+  {
+    digitalWrite(HEATER_BUS, LOW);
+    _activeStatus->PWM = 0;
+    Serial.println("off");
+  }
 }

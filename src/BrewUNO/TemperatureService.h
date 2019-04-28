@@ -3,6 +3,7 @@
 
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <TimeLib.h>
 
 class TemperatureService {
   public:

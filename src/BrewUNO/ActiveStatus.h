@@ -33,7 +33,6 @@ public:
   int BoilTime;
   int PWM;
   float BoilTargetTemperature;
-  double RampPowerPercentage;
   double BoilPowerPercentage;
 
   float TargetTemperature;
@@ -43,11 +42,8 @@ public:
   time_t StartTime;
   time_t TimeNow;
 
-  String Temperatures;
-
   boolean Recirculation;
-  boolean TotalHeaterPower;
-  boolean StepReached;
+  boolean PIDTuning;
 
   boolean LoadActiveStatusSettings();
   void SaveActiveStatus(time_t StartTime,

@@ -4,31 +4,23 @@
 #include <BrewUNO/TemperatureService.h>
 #include <BrewUNO/ActiveStatus.h>
 #include <PID_v1.h>
+#include <PID_AutoTune_v0.h>
 #include <BrewUNO/enum.h>
+#include <BrewUNO/BrewSettingsService.h>
 
 class KettleHeaterService
 {
 public:
-  KettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus);
+  KettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus, BrewSettingsService *brewSettingsService);
   ~KettleHeaterService();
 
   void SetTunings(double kp, double ki, double kd);
-  void SetSampleTime(int sampleTime);
+  void StartAutoTune();
   void Compute();
-  void EnablePID();
-  void DisablePID();
-  void StopPID();
 
 private:
   TemperatureService *_temperatureService;
-  double _rampPowerPercentage;
-
-  void endAutoTune();
-  void cancelAutoTune();
-  void startAutoTune();
-  void checkHeatOff();
-  void generatePWM();
-
   ActiveStatus *_activeStatus;
+  BrewSettingsService *_brewSettingsService;
 };
 #endif

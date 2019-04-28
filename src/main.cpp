@@ -59,7 +59,7 @@ MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
 
 ActiveStatus activeStatus = ActiveStatus(&SPIFFS);
-KettleHeaterService kettleHeaterService = KettleHeaterService(&temperatureService, &activeStatus);
+KettleHeaterService kettleHeaterService = KettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
 MashService mashService = MashService(&SPIFFS, &temperatureService);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService);
 BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &kettleHeaterService, &activeStatus, &temperatureService);
@@ -117,6 +117,7 @@ void setup()
   pinMode(PUMP_BUS, OUTPUT);
   pinMode(BUZZER_BUS, OUTPUT);
   digitalWrite(BUZZER_BUS, LOW);
+  pinMode(HEATER_BUS, OUTPUT);
   Pump().TurnPumpOff();
 }
 

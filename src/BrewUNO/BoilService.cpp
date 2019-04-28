@@ -7,32 +7,23 @@ BoilService::BoilService(FS *fs, TemperatureService *temperatureService) : _fs(f
 
 BoilService::~BoilService() {}
 
+DynamicJsonDocument jsonDocumentBoil = DynamicJsonDocument(MAX_ACTIVESTATUS_SIZE);
+JsonObject _boilSettings;
+
 void BoilService::LoadBoilSettings()
 {
-    _boilSettings = &LoadSettings(BOIL_SETTINGS_FILE);
-}
-
-JsonDocument &BoilService::LoadSettings(String settingsFile)
-{
-    File configFile = _fs->open(settingsFile, "r");
-    if (configFile)
-    {
-        size_t size = configFile.size();
-        if (size <= MAX_ACTIVESTATUS_SIZE)
-        {
-            DynamicJsonDocument jsonDocument = DynamicJsonDocument(MAX_ACTIVESTATUS_SIZE);
-            deserializeJson(jsonDocument, configFile);
-            return jsonDocument;
-        }
-    }
+    File configFile = _fs->open(BOIL_SETTINGS_FILE, "r");
+    if (configFile &&
+        configFile.size() <= MAX_ACTIVESTATUS_SIZE &&
+        deserializeJson(jsonDocumentBoil, configFile) == DeserializationError::Ok && jsonDocumentBoil.is<JsonObject>())
+        _boilSettings = jsonDocumentBoil.as<JsonObject>();
+    configFile.close();
 }
 
 void BoilService::loop(ActiveStatus *activeStatus)
 {
     if (!activeStatus->BrewStarted || activeStatus->ActiveStep != boil)
-    {
         return;
-    }
 
     time_t timeNow = now();
 
@@ -62,15 +53,12 @@ void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, time_t moment)
 {
     int index = 0;
     String currentStep = "";
-    JsonArray steps = _boilSettings->getMember("steps").as<JsonArray>();
+    JsonArray steps = _boilSettings["steps"].as<JsonArray>();
     for (auto step : steps)
-    {
         if (step["time"] == moment)
-        {
             currentStep = currentStep == "" ? String(index) : currentStep + "," + String(index);
-        }
-        index += 1;
-    }
+    index += 1;
+
     if (currentStep != "" && currentStep != activeStatus->ActiveBoilStepIndex)
     {
         activeStatus->ActiveBoilStepIndex = currentStep;

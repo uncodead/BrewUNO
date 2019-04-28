@@ -7,7 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { withNotifier } from '../components/SnackbarNotification';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { GET_ACTIVE_STATUS, START_BREW, NEXT_STEP_BREW, STOP_BREW, RESUME_BREW, ExecuteRestCall, CHANGE_BOIL_PERCENTAGE, START_BOIL } from '../constants/Endpoints';
+import { GET_ACTIVE_STATUS, START_BREW, NEXT_STEP_BREW, STOP_BREW, RESUME_BREW, ExecuteRestCall, CHANGE_BOIL_PERCENTAGE, START_BOIL, START_TUNING }
+  from '../constants/Endpoints';
 import { getDateTime, pad } from '../components/Utils';
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import LineChart from 'recharts/lib/chart/LineChart';
@@ -60,15 +61,18 @@ class Brew extends Component {
   setStatusInterval() {
     interval = setInterval(() => {
       this.getStatus();
-    }, 5000);
+    }, 1000);
   }
 
   updateStatus() {
     if (this.state.status.active_step > 0 && this.state.status.brew_started == 1) {
       var now = getDateTime(this.state.status.time_now);
       var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
+      var splice_data = this.state.data;
+      if (splice_data.length >= 100)
+        splice_data.splice(0, 1);
       this.setState({
-        data: [...this.state.data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature, PWM: this.state.status.pwm / 100 }],
+        data: [...splice_data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature, PWM: this.state.status.pwm / 100 }],
       })
       if (this.state.boilPower == 0) {
         this.setState({
@@ -163,6 +167,12 @@ class Brew extends Component {
     });
   }
 
+  startTuning = () => {
+    if (this.state.status.pid_tuning === 0) {
+      this.actionBrew('Do you want start PID tune?', START_TUNING)
+    }
+  }
+
   componentWillUnmount() {
     clearInterval(interval);
   }
@@ -181,9 +191,12 @@ class Brew extends Component {
         {this.state.status.active_step > 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW) }}>Stop</Button> : null}
-        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 ?
+        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.pid_tuning === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want skip the current step?', NEXT_STEP_BREW) }}>Next Step</Button> : null}
+        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 ?
+          <Button variant="contained" color="secondary" className={classes.button}
+            onClick={() => { this.startTuning() }}> {this.state.status.pid_tuning === 1 ? "Tuning..." : "PID Tune"}</Button> : null}
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="primary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want start boil?', START_BOIL) }}>Boil</Button> : null}

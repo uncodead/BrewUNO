@@ -5,7 +5,6 @@
 #include <IPAddress.h>
 
 #define BREW_SETTINGS_FILE "/config/brewSettings.json"
-
 #define BREW_SETTINGS_SERVICE_PATH "/rest/brewSettings"
 
 class BrewSettingsService : public SettingsService

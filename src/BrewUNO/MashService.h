@@ -34,10 +34,7 @@ public:
 
 private:
   FS *_fs;
-  JsonDocument *_mashSettings;
   TemperatureService *_temperatureService;
-
-  JsonDocument &LoadSettings(String settingsFile);
   boolean checkTemperaturePID(ActiveStatus *activeStatus);
 };
 #endif

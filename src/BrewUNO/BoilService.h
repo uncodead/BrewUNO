@@ -34,10 +34,7 @@ public:
 
 private:
   FS *_fs;
-  JsonDocument *_boilSettings;
   TemperatureService *_temperatureService;
-
   void SetBoiIndexStep(ActiveStatus *activeStatus, time_t);
-  JsonDocument &LoadSettings(String settingsFile);
 };
 #endif

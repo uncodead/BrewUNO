@@ -24,6 +24,7 @@ export const NEXT_STEP_BREW = ENDPOINT_ROOT + "nextstepbrew"
 export const RESUME_BREW = ENDPOINT_ROOT + "resumebrew"
 export const CHANGE_BOIL_PERCENTAGE = ENDPOINT_ROOT + "changeboilpercentage"
 export const START_BOIL = ENDPOINT_ROOT + "startboil"
+export const START_TUNING = ENDPOINT_ROOT + "starttuning"
 
 export const BREW_ENDPOINT = ENDPOINT_ROOT + 'brew';
 
