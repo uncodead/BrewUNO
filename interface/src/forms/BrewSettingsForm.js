@@ -46,17 +46,6 @@ class BrewSettingsForm extends Component {
                   errorMessages={['this field is required']}
                 />
                 <TextValidator
-                  name="rampPowerPercentage"
-                  validators={['required']}
-                  label="Ramp Power %"
-                  type="number"
-                  fullWidth
-                  InputProps={{ endAdornment: <InputAdornment position="start">%</InputAdornment> }}
-                  value={brewSettings.rampPowerPercentage}
-                  onChange={handleValueChange("rampPowerPercentage")}
-                  errorMessages={['this field is required']}
-                />
-                <TextValidator
                   name="boilTime"
                   validators={['required']}
                   label="Boil time"

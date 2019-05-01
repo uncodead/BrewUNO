@@ -14,7 +14,7 @@ public:
   KettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus, BrewSettingsService *brewSettingsService);
   ~KettleHeaterService();
 
-  void SetTunings(double kp, double ki, double kd);
+  void StartPID(double kp, double ki, double kd);
   void StartAutoTune();
   void Compute();
 

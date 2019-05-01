@@ -122,7 +122,7 @@ void ActiveStatus::SaveActiveStatus()
     _activeStatus["target_temperature"] = TargetTemperature;
     _activeStatus["start_time"] = StartTime;
     _activeStatus["end_time"] = EndTime;
-    _activeStatus["time_now"] = now();
+    _activeStatus["time_now"] = TimeNow;
     _activeStatus["brew_started"] = BrewStarted;
     _activeStatus["temperature"] = Temperature;
     _activeStatus["pwm"] = PWM;

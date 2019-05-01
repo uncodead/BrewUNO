@@ -98,7 +98,7 @@ class MenuAppBar extends React.Component {
       <div>
         <Toolbar>
             <Typography variant="title" color="primary">
-              BiaBrewEX
+              BrewUNO
             </Typography>
           <Divider absolute />
         </Toolbar>
@@ -120,7 +120,7 @@ class MenuAppBar extends React.Component {
             <ListItemIcon>
               <SettingsInputAntennaIcon />
             </ListItemIcon>
-            <ListItemText primary="AP Mode Settings" />
+            <ListItemText primary="AP Mode" />
           </ListItem>
           <ListItem button component={Link} to='/ntp-configuration'>
             <ListItemIcon>

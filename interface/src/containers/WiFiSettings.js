@@ -20,7 +20,7 @@ class WiFiSettings extends Component {
       var wifiSettings = {
         ssid:selectedNetwork.ssid,
         password:"",
-        hostname:"esp8266-react",
+        hostname:"BrewUNO",
         static_ip_config:false,
       }
       this.props.setData(wifiSettings);

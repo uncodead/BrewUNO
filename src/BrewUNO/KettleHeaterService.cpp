@@ -20,7 +20,7 @@ KettleHeaterService::KettleHeaterService(TemperatureService *temperatureService,
 
 KettleHeaterService::~KettleHeaterService() {}
 
-void KettleHeaterService::SetTunings(double kp, double ki, double kd)
+void KettleHeaterService::StartPID(double kp, double ki, double kd)
 {
   _kettlePID.SetTunings(kp, ki, kd);
   _kettlePID.SetOutputLimits(0, WindowSize);

@@ -107,10 +107,6 @@ class MashBoilSettingsForm extends Component {
           !this.props.boil ?
             <FormControlLabel control={<Switch ref="recirculation" checked={this.state.recirculation} onChange={this.handleRecirculationChange} />} label="Recirculation" />
             : null
-        }{
-          !this.props.boil ?
-            <FormControlLabel control={<Switch ref="totalHeaterPower" checked={this.state.totalHeaterPower} onChange={this.handletotalHeaterPowerChange} />} label="Total Heater Power" />
-            : null
         }
         <Divider />
         <Button type="submit" variant="contained" fullWidth color="primary">Add</Button>

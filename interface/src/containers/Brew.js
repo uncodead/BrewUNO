@@ -52,15 +52,11 @@ class Brew extends Component {
       confirmDialogOpen: false,
       boilPower: 0
     }
-    this.setStatusInterval();
-    timerProgress = setInterval(() => {
-      this.brewProgress();
-    }, 1000);
-  }
-
-  setStatusInterval() {
     interval = setInterval(() => {
       this.getStatus();
+    }, 3000);
+    timerProgress = setInterval(() => {
+      this.brewProgress();
     }, 1000);
   }
 
@@ -74,11 +70,10 @@ class Brew extends Component {
       this.setState({
         data: [...splice_data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature, PWM: this.state.status.pwm / 100 }],
       })
-      if (this.state.boilPower == 0) {
+      if (this.state.boilPower == 0)
         this.setState({
           boilPower: this.state.status.boil_power_percentage
         })
-      }
     }
   }
 
@@ -155,13 +150,15 @@ class Brew extends Component {
     });
   };
 
-  actionBrew = (message, url) => {
+  actionBrew = (message, url, callback) => {
     this.setState({
       confirmDialogOpen: true,
       confirmDialogMessage: message,
       confirmAction: (confirm) => {
-        if (confirm)
+        if (confirm) {
           ExecuteRestCall(url, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
+          if (callback) { callback() }
+        }
         this.setState({ confirmDialogOpen: false })
       }
     });
@@ -190,7 +187,7 @@ class Brew extends Component {
             onClick={() => { this.actionBrew('Do you want resume brew?', RESUME_BREW) }}>Resume</Button> : null}
         {this.state.status.active_step > 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW) }}>Stop</Button> : null}
+            onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW, () => { this.setState({ data: [] }) }) }}>Stop</Button> : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.pid_tuning === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want skip the current step?', NEXT_STEP_BREW) }}>Next Step</Button> : null}

@@ -45,8 +45,7 @@ class SortableList extends Component {
           />
           {!this.props.brewDay ?
             <IconButton aria-label="Delete"
-              onClick={() => this.deleteItem(itemIndex)}
-              disabled={this.props.items.length <= 1}>
+              onClick={() => this.deleteItem(itemIndex)}>
               <DeleteIcon fontSize="madium" />
             </IconButton>
             : null}

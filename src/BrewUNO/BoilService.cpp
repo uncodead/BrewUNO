@@ -45,8 +45,7 @@ void BoilService::loop(ActiveStatus *activeStatus)
         return;
     }
 
-    time_t moment = activeStatus->EndTime - timeNow;
-    SetBoiIndexStep(activeStatus, moment / 60);
+    SetBoiIndexStep(activeStatus, activeStatus->EndTime - timeNow / 60);
 }
 
 void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, time_t moment)
@@ -57,7 +56,7 @@ void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, time_t moment)
     for (auto step : steps)
         if (step["time"] == moment)
             currentStep = currentStep == "" ? String(index) : currentStep + "," + String(index);
-    index += 1;
+    index++;
 
     if (currentStep != "" && currentStep != activeStatus->ActiveBoilStepIndex)
     {
