@@ -3,7 +3,7 @@
 int WindowSize = 5000;
 unsigned long windowStartTime;
 double KettleSetpoint, KettleInput, KettleOutput;
-PID _kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 1, 1, 1, DIRECT);
+PID _kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 1, 1, 1, P_ON_M, DIRECT);
 
 PID_ATune aTune(&KettleInput, &KettleOutput);
 double aTuneStep = 5000, aTuneNoise = 1, aTuneStartValue = 0;
@@ -34,6 +34,7 @@ void KettleHeaterService::StartAutoTune()
   aTune.SetNoiseBand(aTuneNoise);
   aTune.SetOutputStep(aTuneStep);
   aTune.SetLookbackSec((int)aTuneLookBack);
+  aTune.SetControlType(1);
   ATuneModeRemember = _kettlePID.GetMode();
 }
 

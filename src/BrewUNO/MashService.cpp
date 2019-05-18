@@ -44,7 +44,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->StartTime = 0;
             activeStatus->EndTime = 0;
             activeStatus->TargetTemperature = step["temperature"];
-            activeStatus->Recirculation = step["recirculation"] == "true";
+            activeStatus->Recirculation = ((int)step["recirculation"]) == 1;
             Buzzer().Ring();
         }
         else
@@ -87,7 +87,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.print("End Time: ");
             Serial.println(activeStatus->EndTime);
             Buzzer().Ring();
-            activeStatus->Recirculation = step["recirculation"] == "true";
+            activeStatus->Recirculation = ((int)step["recirculation"]) == 1;
             Pump().TurnPump(activeStatus->Recirculation);
         }
     }

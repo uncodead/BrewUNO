@@ -138,8 +138,8 @@ void ActiveStatus::SaveActiveStatus()
 }
 
 float RawHigh = 99.3;
-float RawLow = 0.3;
-float ReferenceHigh = 99.9;
+float RawLow = 0.0;
+float ReferenceHigh = 100;
 float ReferenceLow = 0;
 float RawRange = RawHigh - RawLow;
 float ReferenceRange = ReferenceHigh - ReferenceLow;
