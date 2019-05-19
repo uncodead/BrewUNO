@@ -1,12 +1,10 @@
 #include <BrewUNO/KettleHeaterService.h>
 
-int WindowSize = 5000;
-unsigned long windowStartTime;
 double KettleSetpoint, KettleInput, KettleOutput;
 PID _kettlePID = PID(&KettleInput, &KettleOutput, &KettleSetpoint, 1, 1, 1, P_ON_M, DIRECT);
 
 PID_ATune aTune(&KettleInput, &KettleOutput);
-double aTuneStep = 5000, aTuneNoise = 1, aTuneStartValue = 0;
+double aTuneStep = 1023, aTuneNoise = 1, aTuneStartValue = 0;
 unsigned int aTuneLookBack = 20;
 byte ATuneModeRemember = 2;
 double kp = 2, ki = 0.5, kd = 2;
@@ -22,9 +20,10 @@ KettleHeaterService::~KettleHeaterService() {}
 
 void KettleHeaterService::StartPID(double kp, double ki, double kd)
 {
-  _kettlePID.SetTunings(kp, ki, kd);
-  _kettlePID.SetOutputLimits(0, WindowSize);
-  windowStartTime = millis();
+  _kettlePID.SetOutputLimits(0.0, 1.0);  // Forces minimum up to 0.0
+  _kettlePID.SetOutputLimits(-1.0, 0.0); // Forces maximum down to 0.0
+  _kettlePID.SetTunings(kp, ki, kd, P_ON_M);
+  _kettlePID.SetOutputLimits(0, 1023);
   _kettlePID.SetMode(AUTOMATIC);
 }
 
@@ -56,6 +55,21 @@ void KettleHeaterService::Compute()
     return;
   }
 
+  // TODO: put this configuration at interface
+  if (!_activeStatus->PIDTuning && KettleSetpoint - KettleInput > PID_START)
+  {
+    _activeStatus->PWM = ((1023 * MASH_HEATER_PERCENTAGE) / 100);
+    analogWrite(HEATER_BUS, _activeStatus->PWM);
+    return;
+  }
+
+  if (KettleInput >= KettleSetpoint + 0.3) {
+    _activeStatus->PWM = 0;
+    analogWrite(HEATER_BUS, _activeStatus->PWM);
+    StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
+    return;
+  }
+
   if (_activeStatus->PIDTuning)
   {
     Serial.println("tuning..");
@@ -70,7 +84,7 @@ void KettleHeaterService::Compute()
       _brewSettingsService->KD = aTune.GetKd();
       _brewSettingsService->writeToFS();
       _kettlePID.SetMode(ATuneModeRemember);
-      _kettlePID.SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
+      _kettlePID.SetTunings(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD, P_ON_M);
     }
   }
   else
@@ -79,23 +93,6 @@ void KettleHeaterService::Compute()
   Serial.print("OUTPUT: ");
   Serial.println(KettleOutput);
 
-  unsigned long now = millis();
-  if (now - windowStartTime > WindowSize)
-  {
-    windowStartTime += WindowSize;
-    Serial.println("time to shift the Relay Window");
-  }
-
-  if (KettleOutput > now - windowStartTime)
-  {
-    digitalWrite(HEATER_BUS, HIGH);
-    _activeStatus->PWM = 1023;
-    Serial.println("on");
-  }
-  else
-  {
-    digitalWrite(HEATER_BUS, LOW);
-    _activeStatus->PWM = 0;
-    Serial.println("off");
-  }
+  _activeStatus->PWM = KettleOutput;
+  analogWrite(HEATER_BUS, KettleOutput);
 }

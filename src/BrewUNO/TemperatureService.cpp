@@ -10,7 +10,7 @@ time_t lastRead = now();
 
 float TemperatureService::GetTemperature()
 {
-  if (now() - lastRead < 2)
+  if (now() - lastRead < 1)
     return 0;
 
   lastRead = now();

@@ -13,7 +13,7 @@
 #include <AsyncArduinoJson6.h>
 #include <IPAddress.h>
 #include <AsyncJsonRequestWebHandler.h>
-#include <BrewUno/BrewListService.h>
+#include <BrewUNO/BrewListService.h>
 
 #define POST_MASH_SETTINGS_SERVICE_PATH "/rest/saveMashSettings"
 #define GET_MASH_SETTINGS_SERVICE_PATH "/rest/getMashSettings"

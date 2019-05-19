@@ -74,11 +74,11 @@ void MashService::loop(ActiveStatus *activeStatus)
             Pump().TurnPumpOn();
         }
 
-        // toddo: colocar em configuracao
-        if (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.2) && activeStatus->StartTime == 0)
+        // todo: colocar em configuracao
+        if (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.4) && activeStatus->StartTime == 0)
         {
             Serial.println("Step Started");
-            JsonObject step = steps[activeStatus->ActiveMashStepIndex];
+            JsonObject step = steps[activeStatus->ActiveMashStepIndex]; 
             activeStatus->StartTime = timeNow;
             activeStatus->EndTime = timeNow + (int(step["time"]) * 60);
 

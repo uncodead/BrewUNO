@@ -149,6 +149,6 @@ void ActiveStatus::SetTemperature(float temperature)
     if (temperature > 0 && temperature >= Temperature - 10)
     {
         float CorrectedValue = (((temperature - RawLow) * ReferenceRange) / RawRange) + ReferenceLow;
-        Temperature = CorrectedValue;
+        Temperature = temperature;
     }
 }

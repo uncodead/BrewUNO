@@ -14,8 +14,8 @@
 #include <AsyncArduinoJson6.h>
 #include <IPAddress.h>
 #include <SettingsService.h>
-#include <BrewUno/BrewListService.h>
-#include <BrewUno/BrewSettingsService.h>
+#include <BrewUNO/BrewListService.h>
+#include <BrewUNO/BrewSettingsService.h>
 
 #define POST_BOIL_SETTINGS_SERVICE_PATH "/rest/saveBoilSettings"
 #define GET_BOIL_SETTINGS_SERVICE_PATH "/rest/getBoilSettings"
