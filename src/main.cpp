@@ -57,12 +57,13 @@ TemperatureService temperatureService = TemperatureService(DS18B20);
 BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS);
 MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
+Pump pump = Pump(&brewSettingsService);
 
 ActiveStatus activeStatus = ActiveStatus(&SPIFFS);
 KettleHeaterService kettleHeaterService = KettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
-MashService mashService = MashService(&SPIFFS, &temperatureService);
+MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService);
-BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &kettleHeaterService, &activeStatus, &temperatureService);
+BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &kettleHeaterService, &activeStatus, &temperatureService, &pump);
 
 void setup()
 {
@@ -118,7 +119,7 @@ void setup()
   pinMode(BUZZER_BUS, OUTPUT);
   digitalWrite(BUZZER_BUS, LOW);
   pinMode(HEATER_BUS, OUTPUT);
-  Pump().TurnPumpOff();
+  pump.TurnPumpOff();
 }
 
 void loop()

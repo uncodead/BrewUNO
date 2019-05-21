@@ -2,13 +2,23 @@
 #define Pump_h
 
 #include <Arduino.h>
+#include <TimeLib.h>
+#include <BrewUNO/BrewSettingsService.h>
 
 class Pump
 {
 public:
-  void TurnPump(bool on);
+  Pump(BrewSettingsService *brewSettingsService);
+
+  BrewSettingsService *_brewSettingsService;
+  
   void TurnPumpOn();
   void TurnPumpOff();
+  void CheckRest();
+  void AntiCavitation();
+
+private:
+  void TurnPump(bool on);
 };
 
 #endif

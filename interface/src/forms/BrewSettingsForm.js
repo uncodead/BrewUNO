@@ -57,6 +57,28 @@ class BrewSettingsForm extends Component {
                   errorMessages={['this field is required']}
                 />
                 <TextValidator
+                  name="pumpRestInterval"
+                  validators={['required']}
+                  label="Pump Rest Interval"
+                  type="number"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
+                  value={brewSettings.pumpRestInterval}
+                  onChange={handleValueChange("pumpRestInterval")}
+                  errorMessages={['this field is required']}
+                />
+                <TextValidator
+                  name="pumpRestTime"
+                  validators={['required']}
+                  label="Pump Rest Time"
+                  type="number"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
+                  value={brewSettings.pumpRestTime}
+                  onChange={handleValueChange("pumpRestTime")}
+                  errorMessages={['this field is required']}
+                />
+                <TextValidator
                   name="sampleTime"
                   validators={['required']}
                   label="Sample Time PID"

@@ -7,6 +7,7 @@ class Buzzer
 {
 public:
   void Ring();
+  void Ring(int count);
 };
 
 #endif

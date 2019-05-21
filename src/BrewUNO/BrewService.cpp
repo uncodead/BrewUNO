@@ -7,14 +7,16 @@ BrewService::BrewService(AsyncWebServer *server,
                          BrewSettingsService *brewSettingsService,
                          KettleHeaterService *kettleHeaterService,
                          ActiveStatus *activeStatus,
-                         TemperatureService *temperatureService) : _server(server),
-                                                                   _fs(fs),
-                                                                   _mashService(mashService),
-                                                                   _boilService(boilService),
-                                                                   _brewSettingsService(brewSettingsService),
-                                                                   _kettleHeaterService(kettleHeaterService),
-                                                                   _activeStatus(activeStatus),
-                                                                   _temperatureService(temperatureService)
+                         TemperatureService *temperatureService,
+                         Pump *pump) : _server(server),
+                                       _fs(fs),
+                                       _mashService(mashService),
+                                       _boilService(boilService),
+                                       _brewSettingsService(brewSettingsService),
+                                       _kettleHeaterService(kettleHeaterService),
+                                       _activeStatus(activeStatus),
+                                       _temperatureService(temperatureService),
+                                       _pump(pump)
 {
     _server->on(START_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBrew, this, std::placeholders::_1));
     _server->on(STOP_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::stopBrew, this, std::placeholders::_1));
@@ -51,6 +53,7 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _kettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
+    _pump->AntiCavitation();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
@@ -74,14 +77,19 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
     _kettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
-    Pump().TurnPump(_activeStatus->Recirculation);
+    _pump->AntiCavitation();
+    if (_activeStatus->Recirculation)
+        _pump->TurnPumpOn();
+    else
+        _pump->TurnPumpOff();
+
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
 void BrewService::stopBrew(AsyncWebServerRequest *request)
 {
     _activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
-    Pump().TurnPumpOff();
+    _pump->TurnPumpOff();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 

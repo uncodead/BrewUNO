@@ -1,7 +1,8 @@
 #include <BrewUNO/MashService.h>
 
-MashService::MashService(FS *fs, TemperatureService *temperatureService) : _fs(fs),
-                                                                           _temperatureService(temperatureService)
+MashService::MashService(FS *fs, TemperatureService *temperatureService, Pump *pump) : _fs(fs),
+                                                                           _temperatureService(temperatureService),
+                                                                           _pump(pump)
 {
 }
 
@@ -57,8 +58,8 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
             activeStatus->Recirculation = false;
             activeStatus->Recirculation = false;
-            Buzzer().Ring();
-            Pump().TurnPumpOff();
+            Buzzer().Ring(4);
+            _pump->TurnPumpOff();
         }
     }
     else
@@ -71,8 +72,10 @@ void MashService::loop(ActiveStatus *activeStatus)
         if (activeStatus->StartTime == 0)
         {
             // Recirculation while brew not started
-            Pump().TurnPumpOn();
+            _pump->TurnPumpOn();
         }
+        else 
+            _pump->CheckRest();
 
         // todo: colocar em configuracao
         if (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.4) && activeStatus->StartTime == 0)
@@ -88,7 +91,10 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.println(activeStatus->EndTime);
             Buzzer().Ring();
             activeStatus->Recirculation = ((int)step["recirculation"]) == 1;
-            Pump().TurnPump(activeStatus->Recirculation);
+            if (activeStatus->Recirculation)
+                _pump->TurnPumpOn();
+            else 
+                _pump->TurnPumpOff();
         }
     }
 }

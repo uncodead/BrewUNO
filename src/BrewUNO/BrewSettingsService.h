@@ -26,6 +26,9 @@ public:
   double BoilTemperature;
   int SampleTime;
 
+  int PumpRestInterval;
+  int PumpRestTime;
+
 protected:
   void readFromJsonObject(JsonObject &root);
   void writeToJsonObject(JsonObject &root);

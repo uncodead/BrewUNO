@@ -46,7 +46,8 @@ public:
               BrewSettingsService *brewSettingsService,
               KettleHeaterService *kettleHeaterService,
               ActiveStatus *activeStatus,
-              TemperatureService *temperatureService);
+              TemperatureService *temperatureService,
+              Pump *pump);
 
   ~BrewService();
 
@@ -61,6 +62,7 @@ private:
   BrewSettingsService *_brewSettingsService;
   KettleHeaterService *_kettleHeaterService;
   TemperatureService *_temperatureService;
+  Pump *_pump;
   ActiveStatus *_activeStatus;
 
   AsyncJsonRequestWebHandler _updateHandler;

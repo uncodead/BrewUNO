@@ -26,7 +26,7 @@
 class MashService
 {
 public:
-  MashService(FS *fs, TemperatureService *temperatureService);
+  MashService(FS *fs, TemperatureService *temperatureService, Pump *pump);
   ~MashService();
 
   void loop(ActiveStatus *activeStatus);
@@ -35,6 +35,7 @@ public:
 private:
   FS *_fs;
   TemperatureService *_temperatureService;
+  Pump *_pump;
   boolean checkTemperaturePID(ActiveStatus *activeStatus);
 };
 #endif
