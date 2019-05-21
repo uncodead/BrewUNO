@@ -29,8 +29,8 @@ void BrewSettingsService::writeToJsonObject(JsonObject &root)
     root["kP"] = KP;
     root["kI"] = KI;
     root["kD"] = KD;
-    root["PumpRestInterval"] = PumpRestInterval;
-    root["PumpRestTime"] = PumpRestTime;
+    root["pumpRestInterval"] = PumpRestInterval;
+    root["pumpRestTime"] = PumpRestTime;
 }
 
 void BrewSettingsService::onConfigUpdated()
