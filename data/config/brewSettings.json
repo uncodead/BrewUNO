@@ -5,5 +5,7 @@
     "sampleTime": 1,
     "kP": 1050,
     "kI": 2.5,
-    "kD": 0
+    "kD": 0,
+    "pumpRestInterval": 300,
+    "pumpRestTime": 60
 }
