@@ -21,6 +21,7 @@ import {
 } from '@material-ui/core/styles';
 
 // Our theme
+/*
 const theme = createMuiTheme({
   palette: {
     primary: indigo,
@@ -31,6 +32,25 @@ const theme = createMuiTheme({
     highlight_success: green[500],
   },
 });
+*/
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+    primary: {
+      main: '#313131',
+      light: '#616161',
+      dark: '#424242',
+      contrastText: '#9E9E9E',
+    },
+    secondary: {
+      light: '#616161',
+      main: '#5c6bc0',
+      // dark: will be calculated from palette.secondary.main,
+      contrastText: '#fff',
+    },
+  },
+});
 
 // JSS instance
 const jss = create(jssPreset());
@@ -39,18 +59,18 @@ const jss = create(jssPreset());
 const generateClassName = createGenerateClassName();
 
 class App extends Component {
-	render() {
-	   return (
-		 <JssProvider jss={jss} generateClassName={generateClassName}>
-			<MuiThemeProvider theme={theme}>
-        <SnackbarNotification>
-				  <CssBaseline />
-          <AppRouting />
-        </SnackbarNotification>
-			</MuiThemeProvider>
-		 </JssProvider>
-		)
-	}
+  render() {
+    return (
+      <JssProvider jss={jss} generateClassName={generateClassName}>
+        <MuiThemeProvider theme={theme}>
+          <SnackbarNotification>
+            <CssBaseline />
+            <AppRouting />
+          </SnackbarNotification>
+        </MuiThemeProvider>
+      </JssProvider>
+    )
+  }
 }
 
 export default App

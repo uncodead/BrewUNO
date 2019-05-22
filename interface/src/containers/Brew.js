@@ -10,6 +10,7 @@ import ConfirmDialog from '../components/ConfirmDialog';
 import { GET_ACTIVE_STATUS, START_BREW, NEXT_STEP_BREW, STOP_BREW, RESUME_BREW, ExecuteRestCall, CHANGE_BOIL_PERCENTAGE, START_BOIL, START_TUNING }
   from '../constants/Endpoints';
 import { getDateTime, pad } from '../components/Utils';
+
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import LineChart from 'recharts/lib/chart/LineChart';
 import Line from 'recharts/lib/cartesian/Line';
@@ -18,11 +19,20 @@ import YAxis from 'recharts/lib/cartesian/YAxis';
 import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
 import Tooltip from 'recharts/lib/component/Tooltip';
 import Legend from 'recharts/lib/component/Legend';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';
+
+import Divider from '@material-ui/core/Divider';
+
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+
+import BrewStatusGadget from '../components/BrewStatusGadget'
 
 const styles = theme => ({
   button: {
@@ -37,6 +47,14 @@ const styles = theme => ({
   slider: {
     padding: '22px 0px'
   },
+
+  gadgetCard: {
+    background: "#303030",
+  },
+
+  chartCard: {
+    background: "#262626",
+  },
 });
 
 let interval, timerProgress;
@@ -46,11 +64,13 @@ class Brew extends Component {
     super(props)
     this.getStatus();
     this.state = {
-      status: {},
+      status: {
+        temperature: '-'
+      },
       data: [],
       progressCompleted: 0,
       confirmDialogOpen: false,
-      boilPower: 0
+      boilPower: 0,
     }
     interval = setInterval(() => {
       this.getStatus();
@@ -68,7 +88,7 @@ class Brew extends Component {
       if (splice_data.length >= 100)
         splice_data.splice(0, 1);
       this.setState({
-        data: [...splice_data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature, PWM: this.state.status.pwm / 100, Pump: this.state.status.pump_on ? 20 : 0 }],
+        data: [...splice_data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature }],
       })
       if (this.state.boilPower == 0)
         this.setState({
@@ -176,9 +196,9 @@ class Brew extends Component {
 
   render() {
     const { classes } = this.props;
+    const data = [{ name: 'Group A', value: 50 }, { name: 'Group B', value: 50 }];
     return (
-      <SectionContent title="Brew">
-
+      <SectionContent title="Lets Brew!">
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="primary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want start brew?', START_BREW) }}>Start</Button> : null}
@@ -197,29 +217,33 @@ class Brew extends Component {
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="primary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want start boil?', START_BOIL) }}>Boil</Button> : null}
-
-        <ResponsiveContainer width="100%" height={320} >
-          <LineChart data={this.state.data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-            <XAxis dataKey="name" />
-            <YAxis yAxisId="left" />
-            <YAxis yAxisId="right" orientation="right" />
-            <CartesianGrid vertical={false} strokeDasharray="3 3" />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" yAxisId="left" dataKey="Target" stroke="#82ca9d" dot={null} />
-            <Line type="monotone" yAxisId="left" dataKey="Current" stroke="#8884d8" dot={null} activeDot={{ r: 10 }} />
-            <Line type="monotone" yAxisId="left" dataKey="PWM" stroke="#FF0000" dot={null} />
-            <Line type="monotone" yAxisId="left" dataKey="Pump" stroke="#ffff66" dot={null} />
-          </LineChart>
-        </ResponsiveContainer>
-
-        <SectionContent title={"Temperature:  " + this.state.status.temperature} >
-        </SectionContent>
-
-        <SectionContent title="Progress">
-          <LinearProgress variant="determinate" value={this.state.progressCompleted} />
-        </SectionContent>
-
+        <Divider />
+        <Card className={classes.gadgetCard}>
+          <CardContent>
+            <BrewStatusGadget
+              Temperature={this.state.status.temperature}
+              TargetTemperature={this.state.status.target_temperature}
+              BoilTemperature={this.state.status.boil_target_temperature}
+              PWM={this.state.status.pwm}
+              Progress={this.state.progressCompleted}
+            />
+          </CardContent>
+        </Card>
+        <Divider />
+        <Card className={classes.chartCard}>
+          <CardContent>
+            <ResponsiveContainer width="90%" height={320} >
+              <LineChart data={this.state.data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                <XAxis dataKey="name" tick={{ fill: '#707070', fontSize: "12px", fontFamily: "Montserrat", }} />
+                <YAxis yAxisId="left" tick={{ fill: '#707070', fontSize: "12px", fontFamily: "Montserrat", }} />
+                <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                <Tooltip  />
+                <Line type="monotone" yAxisId="left" dataKey="Target" stroke="#f9a825" dot={null} />
+                <Line type="monotone" yAxisId="left" dataKey="Current" stroke="#c62828" dot={null} activeDot={{ r: 10 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
         <SectionContent title="Boiling power %">
           <div className={classes.root}>
             <Slider
@@ -231,7 +255,6 @@ class Brew extends Component {
           </div>
           <Typography id="label">{this.state.boilPower}%</Typography>
         </SectionContent>
-
         <SectionContent title="Status">
           <List component="nav">
             <ListItem button>

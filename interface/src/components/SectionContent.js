@@ -5,6 +5,8 @@ import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import Divider from '@material-ui/core/Divider';
+
 const styles = theme => ({
   content: {
     padding: theme.spacing.unit * 2,
@@ -15,21 +17,26 @@ const styles = theme => ({
 function SectionContent(props) {
   const { children, classes, title } = props;
   return (
+    <div>
       <Paper className={classes.content}>
         <Typography variant="display1">
           {title}
         </Typography>
+      </Paper>
+      <Paper className={classes.content}>
         {children}
       </Paper>
+
+    </div>
   );
 }
 
 SectionContent.propTypes = {
   classes: PropTypes.object.isRequired,
-	children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node
-    ]).isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]).isRequired,
   title: PropTypes.string.isRequired
 };
 
