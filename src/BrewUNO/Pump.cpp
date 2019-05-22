@@ -6,7 +6,8 @@ time_t lastPumpRest;
 bool isResting = false;
 bool recirculationOn = false;
 
-Pump::Pump(BrewSettingsService *brewSettingsService) : _brewSettingsService(brewSettingsService)
+Pump::Pump(ActiveStatus *activeStatus, BrewSettingsService *brewSettingsService) : _activeStatus(activeStatus), _brewSettingsService(brewSettingsService)
+
 {
 }
 
@@ -30,6 +31,7 @@ void Pump::TurnPump(bool on)
     else
         digitalWrite(PUMP_BUS, HIGH);
 
+    _activeStatus->PumpOn = on;
     Serial.println("Recirculation: " + String(on));
 }
 

@@ -59,6 +59,7 @@ String ActiveStatus::GetJson()
                     "\"pwm\":" + String(PWM) + ',' +
                     "\"recirculation\":" + String(Recirculation) + "," +
                     "\"pid_tuning\":" + String(PIDTuning) + "," +
+                    "\"pump_on\":" + String(PumpOn) + "," +
                     "\"boil_power_percentage\":" + String(BoilPowerPercentage) +
                     "}";
     Serial.println(status);

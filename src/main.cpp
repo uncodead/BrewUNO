@@ -57,9 +57,9 @@ TemperatureService temperatureService = TemperatureService(DS18B20);
 BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS);
 MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
-Pump pump = Pump(&brewSettingsService);
 
 ActiveStatus activeStatus = ActiveStatus(&SPIFFS);
+Pump pump = Pump(&activeStatus, &brewSettingsService);
 KettleHeaterService kettleHeaterService = KettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
 MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService);

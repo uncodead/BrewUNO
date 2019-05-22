@@ -68,7 +68,7 @@ class Brew extends Component {
       if (splice_data.length >= 100)
         splice_data.splice(0, 1);
       this.setState({
-        data: [...splice_data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature, PWM: this.state.status.pwm / 100 }],
+        data: [...splice_data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature, PWM: this.state.status.pwm / 100, Pump: this.state.status.pump_on ? 20 : 0 }],
       })
       if (this.state.boilPower == 0)
         this.setState({
@@ -209,8 +209,12 @@ class Brew extends Component {
             <Line type="monotone" yAxisId="left" dataKey="Target" stroke="#82ca9d" dot={null} />
             <Line type="monotone" yAxisId="left" dataKey="Current" stroke="#8884d8" dot={null} activeDot={{ r: 10 }} />
             <Line type="monotone" yAxisId="left" dataKey="PWM" stroke="#FF0000" dot={null} />
+            <Line type="monotone" yAxisId="left" dataKey="Pump" stroke="#ffff66" dot={null} />
           </LineChart>
         </ResponsiveContainer>
+
+        <SectionContent title={"Temperature:  " + this.state.status.temperature} >
+        </SectionContent>
 
         <SectionContent title="Progress">
           <LinearProgress variant="determinate" value={this.state.progressCompleted} />

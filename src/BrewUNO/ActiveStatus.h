@@ -44,6 +44,7 @@ public:
 
   boolean Recirculation;
   boolean PIDTuning;
+  boolean PumpOn;
 
   boolean LoadActiveStatusSettings();
   void SaveActiveStatus(time_t StartTime,

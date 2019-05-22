@@ -4,13 +4,15 @@
 #include <Arduino.h>
 #include <TimeLib.h>
 #include <BrewUNO/BrewSettingsService.h>
+#include <BrewUNO/ActiveStatus.h>
 
 class Pump
 {
 public:
-  Pump(BrewSettingsService *brewSettingsService);
+  Pump(ActiveStatus *activeStatus, BrewSettingsService *brewSettingsService);
 
   BrewSettingsService *_brewSettingsService;
+  ActiveStatus *_activeStatus;
   
   void TurnPumpOn();
   void TurnPumpOff();
