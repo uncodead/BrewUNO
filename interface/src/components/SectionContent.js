@@ -18,11 +18,13 @@ function SectionContent(props) {
   const { children, classes, title } = props;
   return (
     <div>
-      <Paper className={classes.content}>
-        <Typography variant="display1">
-          {title}
-        </Typography>
-      </Paper>
+      {title != '' ?
+        <Paper className={classes.content}>
+          <Typography variant="display1">
+            {title}
+          </Typography>
+        </Paper>
+        : null}
       <Paper className={classes.content}>
         {children}
       </Paper>

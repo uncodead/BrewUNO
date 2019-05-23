@@ -31,6 +31,7 @@ import Divider from '@material-ui/core/Divider';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
 
 import BrewStatusGadget from '../components/BrewStatusGadget'
 
@@ -41,21 +42,29 @@ const styles = theme => ({
   input: {
     display: 'none',
   },
-  root: {
-
-  },
-  slider: {
-    padding: '22px 0px'
-  },
-
   gadgetCard: {
     background: "#303030",
   },
-
+  slider: {
+    padding: '22px 0px',
+  },
+  sliderThumb: {
+    background: '#fff',
+  },
+  trackBefore: {
+    background: '#536dfe',
+  },
+  trackAfter: {
+    background: '#fff',
+  },
+  brewSettingsCard: {
+    background: "#303030",
+  },
   chartCard: {
     background: "#262626",
   },
 });
+
 
 let interval, timerProgress;
 
@@ -64,9 +73,7 @@ class Brew extends Component {
     super(props)
     this.getStatus();
     this.state = {
-      status: {
-        temperature: '-'
-      },
+      status: { temperature: '-' },
       data: [],
       progressCompleted: 0,
       confirmDialogOpen: false,
@@ -118,11 +125,9 @@ class Brew extends Component {
   brewProgress() {
     if (this.state.status.brew_started != 1)
       return;
-
     var dateEntered = getDateTime(this.state.status.end_time);
     var now = new Date();
     var difference = dateEntered.getTime() - now.getTime();
-
     if (difference <= 0) {
       this.setState({
         countdown: '00:00:00',
@@ -133,11 +138,7 @@ class Brew extends Component {
       var minutes = Math.floor(seconds / 60);
       var hours = Math.floor(minutes / 60);
       var days = Math.floor(hours / 24);
-
-      hours %= 24;
-      minutes %= 60;
-      seconds %= 60;
-
+      hours %= 24; minutes %= 60; seconds %= 60;
       this.setState({
         countdown: pad(hours, 2) + ':' + pad(minutes, 2) + ':' + pad(seconds, 2),
         progressCompleted: Math.round(((now - getDateTime(this.state.status.start_time)) / (getDateTime(this.state.status.end_time) - getDateTime(this.state.status.start_time))) * 100)
@@ -198,7 +199,7 @@ class Brew extends Component {
     const { classes } = this.props;
     const data = [{ name: 'Group A', value: 50 }, { name: 'Group B', value: 50 }];
     return (
-      <SectionContent title="Lets Brew!">
+      <SectionContent title="">
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="primary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want start brew?', START_BREW) }}>Start</Button> : null}
@@ -226,10 +227,36 @@ class Brew extends Component {
               BoilTemperature={this.state.status.boil_target_temperature}
               PWM={this.state.status.pwm}
               Progress={this.state.progressCompleted}
+              ActiveStep={this.getActiveStep()}
+              BoilTime={this.state.status.boil_time}
+              StartTime={this.state.status.start_time > 0 ? getDateTime(this.state.status.start_time).toLocaleTimeString() : null}
+              EndTime={this.state.status.end_time > 0 ? getDateTime(this.state.status.end_time).toLocaleTimeString() : null}
+              CountDown={this.state.countdown}
             />
           </CardContent>
         </Card>
         <Divider />
+        {this.state.status.active_step === 2 && this.state.status.brew_started === 1 ?
+          <Grid item xs={12}>
+            <Grid container justify="center" spacing={16}></Grid>
+            <Grid item>
+              <Card className={this.props.className}>
+                <CardContent>
+                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Boil Power {this.state.boilPower}%</Typography>
+                  <Slider
+                    classes={{
+                      container: classes.slider, thumb: classes.sliderThumb, trackBefore: classes.trackBefore,
+                      trackAfter: classes.trackAfter,
+                    }}
+                    value={this.state.boilPower}
+                    onChange={this.handleChangeBoilPowerPercentage}
+                    onDragEnd={this.handleSaveChangeBoilPowerPercentage}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+          : null}
         <Card className={classes.chartCard}>
           <CardContent>
             <ResponsiveContainer width="90%" height={320} >
@@ -237,51 +264,34 @@ class Brew extends Component {
                 <XAxis dataKey="name" tick={{ fill: '#707070', fontSize: "12px", fontFamily: "Montserrat", }} />
                 <YAxis yAxisId="left" tick={{ fill: '#707070', fontSize: "12px", fontFamily: "Montserrat", }} />
                 <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                <Tooltip  />
+                <Tooltip />
                 <Line type="monotone" yAxisId="left" dataKey="Target" stroke="#f9a825" dot={null} />
                 <Line type="monotone" yAxisId="left" dataKey="Current" stroke="#c62828" dot={null} activeDot={{ r: 10 }} />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
-        <SectionContent title="Boiling power %">
-          <div className={classes.root}>
-            <Slider
-              classes={{ container: classes.slider }}
-              value={this.state.boilPower}
-              onChange={this.handleChangeBoilPowerPercentage}
-              onDragEnd={this.handleSaveChangeBoilPowerPercentage}
-            />
-          </div>
-          <Typography id="label">{this.state.boilPower}%</Typography>
-        </SectionContent>
-        <SectionContent title="Status">
-          <List component="nav">
-            <ListItem button>
-              <ListItemText primary="Active Step" secondary={this.getActiveStep()} />
-            </ListItem>
-            <ListItem button>
-              <ListItemText primary="Boil time" secondary={this.state.status.boil_time} />
-            </ListItem>
-            <ListItem button>
-              <ListItemText primary="Start of step" secondary={
-                this.state.status.start_time > 0
-                  ? getDateTime(this.state.status.start_time).toLocaleString()
-                  : null
-              } />
-            </ListItem>
-            <ListItem button>
-              <ListItemText primary="End of step" secondary={
-                this.state.status.end_time > 0
-                  ? getDateTime(this.state.status.end_time).toLocaleString()
-                  : null
-              } />
-            </ListItem>
-            <ListItem button>
-              <ListItemText primary="Countdown" secondary={this.state.countdown} />
-            </ListItem>
-          </List>
-        </SectionContent>
+
+        <Grid container>
+          <Grid item xs={12}>
+            <Grid container justify="left">
+              <Grid item xs={6}>
+                <Card className={classes.brewSettingsCard}>
+                  <CardContent>
+                    <MashSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_mash_step_index} />
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={6}>
+                <Card className={classes.brewSettingsCard}>
+                  <CardContent>
+                    <BoilSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_boil_step_index} />
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
 
         <ConfirmDialog
           confirmAction={this.state.confirmAction}
@@ -289,8 +299,6 @@ class Brew extends Component {
           confirmDialogMessage={this.state.confirmDialogMessage}
         />
 
-        <MashSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_mash_step_index} />
-        <BoilSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_boil_step_index} />
       </SectionContent >
     )
   }

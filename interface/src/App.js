@@ -49,6 +49,12 @@ const theme = createMuiTheme({
       // dark: will be calculated from palette.secondary.main,
       contrastText: '#fff',
     },
+    overrides: {
+      MuiSlider: {
+        track: { backgroundColor: 'red' },
+        thumb: { backgroundColor: 'red' },
+      },
+    }
   },
 });
 

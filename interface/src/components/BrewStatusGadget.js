@@ -18,7 +18,6 @@ class BrewStatusGadget extends Component {
   render() {
     const PWMCOLORS = ['#1b5e20', '#CCCCCC'];
     const PROGRESSCOLORS = ['#1565c0', '#CCCCCC'];
-    const RADIAN = Math.PI / 180;
     const { classes } = this.props;
 
     const getTemperatureData = (index, props) => {
@@ -26,7 +25,6 @@ class BrewStatusGadget extends Component {
     }
 
     const getColor = (index) => {
-      debugger
       switch (index) {
         case 0:
           return ['#c62828', '#CCCCCC'];
@@ -38,9 +36,9 @@ class BrewStatusGadget extends Component {
     const getTemperatureValue = (index, props) => {
       switch (index) {
         case 0:
-          return props.Temperature
+          return props.Temperature != undefined ? props.Temperature : 0
         case 1:
-          return props.TargetTemperature
+          return props.TargetTemperature != undefined ? props.TargetTemperature : 0
       }
     }
 
@@ -78,7 +76,7 @@ class BrewStatusGadget extends Component {
               <Card className={this.props.className}>
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Active Step</Typography>
-                  <Typography variant="h5">Mash</Typography>
+                  <Typography variant="h5">{this.props.ActiveStep}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -86,7 +84,7 @@ class BrewStatusGadget extends Component {
               <Card className={this.props.className}>
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Boil Time</Typography>
-                  <Typography variant="h5">60 minutes</Typography>
+                  <Typography variant="h5">{this.props.BoilTime > 0 ? this.props.BoilTime / 60 : ''} min</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -94,7 +92,7 @@ class BrewStatusGadget extends Component {
               <Card className={this.props.className}>
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Step Started at</Typography>
-                  <Typography variant="h5">12:41:23</Typography>
+                  <Typography variant="h5">{this.props.StartTime != null ? this.props.StartTime : '-'}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -102,7 +100,7 @@ class BrewStatusGadget extends Component {
               <Card className={this.props.className}>
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Step End at</Typography>
-                  <Typography variant="h5">12:51:23</Typography>
+                  <Typography variant="h5">{this.props.EndTime != null ? this.props.EndTime : '-'}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -110,7 +108,7 @@ class BrewStatusGadget extends Component {
               <Card className={this.props.className}>
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>CountDown</Typography>
-                  <Typography variant="h5">00:51:23</Typography>
+                  <Typography variant="h5">{this.props.CountDown != undefined ? this.props.CountDown : '-'}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -130,8 +128,8 @@ class BrewStatusGadgetItem extends Component {
         <Card className={this.props.className}>
           <CardContent>
             <Typography color="textSecondary" variant="subtitle1" gutterBottom>{this.props.title}</Typography>
-            <PieChart width={190} height={90}>
-              <Pie data={this.props.data} cx={90} cy={90} startAngle={180} endAngle={0} innerRadius={60} outerRadius={80} paddingAngle={2} legendType='line'>
+            <PieChart width={180} height={90}>
+              <Pie data={this.props.data} cx={85} cy={90} startAngle={180} endAngle={0} innerRadius={60} outerRadius={80} paddingAngle={2} legendType='line'>
                 {this.props.data.map((entry, index) => <Cell fill={this.props.colors[index % this.props.colors.length]} />)}
               </Pie>
             </PieChart>

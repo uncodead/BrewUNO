@@ -61,16 +61,6 @@ class SortableList extends Component {
               }
               label="Recirculation"
             /> : null}
-          {!this.props.boil ?
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={value.totalHeaterPower}
-                  disabled
-                />
-              }
-              label="Total Heater Power"
-            /> : null}
         </ListItem>
         <Divider middle />
       </List>

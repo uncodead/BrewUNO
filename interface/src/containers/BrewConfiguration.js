@@ -29,12 +29,10 @@ class BrewConfiguration extends Component {
           <Tab value="MashSettings" label="Mash" />
           <Tab value="BoilSettings" label="Boil" />
           <Tab value="BrewSettings" label="Settings" />
-          <Tab value="Brew" label="Brew" />
         </Tabs>
         {selectedTab === "MashSettings" && <MashSettings />}
         {selectedTab === "BoilSettings" && <BoilSettings />}
         {selectedTab === "BrewSettings" && <BrewSettings />}
-        {selectedTab === "Brew" && <Brew />}
       </MenuAppBar>
     )
   }

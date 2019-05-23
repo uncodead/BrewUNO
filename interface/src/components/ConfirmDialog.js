@@ -33,10 +33,10 @@ class ConfirmDialog extends Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.props.confirmAction(false)} color="primary">
+          <Button onClick={() => this.props.confirmAction(false)} color="secondary">
             No
          </Button>
-          <Button onClick={() => this.props.confirmAction(true)} color="primary" autoFocus>
+          <Button onClick={() => this.props.confirmAction(true)} color="secondary" autoFocus>
             Yes
          </Button>
         </DialogActions>

@@ -22,6 +22,7 @@ import SystemUpdateIcon from '@material-ui/icons/SystemUpdate';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import SettingsInputAntennaIcon from '@material-ui/icons/SettingsInputAntenna';
 import LocalDrink from '@material-ui/icons/LocalDrink'
+import Assignment from '@material-ui/icons/Assignment'
 
 const drawerWidth = 250;
 
@@ -97,13 +98,22 @@ class MenuAppBar extends React.Component {
     const drawer = (
       <div>
         <Toolbar >
+          <Typography variant="title" color="secondary">
+            BrewUNO
+            </Typography>
           <Divider absolute />
         </Toolbar>
         <Divider />
         <List>
-          <ListItem button component={Link} to='/brew-configuration'>
+          <ListItem button component={Link} to='/brew'>
             <ListItemIcon>
               <LocalDrink />
+            </ListItemIcon>
+            <ListItemText primary="Brew" />
+          </ListItem>
+          <ListItem button component={Link} to='/brew-configuration'>
+            <ListItemIcon>
+              <Assignment />
             </ListItemIcon>
             <ListItemText primary="Brew Settings" />
           </ListItem>
@@ -149,7 +159,7 @@ class MenuAppBar extends React.Component {
                 <MenuIcon />
               </IconButton>
               <Typography variant="title" color="inherit" noWrap>
-                BrewUNO - {sectionTitle}
+                {sectionTitle}
               </Typography>
             </Toolbar>
           </AppBar>
