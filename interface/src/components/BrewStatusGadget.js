@@ -86,7 +86,7 @@ class BrewStatusGadget extends Component {
               <Card className={this.props.className}>
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Boil Time</Typography>
-                  <Typography variant="h5">3600 minutes</Typography>
+                  <Typography variant="h5">60 minutes</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -94,7 +94,7 @@ class BrewStatusGadget extends Component {
               <Card className={this.props.className}>
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Step Started at</Typography>
-                  <Typography variant="h5">10/10/2019 12:41:23</Typography>
+                  <Typography variant="h5">12:41:23</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -102,7 +102,7 @@ class BrewStatusGadget extends Component {
               <Card className={this.props.className}>
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Step End at</Typography>
-                  <Typography variant="h5">10/10/2019 12:51:23</Typography>
+                  <Typography variant="h5">12:51:23</Typography>
                 </CardContent>
               </Card>
             </Grid>
