@@ -11,6 +11,7 @@ const styles = theme => ({
   content: {
     padding: theme.spacing.unit * 2,
     margin: theme.spacing.unit * 2,
+    minWidth: 350
   }
 });
 

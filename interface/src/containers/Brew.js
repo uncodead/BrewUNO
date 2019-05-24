@@ -5,12 +5,15 @@ import BoilSettings from './BoilSettings';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { withNotifier } from '../components/SnackbarNotification';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { GET_ACTIVE_STATUS, START_BREW, NEXT_STEP_BREW, STOP_BREW, RESUME_BREW, ExecuteRestCall, CHANGE_BOIL_PERCENTAGE, START_BOIL, START_TUNING }
-  from '../constants/Endpoints';
+import {
+  START_PUMP, STOP_PUMP,
+  GET_ACTIVE_STATUS, START_BREW,
+  NEXT_STEP_BREW, STOP_BREW, RESUME_BREW,
+  ExecuteRestCall, CHANGE_BOIL_PERCENTAGE,
+  START_BOIL, START_TUNING
+} from '../constants/Endpoints';
 import { getDateTime, pad } from '../components/Utils';
-
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import LineChart from 'recharts/lib/chart/LineChart';
 import Line from 'recharts/lib/cartesian/Line';
@@ -18,21 +21,13 @@ import XAxis from 'recharts/lib/cartesian/XAxis';
 import YAxis from 'recharts/lib/cartesian/YAxis';
 import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
 import Tooltip from 'recharts/lib/component/Tooltip';
-import Legend from 'recharts/lib/component/Legend';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';
-
 import Divider from '@material-ui/core/Divider';
-
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
-
+import Paper from '@material-ui/core/Paper';
 import BrewStatusGadget from '../components/BrewStatusGadget'
 
 const styles = theme => ({
@@ -172,17 +167,23 @@ class Brew extends Component {
   };
 
   actionBrew = (message, url, callback) => {
-    this.setState({
-      confirmDialogOpen: true,
-      confirmDialogMessage: message,
-      confirmAction: (confirm) => {
-        if (confirm) {
-          ExecuteRestCall(url, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
-          if (callback) { callback() }
+    if (message !== '') {
+      this.setState({
+        confirmDialogOpen: true,
+        confirmDialogMessage: message,
+        confirmAction: (confirm) => {
+          if (confirm) {
+            ExecuteRestCall(url, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
+            if (callback) { callback() }
+          }
+          this.setState({ confirmDialogOpen: false })
         }
-        this.setState({ confirmDialogOpen: false })
-      }
-    });
+      });
+    }
+    else {
+      ExecuteRestCall(url, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
+      if (callback) { callback() }
+    }
   }
 
   startTuning = () => {
@@ -201,10 +202,10 @@ class Brew extends Component {
     return (
       <SectionContent title="">
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
-          <Button variant="contained" color="primary" className={classes.button}
+          <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want start brew?', START_BREW) }}>Start</Button> : null}
         {this.state.status.active_step > 0 && this.state.status.brew_started === 0 ?
-          <Button variant="contained" color="primary" className={classes.button}
+          <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want resume brew?', RESUME_BREW) }}>Resume</Button> : null}
         {this.state.status.active_step > 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
@@ -216,8 +217,12 @@ class Brew extends Component {
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.startTuning() }}> {this.state.status.pid_tuning === 1 ? "Tuning..." : "PID Tune"}</Button> : null}
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
-          <Button variant="contained" color="primary" className={classes.button}
+          <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want start boil?', START_BOIL) }}>Boil</Button> : null}
+        <Button variant="contained" color="secondary" className={classes.button}
+          onClick={() => { this.actionBrew('', this.state.status.pump_on ? STOP_PUMP : START_PUMP) }}>
+          Pump</Button>
+
         <Divider />
         <Card className={classes.gadgetCard}>
           <CardContent>
@@ -232,6 +237,7 @@ class Brew extends Component {
               StartTime={this.state.status.start_time > 0 ? getDateTime(this.state.status.start_time).toLocaleTimeString() : null}
               EndTime={this.state.status.end_time > 0 ? getDateTime(this.state.status.end_time).toLocaleTimeString() : null}
               CountDown={this.state.countdown}
+              PumpOn={this.state.status.pump_on}
             />
           </CardContent>
         </Card>
@@ -271,28 +277,20 @@ class Brew extends Component {
             </ResponsiveContainer>
           </CardContent>
         </Card>
-
-        <Grid container>
-          <Grid item xs={12}>
-            <Grid container justify="left">
-              <Grid item xs={6}>
-                <Card className={classes.brewSettingsCard}>
-                  <CardContent>
-                    <MashSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_mash_step_index} />
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={6}>
-                <Card className={classes.brewSettingsCard}>
-                  <CardContent>
-                    <BoilSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_boil_step_index} />
-                  </CardContent>
-                </Card>
+        <Paper className={classes.brewSettingsCard}>
+          <Grid container justify="center">
+            <Grid item>
+              <Grid container >
+                <Grid item>
+                  <MashSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_mash_step_index} />
+                </Grid>
+                <Grid item>
+                  <BoilSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_boil_step_index} />
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-
+        </Paper>
         <ConfirmDialog
           confirmAction={this.state.confirmAction}
           confirmDialogOpen={this.state.confirmDialogOpen}

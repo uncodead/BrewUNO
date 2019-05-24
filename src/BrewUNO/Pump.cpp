@@ -6,9 +6,24 @@ time_t lastPumpRest;
 bool isResting = false;
 bool recirculationOn = false;
 
-Pump::Pump(ActiveStatus *activeStatus, BrewSettingsService *brewSettingsService) : _activeStatus(activeStatus), _brewSettingsService(brewSettingsService)
+Pump::Pump(AsyncWebServer *server, ActiveStatus *activeStatus, BrewSettingsService *brewSettingsService) : _server(server),
+                                                                                                           _activeStatus(activeStatus),
+                                                                                                           _brewSettingsService(brewSettingsService)
 
 {
+    _server->on(START_PUMP_SERVIVE_PATH, HTTP_POST, std::bind(&Pump::startPumpHttpService, this, std::placeholders::_1));
+    _server->on(STOP_PUMP_SERVIVE_PATH, HTTP_POST, std::bind(&Pump::stopPumpHttpService, this, std::placeholders::_1));
+}
+
+void Pump::startPumpHttpService(AsyncWebServerRequest *request)
+{
+    TurnPumpOn();
+    request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
+}
+void Pump::stopPumpHttpService(AsyncWebServerRequest *request)
+{
+    TurnPumpOff();
+    request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
 void Pump::TurnPumpOn()
@@ -26,11 +41,7 @@ void Pump::TurnPumpOff()
 
 void Pump::TurnPump(bool on)
 {
-    if (on)
-        digitalWrite(PUMP_BUS, LOW);
-    else
-        digitalWrite(PUMP_BUS, HIGH);
-
+    digitalWrite(PUMP_BUS, on ? HIGH : LOW);
     _activeStatus->PumpOn = on;
     Serial.println("Recirculation: " + String(on));
 }
@@ -63,8 +74,8 @@ void Pump::AntiCavitation()
     for (byte i = 1; i < 6; i++)
     {
         TurnPump(true);
-        delay(750 + i * 250);
+        delay(1500 + i * 250);
         TurnPump(false);
-        delay(350);
+        delay(2000);
     }
 }
