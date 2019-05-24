@@ -24,9 +24,13 @@ export const NEXT_STEP_BREW = ENDPOINT_ROOT + "nextstepbrew"
 export const RESUME_BREW = ENDPOINT_ROOT + "resumebrew"
 export const CHANGE_BOIL_PERCENTAGE = ENDPOINT_ROOT + "changeboilpercentage"
 export const START_BOIL = ENDPOINT_ROOT + "startboil"
+
 export const START_TUNING = ENDPOINT_ROOT + "starttuning"
 
 export const BREW_ENDPOINT = ENDPOINT_ROOT + 'brew';
+
+export const START_PUMP = ENDPOINT_ROOT + 'startpump';
+export const STOP_PUMP = ENDPOINT_ROOT + 'stoppump';
 
 
 export const ExecuteRestCall = (url, method, callback, callbackError, props) => {

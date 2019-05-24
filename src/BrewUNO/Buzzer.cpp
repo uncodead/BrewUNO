@@ -13,10 +13,15 @@ void Buzzer::Ring()
 
 void Buzzer::Ring(int count)
 {
+  Ring(count, 500);
+}
+
+void Buzzer::Ring(int count, int duration)
+{
   for (byte i = 0; i < count; i++)
   {
     digitalWrite(BUZZER_BUS, HIGH);
-    delay(500);
+    delay(duration);
     digitalWrite(BUZZER_BUS, LOW);
     delay(500);
   }

@@ -1,8 +1,8 @@
 #include <BrewUNO/MashService.h>
 
 MashService::MashService(FS *fs, TemperatureService *temperatureService, Pump *pump) : _fs(fs),
-                                                                           _temperatureService(temperatureService),
-                                                                           _pump(pump)
+                                                                                       _temperatureService(temperatureService),
+                                                                                       _pump(pump)
 {
 }
 
@@ -47,7 +47,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->EndTime = 0;
             activeStatus->TargetTemperature = step["temperature"];
             activeStatus->Recirculation = ((int)step["recirculation"]) == 1;
-            Buzzer().Ring();
+            Buzzer().Ring(1, 2000);
         }
         else
         {
@@ -59,7 +59,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
             activeStatus->Recirculation = false;
             activeStatus->Recirculation = false;
-            Buzzer().Ring(4);
+            Buzzer().Ring(2, 2000);
             _pump->TurnPumpOff();
         }
     }
@@ -71,18 +71,16 @@ void MashService::loop(ActiveStatus *activeStatus)
         Serial.println(activeStatus->TargetTemperature);
 
         if (activeStatus->StartTime == 0)
-        {
             // Recirculation while brew not started
             _pump->TurnPumpOn();
-        }
-        else 
+        else
             _pump->CheckRest();
 
         // todo: colocar em configuracao
         if (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.4) && activeStatus->StartTime == 0)
         {
             Serial.println("Step Started");
-            JsonObject step = steps[activeStatus->ActiveMashStepIndex]; 
+            JsonObject step = steps[activeStatus->ActiveMashStepIndex];
             activeStatus->StartTime = timeNow;
             activeStatus->EndTime = timeNow + (int(step["time"]) * 60);
 
@@ -90,11 +88,11 @@ void MashService::loop(ActiveStatus *activeStatus)
             Serial.println(activeStatus->StartTime);
             Serial.print("End Time: ");
             Serial.println(activeStatus->EndTime);
-            Buzzer().Ring();
+            Buzzer().Ring(1, 2000);
             activeStatus->Recirculation = ((int)step["recirculation"]) == 1;
             if (activeStatus->Recirculation)
                 _pump->TurnPumpOn();
-            else 
+            else
                 _pump->TurnPumpOff();
         }
     }

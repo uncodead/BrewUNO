@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import { PieChart, Pie, Sector, Cell, } from 'recharts';
 import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
+import Cached from '@material-ui/icons/Cached';
+import HighlightOff from '@material-ui/icons/HighlightOff';
 
 const styles = theme => ({
   temperatureCard: {
@@ -109,6 +111,17 @@ class BrewStatusGadget extends Component {
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>CountDown</Typography>
                   <Typography variant="h5">{this.props.CountDown != undefined ? this.props.CountDown : '-'}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item>
+              <Card className={this.props.className}>
+                <CardContent align="center">
+                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Pump</Typography>
+                  {this.props.PumpOn !== undefined && this.props.PumpOn === 1 ?
+                    <Cached style={{ fontSize: 28 }} align="center" color="secondary"/>
+                    :
+                    <Cached style={{ fontSize: 28 }} align="center" color="disabled"/>}
                 </CardContent>
               </Card>
             </Grid>

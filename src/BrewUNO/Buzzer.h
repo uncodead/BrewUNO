@@ -7,7 +7,8 @@ class Buzzer
 {
 public:
   void Ring();
-  void Ring(int count);
+  void Ring(int);
+  void Ring(int, int);
 };
 
 #endif
