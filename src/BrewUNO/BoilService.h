@@ -35,6 +35,6 @@ public:
 private:
   FS *_fs;
   TemperatureService *_temperatureService;
-  void SetBoiIndexStep(ActiveStatus *activeStatus, time_t);
+  void SetBoiIndexStep(ActiveStatus *activeStatus, int);
 };
 #endif

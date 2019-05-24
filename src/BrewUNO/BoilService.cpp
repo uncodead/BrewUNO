@@ -45,17 +45,18 @@ void BoilService::loop(ActiveStatus *activeStatus)
         return;
     }
 
-    SetBoiIndexStep(activeStatus, activeStatus->EndTime - timeNow / 60);
+    SetBoiIndexStep(activeStatus, activeStatus->EndTime - timeNow);
 }
 
-void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, time_t moment)
+void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, int second)
 {
     int index = 0;
     String currentStep = "";
     JsonArray steps = _boilSettings["steps"].as<JsonArray>();
     for (auto step : steps)
     {
-        if (step["time"] == abs(moment))
+        int time = step["time"];
+        if (time * 60 == second)
             currentStep = currentStep == "" ? String(index) : currentStep + "," + String(index);
         index++;
     }
