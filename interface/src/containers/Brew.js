@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SectionContent from '../components/SectionContent';
 import MashSettings from './MashSettings';
 import BoilSettings from './BoilSettings';
+import BrewSettings from './BrewSettings';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { withNotifier } from '../components/SnackbarNotification';
