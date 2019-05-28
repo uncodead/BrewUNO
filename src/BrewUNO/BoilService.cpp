@@ -36,6 +36,7 @@ void BoilService::loop(ActiveStatus *activeStatus)
         Serial.println(activeStatus->StartTime);
         Serial.println(activeStatus->EndTime);
         Buzzer().Ring(1, 2000);
+        activeStatus->SaveActiveStatus();
     }
     if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)
     {
@@ -68,5 +69,6 @@ void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, int second)
         Serial.println(activeStatus->ActiveBoilStepIndex);
         Buzzer().Ring(3);
         Buzzer().Ring(1, 1000);
+        activeStatus->SaveActiveStatus();
     }
 }

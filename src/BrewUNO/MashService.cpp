@@ -48,6 +48,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->TargetTemperature = step["temperature"];
             activeStatus->Recirculation = ((int)step["recirculation"]) == 1;
             Buzzer().Ring(1, 2000);
+            activeStatus->SaveActiveStatus();
         }
         else
         {
@@ -61,6 +62,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->Recirculation = false;
             Buzzer().Ring(2, 2000);
             _pump->TurnPumpOff();
+            activeStatus->SaveActiveStatus();
         }
     }
     else
@@ -94,6 +96,7 @@ void MashService::loop(ActiveStatus *activeStatus)
                 _pump->TurnPumpOn();
             else
                 _pump->TurnPumpOff();
+            activeStatus->SaveActiveStatus();
         }
     }
 }
