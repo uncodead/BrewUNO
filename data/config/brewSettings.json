@@ -7,5 +7,7 @@
     "kI": 2.5,
     "kD": 0,
     "pumpRestInterval": 300,
-    "pumpRestTime": 60
+    "pumpRestTime": 60,
+    "mashHeaterPercentage": 60,
+    "pidStart": 3
 }

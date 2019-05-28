@@ -50,15 +50,14 @@ void KettleHeaterService::Compute()
 
   if (_activeStatus->ActiveStep == boil)
   {
-    _activeStatus->PWM = ((1023 * _activeStatus->BoilPowerPercentage) / 100);
+    _activeStatus->PWM = ((1023 * _brewSettingsService->BoilPowerPercentage) / 100);
     analogWrite(HEATER_BUS, _activeStatus->PWM);
     return;
   }
 
-  // TODO: put this configuration at interface
-  if (!_activeStatus->PIDTuning && KettleSetpoint - KettleInput > PID_START)
+  if (!_activeStatus->PIDTuning && KettleSetpoint - KettleInput > _brewSettingsService->PIDStart)
   {
-    _activeStatus->PWM = ((1023 * MASH_HEATER_PERCENTAGE) / 100);
+    _activeStatus->PWM = ((1023 * _brewSettingsService->MashHeaterPercentage) / 100);
     analogWrite(HEATER_BUS, _activeStatus->PWM);
     return;
   }

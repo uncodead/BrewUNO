@@ -8,7 +8,6 @@ BrewSettingsService::~BrewSettingsService() {}
 void BrewSettingsService::readFromJsonObject(JsonObject &root)
 {
     BoilTemperature = root["boilTemperature"];
-    RampPowerPercentage = root["rampPowerPercentage"];
     BoilPowerPercentage = root["boilPowerPercentage"];
     BoilTime = root["boilTime"];
     SampleTime = root["sampleTime"];
@@ -17,12 +16,13 @@ void BrewSettingsService::readFromJsonObject(JsonObject &root)
     KD = root["kD"];
     PumpRestInterval = root["pumpRestInterval"];
     PumpRestTime = root["pumpRestTime"];
+    PIDStart = root["pidStart"];
+    MashHeaterPercentage = root["mashHeaterPercentage"];
 }
 
 void BrewSettingsService::writeToJsonObject(JsonObject &root)
 {
     root["boilTemperature"] = BoilTemperature;
-    root["rampPowerPercentage"] = RampPowerPercentage;
     root["boilPowerPercentage"] = BoilPowerPercentage;
     root["boilTime"] = BoilTime;
     root["sampleTime"] = SampleTime;
@@ -31,6 +31,8 @@ void BrewSettingsService::writeToJsonObject(JsonObject &root)
     root["kD"] = KD;
     root["pumpRestInterval"] = PumpRestInterval;
     root["pumpRestTime"] = PumpRestTime;
+    root["pidStart"] = PIDStart;
+    root["mashHeaterPercentage"] = MashHeaterPercentage;
 }
 
 void BrewSettingsService::onConfigUpdated()

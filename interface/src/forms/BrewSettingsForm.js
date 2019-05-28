@@ -46,6 +46,17 @@ class BrewSettingsForm extends Component {
                   errorMessages={['this field is required']}
                 />
                 <TextValidator
+                  name="MashHeaterPercentage"
+                  validators={['required']}
+                  label="Mash Heater %"
+                  type="number"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">%</InputAdornment> }}
+                  value={brewSettings.mashHeaterPercentage}
+                  onChange={handleValueChange("mashHeaterPercentage")}
+                  errorMessages={['this field is required']}
+                />
+                <TextValidator
                   name="boilTime"
                   validators={['required']}
                   label="Boil time"
@@ -117,6 +128,17 @@ class BrewSettingsForm extends Component {
                   fullWidth
                   value={brewSettings.kD}
                   onChange={handleValueChange("kD")}
+                  errorMessages={['this field is required']}
+                />
+                <TextValidator
+                  name="pidStart"
+                  validators={['required']}
+                  label="PID Start at"
+                  type="number"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
+                  value={brewSettings.pidStart}
+                  onChange={handleValueChange("pidStart")}
                   errorMessages={['this field is required']}
                 />
                 <Button variant="raised" color="primary" type="submit">

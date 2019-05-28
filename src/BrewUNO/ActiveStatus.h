@@ -32,11 +32,11 @@ public:
   int ActiveMashStepIndex;
   int BoilTime;
   int PWM;
-  float BoilTargetTemperature;
+  double BoilTargetTemperature;
   double BoilPowerPercentage;
 
-  float TargetTemperature;
-  float Temperature;
+  double TargetTemperature;
+  double Temperature;
 
   time_t EndTime;
   time_t StartTime;

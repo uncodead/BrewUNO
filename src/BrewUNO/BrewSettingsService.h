@@ -24,6 +24,8 @@ public:
   double RampPowerPercentage;
   double BoilPowerPercentage;
   double BoilTemperature;
+  double PIDStart;
+  double MashHeaterPercentage;
   int SampleTime;
 
   int PumpRestInterval;
