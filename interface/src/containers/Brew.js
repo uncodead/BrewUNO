@@ -77,7 +77,7 @@ class Brew extends Component {
     }
     interval = setInterval(() => {
       this.getStatus();
-    }, 3000);
+    }, 2000);
     timerProgress = setInterval(() => {
       this.brewProgress();
     }, 1000);
