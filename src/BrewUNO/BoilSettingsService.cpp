@@ -24,11 +24,6 @@ bool BoilSettingsService::jsonSchemaIsValid(JsonDocument &jsonObj, String &messa
             validJson = false;
             messages += " - Amount could not be zero. ";
         }
-        if (step["time"] <= 0)
-        {
-            validJson = false;
-            messages += " - Time could not be zero. ";
-        }
         if (step["time"] > _brewSettings->BoilTime)
         {
             validJson = false;
