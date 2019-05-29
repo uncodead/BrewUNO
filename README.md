@@ -17,7 +17,7 @@ A cheap, open source, online and extensible homebew automation on top of ESP8266
 
 Luciano Rampanelli
 
-Eduardo Sanches
+Eduardo 'Dumpa' Sanches
 
 Guilherme Wood
 
