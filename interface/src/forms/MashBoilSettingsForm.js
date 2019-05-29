@@ -44,7 +44,7 @@ class MashBoilSettingsForm extends Component {
   }
 
   handleRecirculationChange = (e, checked) => {
-    this.setState({ t: checked })
+    this.setState({ r: checked })
   }
 
   render() {
