@@ -19,4 +19,8 @@ Luciano Rampanelli
 
 Eduardo Sanches
 
+Guilherme Wood
+
+Paiakan
+
 rjwats/esp8266-react
