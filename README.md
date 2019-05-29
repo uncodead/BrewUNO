@@ -1,6 +1,6 @@
 # BrewUNO
 
-A chaep, open source, online and extensible homebew automation on top of ESP8266 microchip.
+A cheap, open source, online and extensible homebew automation on top of ESP8266 microchip.
 
 ## Features:
 * Brew with Start/Stop/Resume 
