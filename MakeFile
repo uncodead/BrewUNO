@@ -1,5 +1,6 @@
 push:
 	cd interface;npm run build
+	git pull
 	git add .
 	git commit -am '$(message)'
 	git push
