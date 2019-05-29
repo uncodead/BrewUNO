@@ -199,7 +199,6 @@ class Brew extends Component {
 
   render() {
     const { classes } = this.props;
-    const data = [{ name: 'Group A', value: 50 }, { name: 'Group B', value: 50 }];
     return (
       <SectionContent title="">
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
