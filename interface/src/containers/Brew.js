@@ -204,10 +204,16 @@ class Brew extends Component {
       <SectionContent title="">
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want start brew?', START_BREW) }}>Start</Button> : null}
+            onClick={() => {
+              this.actionBrew('Do you want start brew? Check if you\'ve secure water volume at kettle.', START_BREW,
+                () => { this.props.raiseNotification('Anti Cavitation test started.') })
+            }}>Start</Button> : null}
         {this.state.status.active_step > 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want resume brew?', RESUME_BREW) }}>Resume</Button> : null}
+            onClick={() => {
+              this.actionBrew('Do you want resume brew? Check if you\'ve secure water volume at kettle.', RESUME_BREW,
+                () => { this.props.raiseNotification('Anti Cavitation test started.') })
+            }}>Resume</Button> : null}
         {this.state.status.active_step > 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW, () => { this.setState({ data: [] }) }) }}>Stop</Button> : null}

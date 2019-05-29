@@ -41,6 +41,7 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
         request->send(500, APPLICATION_JSON_TYPE, NPT_JSON_ERROR_MESSAGE);
         return;
     }
+    _pump->AntiCavitation();
     _activeStatus->TimeNow = now();
     _activeStatus->ActiveStep = mash;
     _activeStatus->BrewStarted = true;
@@ -54,7 +55,6 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
-    _pump->AntiCavitation();
 }
 
 void BrewService::resumeBrew(AsyncWebServerRequest *request)
@@ -64,6 +64,7 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
         request->send(500, APPLICATION_JSON_TYPE, NPT_JSON_ERROR_MESSAGE);
         return;
     }
+    _pump->AntiCavitation();
     if (_activeStatus->StartTime > 0 && _activeStatus->EndTime > 0)
     {
         int timeTotal = _activeStatus->EndTime - _activeStatus->StartTime;
@@ -77,7 +78,7 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
     _kettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
-    _pump->AntiCavitation();
+    
     if (_activeStatus->Recirculation)
         _pump->TurnPumpOn();
     else
