@@ -14,17 +14,16 @@ class MashBoilSettingsForm extends Component {
     super(props)
 
     this.state = {
-      name: '',
-      temperature: '',
-      time: '',
-      amount: '',
-      recirculation: true,
-      totalHeaterPower: false
+      n: '',
+      t: '',
+      tm: '',
+      a: '',
+      r: true
     }
   }
   addItem = (event) => {
     this.props.callbackItemAdded(this.state)
-    this.setState({ n: '', t: '', tm: '', a: '', r: '' })
+    this.setState({ n: '', t: '', tm: '', a: '', r: false })
   }
 
   handleNameChange = (e) => {
