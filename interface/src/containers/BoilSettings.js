@@ -24,7 +24,8 @@ class BoilSettings extends Component {
     }).then(response => {
       if (response.ok) {
         response.json().then(json => {
-          this.setState({ items: json.st })
+          if (json.st != undefined && json.st != null)
+            this.setState({ items: json.st })
         });
         return;
       }

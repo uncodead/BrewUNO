@@ -14,7 +14,10 @@ class MashSettings extends Component {
   }
 
   getMashSettings = () => {
-    ExecuteRestCall(GET_MASH_SETTINGS_SERVICE_PATH, 'GET', (json) => { this.setState({ items: json.st }) }, this.setState({ items: [] }), this.props)
+    ExecuteRestCall(GET_MASH_SETTINGS_SERVICE_PATH, 'GET', (json) => {
+      if (json.st != undefined && json.st != null)
+        this.setState({ items: json.st })
+    }, this.setState({ items: [] }), this.props)
   }
 
   saveMashSettings = () => {

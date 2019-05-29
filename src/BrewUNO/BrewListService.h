@@ -80,18 +80,18 @@ private:
 
     if (configFile)
     {
-      size_t size = configFile.size();
-      if (size <= MAX_ACTIVESTATUS_SIZE)
+      DynamicJsonDocument _jsonDocument = DynamicJsonDocument(MAX_ACTIVESTATUS_SIZE);
+      DeserializationError error = deserializeJson(_jsonDocument, configFile);
+      if (error == DeserializationError::Ok && _jsonDocument.is<JsonObject>())
       {
-        DynamicJsonDocument _jsonDocument = DynamicJsonDocument(MAX_ACTIVESTATUS_SIZE);
-        DeserializationError error = deserializeJson(_jsonDocument, configFile);
-        if (error == DeserializationError::Ok && _jsonDocument.is<JsonObject>())
-        {
-          JsonObject json = _jsonDocument.as<JsonObject>();
-          root["st"] = json["st"];
-          configFile.close();
-        }
+        JsonObject json = _jsonDocument.as<JsonObject>();
+        root["st"] = json["st"];
+        configFile.close();
       }
+      else {
+        root["error"] = "true";
+      }
+
       configFile.close();
     }
 
