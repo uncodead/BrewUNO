@@ -13,7 +13,10 @@ A cheap, open source, online and extensible homebew automation on top of ESP8266
 * OTA Update
 * NTP synchronization
 
-Thanks to:
+# Thanks to:
+
 Luciano Rampanelli
+
 Eduardo Sanches
+
 rjwats/esp8266-react
