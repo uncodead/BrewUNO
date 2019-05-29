@@ -53,8 +53,8 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _kettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
-    _pump->AntiCavitation();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
+    _pump->AntiCavitation();
 }
 
 void BrewService::resumeBrew(AsyncWebServerRequest *request)

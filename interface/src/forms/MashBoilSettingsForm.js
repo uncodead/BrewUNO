@@ -18,7 +18,7 @@ class MashBoilSettingsForm extends Component {
       t: '',
       tm: '',
       a: '',
-      r: true
+      r: false
     }
   }
   addItem = (event) => {
