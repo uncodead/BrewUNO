@@ -8,23 +8,23 @@ BoilSettingsService::BoilSettingsService(AsyncWebServer *server, FS *fs, BrewSet
 
 bool BoilSettingsService::jsonSchemaIsValid(JsonDocument &jsonObj, String &messages)
 {
-    JsonArray steps = jsonObj["steps"];
+    JsonArray steps = jsonObj["st"];
 
     bool validJson = true;
     for (int i = 0; i < steps.size(); i++)
     {
         JsonObject step = steps.getElement(i);
-        if (step["name"] == "")
+        if (step["n"] == "")
         {
             validJson = false;
             messages += "Name could not be null. ";
         }
-        if (step["amount"] <= 0)
+        if (step["a"] <= 0)
         {
             validJson = false;
             messages += " - Amount could not be zero. ";
         }
-        if (step["time"] > _brewSettings->BoilTime)
+        if (step["tm"] > _brewSettings->BoilTime)
         {
             validJson = false;
             messages += " - Time exceeded the setting for boiling, check settings.";

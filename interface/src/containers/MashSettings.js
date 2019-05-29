@@ -14,13 +14,13 @@ class MashSettings extends Component {
   }
 
   getMashSettings = () => {
-    ExecuteRestCall(GET_MASH_SETTINGS_SERVICE_PATH, 'GET', (json) => { this.setState({ items: json.steps }) }, this.setState({ items: [] }), this.props)
+    ExecuteRestCall(GET_MASH_SETTINGS_SERVICE_PATH, 'GET', (json) => { this.setState({ items: json.st }) }, this.setState({ items: [] }), this.props)
   }
 
   saveMashSettings = () => {
     fetch(SAVE_MASH_SETTINGS_SERVICE_PATH, {
       method: 'POST',
-      body: JSON.stringify({ "steps": this.state.items }),
+      body: JSON.stringify({ "st": this.state.items }),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

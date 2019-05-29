@@ -24,7 +24,7 @@ class BoilSettings extends Component {
     }).then(response => {
       if (response.ok) {
         response.json().then(json => {
-          this.setState({ items: json.steps })
+          this.setState({ items: json.st })
         });
         return;
       }
@@ -38,7 +38,7 @@ class BoilSettings extends Component {
   saveBoilSettings = () => {
     fetch(SAVE_BOIL_SETTINGS_SERVICE_PATH, {
       method: 'POST',
-      body: JSON.stringify({ "steps": this.state.items }),
+      body: JSON.stringify({ "st": this.state.items }),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ class BoilSettings extends Component {
   }
 
   orderArray = (array) => {
-    return array.sort((a, b) => b.time - a.time);
+    return array.sort((a, b) => b.tm - a.tm);
   }
 
   render() {

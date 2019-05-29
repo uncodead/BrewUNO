@@ -41,11 +41,10 @@ void Pump::TurnPumpOff()
 
 void Pump::TurnPump(bool on)
 {
-    if (INVERT_PUMP)
-        on = !on;
+    on = INVERT_PUMP ? !on : on;
     digitalWrite(PUMP_BUS, on ? HIGH : LOW);
-    _activeStatus->PumpOn = on;
-    Serial.println("Recirculation: " + String(on));
+    _activeStatus->PumpOn = INVERT_PUMP ? !on : on;
+    Serial.println("Recirculation: " + String(INVERT_PUMP ? !on : on));
 }
 
 void Pump::CheckRest()

@@ -53,10 +53,10 @@ void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, int second)
 {
     int index = 0;
     String currentStep = "";
-    JsonArray steps = _boilSettings["steps"].as<JsonArray>();
+    JsonArray steps = _boilSettings["st"].as<JsonArray>();
     for (auto step : steps)
     {
-        int time = step["time"];
+        int time = step["tm"];
         if (time * 60 == second)
             currentStep = currentStep == "" ? String(index) : currentStep + "," + String(index);
         index++;

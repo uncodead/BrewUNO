@@ -23,9 +23,9 @@ class SortableList extends Component {
 
   getItemText = (item) => {
     if (this.props.boil) {
-      return item.amount + 'g at ' + item.time + ' min';
+      return item.a + 'g at ' + item.tm + ' min';
     }
-    return item.time + ' mins at ' + item.temperature + ' ºC'
+    return item.tm + ' mins at ' + item.t + ' ºC'
   }
 
   render() {
@@ -40,7 +40,7 @@ class SortableList extends Component {
         >
           {this.props.dragHandle ? <DragHandle /> : null}
           <ListItemText
-            primary={value.name}
+            primary={value.n}
             secondary={<Typography>{this.getItemText(value)}</Typography>}
           />
           {!this.props.brewDay ?
@@ -55,7 +55,7 @@ class SortableList extends Component {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={value.recirculation}
+                  checked={value.r}
                   disabled
                 />
               }

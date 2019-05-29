@@ -87,7 +87,7 @@ private:
         if (error == DeserializationError::Ok && _jsonDocument.is<JsonObject>())
         {
           JsonObject json = _jsonDocument.as<JsonObject>();
-          root["steps"] = json["steps"];
+          root["st"] = json["st"];
           configFile.close();
         }
       }

@@ -8,7 +8,7 @@ MashSettingsService::MashSettingsService(AsyncWebServer *server, FS *fs)
 
 bool MashSettingsService::jsonSchemaIsValid(JsonDocument jsonObj, String &messages)
 {
-    JsonArray steps = jsonObj["steps"].as<JsonArray>();;
+    JsonArray steps = jsonObj["st"].as<JsonArray>();;
     if (steps.size() <= 0)
     {
         return false;
@@ -18,17 +18,17 @@ bool MashSettingsService::jsonSchemaIsValid(JsonDocument jsonObj, String &messag
     for (int i = 0; i < steps.size(); i++)
     {
         JsonObject step = steps[i];
-        if (step["name"] == "")
+        if (step["n"] == "")
         {
             validJson = false;
             messages += "Name could not be null. ";
         }
-        if (step["temperature"] <= 0)
+        if (step["t"] <= 0)
         {
             validJson = false;
             messages += "Temperature could not be zero. ";
         }
-        if (step["time"] <= 0)
+        if (step["tm"] <= 0)
         {
             validJson = false;
             messages += "Time could not be zero.";
