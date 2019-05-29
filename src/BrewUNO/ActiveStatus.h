@@ -16,7 +16,7 @@
 #include <NtpClientLib.h>
 #include <BrewUNO/enum.h>
 
-#define MAX_ACTIVESTATUS_SIZE 1024
+#define MAX_ACTIVESTATUS_SIZE 4024
 #define ACTIVE_STATUS_FILE "/config/activeStatus.json"
 
 class ActiveStatus

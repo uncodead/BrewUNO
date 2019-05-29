@@ -13,6 +13,7 @@
 #include <AsyncArduinoJson6.h>
 #include <IPAddress.h>
 #include <AsyncJsonRequestWebHandler.h>
+#include <BrewUNO/ActiveStatus.h>
 
 class BrewListService
 {
@@ -24,7 +25,7 @@ public:
     // configure update settings handler
     _updateHandler.setUri(postServicePath);
     _updateHandler.setMethod(HTTP_POST);
-    _updateHandler.setMaxContentLength(1024);
+    _updateHandler.setMaxContentLength(MAX_ACTIVESTATUS_SIZE);
     _updateHandler.onRequest(std::bind(&BrewListService::save, this, std::placeholders::_1, std::placeholders::_2));
     _server->addHandler(&_updateHandler);
   }
@@ -60,7 +61,7 @@ private:
 
       configFile.close();
 
-      AsyncJsonResponse *response = new AsyncJsonResponse(1024);
+      AsyncJsonResponse *response = new AsyncJsonResponse(MAX_ACTIVESTATUS_SIZE);
       response->setLength();
       request->send(response);
     }
@@ -74,15 +75,15 @@ private:
   {
     File configFile = _fs->open(_settingsFile, "r");
 
-    AsyncJsonResponse *response = new AsyncJsonResponse(1024);
+    AsyncJsonResponse *response = new AsyncJsonResponse(MAX_ACTIVESTATUS_SIZE);
     JsonObject root = response->getRoot();
 
     if (configFile)
     {
       size_t size = configFile.size();
-      if (size <= 1024)
+      if (size <= MAX_ACTIVESTATUS_SIZE)
       {
-        DynamicJsonDocument _jsonDocument = DynamicJsonDocument(1024);
+        DynamicJsonDocument _jsonDocument = DynamicJsonDocument(MAX_ACTIVESTATUS_SIZE);
         DeserializationError error = deserializeJson(_jsonDocument, configFile);
         if (error == DeserializationError::Ok && _jsonDocument.is<JsonObject>())
         {
