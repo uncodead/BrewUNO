@@ -2,6 +2,8 @@
 
 A cheap, open source, online and extensible homebew automation on top of ESP8266 microchip.
 
+![BrewUNO](https://a.imge.to/2019/05/30/vQ5nR.jpg)
+
 ## Features:
 * Brew with Start/Stop/Resume 
 * Online brew stats at interface
