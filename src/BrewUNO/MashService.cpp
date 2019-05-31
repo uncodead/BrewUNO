@@ -77,8 +77,7 @@ void MashService::loop(ActiveStatus *activeStatus)
         else
             _pump->CheckRest();
 
-        // todo: colocar em configuracao
-        if (activeStatus->Temperature >= (activeStatus->TargetTemperature - 0.4) && activeStatus->StartTime == 0)
+        if (activeStatus->Temperature >= (activeStatus->TargetTemperature) && activeStatus->StartTime == 0)
         {
             Serial.println("Step Started");
             JsonObject step = steps[activeStatus->ActiveMashStepIndex];
