@@ -33,6 +33,8 @@ void MashService::loop(ActiveStatus *activeStatus)
         JsonObject step = steps[0];
         activeStatus->TargetTemperature = step["t"];
         _pump->AntiCavitation();
+        if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
+            return;
     }
 
     if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)

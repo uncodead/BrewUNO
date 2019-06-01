@@ -1,5 +1,6 @@
 .pioenvs
 .piolibdeps
+platformio.ini
 .clang_complete
 .gcc-flags.json
 *Thumbs.db
