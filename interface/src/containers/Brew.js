@@ -129,7 +129,7 @@ class Brew extends Component {
     var dateEntered = getDateTime(this.state.status.end_time);
     var now = new Date();
     var difference = dateEntered.getTime() - now.getTime();
-    if (difference <= 0) {
+    if (difference < 0) {
       this.setState({
         countdown: '00:00:00',
         progressCompleted: 100
