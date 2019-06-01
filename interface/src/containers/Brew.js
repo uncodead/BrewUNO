@@ -122,7 +122,7 @@ class Brew extends Component {
     if (this.state.status.brew_started != 1) {
       this.setState({
         countdown: '00:00:00',
-        progressCompleted: 100
+        progressCompleted: 0
       })
       return;
     }
