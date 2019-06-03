@@ -89,6 +89,9 @@ The default settings configure the device to bring up an access point on start u
 * SSID: BrewUNO
 * Password: brewuno
 
+Run:
+PlatformIO Build
+PlatformIO Upload and Monitor
 
 # Thanks to:
 
