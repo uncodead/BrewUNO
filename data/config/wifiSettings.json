@@ -1,6 +1,6 @@
 {
-  "ssid":"SSID",
-  "password":"password",
-  "hostname":"BrewUNO",
+  "ssid":"S8PLUS",
+  "password":"bruno123",
+  "hostname":"esp8266-react",
   "static_ip_config":false
 } 
