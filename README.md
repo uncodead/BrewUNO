@@ -92,12 +92,8 @@ The default settings configure the device to bring up an access point on start u
 
 # Thanks to:
 
-Luciano Rampanelli
-
-Eduardo 'Dumpa' Sanches
-
-Guilherme Wood
-
-Paiakan
-
+* Luciano Rampanelli
+* Eduardo 'Dumpa' Sanches
+* Guilherme Wood
+* Paiakan
 * [ESP8266 React](https://github.com/rjwats/esp8266-react) - rjwats/esp8266-react
