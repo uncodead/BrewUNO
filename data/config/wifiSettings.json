@@ -1,0 +1,6 @@
+{
+  "ssid":"SSID",
+  "password":"password",
+  "hostname":"BrewUNO",
+  "static_ip_config":false
+} 
