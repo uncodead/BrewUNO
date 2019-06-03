@@ -9,5 +9,5 @@
     "pumpRestInterval": 300,
     "pumpRestTime": 60,
     "mashHeaterPercentage": 60,
-    "pidStart": 3
+    "pidStart": 1
 }

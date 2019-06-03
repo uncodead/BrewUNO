@@ -163,7 +163,11 @@ void BrewService::loop()
 {
     _activeStatus->SetTemperature(_temperatureService->GetTemperature());
     if (!_activeStatus->BrewStarted)
+    {
+        _pump->TurnPumpOff();
+        _kettleHeaterService->Compute();
         return;
+    }
     _mashService->loop(_activeStatus);
     _boilService->loop(_activeStatus);
     _kettleHeaterService->Compute();
