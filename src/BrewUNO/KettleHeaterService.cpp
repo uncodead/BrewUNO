@@ -62,7 +62,8 @@ void KettleHeaterService::Compute()
     return;
   }
 
-  if (KettleInput >= KettleSetpoint + 0.3) {
+  // to prevent pid overshoot
+  if (KettleInput > KettleSetpoint + 0.1) {
     _activeStatus->PWM = 0;
     analogWrite(HEATER_BUS, _activeStatus->PWM);
     StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
