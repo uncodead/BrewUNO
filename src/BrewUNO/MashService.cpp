@@ -23,8 +23,11 @@ void MashService::LoadMashSettings()
 
 void MashService::loop(ActiveStatus *activeStatus)
 {
-    if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
+    if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash) 
+    {
+        _pump->TurnPumpOff();
         return;
+    }
 
     time_t timeNow = now();
     JsonArray steps = _mashSettings["st"].as<JsonArray>();
