@@ -1,0 +1,7 @@
+{
+  "themos":[
+      { "id": "1", "name": "Main", "main": true, "sparge": false },
+      { "id": "2", "name": "Spage", "main": false, "sparge": true },
+      { "id": "3", "name": "Home", "main": false, "sparge": false }
+  ]
+}
