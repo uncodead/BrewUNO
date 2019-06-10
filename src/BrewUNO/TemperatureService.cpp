@@ -2,6 +2,7 @@
 
 TemperatureService::TemperatureService(AsyncWebServer *server, FS *fs, DallasTemperature dallasTemperature) : _server(server), _fs(fs), _dallasTemperature(dallasTemperature)
 {
+    _dallasTemperature.begin();
     _server->on(GET_SENSORS_SERVICE_PATH, HTTP_GET, std::bind(&TemperatureService::GetTemperatureAndAdress, this, std::placeholders::_1));
 }
 
@@ -29,6 +30,7 @@ String TemperatureService::GetSensorsJson()
     DeviceAddress Thermometer;
     _dallasTemperature.requestTemperatures();
     int deviceCount = _dallasTemperature.getDeviceCount();
+    Serial.println("Sensor count: " + String(deviceCount));
     String json = "{ \"sensors\": [ ";
     for (int i = 0; i < deviceCount; i++)
     {
