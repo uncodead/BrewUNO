@@ -34,7 +34,7 @@ String TemperatureService::GetSensorsJson()
     {
         _dallasTemperature.getAddress(Thermometer, i);
         json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",";
-        json += "\"value\": " + String(_dallasTemperature.getTempC(Thermometer)) + "},";
+        json += "\"value\": \"" + String(_dallasTemperature.getTempC(Thermometer)) +  "\"},";
     }
     json += "]}";
     return json;

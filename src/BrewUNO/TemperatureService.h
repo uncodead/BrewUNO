@@ -7,7 +7,7 @@
 #include <ESPAsyncWebServer.h>
 
 #define APPLICATION_JSON_TYPE "application/json"
-#define GET_SENSORS_SERVICE_PATH "getsensors"
+#define GET_SENSORS_SERVICE_PATH "/rest/getsensors"
 
 class TemperatureService
 {
