@@ -120,6 +120,7 @@ void setup()
   digitalWrite(BUZZER_BUS, LOW);
   pinMode(HEATER_BUS, OUTPUT);
   pump.TurnPumpOff();
+  DS18B20.begin();
 }
 
 void loop()

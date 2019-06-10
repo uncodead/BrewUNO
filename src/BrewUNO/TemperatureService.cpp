@@ -2,7 +2,6 @@
 
 TemperatureService::TemperatureService(AsyncWebServer *server, FS *fs, DallasTemperature dallasTemperature) : _server(server), _fs(fs), _dallasTemperature(dallasTemperature)
 {
-    _dallasTemperature.begin();
     _server->on(GET_SENSORS_SERVICE_PATH, HTTP_GET, std::bind(&TemperatureService::GetTemperatureAndAdress, this, std::placeholders::_1));
 }
 
