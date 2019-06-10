@@ -37,6 +37,11 @@ public:
 
   double TargetTemperature;
   double Temperature;
+  double SpargeTemperature;
+  String Temperatures;
+
+  String MainSensor;
+  String SpargeSensor;
 
   time_t EndTime;
   time_t StartTime;
@@ -60,6 +65,8 @@ public:
   void SaveActiveStatus();
   void SaveActiveStatusLoop();
   void SetTemperature(float);
+  void SetSpargeTemperature(float);
+  void SetJsonTemperatures(String json);
   String GetJson();
 
 private:

@@ -31,6 +31,9 @@ public:
   int PumpRestInterval;
   int PumpRestTime;
 
+  String MainSensor;
+  String SpargeSensor;
+
 protected:
   void readFromJsonObject(JsonObject &root);
   void writeToJsonObject(JsonObject &root);

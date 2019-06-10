@@ -3,12 +3,21 @@ import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
 import BrewSettingsForm from '../forms/BrewSettingsForm';
 import { restComponent } from '../components/RestComponent';
+import {
+  ExecuteRestCall, GET_SENSORS
+} from '../constants/Endpoints';
 
 import { BREW_SETTINGS_ENDPOINT } from '../constants/Endpoints';
 
 class BrewSettings extends Component {
   constructor(props) {
     super(props)
+    this.state = { sensors: [] }
+    this.getSensors()
+  }
+
+  getSensors() {
+    ExecuteRestCall(GET_SENSORS, 'GET', (json) => { this.setState({ sensors: json.sensors }) }, null, this.props)
   }
 
   componentDidMount() {
@@ -26,6 +35,7 @@ class BrewSettings extends Component {
           errorMessage={errorMessage}
           onSubmit={this.props.saveData}
           handleValueChange={this.props.handleValueChange}
+          sensors={this.state.sensors}
         />
       </SectionContent>
     )

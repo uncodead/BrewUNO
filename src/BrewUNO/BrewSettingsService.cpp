@@ -18,6 +18,8 @@ void BrewSettingsService::readFromJsonObject(JsonObject &root)
     PumpRestTime = root["pumpRestTime"];
     PIDStart = root["pidStart"];
     MashHeaterPercentage = root["mashHeaterPercentage"];
+    MainSensor = root["mainSensor"] | "";
+    SpargeSensor = root["spargeSensor"] | "";
 }
 
 void BrewSettingsService::writeToJsonObject(JsonObject &root)
@@ -33,6 +35,8 @@ void BrewSettingsService::writeToJsonObject(JsonObject &root)
     root["pumpRestTime"] = PumpRestTime;
     root["pidStart"] = PIDStart;
     root["mashHeaterPercentage"] = MashHeaterPercentage;
+    root["mainSensor"] = MainSensor;
+    root["spargeSensor"] = SpargeSensor;
 }
 
 void BrewSettingsService::onConfigUpdated()

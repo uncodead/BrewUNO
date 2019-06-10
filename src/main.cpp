@@ -53,7 +53,7 @@ NTPStatus ntpStatus = NTPStatus(&server);
 APStatus apStatus = APStatus(&server);
 
 //brewUNO
-TemperatureService temperatureService = TemperatureService(DS18B20);
+TemperatureService temperatureService = TemperatureService(&server, &SPIFFS, DS18B20);
 BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS);
 MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);

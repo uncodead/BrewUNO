@@ -32,6 +32,7 @@ export const BREW_ENDPOINT = ENDPOINT_ROOT + 'brew';
 export const START_PUMP = ENDPOINT_ROOT + 'startpump';
 export const STOP_PUMP = ENDPOINT_ROOT + 'stoppump';
 
+export const GET_SENSORS = ENDPOINT_ROOT + 'getsensors';
 
 export const ExecuteRestCall = (url, method, callback, callbackError, props) => {
   fetch(url, {

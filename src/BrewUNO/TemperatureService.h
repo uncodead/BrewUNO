@@ -4,15 +4,28 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <TimeLib.h>
+#include <ESPAsyncWebServer.h>
 
-class TemperatureService {
-  public:
-    TemperatureService(DallasTemperature dallasTemperature);
-    ~TemperatureService();
+#define APPLICATION_JSON_TYPE "application/json"
+#define GET_SENSORS_SERVICE_PATH "getsensors"
 
-    float GetTemperature();
+class TemperatureService
+{
+public:
+  TemperatureService(AsyncWebServer *server, FS *fs, DallasTemperature dallasTemperature);
+  ~TemperatureService();
 
-  private:
-    DallasTemperature _dallasTemperature;
+  float GetTemperature(String sensorAddress);
+
+  void GetTemperatureAndAdress(AsyncWebServerRequest *request);
+  String GetAddressToString(DeviceAddress deviceAddress);
+  String GetSensorsJson();
+  int GetSensorsCount();
+  String GetFirstSensorAddress();
+
+private:
+  DallasTemperature _dallasTemperature;
+  AsyncWebServer *_server;
+  FS *_fs;
 };
 #endif
