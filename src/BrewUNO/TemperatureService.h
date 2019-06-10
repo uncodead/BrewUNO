@@ -22,6 +22,7 @@ public:
   String GetSensorsJson();
   int GetSensorsCount();
   String GetFirstSensorAddress();
+  int DeviceCount;
 
 private:
   DallasTemperature _dallasTemperature;

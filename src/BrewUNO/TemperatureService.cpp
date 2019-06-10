@@ -28,10 +28,9 @@ String TemperatureService::GetSensorsJson()
 {
     DeviceAddress Thermometer;
     _dallasTemperature.requestTemperatures();
-    int deviceCount = _dallasTemperature.getDeviceCount();
-    Serial.println("Sensor count: " + String(deviceCount));
+    Serial.println("Sensor count: " + String(DeviceCount));
     String json = "{ \"sensors\": [ ";
-    for (int i = 0; i < deviceCount; i++)
+    for (int i = 0; i < DeviceCount; i++)
     {
         _dallasTemperature.getAddress(Thermometer, i);
         json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",";

@@ -39,6 +39,7 @@
 
 OneWire oneWire(TEMPERATURE_BUS);
 DallasTemperature DS18B20(&oneWire);
+int deviceCount = 0;
 
 AsyncWebServer server(80);
 
@@ -121,6 +122,14 @@ void setup()
   pinMode(HEATER_BUS, OUTPUT);
   pump.TurnPumpOff();
   DS18B20.begin();
+  // locate devices on the bus
+  Serial.print("Locating devices...");
+  Serial.print("Found ");
+  deviceCount = DS18B20.getDeviceCount();
+  Serial.print(deviceCount, DEC);
+  Serial.println(" devices.");
+  Serial.println("");
+  temperatureService.DeviceCount = DS18B20.getDeviceCount();
 }
 
 void loop()
