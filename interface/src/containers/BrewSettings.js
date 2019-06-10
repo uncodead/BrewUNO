@@ -13,11 +13,15 @@ class BrewSettings extends Component {
   constructor(props) {
     super(props)
     this.state = { sensors: [] }
-    this.getSensors()
+    this.getSensors();
   }
 
   getSensors() {
-    ExecuteRestCall(GET_SENSORS, 'GET', (json) => { this.setState({ sensors: json.sensors }) }, null, this.props)
+    ExecuteRestCall(GET_SENSORS, 'GET', (json) => {
+      this.setState({
+        sensors: json.sensors
+      })
+    }, null, this.props)
   }
 
   componentDidMount() {
