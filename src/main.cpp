@@ -129,7 +129,7 @@ void setup()
   Serial.print(deviceCount, DEC);
   Serial.println(" devices.");
   Serial.println("");
-  temperatureService.DeviceCount = DS18B20.getDeviceCount();
+  temperatureService.DeviceCount = deviceCount;
 }
 
 void loop()
