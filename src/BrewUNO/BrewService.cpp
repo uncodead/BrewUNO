@@ -178,7 +178,6 @@ void BrewService::loop()
     }
     if (!_activeStatus->BrewStarted)
     {
-        _pump->TurnPumpOff();
         _kettleHeaterService->Compute();
         return;
     }
