@@ -68,74 +68,68 @@ BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilServi
 
 void setup()
 {
-  // Disable wifi config persistance
-  WiFi.persistent(false);
+    // Disable wifi config persistance
+    WiFi.persistent(false);
 
-  Serial.begin(SERIAL_BAUD_RATE);
-  SPIFFS.begin();
-  //SPIFFS.format();
+    Serial.begin(SERIAL_BAUD_RATE);
+    SPIFFS.begin();
+    //SPIFFS.format();
 
-  // start services
-  ntpSettingsService.begin();
-  otaSettingsService.begin();
-  apSettingsService.begin();
-  wifiSettingsService.begin();
+    // start services
+    ntpSettingsService.begin();
+    otaSettingsService.begin();
+    apSettingsService.begin();
+    wifiSettingsService.begin();
 
-  brewSettingsService.begin();
-  brewService.begin();
+    brewSettingsService.begin();
 
-  // Serving static resources from /www/
-  server.serveStatic("/js/", SPIFFS, "/www/js/");
-  server.serveStatic("/css/", SPIFFS, "/www/css/");
-  server.serveStatic("/fonts/", SPIFFS, "/www/fonts/");
-  server.serveStatic("/app/", SPIFFS, "/www/app/");
-  server.serveStatic("/favicon.ico", SPIFFS, "/www/favicon.ico");
+    // Serving static resources from /www/
+    server.serveStatic("/js/", SPIFFS, "/www/js/");
+    server.serveStatic("/css/", SPIFFS, "/www/css/");
+    server.serveStatic("/fonts/", SPIFFS, "/www/fonts/");
+    server.serveStatic("/app/", SPIFFS, "/www/app/");
+    server.serveStatic("/favicon.ico", SPIFFS, "/www/favicon.ico");
 
-  // Serving all other get requests with "/www/index.htm"
-  // OPTIONS get a straight up 200 response
-  server.onNotFound([](AsyncWebServerRequest *request) {
-    if (request->method() == HTTP_GET)
-    {
-      request->send(SPIFFS, "/www/index.html");
-    }
-    else if (request->method() == HTTP_OPTIONS)
-    {
-      request->send(200);
-    }
-    else
-    {
-      request->send(404);
-    }
-  });
+    // Serving all other get requests with "/www/index.htm"
+    // OPTIONS get a straight up 200 response
+    server.onNotFound([](AsyncWebServerRequest *request) {
+        if (request->method() == HTTP_GET)
+            request->send(SPIFFS, "/www/index.html");
+        else if (request->method() == HTTP_OPTIONS)
+            request->send(200);
+        else
+            request->send(404);
+    });
 
 // Disable CORS if required
 #if defined(ENABLE_CORS)
-  DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
-  DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "*");
+    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
+    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "*");
 #endif
 
-  server.begin();
+    server.begin();
 
-  pinMode(PUMP_BUS, OUTPUT);
-  pinMode(BUZZER_BUS, OUTPUT);
-  digitalWrite(BUZZER_BUS, LOW);
-  pinMode(HEATER_BUS, OUTPUT);
-  pump.TurnPumpOff();
-  DS18B20.begin();
-  // locate devices on the bus
-  Serial.print("Locating devices...");
-  Serial.print("Found ");
-  deviceCount = DS18B20.getDeviceCount();
-  Serial.print(deviceCount, DEC);
-  Serial.println(" devices.");
-  Serial.println("");
-  temperatureService.DeviceCount = deviceCount;
+    pinMode(PUMP_BUS, OUTPUT);
+    pinMode(BUZZER_BUS, OUTPUT);
+    digitalWrite(BUZZER_BUS, LOW);
+    pinMode(HEATER_BUS, OUTPUT);
+    pump.TurnPumpOff();
+    DS18B20.begin();
+    // locate devices on the bus
+    Serial.print("Locating devices...");
+    Serial.print("Found ");
+    deviceCount = DS18B20.getDeviceCount();
+    Serial.print(deviceCount, DEC);
+    Serial.println(" devices.");
+    Serial.println("");
+    temperatureService.DeviceCount = deviceCount;
+    brewService.begin();
 }
 
 void loop()
 {
-  apSettingsService.loop();
-  ntpSettingsService.loop();
-  otaSettingsService.loop();
-  brewService.loop();
+    apSettingsService.loop();
+    ntpSettingsService.loop();
+    otaSettingsService.loop();
+    brewService.loop();
 }

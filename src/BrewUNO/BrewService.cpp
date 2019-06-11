@@ -160,6 +160,7 @@ void BrewService::begin()
     if (_temperatureService->DeviceCount == 1)
     {
         _brewSettingsService->MainSensor = _temperatureService->GetFirstSensorAddress();
+        _activeStatus->MainSensor = _brewSettingsService->MainSensor;
         _brewSettingsService->writeToFS();
     }
 }
