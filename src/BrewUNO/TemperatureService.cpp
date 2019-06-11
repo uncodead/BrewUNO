@@ -34,8 +34,11 @@ String TemperatureService::GetSensorsJson()
     {
         _dallasTemperature.getAddress(Thermometer, i);
         json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",";
-        json += "\"value\": \"" + String(_dallasTemperature.getTempC(Thermometer)) +  "\"},";
+        json += "\"value\": \"" + String(_dallasTemperature.getTempC(Thermometer)) + "\"}";
+        if (i < DeviceCount - 1)
+            json += ',';
     }
+
     json += "]}";
     return json;
 }
@@ -57,14 +60,12 @@ float TemperatureService::GetTemperature(String sensorAddress)
     float tempC = 0;
     DeviceAddress Thermometer;
     _dallasTemperature.requestTemperatures();
-    int deviceCount = _dallasTemperature.getDeviceCount();
-    for (int i = 0; i < deviceCount; i++)
+
+    for (int i = 0; i < DeviceCount; i++)
     {
         _dallasTemperature.getAddress(Thermometer, i);
         if (GetAddressToString(Thermometer) == sensorAddress)
-        {
             tempC = _dallasTemperature.getTempC(Thermometer);
-        }
     }
     return tempC;
 }
