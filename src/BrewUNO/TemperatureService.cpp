@@ -14,7 +14,7 @@ void TemperatureService::GetTemperatureAndAdress(AsyncWebServerRequest *request)
 
 int TemperatureService::GetSensorsCount()
 {
-    return _dallasTemperature.getDeviceCount();
+    return DeviceCount;
 }
 
 String TemperatureService::GetFirstSensorAddress()
