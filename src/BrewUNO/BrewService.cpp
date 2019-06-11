@@ -157,7 +157,7 @@ void BrewService::begin()
     _boilService->LoadBoilSettings();
     _activeStatus->LoadActiveStatusSettings();
     _activeStatus->BrewStarted = false;
-    if (_temperatureService->GetSensorsCount() == 1)
+    if (_temperatureService->DeviceCount == 1)
     {
         _brewSettingsService->MainSensor = _temperatureService->GetFirstSensorAddress();
         _brewSettingsService->writeToFS();

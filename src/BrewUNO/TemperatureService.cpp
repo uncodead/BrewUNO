@@ -12,10 +12,6 @@ void TemperatureService::GetTemperatureAndAdress(AsyncWebServerRequest *request)
     request->send(200, APPLICATION_JSON_TYPE, GetSensorsJson());
 }
 
-int TemperatureService::GetSensorsCount()
-{
-    return DeviceCount;
-}
 
 String TemperatureService::GetFirstSensorAddress()
 {

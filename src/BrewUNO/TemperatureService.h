@@ -20,7 +20,6 @@ public:
   void GetTemperatureAndAdress(AsyncWebServerRequest *request);
   String GetAddressToString(DeviceAddress deviceAddress);
   String GetSensorsJson();
-  int GetSensorsCount();
   String GetFirstSensorAddress();
   int DeviceCount;
 
