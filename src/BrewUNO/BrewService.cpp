@@ -168,7 +168,7 @@ void BrewService::begin()
 time_t lastReadTemperature = now();
 void BrewService::loop()
 {
-    if (now() - lastReadTemperature > 1)
+    if (now() - lastReadTemperature > 2)
     {
         _activeStatus->SetTemperature(_temperatureService->GetTemperature(_brewSettingsService->MainSensor));
         _activeStatus->SetSpargeTemperature(_temperatureService->GetTemperature(_brewSettingsService->SpargeSensor));
