@@ -56,6 +56,10 @@ String ActiveStatus::GetJson()
                     "\"time_now\":" + String(TimeNow) + "," +
                     "\"brew_started\":" + String(BrewStarted) + "," +
                     "\"temperature\":" + String(Temperature) + "," +
+                    "\"sparge_temperature\":" + String(SpargeTemperature) + "," +
+                    "\"temperatures\":" + Temperatures + "," +
+                    "\"main_sensor\": \"" + MainSensor + "\"," +
+                    "\"sparge_sensor\": \"" + SpargeSensor + "\"," +
                     "\"pwm\":" + String(PWM) + ',' +
                     "\"recirculation\":" + String(Recirculation) + "," +
                     "\"pid_tuning\":" + String(PIDTuning) + "," +
@@ -152,4 +156,17 @@ void ActiveStatus::SetTemperature(float temperature)
         float CorrectedValue = (((temperature - RawLow) * ReferenceRange) / RawRange) + ReferenceLow;
         Temperature = temperature;
     }
+}
+
+void ActiveStatus::SetSpargeTemperature(float temperature)
+{
+    if (temperature > 0 && temperature >= Temperature - 10)
+    {
+        SpargeTemperature = temperature;
+    }
+}
+
+void ActiveStatus::SetJsonTemperatures(String json)
+{
+    Temperatures = json;
 }

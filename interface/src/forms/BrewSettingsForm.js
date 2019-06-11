@@ -6,6 +6,9 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
 
 class BrewSettingsForm extends Component {
   render() {
@@ -67,6 +70,31 @@ class BrewSettingsForm extends Component {
                   onChange={handleValueChange("boilTime")}
                   errorMessages={['this field is required']}
                 />
+                <InputLabel>Main Sensor</InputLabel>
+                <Select
+                  value={brewSettings.mainSensor}
+                  onChange={handleValueChange("mainSensor")}
+                  fullWidth
+                  native
+                  required
+                  inputProps={{ required: true }}
+                >
+                  <option value=''></option>
+                  {this.props.sensors.map(value => (
+                    <option value={value.address}>{value.address} - {value.value}ºC</option>
+                  ))}
+                </Select>
+                <InputLabel>Sparge Sensor</InputLabel>
+                <Select
+                  value={brewSettings.spargeSensor}
+                  onChange={handleValueChange("spargeSensor")}
+                  fullWidth
+                  inputProps={{ required: true }}
+                >
+                  {this.props.sensors.map(value => (
+                    <MenuItem value={value.address}>{value.address} - {value.value}ºC</MenuItem>
+                  ))}
+                </Select>
                 <TextValidator
                   name="pumpRestInterval"
                   validators={['required']}

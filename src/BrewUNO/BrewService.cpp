@@ -157,14 +157,28 @@ void BrewService::begin()
     _boilService->LoadBoilSettings();
     _activeStatus->LoadActiveStatusSettings();
     _activeStatus->BrewStarted = false;
+    if (_temperatureService->DeviceCount == 1)
+    {
+        _brewSettingsService->MainSensor = _temperatureService->GetFirstSensorAddress();
+        _activeStatus->MainSensor = _brewSettingsService->MainSensor;
+        _brewSettingsService->writeToFS();
+    }
 }
 
+time_t lastReadTemperature = now();
 void BrewService::loop()
 {
-    _activeStatus->SetTemperature(_temperatureService->GetTemperature());
+    if (now() - lastReadTemperature > 1)
+    {
+        _activeStatus->SetTemperature(_temperatureService->GetTemperature(_brewSettingsService->MainSensor));
+        _activeStatus->SetSpargeTemperature(_temperatureService->GetTemperature(_brewSettingsService->SpargeSensor));
+        _activeStatus->SetJsonTemperatures(_temperatureService->GetSensorsJson());
+        _activeStatus->MainSensor = _brewSettingsService->MainSensor;
+        _activeStatus->SpargeSensor = _brewSettingsService->SpargeSensor;
+        lastReadTemperature = now();
+    }
     if (!_activeStatus->BrewStarted)
     {
-        _pump->TurnPumpOff();
         _kettleHeaterService->Compute();
         return;
     }
