@@ -67,6 +67,7 @@ void Pump::CheckRest()
             lastPumpRest = 0;
             lastPumpStarted = timeNow;
         }
+        _activeStatus->PumpIsResting = isResting;
     }
 }
 
