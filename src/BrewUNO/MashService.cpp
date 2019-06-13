@@ -74,7 +74,7 @@ void MashService::loop(ActiveStatus *activeStatus)
         Serial.println(activeStatus->TargetTemperature);
 
         if (activeStatus->StartTime == 0)
-            // Recirculation while brew not started
+            // Recirculation while step not started
             _pump->TurnPumpOn();
         else
             _pump->CheckRest();

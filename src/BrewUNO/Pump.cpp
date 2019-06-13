@@ -20,6 +20,7 @@ void Pump::startPumpHttpService(AsyncWebServerRequest *request)
     TurnPumpOn();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
+
 void Pump::stopPumpHttpService(AsyncWebServerRequest *request)
 {
     TurnPumpOff();
@@ -32,6 +33,7 @@ void Pump::TurnPumpOn()
     recirculationOn = true;
     lastPumpStarted = now();
 }
+
 void Pump::TurnPumpOff()
 {
     TurnPump(false);
