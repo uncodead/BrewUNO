@@ -12,7 +12,6 @@ void TemperatureService::GetTemperatureAndAdress(AsyncWebServerRequest *request)
     request->send(200, APPLICATION_JSON_TYPE, GetSensorsJson());
 }
 
-
 String TemperatureService::GetFirstSensorAddress()
 {
     DeviceAddress Thermometer;
@@ -20,23 +19,35 @@ String TemperatureService::GetFirstSensorAddress()
     return GetAddressToString(Thermometer);
 }
 
+String json = "";
+
 String TemperatureService::GetSensorsJson()
 {
+    if (json == "")
+        GetTemperature("");
+    return json;
+}
+
+float TemperatureService::GetTemperature(String sensorAddress)
+{
+    float temperature = 0;
     DeviceAddress Thermometer;
     _dallasTemperature.requestTemperatures();
-    Serial.println("Sensor count: " + String(DeviceCount));
     String json = "{ \"sensors\": [ ";
     for (int i = 0; i < DeviceCount; i++)
     {
         _dallasTemperature.getAddress(Thermometer, i);
+        float temp = _dallasTemperature.getTempC(Thermometer);
         json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",";
         json += "\"value\": \"" + String(_dallasTemperature.getTempC(Thermometer)) + "\"}";
         if (i < DeviceCount - 1)
             json += ',';
-    }
 
+        if (GetAddressToString(Thermometer) == sensorAddress)
+            temperature = temp;
+    }
     json += "]}";
-    return json;
+    return temperature;
 }
 
 String TemperatureService::GetAddressToString(DeviceAddress deviceAddress)
@@ -49,19 +60,4 @@ String TemperatureService::GetAddressToString(DeviceAddress deviceAddress)
         str += String(deviceAddress[i], HEX);
     }
     return str;
-}
-
-float TemperatureService::GetTemperature(String sensorAddress)
-{
-    float tempC = 0;
-    DeviceAddress Thermometer;
-    _dallasTemperature.requestTemperatures();
-
-    for (int i = 0; i < DeviceCount; i++)
-    {
-        _dallasTemperature.getAddress(Thermometer, i);
-        if (GetAddressToString(Thermometer) == sensorAddress)
-            tempC = _dallasTemperature.getTempC(Thermometer);
-    }
-    return tempC;
 }

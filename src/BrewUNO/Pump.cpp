@@ -69,6 +69,9 @@ void Pump::CheckRest()
         }
         _activeStatus->PumpIsResting = isResting;
     }
+    else {
+        _activeStatus->PumpIsResting = false;
+    }
 }
 
 void Pump::AntiCavitation()
