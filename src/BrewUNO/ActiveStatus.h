@@ -52,6 +52,10 @@ public:
   boolean PumpOn;
   boolean PumpIsResting;
 
+  boolean HeaterOff;
+  boolean StepLock;
+  boolean StepLocked;
+
   boolean LoadActiveStatusSettings();
   void SaveActiveStatus(time_t StartTime,
                         time_t EndTime,

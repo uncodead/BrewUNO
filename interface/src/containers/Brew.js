@@ -9,7 +9,7 @@ import { withNotifier } from '../components/SnackbarNotification';
 import ConfirmDialog from '../components/ConfirmDialog';
 import {
   START_PUMP, STOP_PUMP,
-  GET_ACTIVE_STATUS, START_BREW,
+  GET_ACTIVE_STATUS, START_BREW, UNLOCK_STEP_BREW,
   NEXT_STEP_BREW, STOP_BREW, RESUME_BREW,
   ExecuteRestCall, CHANGE_BOIL_PERCENTAGE,
   START_BOIL, START_TUNING
@@ -218,6 +218,9 @@ class Brew extends Component {
               this.actionBrew('Do you want resume brew? Check if you\'ve secure water volume at kettle.', RESUME_BREW,
                 () => { this.props.raiseNotification('Anti Cavitation test started.') })
             }}>Resume</Button> : null}
+        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.this.state.status.step_locked === 1 ?
+          <Button variant="contained" color="secondary" className={classes.button}
+            onClick={() => { this.actionBrew('Do you want unlock the current step?', UNLOCK_STEP_BREW) }}>Unlock Step</Button> : null}
         {this.state.status.active_step > 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW, () => { this.setState({ data: [] }) }) }}>Stop</Button> : null}

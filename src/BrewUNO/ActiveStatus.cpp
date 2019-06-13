@@ -31,6 +31,8 @@ boolean ActiveStatus::LoadActiveStatusSettings()
                 BrewStarted = _activeStatus["brew_started"];
                 PWM = _activeStatus["pwm"];
                 Recirculation = _activeStatus["recirculation"];
+                HeaterOff = _activeStatus["heater_off"];
+                StepLock = _activeStatus["step_lock"];
                 BoilPowerPercentage = _activeStatus["boil_power_percentage"];
                 PIDTuning = _activeStatus["pid_tuning"];
                 configFile.close();
@@ -62,6 +64,9 @@ String ActiveStatus::GetJson()
                     "\"sparge_sensor\": \"" + SpargeSensor + "\"," +
                     "\"pwm\":" + String(PWM) + ',' +
                     "\"recirculation\":" + String(Recirculation) + "," +
+                    "\"heater_off\":" + String(HeaterOff) + "," +
+                    "\"step_lock\":" + String(StepLock) + "," +
+                    "\"step_locked\":" + String(StepLocked) + "," +
                     "\"pid_tuning\":" + String(PIDTuning) + "," +
                     "\"pump_on\":" + String(PumpOn) + "," +
                     "\"boil_power_percentage\":" + String(BoilPowerPercentage) +
@@ -96,6 +101,8 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     Temperature = 0;
     PWM = 0;
     Recirculation = false;
+    HeaterOff = false;
+    StepLock = false;
     PIDTuning = false;
     BoilPowerPercentage = 0;
 
@@ -132,6 +139,8 @@ void ActiveStatus::SaveActiveStatus()
     _activeStatus["temperature"] = Temperature;
     _activeStatus["pwm"] = PWM;
     _activeStatus["recirculation"] = Recirculation;
+    _activeStatus["heater_off"] = HeaterOff;
+    _activeStatus["step_lock"] = StepLock;
     _activeStatus["boil_power_percentage"] = BoilPowerPercentage;
     _activeStatus["pid_tuning"] = PIDTuning;
 
@@ -151,19 +160,25 @@ float ReferenceRange = ReferenceHigh - ReferenceLow;
 
 void ActiveStatus::SetTemperature(float temperature)
 {
+    Temperature = temperature;
+    /*
     if (temperature > 0)
     {
         float CorrectedValue = (((temperature - RawLow) * ReferenceRange) / RawRange) + ReferenceLow;
         Temperature = temperature;
     }
+    */
 }
 
 void ActiveStatus::SetSpargeTemperature(float temperature)
 {
+    SpargeTemperature = temperature;
+    /*
     if (temperature > 0)
     {
         SpargeTemperature = temperature;
     }
+    */
 }
 
 void ActiveStatus::SetJsonTemperatures(String json)

@@ -18,12 +18,15 @@ class MashBoilSettingsForm extends Component {
       t: '',
       tm: '',
       a: '',
-      r: false
+      r: false,
+      sl: false,
+      ho: false
     }
   }
+
   addItem = (event) => {
     this.props.callbackItemAdded(this.state)
-    this.setState({ n: '', t: '', tm: '', a: '', r: false })
+    this.setState({ n: '', t: '', tm: '', a: '', r: false, sl: false, ho: false })
   }
 
   handleNameChange = (e) => {
@@ -44,6 +47,14 @@ class MashBoilSettingsForm extends Component {
 
   handleRecirculationChange = (e, checked) => {
     this.setState({ r: checked })
+  }
+
+  handleStepLock = (e, checked) => {
+    this.setState({ sl: checked })
+  }
+
+  handleHeaterOff = (e, checked) => {
+    this.setState({ ho: checked })
   }
 
   render() {
@@ -98,11 +109,9 @@ class MashBoilSettingsForm extends Component {
             />
             : null
         }
-        {
-          !this.props.boil ?
-            <FormControlLabel control={<Switch ref="r" checked={this.state.r} onChange={this.handleRecirculationChange} />} label="Recirculation" />
-            : null
-        }
+        {!this.props.boil ? <FormControlLabel control={<Switch ref="r" checked={this.state.r} onChange={this.handleRecirculationChange} />} label="Pump ON" /> : null}
+        {!this.props.boil ? <FormControlLabel control={<Switch ref="ho" checked={this.state.ho} onChange={this.handleHeaterOff} />} label="Heater OFF" /> : null}
+        {!this.props.boil ? <FormControlLabel control={<Switch ref="sl" checked={this.state.sl} onChange={this.handleStepLock} />} label="Step LOCK" /> : null}
         <Divider />
         <Button type="submit" variant="contained" fullWidth color="primary">Add</Button>
       </ValidatorForm>

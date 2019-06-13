@@ -23,6 +23,7 @@ BrewService::BrewService(AsyncWebServer *server,
     _server->on(GET_ACTIVE_STATUS_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::getActiveStatus, this, std::placeholders::_1));
     _server->on(NEXT_STEP_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::nextStep, this, std::placeholders::_1));
     _server->on(RESUME_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::resumeBrew, this, std::placeholders::_1));
+    _server->on(UNLOCK_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::unLockBrew, this, std::placeholders::_1));
     _server->on(START_BOIL_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBoil, this, std::placeholders::_1));
     _server->on(START_TUNING_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startTuning, this, std::placeholders::_1));
     _updateHandler.setUri(CHANGE_BOIL_PERCENTAGE_SERVICE_PATH);
@@ -53,6 +54,19 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _kettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
+    request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
+}
+
+void BrewService::unLockBrew(AsyncWebServerRequest *request)
+{
+    if (timeStatus() != timeSet)
+    {
+        request->send(500, APPLICATION_JSON_TYPE, NPT_JSON_ERROR_MESSAGE);
+        return;
+    }
+
+    _activeStatus->StepLock = false;
+    _activeStatus->SaveActiveStatus();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 

@@ -39,7 +39,7 @@ void KettleHeaterService::StartAutoTune()
 
 void KettleHeaterService::Compute()
 {
-  if (!_activeStatus->BrewStarted || _activeStatus->ActiveStep == none || _activeStatus->PumpIsResting)
+  if (!_activeStatus->BrewStarted || _activeStatus->ActiveStep == none || _activeStatus->PumpIsResting || _activeStatus->HeaterOff)
   {
     analogWrite(HEATER_BUS, 0);
     return;

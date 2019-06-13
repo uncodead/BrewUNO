@@ -23,23 +23,33 @@ void MashService::LoadMashSettings()
 
 void MashService::loop(ActiveStatus *activeStatus)
 {
-    if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash) 
+    if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
         return;
 
     time_t timeNow = now();
     JsonArray steps = _mashSettings["st"].as<JsonArray>();
     if (activeStatus->TargetTemperature == 0)
     {
-        JsonObject step = steps[0];
-        activeStatus->TargetTemperature = step["t"];
+        activeStatus->TargetTemperature = steps[0]["t"];
         _pump->AntiCavitation();
+        // brew was stopped during anti cavitatiton
         if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
             return;
     }
 
     if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)
     {
-        Serial.println("Step over, next step: ");
+        Serial.println("Step over..");
+        activeStatus->StepLocked = activeStatus->StepLock;
+        if (activeStatus->StepLock)
+        {
+            Serial.println("Step locked...");
+            _pump->CheckRest();
+            Buzzer().Ring(2, 1000);
+            return;
+        }
+
+        Serial.println("Next step: ");
         unsigned int nextMashStep = activeStatus->ActiveMashStepIndex + 1;
         if (steps.size() > nextMashStep)
         {
@@ -49,6 +59,8 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->EndTime = 0;
             activeStatus->TargetTemperature = step["t"];
             activeStatus->Recirculation = ((int)step["r"]) == 1;
+            activeStatus->HeaterOff = ((int)step["ho"]) == 1;
+            activeStatus->StepLock = ((int)step["sl"]) == 1;
             Buzzer().Ring(1, 2000);
             activeStatus->SaveActiveStatus();
         }
@@ -85,12 +97,15 @@ void MashService::loop(ActiveStatus *activeStatus)
             JsonObject step = steps[activeStatus->ActiveMashStepIndex];
             activeStatus->StartTime = timeNow;
             activeStatus->EndTime = timeNow + (int(step["tm"]) * 60);
+            activeStatus->HeaterOff = ((int)step["ho"]) == 1;
+            activeStatus->StepLock = ((int)step["sl"]) == 1;
 
             Serial.print("Start time: ");
             Serial.println(activeStatus->StartTime);
             Serial.print("End Time: ");
             Serial.println(activeStatus->EndTime);
             Buzzer().Ring(1, 2000);
+
             activeStatus->Recirculation = ((int)step["r"]) == 1;
             if (activeStatus->Recirculation)
                 _pump->TurnPumpOn();
