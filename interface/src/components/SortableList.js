@@ -62,6 +62,30 @@ class SortableList extends Component {
               label="Recirculation"
             /> : null}
         </ListItem>
+        <ListItem color="black">
+          {!this.props.boil ?
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={value.ho}
+                  disabled
+                />
+              }
+              label="Heater OFF"
+            /> : null}
+        </ListItem>
+        <ListItem color="black">
+          {!this.props.boil ?
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={value.sl}
+                  disabled
+                />
+              }
+              label="Step LOCK"
+            /> : null}
+        </ListItem>
         <Divider middle />
       </List>
     );

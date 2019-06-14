@@ -218,13 +218,13 @@ class Brew extends Component {
               this.actionBrew('Do you want resume brew? Check if you\'ve secure water volume at kettle.', RESUME_BREW,
                 () => { this.props.raiseNotification('Anti Cavitation test started.') })
             }}>Resume</Button> : null}
-        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.this.state.status.step_locked === 1 ?
+        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.step_locked === 1 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want unlock the current step?', UNLOCK_STEP_BREW) }}>Unlock Step</Button> : null}
         {this.state.status.active_step > 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW, () => { this.setState({ data: [] }) }) }}>Stop</Button> : null}
-        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.pid_tuning === 0 ?
+        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.pid_tuning === 0 && this.state.status.step_locked === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want skip the current step?', NEXT_STEP_BREW) }}>Next Step</Button> : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 ?

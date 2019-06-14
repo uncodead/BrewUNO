@@ -45,7 +45,7 @@ void MashService::loop(ActiveStatus *activeStatus)
         {
             Serial.println("Step locked...");
             _pump->CheckRest();
-            Buzzer().Ring(2, 1000);
+            Buzzer().Ring(2, 100);
             return;
         }
 

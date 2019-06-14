@@ -114,6 +114,7 @@ void BrewService::nextStep(AsyncWebServerRequest *request)
         return;
     }
 
+    _activeStatus->StepLock = false;
     _activeStatus->EndTime = now();
     _activeStatus->SaveActiveStatus();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());

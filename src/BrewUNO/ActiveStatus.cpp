@@ -103,6 +103,7 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     Recirculation = false;
     HeaterOff = false;
     StepLock = false;
+    StepLocked = false;
     PIDTuning = false;
     BoilPowerPercentage = 0;
 
@@ -160,25 +161,19 @@ float ReferenceRange = ReferenceHigh - ReferenceLow;
 
 void ActiveStatus::SetTemperature(float temperature)
 {
-    Temperature = temperature;
-    /*
-    if (temperature > 0)
+    if (temperature >= 0)
     {
         float CorrectedValue = (((temperature - RawLow) * ReferenceRange) / RawRange) + ReferenceLow;
         Temperature = temperature;
     }
-    */
 }
 
 void ActiveStatus::SetSpargeTemperature(float temperature)
 {
-    SpargeTemperature = temperature;
-    /*
-    if (temperature > 0)
+    if (temperature >= 0)
     {
         SpargeTemperature = temperature;
     }
-    */
 }
 
 void ActiveStatus::SetJsonTemperatures(String json)

@@ -33,7 +33,7 @@ float TemperatureService::GetTemperature(String sensorAddress)
     float temperature = 0;
     DeviceAddress Thermometer;
     _dallasTemperature.requestTemperatures();
-    String json = "{ \"sensors\": [ ";
+    json = "{ \"sensors\": [ ";
     for (int i = 0; i < DeviceCount; i++)
     {
         _dallasTemperature.getAddress(Thermometer, i);

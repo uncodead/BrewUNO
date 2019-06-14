@@ -4,19 +4,25 @@
             "n": "Mash in",
             "t": 40,
             "tm": 15,
-            "r": true
+            "r": true,
+            "sl": false,
+            "ho": false
         },
         {
             "n": "Sacarification",
             "t": 65,
             "tm": 20,
-            "r": true
+            "r": true,
+            "sl": false,
+            "ho": false
         },
         {
             "n": "Mash out",
             "t": 78,
             "tm": 10,
-            "r": false
+            "r": false,
+            "sl": false,
+            "ho": false
         }
     ]
 }
