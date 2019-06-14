@@ -93,10 +93,9 @@ void KettleHeaterService::Compute()
   else
     _kettlePID.Compute();
 
-  int MaxPWM = ((1023 * _brewSettingsService->MashHeaterPercentage) / 100);
-  _activeStatus->PWM = KettleOutput > MaxPWM ? MaxPWM : KettleOutput;
   Serial.print("OUTPUT: ");
-  Serial.println(_activeStatus->PWM);
+  Serial.println(KettleOutput);
 
-  analogWrite(HEATER_BUS, _activeStatus->PWM);
+  _activeStatus->PWM = KettleOutput;
+  analogWrite(HEATER_BUS, KettleOutput);
 }
