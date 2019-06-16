@@ -24,30 +24,33 @@ String json = "";
 String TemperatureService::GetSensorsJson()
 {
     if (json == "")
-        GetTemperature("");
+        GetTemperatures("", "");
     return json;
 }
 
-float TemperatureService::GetTemperature(String sensorAddress)
+Temperatures TemperatureService::GetTemperatures(String main, String sparge)
 {
-    float temperature = 0;
+    Temperatures temps;
     DeviceAddress Thermometer;
     _dallasTemperature.requestTemperatures();
-    json = "{ \"sensors\": [ ";
+    String _json = "{ \"sensors\": [ ";
     for (int i = 0; i < DeviceCount; i++)
     {
         _dallasTemperature.getAddress(Thermometer, i);
         float temp = _dallasTemperature.getTempC(Thermometer);
-        json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",";
-        json += "\"value\": \"" + String(_dallasTemperature.getTempC(Thermometer)) + "\"}";
+        _json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",";
+        _json += "\"value\": \"" + String(_dallasTemperature.getTempC(Thermometer)) + "\"}";
         if (i < DeviceCount - 1)
-            json += ',';
+            _json += ',';
 
-        if (GetAddressToString(Thermometer) == sensorAddress)
-            temperature = temp;
+        if (main != "" && GetAddressToString(Thermometer) == main)
+            temps.Main = temp;
+        if (sparge != "" && GetAddressToString(Thermometer) == sparge)
+            temps.Sparge = temp;
     }
-    json += "]}";
-    return temperature;
+    json = _json + "]}";
+    temps.Json = json;
+    return temps;
 }
 
 String TemperatureService::GetAddressToString(DeviceAddress deviceAddress)

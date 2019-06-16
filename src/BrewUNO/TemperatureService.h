@@ -5,9 +5,17 @@
 #include <DallasTemperature.h>
 #include <TimeLib.h>
 #include <ESPAsyncWebServer.h>
+#include <BrewUNO/ActiveStatus.h>
 
 #define APPLICATION_JSON_TYPE "application/json"
 #define GET_SENSORS_SERVICE_PATH "/rest/getsensors"
+
+struct Temperatures
+{
+  float Main;
+  float Sparge;
+  String Json;
+};
 
 class TemperatureService
 {
@@ -15,7 +23,7 @@ public:
   TemperatureService(AsyncWebServer *server, FS *fs, DallasTemperature dallasTemperature);
   ~TemperatureService();
 
-  float GetTemperature(String sensorAddress);
+  Temperatures GetTemperatures(String main,String sparge);
 
   void GetTemperatureAndAdress(AsyncWebServerRequest *request);
   String GetAddressToString(DeviceAddress deviceAddress);
