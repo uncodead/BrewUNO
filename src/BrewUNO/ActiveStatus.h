@@ -32,6 +32,8 @@ public:
   int ActiveMashStepIndex;
   int BoilTime;
   int PWM;
+  boolean PIDActing;
+
   double BoilTargetTemperature;
   double BoilPowerPercentage;
 

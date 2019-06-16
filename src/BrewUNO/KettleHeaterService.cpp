@@ -41,6 +41,7 @@ void KettleHeaterService::Compute()
 {
   if (!_activeStatus->BrewStarted || _activeStatus->ActiveStep == none || _activeStatus->PumpIsResting || _activeStatus->HeaterOff)
   {
+    _activeStatus->PIDActing = false;
     _activeStatus->PWM = 0;
     analogWrite(HEATER_BUS, 0);
     return;
@@ -51,6 +52,7 @@ void KettleHeaterService::Compute()
 
   if (_activeStatus->ActiveStep == boil)
   {
+    _activeStatus->PIDActing = false;
     _activeStatus->PWM = ((1023 * _activeStatus->BoilPowerPercentage) / 100);
     analogWrite(HEATER_BUS, _activeStatus->PWM);
     return;
@@ -58,6 +60,7 @@ void KettleHeaterService::Compute()
 
   if (!_activeStatus->PIDTuning && KettleSetpoint - KettleInput > _brewSettingsService->PIDStart)
   {
+    _activeStatus->PIDActing = false;
     _activeStatus->PWM = ((1023 * _brewSettingsService->MashHeaterPercentage) / 100);
     analogWrite(HEATER_BUS, _activeStatus->PWM);
     return;
@@ -67,6 +70,7 @@ void KettleHeaterService::Compute()
   if (KettleInput > KettleSetpoint + 0.1)
   {
     _activeStatus->PWM = 0;
+    _activeStatus->PIDActing = false;
     analogWrite(HEATER_BUS, _activeStatus->PWM);
     StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     return;
@@ -98,4 +102,5 @@ void KettleHeaterService::Compute()
 
   _activeStatus->PWM = KettleOutput;
   analogWrite(HEATER_BUS, KettleOutput);
+  _activeStatus->PIDActing = _activeStatus->PWM > 0;
 }

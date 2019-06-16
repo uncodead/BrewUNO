@@ -32,6 +32,7 @@ void Pump::TurnPumpOn()
     TurnPump(true);
     recirculationOn = true;
     lastPumpStarted = now();
+    _activeStatus->PumpIsResting = false;
 }
 
 void Pump::TurnPumpOff()
@@ -51,7 +52,7 @@ void Pump::TurnPump(bool on)
 
 void Pump::CheckRest()
 {
-    if (recirculationOn)
+    if (recirculationOn && !_activeStatus->PIDActing)
     {
         time_t timeNow = now();
         if (!isResting && timeNow - lastPumpStarted >= _brewSettingsService->PumpRestInterval)
@@ -60,6 +61,7 @@ void Pump::CheckRest()
             isResting = true;
             lastPumpStarted = 0;
             lastPumpRest = timeNow;
+            Buzzer().Ring(1, 50);
         }
 
         if (isResting && timeNow - lastPumpRest >= _brewSettingsService->PumpRestTime)
@@ -68,6 +70,7 @@ void Pump::CheckRest()
             isResting = false;
             lastPumpRest = 0;
             lastPumpStarted = timeNow;
+            Buzzer().Ring(1, 50);
         }
         _activeStatus->PumpIsResting = isResting;
     }

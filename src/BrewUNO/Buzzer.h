@@ -8,7 +8,7 @@ class Buzzer
 public:
   void Ring();
   void Ring(int);
-  void Ring(int, int);
+  void Ring(int count, int duration);
 };
 
 #endif

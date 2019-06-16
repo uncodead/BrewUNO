@@ -69,6 +69,7 @@ String ActiveStatus::GetJson()
                     "\"step_locked\":" + String(StepLocked) + "," +
                     "\"pid_tuning\":" + String(PIDTuning) + "," +
                     "\"pump_on\":" + String(PumpOn) + "," +
+                    "\"pump_is_resting\":" + String(PumpIsResting) + "," +
                     "\"boil_power_percentage\":" + String(BoilPowerPercentage) +
                     "}";
     Serial.println(status);

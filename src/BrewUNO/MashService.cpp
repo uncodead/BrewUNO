@@ -73,6 +73,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->ActiveMashStepIndex = -1;
             activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
             activeStatus->Recirculation = false;
+            _pump->CheckRest();
             Buzzer().Ring(2, 2000);
             _pump->TurnPumpOff();
             activeStatus->SaveActiveStatus();

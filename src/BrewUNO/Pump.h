@@ -5,6 +5,8 @@
 #include <TimeLib.h>
 #include <BrewUNO/BrewSettingsService.h>
 #include <BrewUNO/ActiveStatus.h>
+#include <BrewUNO/Buzzer.h>
+
 #define APPLICATION_JSON_TYPE "application/json"
 #define START_PUMP_SERVIVE_PATH "/rest/startpump"
 #define STOP_PUMP_SERVIVE_PATH "/rest/stoppump"
