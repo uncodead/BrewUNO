@@ -139,6 +139,7 @@ void BrewService::startBoil(AsyncWebServerRequest *request)
     _activeStatus->SaveActiveStatus();
     _kettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _boilService->LoadBoilSettings();
+    _pump->TurnPumpOff();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
