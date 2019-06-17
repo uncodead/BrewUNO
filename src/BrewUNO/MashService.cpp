@@ -100,6 +100,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->EndTime = timeNow + (int(step["tm"]) * 60);
             activeStatus->HeaterOff = ((int)step["ho"]) == 1;
             activeStatus->StepLock = ((int)step["sl"]) == 1;
+            activeStatus->ActiveMashStepName = step["n"].as<String>();;
 
             Serial.print("Start time: ");
             Serial.println(activeStatus->StartTime);

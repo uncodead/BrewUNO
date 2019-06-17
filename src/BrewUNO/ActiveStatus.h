@@ -29,7 +29,11 @@ public:
   boolean BrewStarted;
 
   String ActiveBoilStepIndex;
+  String ActiveBoilStepName;
+
   int ActiveMashStepIndex;
+  String ActiveMashStepName;
+  
   int BoilTime;
   int PWM;
   boolean PIDActing;

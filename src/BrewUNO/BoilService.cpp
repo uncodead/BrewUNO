@@ -53,18 +53,23 @@ void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, int second)
 {
     int index = 0;
     String currentStep = "";
+    String currentStepName = "";
     JsonArray steps = _boilSettings["st"].as<JsonArray>();
     for (auto step : steps)
     {
         int time = step["tm"];
-        if (time * 60 == second)
+        String name = step["n"];
+        if (time * 60 == second) {
             currentStep = currentStep == "" ? String(index) : currentStep + "," + String(index);
+            currentStepName += currentStepName == "" ? name : currentStepName + ", " + name;
+        }
         index++;
     }
 
     if (currentStep != "" && currentStep != activeStatus->ActiveBoilStepIndex)
     {
         activeStatus->ActiveBoilStepIndex = currentStep;
+        activeStatus->ActiveBoilStepName = currentStepName;
         Serial.println(currentStep);
         Serial.println(activeStatus->ActiveBoilStepIndex);
         Buzzer().Ring(3);

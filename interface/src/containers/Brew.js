@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import SectionContent from '../components/SectionContent';
 import MashSettings from './MashSettings';
 import BoilSettings from './BoilSettings';
-import BrewSettings from './BrewSettings';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { withNotifier } from '../components/SnackbarNotification';
@@ -30,6 +29,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import BrewStatusGadget from '../components/BrewStatusGadget'
+import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
   button: {
@@ -74,6 +74,9 @@ class Brew extends Component {
       progressCompleted: 0,
       confirmDialogOpen: false,
       boilPower: 0,
+      activeMashStepName: "",
+      activeBoilStepName: "",
+      statusInitialized: false
     }
     interval = setInterval(() => {
       this.getStatus();
@@ -88,15 +91,42 @@ class Brew extends Component {
       var now = getDateTime(this.state.status.time_now);
       var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
       var splice_data = this.state.data;
+
       if (splice_data.length >= 100)
         splice_data.splice(0, 1);
+
       this.setState({
         data: [...splice_data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature }],
       })
+
       if (this.state.boilPower == 0)
         this.setState({
           boilPower: this.state.status.boil_power_percentage
         })
+
+      const action = (key) => (
+        <Button color="secondary" onClick={() => { this.props.closeSnackbar(key) }}>
+          {'Dismiss'}
+        </Button>
+      );
+
+      if (this.state.statusInitialized) {
+        if (this.getActiveStep() == "Mash" && this.state.status.active_mash_step_name !== "" && this.state.activeMashStepName !== this.state.status.active_mash_step_name) {
+          this.state.activeMashStepName = this.state.status.active_mash_step_name;
+          this.props.enqueueSnackbar("Mash Step: " + this.state.activeMashStepName, {
+            persist: true,
+            action,
+          });
+        }
+        if (this.getActiveStep() == "Boil" && this.state.status.active_boil_step_name !== "" && this.state.activeBoilStepName !== this.state.status.active_boil_step_name) {
+          this.state.activeBoilStepName = this.state.status.active_boil_step_name;
+          this.props.enqueueSnackbar("Boil Step: " + this.state.activeBoilStepName, {
+            persist: true,
+            action,
+          });
+        }
+      }
+      this.setState({ statusInitialized: true })
     }
   }
 
@@ -268,6 +298,7 @@ class Brew extends Component {
                       container: classes.slider, thumb: classes.sliderThumb, trackBefore: classes.trackBefore,
                       trackAfter: classes.trackAfter,
                     }}
+                    step={1}
                     value={this.state.boilPower}
                     onChange={this.handleChangeBoilPowerPercentage}
                     onDragEnd={this.handleSaveChangeBoilPowerPercentage}
@@ -316,4 +347,4 @@ class Brew extends Component {
   }
 }
 
-export default withNotifier(withStyles(styles)(Brew));
+export default withSnackbar(withNotifier(withStyles(styles)(Brew)));

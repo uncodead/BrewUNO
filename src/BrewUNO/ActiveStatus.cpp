@@ -49,7 +49,9 @@ String ActiveStatus::GetJson()
     Serial.println("GET Json:");
     String status = "{\"active_step\":" + String(ActiveStep) + "," +
                     "\"active_mash_step_index\":" + String(ActiveMashStepIndex) + "," +
+                    "\"active_mash_step_name\":" + String(ActiveMashStepName) + "," +
                     "\"active_boil_step_index\":\"" + String(ActiveBoilStepIndex) + "\"" + "," +
+                    "\"active_boil_step_name\":\"" + String(ActiveBoilStepName) + "\"" + "," +
                     "\"boil_time\":" + String(BoilTime) + "," +
                     "\"boil_target_temperature\":" + String(BoilTargetTemperature) + "," +
                     "\"target_temperature\":" + String(TargetTemperature) + "," +

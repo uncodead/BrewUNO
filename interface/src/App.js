@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 
+
 import AppRouting from './AppRouting';
 import SnackbarNotification from './components/SnackbarNotification';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
-import blueGrey from '@material-ui/core/colors/blueGrey';
-import indigo from '@material-ui/core/colors/indigo';
-import orange from '@material-ui/core/colors/orange';
-import red from '@material-ui/core/colors/red';
-import green from '@material-ui/core/colors/green';
+
+import { SnackbarProvider } from 'notistack';
 
 import JssProvider from 'react-jss/lib/JssProvider';
 import { create } from 'jss';
@@ -69,10 +67,12 @@ class App extends Component {
     return (
       <JssProvider jss={jss} generateClassName={generateClassName}>
         <MuiThemeProvider theme={theme}>
-          <SnackbarNotification>
-            <CssBaseline />
-            <AppRouting />
-          </SnackbarNotification>
+          <SnackbarProvider  maxSnack={3}>
+            <SnackbarNotification>
+              <CssBaseline />
+              <AppRouting />
+            </SnackbarNotification>
+          </SnackbarProvider>
         </MuiThemeProvider>
       </JssProvider>
     )
