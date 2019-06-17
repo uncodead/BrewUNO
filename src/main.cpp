@@ -113,7 +113,7 @@ void setup()
     pinMode(BUZZER_BUS, OUTPUT);
     digitalWrite(BUZZER_BUS, LOW);
     pinMode(HEATER_BUS, OUTPUT);
-    pinMode(TEMPERATURE_BUS, OUTPUT);
+    //pinMode(TEMPERATURE_BUS, OUTPUT);
     pump.TurnPumpOff();
     DS18B20.begin();
     // locate devices on the bus
