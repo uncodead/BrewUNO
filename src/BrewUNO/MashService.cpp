@@ -28,10 +28,13 @@ void MashService::loop(ActiveStatus *activeStatus)
 
     time_t timeNow = now();
     JsonArray steps = _mashSettings["st"].as<JsonArray>();
+    
     if (activeStatus->TargetTemperature == 0)
     {
         activeStatus->TargetTemperature = steps[0]["t"];
         _pump->AntiCavitation();
+        _pump->TurnPumpOn();
+
         // brew was stopped during anti cavitatiton
         if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
             return;
@@ -62,6 +65,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->HeaterOff = ((int)step["ho"]) == 1;
             activeStatus->StepLock = ((int)step["sl"]) == 1;
             Buzzer().Ring(1, 2000);
+            _pump->TurnPumpOn();
             activeStatus->SaveActiveStatus();
         }
         else
@@ -73,7 +77,6 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->ActiveMashStepIndex = -1;
             activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
             activeStatus->Recirculation = false;
-            _pump->CheckRest();
             Buzzer().Ring(2, 2000);
             _pump->TurnPumpOff();
             activeStatus->SaveActiveStatus();
@@ -86,10 +89,7 @@ void MashService::loop(ActiveStatus *activeStatus)
         Serial.print("Target: ");
         Serial.println(activeStatus->TargetTemperature);
 
-        if (activeStatus->StartTime == 0)
-            // Recirculation while step not started
-            _pump->TurnPumpOn();
-        else
+        if (activeStatus->StartTime != 0)
             _pump->CheckRest();
 
         if (activeStatus->Temperature >= (activeStatus->TargetTemperature) && activeStatus->StartTime == 0)

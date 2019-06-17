@@ -32,7 +32,7 @@ void Pump::TurnPumpOn()
     TurnPump(true);
     recirculationOn = true;
     lastPumpStarted = now();
-    _activeStatus->PumpIsResting = false;
+    CheckRest();
 }
 
 void Pump::TurnPumpOff()
@@ -40,6 +40,7 @@ void Pump::TurnPumpOff()
     TurnPump(false);
     recirculationOn = false;
     lastPumpStarted = 0;
+    CheckRest();
 }
 
 void Pump::TurnPump(bool on)
@@ -74,7 +75,8 @@ void Pump::CheckRest()
         }
         _activeStatus->PumpIsResting = isResting;
     }
-    else {
+    else
+    {
         _activeStatus->PumpIsResting = false;
     }
 }
@@ -83,9 +85,8 @@ void Pump::AntiCavitation()
 {
     for (byte i = 1; i < 6; i++)
     {
-        if (!_activeStatus->BrewStarted){
+        if (!_activeStatus->BrewStarted)
             continue;
-        }
         TurnPump(true);
         delay(1500 + i * 250);
         TurnPump(false);
