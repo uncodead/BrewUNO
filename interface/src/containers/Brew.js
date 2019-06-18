@@ -74,8 +74,7 @@ class Brew extends Component {
       progressCompleted: 0,
       confirmDialogOpen: false,
       boilPower: 0,
-      activeMashStepName: "",
-      activeBoilStepName: "",
+      activeStepName: "",
       statusInitialized: false
     }
     interval = setInterval(() => {
@@ -111,19 +110,21 @@ class Brew extends Component {
       );
 
       if (this.state.statusInitialized) {
-        if (this.getActiveStep() == "Mash" && this.state.status.active_mash_step_name !== "" && this.state.activeMashStepName !== this.state.status.active_mash_step_name) {
-          this.state.activeMashStepName = this.state.status.active_mash_step_name;
-          this.props.enqueueSnackbar("Mash Step: " + this.state.activeMashStepName, {
-            persist: true,
-            action,
-          });
+        if (this.getActiveStep() == "Mash" && this.state.activeStepName !== this.state.status.active_mash_step_name) {
+          this.setState({ activeStepName: this.state.status.active_mash_step_name });
+          if (this.state.status.active_mash_step_name !== "")
+            this.props.enqueueSnackbar("Mash Step: " + this.state.status.active_mash_step_name, {
+              persist: true,
+              action,
+            });
         }
-        if (this.getActiveStep() == "Boil" && this.state.status.active_boil_step_name !== "" && this.state.activeBoilStepName !== this.state.status.active_boil_step_name) {
-          this.state.activeBoilStepName = this.state.status.active_boil_step_name;
-          this.props.enqueueSnackbar("Boil Step: " + this.state.activeBoilStepName, {
-            persist: true,
-            action,
-          });
+        if (this.getActiveStep() == "Boil" && this.state.activeStepName !== this.state.status.active_boil_step_name) {
+          this.setState({ activeStepName: this.state.status.active_boil_step_name })
+          if (this.state.status.active_boil_step_name !== "")
+            this.props.enqueueSnackbar("Boil Step: " + this.state.status.active_boil_step_name, {
+              persist: true,
+              action,
+            });
         }
       }
       this.setState({ statusInitialized: true })
@@ -282,6 +283,7 @@ class Brew extends Component {
               EndTime={this.state.status.end_time > 0 ? getDateTime(this.state.status.end_time).toLocaleTimeString() : null}
               CountDown={this.state.countdown}
               PumpOn={this.state.status.pump_on}
+              ActiveStepName={this.state.activeStepName}
             />
           </CardContent>
         </Card>

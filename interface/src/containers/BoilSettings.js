@@ -79,7 +79,7 @@ class BoilSettings extends Component {
 
   render() {
     return (
-      <SectionContent title="Boil Timming" selected={this.props.active_boil_step_index >= 0}>
+      <SectionContent title="Boil Timing" selected={this.props.active_boil_step_index >= 0}>
         {!this.props.listOnly ? <BoilSettingsForm callbackItemAdded={this.itemAdded} boil={true} /> : null}
         <Divider />
         <SortableList

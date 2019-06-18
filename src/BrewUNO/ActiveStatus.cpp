@@ -92,8 +92,9 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     ActiveStep = activeStep;
 
     ActiveMashStepIndex = activeMashStepIndex;
-
+    ActiveMashStepName = "";
     ActiveBoilStepIndex = activeBoilStepIndex;
+    ActiveBoilStepName = "";
     BoilTime = boilTime;
     BoilTargetTemperature = boilTargetTemperature;
     TargetTemperature = targetTemperature;

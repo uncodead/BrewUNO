@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-
 import AppRouting from './AppRouting';
 import SnackbarNotification from './components/SnackbarNotification';
 

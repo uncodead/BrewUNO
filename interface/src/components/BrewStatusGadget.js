@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { PieChart, Pie, Sector, Cell, } from 'recharts';
-import Paper from '@material-ui/core/Paper';
+import { PieChart, Pie, Cell, } from 'recharts';
 import { withStyles } from '@material-ui/core/styles';
 import Cached from '@material-ui/icons/Cached';
-import HighlightOff from '@material-ui/icons/HighlightOff';
+import Autorenew from '@material-ui/icons/Autorenew';
 
 const styles = theme => ({
   temperatureCard: {
     background: "#31313152",
+  },
+  pumpColor1: {
+    color: "#77dcff",
+  },
+  pumpColor2: {
+    color: "#00CED1",
   },
 });
 
@@ -85,24 +89,16 @@ class BrewStatusGadget extends Component {
             <Grid item>
               <Card className={this.props.className}>
                 <CardContent>
+                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Active Step Name</Typography>
+                  <Typography variant="h5">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item>
+              <Card className={this.props.className}>
+                <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Boil Time</Typography>
                   <Typography variant="h5">{this.props.BoilTime > 0 ? this.props.BoilTime / 60 : ''} min</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item>
-              <Card className={this.props.className}>
-                <CardContent>
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Step Started at</Typography>
-                  <Typography variant="h5">{this.props.StartTime != null ? this.props.StartTime : '-'}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item>
-              <Card className={this.props.className}>
-                <CardContent>
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Step End at</Typography>
-                  <Typography variant="h5">{this.props.EndTime != null ? this.props.EndTime : '-'}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -117,11 +113,13 @@ class BrewStatusGadget extends Component {
             <Grid item>
               <Card className={this.props.className}>
                 <CardContent align="center">
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Pump</Typography>
+                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Pump {this.props.PumpOn !== undefined && this.props.PumpOn === 1 ? "(ON)" : "(OFF)"} </Typography>
                   {this.props.PumpOn !== undefined && this.props.PumpOn === 1 ?
-                    <Cached style={{ fontSize: 28 }} align="center" color="secondary"/>
+                    new Date().getSeconds() % 2 == 0 ?
+                      <Cached className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" /> :
+                      <Autorenew className={classes.pumpColor2} style={{ fontSize: 28 }} align="center" />
                     :
-                    <Cached style={{ fontSize: 28 }} align="center" color="disabled"/>}
+                    <Cached style={{ fontSize: 28 }} align="center" color="disabled" />}
                 </CardContent>
               </Card>
             </Grid>
