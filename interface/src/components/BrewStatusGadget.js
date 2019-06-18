@@ -113,7 +113,7 @@ class BrewStatusGadget extends Component {
             <Grid item>
               <Card className={this.props.className}>
                 <CardContent align="center">
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Pump {this.props.PumpOn !== undefined && this.props.PumpOn === 1 ? "(ON)" : "(OFF)"} </Typography>
+                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Pump</Typography>
                   {this.props.PumpOn !== undefined && this.props.PumpOn === 1 ?
                     new Date().getSeconds() % 2 == 0 ?
                       <Cached className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" /> :
