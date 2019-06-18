@@ -284,6 +284,8 @@ class Brew extends Component {
               CountDown={this.state.countdown}
               PumpOn={this.state.status.pump_on}
               ActiveStepName={this.state.activeStepName}
+              StepLocked={this.state.status.step_locked > 0}
+              PumpIsResting={this.state.status.pump_is_resting > 0}
             />
           </CardContent>
         </Card>
