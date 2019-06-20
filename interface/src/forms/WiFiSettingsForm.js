@@ -201,7 +201,7 @@ class WiFiSettingsForm extends React.Component {
           		</Fragment>
       		  }
 
-          <Button variant="raised" color="primary" className={classes.button} type="submit">
+          <Button variant="raised" color="secondary" className={classes.button} type="submit">
             Save
           </Button>
           <Button variant="raised" color="secondary" className={classes.button} onClick={onReset}>

@@ -3,7 +3,7 @@ import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
 import BoilSettingsForm from '../forms/MashBoilSettingsForm';
 import SortableList from '../components/SortableList';
-import { withNotifier } from '../components/SnackbarNotification';
+import { withSnackbar } from 'notistack';
 import { SAVE_BOIL_SETTINGS_SERVICE_PATH, GET_BOIL_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
 
 class BoilSettings extends Component {
@@ -31,7 +31,7 @@ class BoilSettings extends Component {
       }
       throw Error("Boil Setings service returned unexpected response code: " + response.status);
     }).catch(error => {
-      this.props.raiseNotification("Problem getting Boil Settings: " + error.message);
+      this.props.enqueueSnackbar("Problem getting Boil Settings: " + error.message);
       this.setState({ items: [] })
     });
   }
@@ -46,13 +46,13 @@ class BoilSettings extends Component {
       },
     }).then(response => {
       if (response.ok) {
-        this.props.raiseNotification("Boil settings saved.");
+        this.props.enqueueSnackbar("Boil settings saved.");
         return;
       }
       response.text().then(function (data) {
         throw Error("Boil Setings service returned unexpected response code: " + response.status + " Message: " + data);
       }).catch(error => {
-        this.props.raiseNotification(error.message);
+        this.props.enqueueSnackbar(error.message);
         this.getBoilSettings();
       });
     });
@@ -95,4 +95,4 @@ class BoilSettings extends Component {
   }
 }
 
-export default withNotifier(BoilSettings);
+export default withSnackbar(BoilSettings);

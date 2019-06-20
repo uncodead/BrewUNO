@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import { getDateTime, pad } from '../components/Utils';
 
 class Chronometer extends React.Component {
     componentDidMount() {
@@ -17,10 +18,14 @@ class Chronometer extends React.Component {
     constructor(props) {
         super(props);
 
-        //: getInitialState() method
+        debugger
+        var difference = new Date().getTime() - getDateTime(this.props.StartTime);
+        var seconds = Math.floor(difference / 1000);
+        var minutes = Math.floor(seconds / 60);
+        minutes %= 60; seconds %= 60;
         this.state = {
-            minutes: 0,
-            seconds: 0,
+            minutes: minutes,
+            seconds: seconds,
             millis: 0,
             running: false
         };
@@ -85,7 +90,7 @@ class Chronometer extends React.Component {
             <Card>
                 <CardContent>
                     <Typography color="textSecondary" variant="subtitle1" gutterBottom>{this.props.title}</Typography>
-                    <Typography variant="h5">{this.zeroPad(this.state.minutes)}:{this.zeroPad(this.state.seconds)}.0{this.state.millis}</Typography>
+                    <Typography variant="h5">{this.zeroPad(this.state.minutes)}:{this.zeroPad(this.state.seconds)}</Typography>
                 </CardContent>
             </Card>
         )

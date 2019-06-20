@@ -53,7 +53,7 @@ export const ExecuteRestCall = (url, method, callback, callbackError, props) => 
       return;
     }
     if (props != undefined && props.enqueueSnackbar != undefined)
-      response.json().then(json => props.raiseNotification(json.message));
+      response.json().then(json => props.enqueueSnackbar(json.message));
   }).catch(error => {
     if (props != undefined && props.enqueueSnackbar != undefined)
       props.enqueueSnackbar("Problem getting resource: " + error.message);

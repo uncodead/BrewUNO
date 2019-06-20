@@ -75,7 +75,7 @@ class NTPSettingsForm extends React.Component {
                  margin="normal"
                />
 
-          <Button variant="raised" color="primary" className={classes.button} type="submit">
+          <Button variant="raised" color="secondary" className={classes.button} type="submit">
             Save
           </Button>
           <Button variant="raised" color="secondary" className={classes.button} onClick={onReset}>

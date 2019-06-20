@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { SCAN_NETWORKS_ENDPOINT, LIST_NETWORKS_ENDPOINT }  from  '../constants/Endpoints';
 import SectionContent from '../components/SectionContent';
 import WiFiNetworkSelector from '../forms/WiFiNetworkSelector';
-import {withNotifier} from '../components/SnackbarNotification';
+import { withSnackbar } from 'notistack';
 
 const NUM_POLLS = 10
 const POLLING_FREQUENCY = 500
@@ -45,7 +45,7 @@ class WiFiNetworkScanner extends Component {
       }
       throw Error("Scanning for networks returned unexpected response code: " + response.status);
     }).catch(error => {
-        this.props.raiseNotification("Problem scanning: " + error.message);
+        this.props.enqueueSnackbar("Problem scanning: " + error.message);
         this.setState({scanningForNetworks:false, networkList: null, errorMessage:error.message});
     });
   }
@@ -92,7 +92,7 @@ class WiFiNetworkScanner extends Component {
     .catch(error => {
       console.log(error.message);
       if (error.name !== RETRY_EXCEPTION_TYPE) {
-        this.props.raiseNotification("Problem scanning: " + error.message);
+        this.props.enqueueSnackbar("Problem scanning: " + error.message);
         this.setState({scanningForNetworks:false, networkList: null, errorMessage:error.message});
       }
     });
@@ -118,4 +118,4 @@ WiFiNetworkScanner.propTypes = {
   selectNetwork: PropTypes.func.isRequired
 };
 
-export default withNotifier(WiFiNetworkScanner);
+export default withSnackbar(WiFiNetworkScanner);

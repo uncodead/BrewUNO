@@ -9,6 +9,7 @@ import Cached from '@material-ui/icons/Cached';
 import Autorenew from '@material-ui/icons/Autorenew';
 import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
 import Chronometer from './Chronometer'
+import { getDateTime, pad } from '../components/Utils';
 
 const styles = theme => ({
   temperatureCard: {
@@ -23,6 +24,48 @@ const styles = theme => ({
 });
 
 class BrewStatusGadget extends Component {
+  constructor(props) {
+    super(props)
+    
+    this.state = {
+      countdown : 0,
+      progressCompleted: 0,
+    }
+  }
+
+  timerProgress = setInterval(() => {
+    this.brewProgress();
+  }, 1000);
+
+  brewProgress() {
+    if (this.props.StartTime <= 0 || this.props.EndTime <= 0) {
+      this.setState({
+        countdown: '00:00:00',
+        progressCompleted: 0
+      })
+      return;
+    }
+    var dateEntered = getDateTime(this.props.EndTime);
+    var now = new Date();
+    var difference = dateEntered.getTime() - now.getTime();
+    if (difference <= 0) {
+      this.setState({
+        countdown: '00:00:00',
+        progressCompleted: 100
+      })
+    } else {
+      var seconds = Math.floor(difference / 1000);
+      var minutes = Math.floor(seconds / 60);
+      var hours = Math.floor(minutes / 60);
+      var days = Math.floor(hours / 24);
+      hours %= 24; minutes %= 60; seconds %= 60;
+      this.setState({
+        countdown: pad(hours, 2) + ':' + pad(minutes, 2) + ':' + pad(seconds, 2),
+        progressCompleted: Math.round(((now - getDateTime(this.props.StartTime)) / (getDateTime(this.props.EndTime) - getDateTime(this.props.StartTime))) * 100)
+      })
+    }
+  }
+
   render() {
     const PWMCOLORS = ['#1b5e20', '#CCCCCC'];
     const PROGRESSCOLORS = ['#1565c0', '#CCCCCC'];
@@ -75,7 +118,7 @@ class BrewStatusGadget extends Component {
               <BrewStatusGadgetItem className={classes.temperatureCard} title={getTemperatureText(value)} colors={getColor(value)} value={getTemperatureValue(value, this.props) + 'ºC'} data={getTemperatureData(value, this.props)} />
             ))}
             <BrewStatusGadgetItem className={classes.temperatureCard} title="PWM" colors={PWMCOLORS} value={this.props.PWM} data={getPWMData(this.props)} />
-            <BrewStatusGadgetItem className={classes.temperatureCard} title="Progress" colors={PROGRESSCOLORS} value={this.props.Progress + '%'} data={getProgressData(this.props.Progress)} />
+            <BrewStatusGadgetItem className={classes.temperatureCard} title="Progress" colors={PROGRESSCOLORS} value={this.state.progressCompleted + '%'} data={getProgressData(this.state.progressCompleted)} />
           </Grid>
         </Grid>
         <Grid item xs={12}>
@@ -109,7 +152,7 @@ class BrewStatusGadget extends Component {
                 <Card className={this.props.className}>
                   <CardContent>
                     <Typography color="textSecondary" variant="subtitle1" gutterBottom>CountDown</Typography>
-                    <Typography variant="h5">{this.props.CountDown != undefined ? this.props.CountDown : '-'}</Typography>
+                    <Typography variant="h5">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
                   </CardContent>
                 </Card>
               </Grid>
@@ -117,7 +160,7 @@ class BrewStatusGadget extends Component {
             }
             {this.props.StepLocked ?
               <Grid item>
-                <Chronometer title="Step Locked" onRef={ref => (this.chronometer = ref)} />
+                <Chronometer StartTime={this.props.EndTime} title="Step Locked" onRef={ref => (this.chronometer = ref)} />
               </Grid>
               : null
             }
@@ -132,7 +175,7 @@ class BrewStatusGadget extends Component {
                     :
                     this.props.PumpIsResting ?
                       <PauseCircleFilled style={{ fontSize: 28 }} align="center" color="secondary" /> :
-                      <Cached style={{ fontSize: 30 }} align="center" color="disabled" />
+                      <Cached style={{ fontSize: 28 }} align="center" color="disabled" />
                   }
                 </CardContent>
               </Card>

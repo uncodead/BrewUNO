@@ -3,7 +3,7 @@ import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
 import MashSettingsForm from '../forms/MashBoilSettingsForm';
 import SortableList from '../components/SortableList';
-import { withNotifier } from '../components/SnackbarNotification';
+import { withSnackbar } from 'notistack';
 import { SAVE_MASH_SETTINGS_SERVICE_PATH, GET_MASH_SETTINGS_SERVICE_PATH, ExecuteRestCall } from '../constants/Endpoints';
 
 class MashSettings extends Component {
@@ -30,13 +30,13 @@ class MashSettings extends Component {
       },
     }).then(response => {
       if (response.ok) {
-        this.props.raiseNotification("Mash settings saved.");
+        this.props.enqueueSnackbar("Mash settings saved.");
         return;
       }
       response.text().then(function (data) {
         throw Error("Mash Setings service returned unexpected response code: " + response.status + " Message: " + data);
       }).catch(error => {
-        this.props.raiseNotification(error.message);
+        this.props.enqueueSnackbar(error.message);
         this.getMashSettings();
       });
     });
@@ -82,4 +82,4 @@ class MashSettings extends Component {
   }
 }
 
-export default withNotifier(MashSettings);
+export default withSnackbar(MashSettings);

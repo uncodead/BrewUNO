@@ -66,7 +66,7 @@ class OTASettingsForm extends React.Component {
                         checked={otaSettings.enabled}
                         onChange={handleCheckboxChange('enabled')}
                         value="enabled"
-                        color="primary"
+                        color="secondary"
                  />
                }
               label="Enable OTA Updates?"
@@ -95,7 +95,7 @@ class OTASettingsForm extends React.Component {
                    margin="normal"
              />
 
-          <Button variant="raised" color="primary" className={classes.button} type="submit">
+          <Button variant="raised" color="secondary" className={classes.button} type="submit">
             Save
           </Button>
           <Button variant="raised" color="secondary" className={classes.button} onClick={onReset}>

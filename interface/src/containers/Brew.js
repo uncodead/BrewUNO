@@ -4,7 +4,6 @@ import MashSettings from './MashSettings';
 import BoilSettings from './BoilSettings';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import { withNotifier } from '../components/SnackbarNotification';
 import ConfirmDialog from '../components/ConfirmDialog';
 import {
   START_PUMP, STOP_PUMP,
@@ -71,7 +70,6 @@ class Brew extends Component {
     this.state = {
       status: { temperature: '-' },
       data: [],
-      progressCompleted: 0,
       confirmDialogOpen: false,
       boilPower: 0,
       activeStepName: "",
@@ -80,9 +78,6 @@ class Brew extends Component {
     interval = setInterval(() => {
       this.getStatus();
     }, 2000);
-    timerProgress = setInterval(() => {
-      this.brewProgress();
-    }, 1000);
   }
 
   updateStatus() {
@@ -91,7 +86,7 @@ class Brew extends Component {
       var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
       var splice_data = this.state.data;
 
-      if (splice_data.length >= 100)
+      if (splice_data.length >= 500)
         splice_data.splice(0, 1);
 
       this.setState({
@@ -148,35 +143,6 @@ class Brew extends Component {
         return "Boil"
       default:
         return "Stopped"
-    }
-  }
-
-  brewProgress() {
-    if (this.state.status.brew_started !== 1 || this.state.status.end_time <= 0) {
-      this.setState({
-        countdown: '00:00:00',
-        progressCompleted: 0
-      })
-      return;
-    }
-    var dateEntered = getDateTime(this.state.status.end_time);
-    var now = new Date();
-    var difference = dateEntered.getTime() - now.getTime();
-    if (difference <= 0) {
-      this.setState({
-        countdown: '00:00:00',
-        progressCompleted: 100
-      })
-    } else {
-      var seconds = Math.floor(difference / 1000);
-      var minutes = Math.floor(seconds / 60);
-      var hours = Math.floor(minutes / 60);
-      var days = Math.floor(hours / 24);
-      hours %= 24; minutes %= 60; seconds %= 60;
-      this.setState({
-        countdown: pad(hours, 2) + ':' + pad(minutes, 2) + ':' + pad(seconds, 2),
-        progressCompleted: Math.round(((now - getDateTime(this.state.status.start_time)) / (getDateTime(this.state.status.end_time) - getDateTime(this.state.status.start_time))) * 100)
-      })
     }
   }
 
@@ -278,12 +244,10 @@ class Brew extends Component {
               TargetTemperature={this.state.status.target_temperature}
               BoilTemperature={this.state.status.boil_target_temperature}
               PWM={this.state.status.pwm}
-              Progress={this.state.progressCompleted}
               ActiveStep={this.getActiveStep()}
               BoilTime={this.state.status.boil_time}
-              StartTime={this.state.status.start_time > 0 ? getDateTime(this.state.status.start_time).toLocaleTimeString() : null}
-              EndTime={this.state.status.end_time > 0 ? getDateTime(this.state.status.end_time).toLocaleTimeString() : null}
-              CountDown={this.state.countdown}
+              StartTime={this.state.status.start_time > 0 ? this.state.status.start_time : null}
+              EndTime={this.state.status.end_time > 0 ? this.state.status.end_time : null}
               PumpOn={this.state.status.pump_on}
               ActiveStepName={this.state.activeStepName}
               StepLocked={this.state.status.step_locked > 0}
