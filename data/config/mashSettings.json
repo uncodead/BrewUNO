@@ -1,27 +1,35 @@
 {
     "st": [
-        {
-            "n": "Mash in",
-            "t": 40,
-            "tm": 15,
+         {
+            "n": "Pre Mash",
+            "t": 32,
+            "tm": 1,
             "r": true,
             "sl": false,
             "ho": false
         },
         {
-            "n": "Sacarification",
-            "t": 65,
-            "tm": 20,
-            "r": true,
-            "sl": false,
-            "ho": false
-        },
-        {
-            "n": "Mash out",
-            "t": 78,
-            "tm": 10,
+            "n": "Mash In",
+            "t": 30,
+            "tm": 0,
             "r": false,
-            "sl": false,
+            "sl": true,
+            "ho": true
+        },
+        {
+            "n": "Mash",
+            "t": 30,
+            "tm": 2,
+            "r": true,
+            "sl": true,
+            "ho": false
+        },
+        {
+            "n": "MashOut",
+            "t": 31,
+            "tm": 1,
+            "r": true,
+            "sl": true,
             "ho": false
         }
     ]

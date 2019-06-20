@@ -25,13 +25,17 @@ You will need the following before you can get started.
 * [NPM](https://www.npmjs.com/) - For building the interface (if you want)
 * Bash shell, or Git Bash if you are under windows
 
-### Installing in PlatformIO
+### Installing & Deployment
 
 Pull the project and add it to PlatformIO as a project folder (File > Add Project Folder).
 
 PlatformIO should download the ESP8266 platform and the project library dependencies automatically.
 
 Once the platform and libraries are downloaded the back end should be compiling.
+
+Edit /data/config/wifiSettings.json with yours wifi configurations.
+
+Under PlatformIO menu: Upload File System image, and then, Upload and Monitor. You will see the ip address to access interface.
 
 ### Building the interface
 
@@ -69,7 +73,7 @@ REACT_APP_ENDPOINT_ROOT=http://192.168.0.6/rest/
 
 CORS can be enabled on the back end by uncommenting the -D ENABLE_CORS build flag in platformio.ini and re-deploying.
 
-## Configuration & Deployment
+## Configuration
 
 Standard configuration settings, such as build flags, libraries and device configuration can be found in platformio.ini. See the [PlatformIO docs](http://docs.platformio.org/en/latest/projectconf.html) for full details on what you can do with this.
 
@@ -88,10 +92,6 @@ The default settings configure the device to bring up an access point on start u
 
 * SSID: BrewUNO
 * Password: brewuno
-
-Run:
-PlatformIO Build
-PlatformIO Upload and Monitor
 
 # Thanks to:
 

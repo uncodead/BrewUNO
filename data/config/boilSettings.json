@@ -1,24 +1,19 @@
 {
     "st": [
         {
-            "n": "Amarillo",
-            "tm": 55,
-            "a": 10
+            "n": "BoilZero",
+            "tm": 2,
+            "a": 1
         },
         {
-            "n": "Galaxy",
-            "tm": 50,
-            "a": 10
+            "n": "BoilUno",
+            "tm": 1,
+            "a": 1
         },
         {
-            "n": "Cascade",
-            "tm": 40,
-            "a": 10
-        },
-        {
-            "n": "Citra",
-            "tm": 30,
-            "a": 10
+            "n": "BoilDuo",
+            "tm": 0,
+            "a": 1
         }
     ]
 }

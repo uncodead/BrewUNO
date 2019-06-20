@@ -7,6 +7,8 @@ import { PieChart, Pie, Cell, } from 'recharts';
 import { withStyles } from '@material-ui/core/styles';
 import Cached from '@material-ui/icons/Cached';
 import Autorenew from '@material-ui/icons/Autorenew';
+import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
+import Chronometer from './Chronometer'
 
 const styles = theme => ({
   temperatureCard: {
@@ -102,14 +104,23 @@ class BrewStatusGadget extends Component {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item>
-              <Card className={this.props.className}>
-                <CardContent>
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>CountDown</Typography>
-                  <Typography variant="h5">{this.props.CountDown != undefined ? this.props.CountDown : '-'}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
+            {!this.props.StepLocked ?
+              <Grid item>
+                <Card className={this.props.className}>
+                  <CardContent>
+                    <Typography color="textSecondary" variant="subtitle1" gutterBottom>CountDown</Typography>
+                    <Typography variant="h5">{this.props.CountDown != undefined ? this.props.CountDown : '-'}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+              : null
+            }
+            {this.props.StepLocked ?
+              <Grid item>
+                <Chronometer title="Step Locked" onRef={ref => (this.chronometer = ref)} />
+              </Grid>
+              : null
+            }
             <Grid item>
               <Card className={this.props.className}>
                 <CardContent align="center">
@@ -119,7 +130,10 @@ class BrewStatusGadget extends Component {
                       <Cached className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" /> :
                       <Autorenew className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" />
                     :
-                    <Cached style={{ fontSize: 28 }} align="center" color="disabled" />}
+                    this.props.PumpIsResting ?
+                      <PauseCircleFilled style={{ fontSize: 28 }} align="center" color="secondary" /> :
+                      <Cached style={{ fontSize: 30 }} align="center" color="disabled" />
+                  }
                 </CardContent>
               </Card>
             </Grid>
