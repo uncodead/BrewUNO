@@ -23,6 +23,7 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import SettingsInputAntennaIcon from '@material-ui/icons/SettingsInputAntenna';
 import LocalDrink from '@material-ui/icons/LocalDrink'
 import Assignment from '@material-ui/icons/Assignment'
+import ContactSupport from '@material-ui/icons/ContactSupport'
 
 const drawerWidth = 250;
 
@@ -140,6 +141,12 @@ class MenuAppBar extends React.Component {
               <SystemUpdateIcon />
             </ListItemIcon>
             <ListItemText primary="OTA Settings" />
+          </ListItem>
+          <ListItem button component={Link} to='/about'>
+            <ListItemIcon>
+              <ContactSupport />
+            </ListItemIcon>
+            <ListItemText primary="About" />
           </ListItem>
         </List>
       </div>
