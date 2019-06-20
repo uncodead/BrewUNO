@@ -24,8 +24,6 @@ import SettingsInputAntennaIcon from '@material-ui/icons/SettingsInputAntenna';
 import LocalDrink from '@material-ui/icons/LocalDrink'
 import Assignment from '@material-ui/icons/Assignment'
 
-import logo from '../img/logo.pngj'
-
 const drawerWidth = 250;
 
 const styles = theme => ({
@@ -101,7 +99,7 @@ class MenuAppBar extends React.Component {
       <div>
         <Toolbar >
           <Typography variant="title" color="secondary">
-            <img src={logo} alt="Logo"/>
+            <img src="/app/logo.png" alt="Logo"/>
           </Typography>
           <Divider absolute />
         </Toolbar>
