@@ -47,16 +47,16 @@ export const ExecuteRestCall = (url, method, callback, callbackError, props) => 
       response.json()
         .catch(() => {
           if (props != undefined && props.enqueueSnackbar != undefined)
-            props.enqueueSnackbar("Invalid json result");
+            props.enqueueSnackbar("Invalid json result", { variant: 'error' });
         })
         .then(json => callback(json));
       return;
     }
     if (props != undefined && props.enqueueSnackbar != undefined)
-      response.json().then(json => props.enqueueSnackbar(json.message));
+      response.json().then(json => props.enqueueSnackbar(json.message, { variant: 'info' }));
   }).catch(error => {
     if (props != undefined && props.enqueueSnackbar != undefined)
-      props.enqueueSnackbar("Problem getting resource: " + error.message);
+      props.enqueueSnackbar("Problem getting resource: " + error.message, { variant: 'error' });
     if (callbackError) {
       callbackError()
     }
