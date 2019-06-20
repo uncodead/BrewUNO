@@ -115,13 +115,14 @@ class Brew extends Component {
       this.setState({ activeStepName: stepName });
       if (stepName !== "") {
         const action = (key) => (
-          <Button color="secondary" onClick={() => { this.props.closeSnackbar(key) }}>
+          <Button color="Primary" onClick={() => { this.props.closeSnackbar(key) }}>
             {'Dismiss'}
           </Button>
         );
         this.props.enqueueSnackbar(step + " Step: " + stepName, {
           persist: true,
           action,
+          variant: 'warning'
         });
       }
     }
@@ -159,13 +160,13 @@ class Brew extends Component {
       },
     }).then(response => {
       if (response.ok) {
-        this.props.enqueueSnackbar("Boiling power configured.");
+        this.props.enqueueSnackbar("Boiling power configured.", { variant: 'info' });
         return;
       }
       response.text().then(function (data) {
         throw Error(data);
       }).catch(error => {
-        this.props.enqueueSnackbar(error.message);
+        this.props.enqueueSnackbar(error.message, { variant: 'error' });
       });
     });
   };
@@ -208,13 +209,13 @@ class Brew extends Component {
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew('Do you want start brew? Check if you\'ve secure water volume at kettle.', START_BREW,
-                () => { this.props.enqueueSnackbar('Anti Cavitation test started.') })
+                () => { this.props.enqueueSnackbar('Anti Cavitation test started.', { variant: 'info' }) })
             }}>Start</Button> : null}
         {this.state.status.active_step > 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew('Do you want resume brew? Check if you\'ve secure water volume at kettle.', RESUME_BREW,
-                () => { this.props.enqueueSnackbar('Anti Cavitation test started.') })
+                () => { this.props.enqueueSnackbar('Anti Cavitation test started.', { variant: 'info' }) })
             }}>Resume</Button> : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.step_locked === 1 ?
           <Button variant="contained" color="secondary" className={classes.button}

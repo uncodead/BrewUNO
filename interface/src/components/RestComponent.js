@@ -51,7 +51,7 @@ export const restComponent = (endpointUrl, FormComponent) => {
           })
           .then(json => {this.setState({data: json, fetched:true})})
           .catch(error =>{
-            this.props.enqueueSnackbar("Problem fetching: " + error.message);
+            this.props.enqueueSnackbar("Problem fetching: " + error.message, {variant: 'error',});
             this.setState({data: null, fetched:true, errorMessage:error.message});
           });
       }
@@ -72,10 +72,10 @@ export const restComponent = (endpointUrl, FormComponent) => {
           throw Error("Invalid status code: " + response.status);
         })
         .then(json => {
-          this.props.enqueueSnackbar("Changes successfully applied.");
+          this.props.enqueueSnackbar("Changes successfully applied.", {variant: 'info',});
           this.setState({data: json, fetched:true});
         }).catch(error => {
-          this.props.enqueueSnackbar("Problem saving: " + error.message);
+          this.props.enqueueSnackbar("Problem saving: " + error.message, {variant: 'error',});
           this.setState({data: null, fetched:true, errorMessage:error.message});
         });
       }

@@ -55,6 +55,13 @@ const theme = createMuiTheme({
   },
 });
 
+const styles = {
+  success: { backgroundColor: 'purple' },
+  error: { backgroundColor: 'blue' },
+  warning: { backgroundColor: 'green' },
+  info: { backgroundColor: 'yellow' },
+};
+
 // JSS instance
 const jss = create(jssPreset());
 
@@ -66,7 +73,12 @@ class App extends Component {
     return (
       <JssProvider jss={jss} generateClassName={generateClassName}>
         <MuiThemeProvider theme={theme}>
-          <SnackbarProvider maxSnack={5}>
+          <SnackbarProvider maxSnack={5} classes={{
+            variantSuccess: styles.success,
+            variantError: styles.error,
+            variantWarning: styles.warning,
+            variantInfo: styles.info,
+          }}>
             <CssBaseline />
             <AppRouting />
           </SnackbarProvider>
