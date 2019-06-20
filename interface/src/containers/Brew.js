@@ -86,7 +86,7 @@ class Brew extends Component {
       var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
       var splice_data = this.state.data;
 
-      if (splice_data.length >= 500)
+      if (splice_data.length >= 200)
         splice_data.splice(0, 1);
 
       this.setState({
@@ -98,34 +98,33 @@ class Brew extends Component {
           boilPower: this.state.status.boil_power_percentage
         })
     }
-    const action = (key) => (
-      <Button color="secondary" onClick={() => { this.props.closeSnackbar(key) }}>
-        {'Dismiss'}
-      </Button>
-    );
 
     if (this.state.statusInitialized) {
-      if (this.getActiveStep() == "Mash" && this.state.activeStepName !== this.state.status.active_mash_step_name) {
-        this.setState({ activeStepName: this.state.status.active_mash_step_name });
-        if (this.state.status.active_mash_step_name !== "")
-          this.props.enqueueSnackbar("Mash Step: " + this.state.status.active_mash_step_name, {
-            persist: true,
-            action,
-          });
-      }
-      else if (this.getActiveStep() == "Boil" && this.state.activeStepName !== this.state.status.active_boil_step_name) {
-        this.setState({ activeStepName: this.state.status.active_boil_step_name })
-        if (this.state.status.active_boil_step_name !== "")
-          this.props.enqueueSnackbar("Boil Step: " + this.state.status.active_boil_step_name, {
-            persist: true,
-            action,
-          });
-      }
-      else if (this.getActiveStep() == "Stopped") {
+      this.notification(this.getActiveStep(), this.state.status.active_mash_step_name, "Mash")
+      this.notification(this.getActiveStep(), this.state.status.active_boil_step_name, "Boil")
+
+      if (this.getActiveStep() == "Stopped") {
         this.setState({ activeStepName: '-' })
       }
     }
     this.setState({ statusInitialized: true })
+  }
+
+  notification(getActiveStep, stepName, step) {
+    if (getActiveStep === step && this.state.activeStepName !== stepName) {
+      this.setState({ activeStepName: stepName });
+      if (stepName !== "") {
+        const action = (key) => (
+          <Button color="secondary" onClick={() => { this.props.closeSnackbar(key) }}>
+            {'Dismiss'}
+          </Button>
+        );
+        this.props.enqueueSnackbar(step + " Step: " + stepName, {
+          persist: true,
+          action,
+        });
+      }
+    }
   }
 
   getStatus() {
