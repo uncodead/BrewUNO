@@ -102,33 +102,35 @@ class Brew extends Component {
         this.setState({
           boilPower: this.state.status.boil_power_percentage
         })
-
-      const action = (key) => (
-        <Button color="secondary" onClick={() => { this.props.closeSnackbar(key) }}>
-          {'Dismiss'}
-        </Button>
-      );
-
-      if (this.state.statusInitialized) {
-        if (this.getActiveStep() == "Mash" && this.state.activeStepName !== this.state.status.active_mash_step_name) {
-          this.setState({ activeStepName: this.state.status.active_mash_step_name });
-          if (this.state.status.active_mash_step_name !== "")
-            this.props.enqueueSnackbar("Mash Step: " + this.state.status.active_mash_step_name, {
-              persist: true,
-              action,
-            });
-        }
-        if (this.getActiveStep() == "Boil" && this.state.activeStepName !== this.state.status.active_boil_step_name) {
-          this.setState({ activeStepName: this.state.status.active_boil_step_name })
-          if (this.state.status.active_boil_step_name !== "")
-            this.props.enqueueSnackbar("Boil Step: " + this.state.status.active_boil_step_name, {
-              persist: true,
-              action,
-            });
-        }
-      }
-      this.setState({ statusInitialized: true })
     }
+    const action = (key) => (
+      <Button color="secondary" onClick={() => { this.props.closeSnackbar(key) }}>
+        {'Dismiss'}
+      </Button>
+    );
+
+    if (this.state.statusInitialized) {
+      if (this.getActiveStep() == "Mash" && this.state.activeStepName !== this.state.status.active_mash_step_name) {
+        this.setState({ activeStepName: this.state.status.active_mash_step_name });
+        if (this.state.status.active_mash_step_name !== "")
+          this.props.enqueueSnackbar("Mash Step: " + this.state.status.active_mash_step_name, {
+            persist: true,
+            action,
+          });
+      }
+      else if (this.getActiveStep() == "Boil" && this.state.activeStepName !== this.state.status.active_boil_step_name) {
+        this.setState({ activeStepName: this.state.status.active_boil_step_name })
+        if (this.state.status.active_boil_step_name !== "")
+          this.props.enqueueSnackbar("Boil Step: " + this.state.status.active_boil_step_name, {
+            persist: true,
+            action,
+          });
+      }
+      else if (this.getActiveStep() == "Stopped") {
+        this.setState({ activeStepName: '-' })
+      }
+    }
+    this.setState({ statusInitialized: true })
   }
 
   getStatus() {
@@ -192,13 +194,13 @@ class Brew extends Component {
       },
     }).then(response => {
       if (response.ok) {
-        this.props.raiseNotification("Boiling power configured.");
+        this.props.enqueueSnackbar("Boiling power configured.");
         return;
       }
       response.text().then(function (data) {
         throw Error(data);
       }).catch(error => {
-        this.props.raiseNotification(error.message);
+        this.props.enqueueSnackbar(error.message);
       });
     });
   };
@@ -241,13 +243,13 @@ class Brew extends Component {
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew('Do you want start brew? Check if you\'ve secure water volume at kettle.', START_BREW,
-                () => { this.props.raiseNotification('Anti Cavitation test started.') })
+                () => { this.props.enqueueSnackbar('Anti Cavitation test started.') })
             }}>Start</Button> : null}
         {this.state.status.active_step > 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew('Do you want resume brew? Check if you\'ve secure water volume at kettle.', RESUME_BREW,
-                () => { this.props.raiseNotification('Anti Cavitation test started.') })
+                () => { this.props.enqueueSnackbar('Anti Cavitation test started.') })
             }}>Resume</Button> : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.step_locked === 1 ?
           <Button variant="contained" color="secondary" className={classes.button}
@@ -349,4 +351,4 @@ class Brew extends Component {
   }
 }
 
-export default withSnackbar(withNotifier(withStyles(styles)(Brew)));
+export default withSnackbar(withStyles(styles)(Brew));

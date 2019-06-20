@@ -117,7 +117,7 @@ class BrewStatusGadget extends Component {
                   {this.props.PumpOn !== undefined && this.props.PumpOn === 1 ?
                     new Date().getSeconds() % 2 == 0 ?
                       <Cached className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" /> :
-                      <Autorenew className={classes.pumpColor2} style={{ fontSize: 28 }} align="center" />
+                      <Autorenew className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" />
                     :
                     <Cached style={{ fontSize: 28 }} align="center" color="disabled" />}
                 </CardContent>

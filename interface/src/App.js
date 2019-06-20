@@ -66,11 +66,9 @@ class App extends Component {
     return (
       <JssProvider jss={jss} generateClassName={generateClassName}>
         <MuiThemeProvider theme={theme}>
-          <SnackbarProvider  maxSnack={3}>
-            <SnackbarNotification>
-              <CssBaseline />
-              <AppRouting />
-            </SnackbarNotification>
+          <SnackbarProvider maxSnack={5}>
+            <CssBaseline />
+            <AppRouting />
           </SnackbarProvider>
         </MuiThemeProvider>
       </JssProvider>
