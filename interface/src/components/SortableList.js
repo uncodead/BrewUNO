@@ -41,7 +41,11 @@ class SortableList extends Component {
           {this.props.dragHandle ? <DragHandle /> : null}
           <ListItemText
             primary={value.n}
-            secondary={<Typography>{this.getItemText(value)}</Typography>}
+            secondary={<Typography>{this.getItemText(value)}
+              {this.props.brewDay && !this.props.boil && value.r ? ' (Recirculation) ' : null}
+              {this.props.brewDay && !this.props.boil && value.ho ? ' (Heater OFF) ' : null}
+              {this.props.brewDay && !this.props.boil && value.sl ? ' (Step LOCK)' : null}
+            </Typography>}
           />
           {!this.props.brewDay ?
             <IconButton aria-label="Delete"
@@ -50,42 +54,48 @@ class SortableList extends Component {
             </IconButton>
             : null}
         </ListItem>
-        <ListItem color="black">
-          {!this.props.boil ?
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={value.r}
-                  disabled
-                />
-              }
-              label="Recirculation"
-            /> : null}
-        </ListItem>
-        <ListItem color="black">
-          {!this.props.boil ?
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={value.ho}
-                  disabled
-                />
-              }
-              label="Heater OFF"
-            /> : null}
-        </ListItem>
-        <ListItem color="black">
-          {!this.props.boil ?
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={value.sl}
-                  disabled
-                />
-              }
-              label="Step LOCK"
-            /> : null}
-        </ListItem>
+        {!this.props.brewDay ?
+          <ListItem color="black">
+            {!this.props.boil ?
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={value.r}
+                    disabled
+                  />
+                }
+                label="Recirculation"
+              /> : null}
+          </ListItem>
+          : null}
+        {!this.props.brewDay ?
+          <ListItem color="black">
+            {!this.props.boil ?
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={value.ho}
+                    disabled
+                  />
+                }
+                label="Heater OFF"
+              /> : null}
+          </ListItem>
+          : null}
+        {!this.props.brewDay ?
+          <ListItem color="black">
+            {!this.props.boil ?
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={value.sl}
+                    disabled
+                  />
+                }
+                label="Step LOCK"
+              /> : null}
+          </ListItem>
+          : null}
         <Divider middle />
       </List>
     );
