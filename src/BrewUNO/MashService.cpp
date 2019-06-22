@@ -32,6 +32,10 @@ void MashService::loop(ActiveStatus *activeStatus)
     if (activeStatus->TargetTemperature == 0)
     {
         activeStatus->TargetTemperature = steps[0]["t"];
+        activeStatus->ActiveMashStepIndex = 0;
+        activeStatus->ActiveMashStepName = steps[0]["n"].as<String>() + " " +
+                                           steps[0]["tm"].as<String>() + "mins at " +
+                                           steps[0]["t"].as<String>() + "ºC (not started)";
         _pump->AntiCavitation();
         _pump->TurnPumpOn();
 
@@ -58,7 +62,9 @@ void MashService::loop(ActiveStatus *activeStatus)
         {
             JsonObject step = steps[nextMashStep];
             activeStatus->ActiveMashStepIndex = nextMashStep;
-            activeStatus->ActiveMashStepName = "";
+            activeStatus->ActiveMashStepName = step["n"].as<String>() + " " +
+                                               step["tm"].as<String>() + "mins at " +
+                                               step["t"].as<String>() + "ºC (not started)";
             activeStatus->StartTime = 0;
             activeStatus->EndTime = 0;
             activeStatus->TargetTemperature = step["t"];

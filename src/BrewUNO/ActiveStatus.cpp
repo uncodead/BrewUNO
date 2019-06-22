@@ -165,7 +165,7 @@ float ReferenceRange = ReferenceHigh - ReferenceLow;
 
 void ActiveStatus::SetTemperature(float temperature)
 {
-    if (temperature >= 0)
+    if (temperature >= 10)
     {
         float CorrectedValue = (((temperature - RawLow) * ReferenceRange) / RawRange) + ReferenceLow;
         Temperature = temperature;
@@ -174,7 +174,7 @@ void ActiveStatus::SetTemperature(float temperature)
 
 void ActiveStatus::SetSpargeTemperature(float temperature)
 {
-    if (temperature >= 0)
+    if (temperature >= 10)
     {
         SpargeTemperature = temperature;
     }

@@ -7,9 +7,9 @@ import { PieChart, Pie, Cell, } from 'recharts';
 import { withStyles } from '@material-ui/core/styles';
 import Cached from '@material-ui/icons/Cached';
 import Autorenew from '@material-ui/icons/Autorenew';
-import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
 import Chronometer from './Chronometer'
 import { getDateTime, pad } from '../components/Utils';
+import Loop from '@material-ui/icons/Loop';
 
 const styles = theme => ({
   temperatureCard: {
@@ -20,15 +20,15 @@ const styles = theme => ({
   },
   pumpColor2: {
     color: "#00CED1",
-  },
+  }
 });
 
 class BrewStatusGadget extends Component {
   constructor(props) {
     super(props)
-    
+
     this.state = {
-      countdown : 0,
+      countdown: 0,
       progressCompleted: 0,
     }
   }
@@ -67,7 +67,7 @@ class BrewStatusGadget extends Component {
   }
 
   render() {
-    const PWMCOLORS = ['#1b5e20', '#CCCCCC'];
+    const PWMCOLORS = ['#1b5e20', '#424242'];
     const PROGRESSCOLORS = ['#1565c0', '#CCCCCC'];
     const { classes } = this.props;
 
@@ -78,9 +78,9 @@ class BrewStatusGadget extends Component {
     const getColor = (index) => {
       switch (index) {
         case 0:
-          return ['#c62828', '#CCCCCC'];
+          return ['#c62828', '#424242'];
         case 1:
-          return ['#f9a825', '#CCCCCC'];
+          return ['#f9a825', '#424242'];
       }
     }
 
@@ -98,7 +98,7 @@ class BrewStatusGadget extends Component {
         case 0:
           return 'Temperature'
         case 1:
-          return 'Target Temperature'
+          return 'Target ºC'
       }
     }
 
@@ -174,8 +174,8 @@ class BrewStatusGadget extends Component {
                       <Autorenew className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" />
                     :
                     this.props.PumpIsResting ?
-                      <PauseCircleFilled style={{ fontSize: 28 }} align="center" color="secondary" /> :
-                      <Cached style={{ fontSize: 28 }} align="center" color="disabled" />
+                      <Cached style={{ fontSize: 28 }} align="center" color="disabled" /> :
+                      <Loop className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" />
                   }
                 </CardContent>
               </Card>
@@ -189,19 +189,39 @@ class BrewStatusGadget extends Component {
 
 class BrewStatusGadgetItem extends Component {
   render() {
-    const { classes } = this.props;
-    const RADIAN = Math.PI / 180;
     return (
       <Grid item>
         <Card className={this.props.className}>
           <CardContent>
             <Typography color="textSecondary" variant="subtitle1" gutterBottom>{this.props.title}</Typography>
-            <PieChart width={180} height={90}>
-              <Pie data={this.props.data} cx={85} cy={90} startAngle={180} endAngle={0} innerRadius={60} outerRadius={80} paddingAngle={2} legendType='line'>
+            <PieChart width={100} height={45}>
+              <Pie data={this.props.data}
+                cx={45} cy={40}
+                startAngle={180} endAngle={0}
+                innerRadius={30} outerRadius={40}
+                paddingAngle={0}
+              >
+
+                {/*
+              <Pie data={this.props.data}
+                cx={45} cy={40}
+                startAngle={180} endAngle={0} 
+                innerRadius={30} outerRadius={40} 
+                paddingAngle={3} legendType='line'>
+                {this.props.data.map((entry, index) => <Cell fill={this.props.colors[index % this.props.colors.length]} />)}
+              </Pie>
+              */}
+
                 {this.props.data.map((entry, index) => <Cell fill={this.props.colors[index % this.props.colors.length]} />)}
               </Pie>
             </PieChart>
             <Typography top="20" align="center" variant="h5">{this.props.value}</Typography>
+            {/*
+            <LinearProgress
+              variant="determinate"
+              color="secondary"
+              value={50}
+            />*/}
           </CardContent>
         </Card>
       </Grid>

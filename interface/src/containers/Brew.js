@@ -61,7 +61,7 @@ const styles = theme => ({
 });
 
 
-let interval, timerProgress;
+let interval;
 
 class Brew extends Component {
   constructor(props) {
@@ -226,9 +226,6 @@ class Brew extends Component {
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.pid_tuning === 0 && this.state.status.step_locked === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want skip the current step?', NEXT_STEP_BREW) }}>Next Step</Button> : null}
-        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 ?
-          <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.startTuning() }}> {this.state.status.pid_tuning === 1 ? "Tuning..." : "PID Tune"}</Button> : null}
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want start boil?', START_BOIL) }}>Boil</Button> : null}
