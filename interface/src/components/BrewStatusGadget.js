@@ -175,7 +175,7 @@ class BrewStatusGadget extends Component {
                     :
                     this.props.PumpIsResting ?
                       <PauseCircleFilled style={{ fontSize: 28 }} align="center" color="disabled" /> :
-                      <Loop className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" />
+                      <Loop style={{ fontSize: 28 }} align="center" color="disabled" />
                   }
                 </CardContent>
               </Card>
