@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { PieChart, Pie, Cell, } from 'recharts';
 import { withStyles } from '@material-ui/core/styles';
 import Cached from '@material-ui/icons/Cached';
-import Autorenew from '@material-ui/icons/Autorenew';
+import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
 import Chronometer from './Chronometer'
 import { getDateTime, pad } from '../components/Utils';
 import Loop from '@material-ui/icons/Loop';
@@ -170,11 +170,11 @@ class BrewStatusGadget extends Component {
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Pump</Typography>
                   {this.props.PumpOn !== undefined && this.props.PumpOn === 1 ?
                     new Date().getSeconds() % 2 == 0 ?
-                      <Cached className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" /> :
-                      <Autorenew className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" />
+                      <Loop className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" /> :
+                      <Cached className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" />
                     :
                     this.props.PumpIsResting ?
-                      <Cached style={{ fontSize: 28 }} align="center" color="disabled" /> :
+                      <PauseCircleFilled style={{ fontSize: 28 }} align="center" color="disabled" /> :
                       <Loop className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" />
                   }
                 </CardContent>
