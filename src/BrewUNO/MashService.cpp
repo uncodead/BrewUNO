@@ -21,6 +21,7 @@ void MashService::LoadMashSettings()
     configFile.close();
 }
 
+time_t lastBeep = now();
 void MashService::loop(ActiveStatus *activeStatus)
 {
     if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
@@ -33,7 +34,7 @@ void MashService::loop(ActiveStatus *activeStatus)
     {
         activeStatus->TargetTemperature = steps[0]["t"];
         activeStatus->ActiveMashStepIndex = 0;
-        activeStatus->ActiveMashStepName = getMashName(steps[0]) + "[not started]";
+        activeStatus->ActiveMashStepName = getMashName(steps[0]) + " [not started]";
         _pump->AntiCavitation();
         _pump->TurnPumpOn();
 
@@ -50,7 +51,11 @@ void MashService::loop(ActiveStatus *activeStatus)
         {
             Serial.println("Step locked...");
             _pump->CheckRest();
-            Buzzer().Ring(1, 10);
+            if (timeNow - lastBeep > 15)
+            {
+                Buzzer().Ring(1, 1000);
+                lastBeep = now();
+            }
             return;
         }
 
@@ -60,7 +65,7 @@ void MashService::loop(ActiveStatus *activeStatus)
         {
             JsonObject step = steps[nextMashStep];
             activeStatus->ActiveMashStepIndex = nextMashStep;
-            activeStatus->ActiveMashStepName = getMashName(step) + "[not started]";
+            activeStatus->ActiveMashStepName = getMashName(step) + " [not started]";
             activeStatus->StartTime = 0;
             activeStatus->EndTime = 0;
             activeStatus->TargetTemperature = step["t"];
@@ -88,11 +93,6 @@ void MashService::loop(ActiveStatus *activeStatus)
     }
     else
     {
-        Serial.print("Temperature: ");
-        Serial.println(activeStatus->Temperature);
-        Serial.print("Target: ");
-        Serial.println(activeStatus->TargetTemperature);
-
         if (activeStatus->StartTime != 0)
             _pump->CheckRest();
 

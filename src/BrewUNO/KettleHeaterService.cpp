@@ -54,6 +54,8 @@ void KettleHeaterService::Compute()
   {
     _activeStatus->PIDSettingsUpdated = false;
     StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
+    Serial.println("BrewSettings Updated: " + String(_brewSettingsService->KP) + "/" + String(_brewSettingsService->KI) + "/" + String(_brewSettingsService->KD));
+    return;
   }
 
   if (_activeStatus->ActiveStep == boil)
