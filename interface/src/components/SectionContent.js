@@ -5,8 +5,6 @@ import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import Divider from '@material-ui/core/Divider';
-
 const styles = theme => ({
   content: {
     padding: theme.spacing.unit * 2,

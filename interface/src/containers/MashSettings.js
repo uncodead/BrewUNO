@@ -30,13 +30,13 @@ class MashSettings extends Component {
       },
     }).then(response => {
       if (response.ok) {
-        this.props.enqueueSnackbar("Mash settings saved.");
+        this.props.enqueueSnackbar("Mash settings saved.", { variant: 'info', autoHideDuration: 2000, });
         return;
       }
       response.text().then(function (data) {
         throw Error("Mash Setings service returned unexpected response code: " + response.status + " Message: " + data);
       }).catch(error => {
-        this.props.enqueueSnackbar(error.message);
+        this.props.enqueueSnackbar(error.message, { variant: 'error', autoHideDuration: 2000, });
         this.getMashSettings();
       });
     });

@@ -5,21 +5,21 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { PieChart, Pie, Cell, } from 'recharts';
 import { withStyles } from '@material-ui/core/styles';
-import Cached from '@material-ui/icons/Cached';
 import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
 import Chronometer from './Chronometer'
 import { getDateTime, pad } from '../components/Utils';
-import Loop from '@material-ui/icons/Loop';
+import PlayCircleFilledWhite from '@material-ui/icons/PlayCircleFilledWhite';
+import Cancel from '@material-ui/icons/Cancel';
 
 const styles = theme => ({
   temperatureCard: {
     background: "#31313152",
   },
   pumpColor1: {
-    color: "#77dcff",
+    color: "#447bd6",
   },
   pumpColor2: {
-    color: "#00CED1",
+    color: "#5c94f2",
   }
 });
 
@@ -68,7 +68,7 @@ class BrewStatusGadget extends Component {
 
   render() {
     const PWMCOLORS = ['#1b5e20', '#424242'];
-    const PROGRESSCOLORS = ['#1565c0', '#CCCCCC'];
+    const PROGRESSCOLORS = ['#1565c0', '#424242'];
     const { classes } = this.props;
 
     const getTemperatureData = (index, props) => {
@@ -125,25 +125,25 @@ class BrewStatusGadget extends Component {
           <Grid container justify="center" spacing={16}>
             <Grid item>
               <Card className={this.props.className}>
-                <CardContent>
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Active Step</Typography>
-                  <Typography variant="h5">{this.props.ActiveStep}</Typography>
+                <CardContent align="center">
+                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Pump</Typography>
+                  {this.props.PumpOn !== undefined && this.props.PumpOn === 1 ?
+                    new Date().getSeconds() % 2 == 0 ?
+                      <PlayCircleFilledWhite className={classes.pumpColor1} color="primary" style={{ fontSize: 28 }} align="center" /> :
+                      <PlayCircleFilledWhite className={classes.pumpColor2} color="secondary" style={{ fontSize: 28 }} align="center" />
+                    :
+                    this.props.PumpIsResting ?
+                      <PauseCircleFilled style={{ fontSize: 28 }} align="center" color="disabled" /> :
+                      <Cancel style={{ fontSize: 28 }} align="center" color="disabled" />
+                  }
                 </CardContent>
               </Card>
             </Grid>
             <Grid item>
               <Card className={this.props.className}>
                 <CardContent>
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Active Step Name</Typography>
+                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Active Step - {this.props.ActiveStep}</Typography>
                   <Typography variant="h5">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item>
-              <Card className={this.props.className}>
-                <CardContent>
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Boil Time</Typography>
-                  <Typography variant="h5">{this.props.BoilTime > 0 ? this.props.BoilTime / 60 : ''} min</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -164,22 +164,6 @@ class BrewStatusGadget extends Component {
               </Grid>
               : null
             }
-            <Grid item>
-              <Card className={this.props.className}>
-                <CardContent align="center">
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Pump</Typography>
-                  {this.props.PumpOn !== undefined && this.props.PumpOn === 1 ?
-                    new Date().getSeconds() % 2 == 0 ?
-                      <Loop className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" /> :
-                      <Cached className={classes.pumpColor1} style={{ fontSize: 28 }} align="center" />
-                    :
-                    this.props.PumpIsResting ?
-                      <PauseCircleFilled style={{ fontSize: 28 }} align="center" color="disabled" /> :
-                      <Loop style={{ fontSize: 28 }} align="center" color="disabled" />
-                  }
-                </CardContent>
-              </Card>
-            </Grid>
           </Grid>
         </Grid>
       </Grid>
@@ -197,9 +181,12 @@ class BrewStatusGadgetItem extends Component {
             <PieChart width={100} height={45}>
               <Pie data={this.props.data}
                 cx={45} cy={40}
-                startAngle={180} endAngle={0}
-                innerRadius={30} outerRadius={40}
+                startAngle={180}
+                endAngle={0}
+                innerRadius={30}
+                outerRadius={40}
                 paddingAngle={0}
+                stroke={0}
               >
 
                 {/*

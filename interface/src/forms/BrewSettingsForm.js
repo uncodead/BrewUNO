@@ -118,17 +118,6 @@ class BrewSettingsForm extends Component {
                   errorMessages={['this field is required']}
                 />
                 <TextValidator
-                  name="sampleTime"
-                  validators={['required']}
-                  label="Sample Time PID"
-                  type="number"
-                  fullWidth
-                  InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
-                  value={brewSettings.sampleTime}
-                  onChange={handleValueChange("sampleTime")}
-                  errorMessages={['this field is required']}
-                />
-                <TextValidator
                   name="kp"
                   label="kP"
                   type="number"
@@ -169,7 +158,7 @@ class BrewSettingsForm extends Component {
                   onChange={handleValueChange("pidStart")}
                   errorMessages={['this field is required']}
                 />
-                <Button variant="raised" color="primary" type="submit">
+                <Button variant="raised" color="secondary" type="submit">
                   Save
               </Button>
               </ValidatorForm>

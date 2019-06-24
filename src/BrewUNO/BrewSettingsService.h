@@ -3,6 +3,7 @@
 
 #include <SettingsService.h>
 #include <IPAddress.h>
+#include <BrewUNO/ActiveStatus.h>
 
 #define BREW_SETTINGS_FILE "/config/brewSettings.json"
 #define BREW_SETTINGS_SERVICE_PATH "/rest/brewSettings"
@@ -11,7 +12,7 @@ class BrewSettingsService : public SettingsService
 {
 
 public:
-  BrewSettingsService(AsyncWebServer *server, FS *fs);
+  BrewSettingsService(AsyncWebServer *server, FS *fs, ActiveStatus *activeStatus);
   ~BrewSettingsService();
 
   void begin();
@@ -26,7 +27,6 @@ public:
   double BoilTemperature;
   double PIDStart;
   double MashHeaterPercentage;
-  int SampleTime;
 
   int PumpRestInterval;
   int PumpRestTime;
@@ -38,6 +38,9 @@ protected:
   void readFromJsonObject(JsonObject &root);
   void writeToJsonObject(JsonObject &root);
   void onConfigUpdated();
+
+private:
+  ActiveStatus *_activeStatus;
 };
 
 #endif

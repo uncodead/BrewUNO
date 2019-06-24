@@ -37,5 +37,6 @@ private:
   TemperatureService *_temperatureService;
   Pump *_pump;
   boolean checkTemperaturePID(ActiveStatus *activeStatus);
+  String getMashName(JsonObject step);
 };
 #endif

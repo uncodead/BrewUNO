@@ -2,12 +2,11 @@
     "boilPowerPercentage": 100,
     "boilTemperature": 99.1,
     "boilTime": 60,
-    "sampleTime": 1,
     "kP": 1100,
     "kI": 3.5,
     "kD": 0,
     "pumpRestInterval": 300,
     "pumpRestTime": 60,
     "mashHeaterPercentage": 66,
-    "pidStart": 1
+    "pidStart": 0.7
 }

@@ -50,6 +50,12 @@ void KettleHeaterService::Compute()
   KettleInput = _activeStatus->Temperature;
   KettleSetpoint = _activeStatus->TargetTemperature;
 
+  if (_activeStatus->PIDSettingsUpdated)
+  {
+    _activeStatus->PIDSettingsUpdated = false;
+    StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
+  }
+
   if (_activeStatus->ActiveStep == boil)
   {
     _activeStatus->PIDActing = false;

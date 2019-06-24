@@ -31,7 +31,7 @@ class BoilSettings extends Component {
       }
       throw Error("Boil Setings service returned unexpected response code: " + response.status);
     }).catch(error => {
-      this.props.enqueueSnackbar("Problem getting Boil Settings: " + error.message);
+      this.props.enqueueSnackbar("Problem getting Boil Settings: " + error.message, { variant: 'error', autoHideDuration: 2000, });
       this.setState({ items: [] })
     });
   }
@@ -46,13 +46,13 @@ class BoilSettings extends Component {
       },
     }).then(response => {
       if (response.ok) {
-        this.props.enqueueSnackbar("Boil settings saved.");
+        this.props.enqueueSnackbar("Boil settings saved.", { variant: 'info', autoHideDuration: 2000, });
         return;
       }
       response.text().then(function (data) {
         throw Error("Boil Setings service returned unexpected response code: " + response.status + " Message: " + data);
       }).catch(error => {
-        this.props.enqueueSnackbar(error.message);
+        this.props.enqueueSnackbar(error.message, { variant: 'error', autoHideDuration: 2000, });
         this.getBoilSettings();
       });
     });

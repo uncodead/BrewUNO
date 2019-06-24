@@ -1,7 +1,7 @@
 #include <BrewUNO/BrewSettingsService.h>
 
-BrewSettingsService::BrewSettingsService(AsyncWebServer *server, FS *fs)
-    : SettingsService(server, fs, BREW_SETTINGS_SERVICE_PATH, BREW_SETTINGS_FILE) {}
+BrewSettingsService::BrewSettingsService(AsyncWebServer *server, FS *fs, ActiveStatus *activeStatus)
+    : _activeStatus(activeStatus), SettingsService(server, fs, BREW_SETTINGS_SERVICE_PATH, BREW_SETTINGS_FILE) {}
 
 BrewSettingsService::~BrewSettingsService() {}
 
@@ -10,7 +10,6 @@ void BrewSettingsService::readFromJsonObject(JsonObject &root)
     BoilTemperature = root["boilTemperature"];
     BoilPowerPercentage = root["boilPowerPercentage"];
     BoilTime = root["boilTime"];
-    SampleTime = root["sampleTime"];
     KP = root["kP"];
     KI = root["kI"];
     KD = root["kD"];
@@ -27,7 +26,6 @@ void BrewSettingsService::writeToJsonObject(JsonObject &root)
     root["boilTemperature"] = BoilTemperature;
     root["boilPowerPercentage"] = BoilPowerPercentage;
     root["boilTime"] = BoilTime;
-    root["sampleTime"] = SampleTime;
     root["kP"] = KP;
     root["kI"] = KI;
     root["kD"] = KD;
@@ -41,6 +39,7 @@ void BrewSettingsService::writeToJsonObject(JsonObject &root)
 
 void BrewSettingsService::onConfigUpdated()
 {
+    _activeStatus->PIDSettingsUpdated = true;
 }
 
 void BrewSettingsService::begin()

@@ -77,7 +77,7 @@ class App extends Component {
             variantSuccess: styles.success,
             variantError: styles.error,
             variantWarning: styles.warning,
-            variantInfo: styles.info,
+            variantInfo: styles.info
           }}>
             <CssBaseline />
             <AppRouting />

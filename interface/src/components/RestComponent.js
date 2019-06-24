@@ -16,11 +16,11 @@ export const restComponent = (endpointUrl, FormComponent) => {
       constructor(props) {
         super(props);
 
-        this.state={
-                 data:null,
-                 fetched: false,
-                 errorMessage:null
-               };
+        this.state = {
+          data: null,
+          fetched: false,
+          errorMessage: null
+        };
 
         this.setState = this.setState.bind(this);
         this.loadData = this.loadData.bind(this);
@@ -30,18 +30,18 @@ export const restComponent = (endpointUrl, FormComponent) => {
 
       setData(data) {
         this.setState({
-                 data:data,
-                 fetched: true,
-                 errorMessage:null
-               });
+          data: data,
+          fetched: true,
+          errorMessage: null
+        });
       }
 
       loadData() {
         this.setState({
-                 data:null,
-                 fetched: false,
-                 errorMessage:null
-               });
+          data: null,
+          fetched: false,
+          errorMessage: null
+        });
         fetch(endpointUrl)
           .then(response => {
             if (response.status === 200) {
@@ -49,15 +49,15 @@ export const restComponent = (endpointUrl, FormComponent) => {
             }
             throw Error("Invalid status code: " + response.status);
           })
-          .then(json => {this.setState({data: json, fetched:true})})
-          .catch(error =>{
-            this.props.enqueueSnackbar("Problem fetching: " + error.message, {variant: 'error',});
-            this.setState({data: null, fetched:true, errorMessage:error.message});
+          .then(json => { this.setState({ data: json, fetched: true }) })
+          .catch(error => {
+            this.props.enqueueSnackbar("Problem fetching: " + error.message, { variant: 'error', autoHideDuration: 2000, });
+            this.setState({ data: null, fetched: true, errorMessage: error.message });
           });
       }
 
       saveData(e) {
-        this.setState({fetched: false});
+        this.setState({ fetched: false });
         fetch(endpointUrl, {
           method: 'POST',
           body: JSON.stringify(this.state.data),
@@ -65,43 +65,43 @@ export const restComponent = (endpointUrl, FormComponent) => {
             'Content-Type': 'application/json'
           })
         })
-        .then(response => {
-          if (response.status === 200) {
-            return response.json();
-          }
-          throw Error("Invalid status code: " + response.status);
-        })
-        .then(json => {
-          this.props.enqueueSnackbar("Changes successfully applied.", {variant: 'info',});
-          this.setState({data: json, fetched:true});
-        }).catch(error => {
-          this.props.enqueueSnackbar("Problem saving: " + error.message, {variant: 'error',});
-          this.setState({data: null, fetched:true, errorMessage:error.message});
-        });
+          .then(response => {
+            if (response.status === 200) {
+              return response.json();
+            }
+            throw Error("Invalid status code: " + response.status);
+          })
+          .then(json => {
+            this.props.enqueueSnackbar("Changes successfully applied.", { variant: 'info', autoHideDuration: 2000, });
+            this.setState({ data: json, fetched: true });
+          }).catch(error => {
+            this.props.enqueueSnackbar("Problem saving: " + error.message, { variant: 'error', autoHideDuration: 2000, });
+            this.setState({ data: null, fetched: true, errorMessage: error.message });
+          });
       }
 
       handleValueChange = name => event => {
         const { data } = this.state;
         data[name] = event.target.value;
-        this.setState({data});
+        this.setState({ data });
       };
 
       handleCheckboxChange = name => event => {
         const { data } = this.state;
         data[name] = event.target.checked;
-        this.setState({data});
+        this.setState({ data });
       }
 
       render() {
         return <FormComponent
-                  handleValueChange={this.handleValueChange}
-                  handleCheckboxChange={this.handleCheckboxChange}
-                  setData={this.setData}
-                  saveData={this.saveData}
-                  loadData={this.loadData}
-                  {...this.state}
-                  {...this.props}
-                />;
+          handleValueChange={this.handleValueChange}
+          handleCheckboxChange={this.handleCheckboxChange}
+          setData={this.setData}
+          saveData={this.saveData}
+          loadData={this.loadData}
+          {...this.state}
+          {...this.props}
+        />;
       }
 
     }

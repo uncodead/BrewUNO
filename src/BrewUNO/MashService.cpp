@@ -33,9 +33,7 @@ void MashService::loop(ActiveStatus *activeStatus)
     {
         activeStatus->TargetTemperature = steps[0]["t"];
         activeStatus->ActiveMashStepIndex = 0;
-        activeStatus->ActiveMashStepName = steps[0]["n"].as<String>() + " " +
-                                           steps[0]["tm"].as<String>() + "mins at " +
-                                           steps[0]["t"].as<String>() + "ºC (not started)";
+        activeStatus->ActiveMashStepName = getMashName(steps[0]) + "[not started]";
         _pump->AntiCavitation();
         _pump->TurnPumpOn();
 
@@ -62,9 +60,7 @@ void MashService::loop(ActiveStatus *activeStatus)
         {
             JsonObject step = steps[nextMashStep];
             activeStatus->ActiveMashStepIndex = nextMashStep;
-            activeStatus->ActiveMashStepName = step["n"].as<String>() + " " +
-                                               step["tm"].as<String>() + "mins at " +
-                                               step["t"].as<String>() + "ºC (not started)";
+            activeStatus->ActiveMashStepName = getMashName(step) + "[not started]";
             activeStatus->StartTime = 0;
             activeStatus->EndTime = 0;
             activeStatus->TargetTemperature = step["t"];
@@ -108,9 +104,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->EndTime = timeNow + (int(step["tm"]) * 60);
             activeStatus->HeaterOff = ((int)step["ho"]) == 1;
             activeStatus->StepLock = ((int)step["sl"]) == 1;
-            activeStatus->ActiveMashStepName = step["n"].as<String>() + " " +
-                                               step["tm"].as<String>() + "mins at " +
-                                               step["t"].as<String>() + "ºC";
+            activeStatus->ActiveMashStepName = getMashName(step);
 
             Serial.print("Start time: ");
             Serial.println(activeStatus->StartTime);
@@ -126,4 +120,11 @@ void MashService::loop(ActiveStatus *activeStatus)
             activeStatus->SaveActiveStatus();
         }
     }
+}
+
+String MashService::getMashName(JsonObject step)
+{
+    return step["n"].as<String>() + " " +
+           step["tm"].as<String>() + "mins at " +
+           step["t"].as<String>() + "ºC";
 }

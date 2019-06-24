@@ -113,7 +113,7 @@ class MashBoilSettingsForm extends Component {
         {!this.props.boil ? <FormControlLabel control={<Switch ref="ho" checked={this.state.ho} onChange={this.handleHeaterOff} />} label="Heater OFF" /> : null}
         {!this.props.boil ? <FormControlLabel control={<Switch ref="sl" checked={this.state.sl} onChange={this.handleStepLock} />} label="Step LOCK" /> : null}
         <Divider />
-        <Button type="submit" variant="contained" fullWidth color="primary">Add</Button>
+        <Button type="submit" variant="contained" fullWidth color="secondary">Add</Button>
       </ValidatorForm>
     )
   }
