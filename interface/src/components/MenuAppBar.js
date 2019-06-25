@@ -48,6 +48,7 @@ const styles = theme => ({
     height: '100%',
   },
   appBar: {
+    backgroundColor: '#313131',
     position: 'absolute',
     marginLeft: drawerWidth,
     [theme.breakpoints.up('md')]: {

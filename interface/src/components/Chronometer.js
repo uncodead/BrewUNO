@@ -18,7 +18,6 @@ class Chronometer extends React.Component {
     constructor(props) {
         super(props);
 
-        debugger
         var difference = new Date().getTime() - getDateTime(this.props.StartTime);
         var seconds = Math.floor(difference / 1000);
         var minutes = Math.floor(seconds / 60);
