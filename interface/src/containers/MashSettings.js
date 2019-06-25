@@ -4,7 +4,8 @@ import SectionContent from '../components/SectionContent';
 import MashSettingsForm from '../forms/MashBoilSettingsForm';
 import SortableList from '../components/SortableList';
 import { withSnackbar } from 'notistack';
-import { SAVE_MASH_SETTINGS_SERVICE_PATH, GET_MASH_SETTINGS_SERVICE_PATH, ExecuteRestCall } from '../constants/Endpoints';
+import { SAVE_MASH_SETTINGS_SERVICE_PATH, GET_MASH_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
+import { ExecuteRestCall } from '../components/Utils';
 
 class MashSettings extends Component {
   constructor(props) {

@@ -9,10 +9,10 @@ import {
   START_PUMP, STOP_PUMP,
   GET_ACTIVE_STATUS, START_BREW, UNLOCK_STEP_BREW,
   NEXT_STEP_BREW, STOP_BREW, RESUME_BREW,
-  ExecuteRestCall, CHANGE_BOIL_PERCENTAGE,
-  START_BOIL, START_TUNING
+  CHANGE_BOIL_PERCENTAGE,
+  START_BOIL, START_TUNING, PAUSE_BREW
 } from '../constants/Endpoints';
-import { getDateTime, pad } from '../components/Utils';
+import { getDateTime, ExecuteRestCall } from '../components/Utils';
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import LineChart from 'recharts/lib/chart/LineChart';
 import Line from 'recharts/lib/cartesian/Line';
@@ -211,11 +211,15 @@ class Brew extends Component {
               this.actionBrew('Do you want start brew? Check if you\'ve secure water volume at kettle.', START_BREW,
                 () => { this.props.enqueueSnackbar('Anti Cavitation test started.', { variant: 'info', autoHideDuration: 2000, }) })
             }}>Start</Button> : null}
+        {this.state.status.active_step > 0 && this.state.status.brew_started === 1 ?
+          <Button variant="contained" color="secondary" className={classes.button}
+            onClick={() => {
+              this.actionBrew('Do you want pause brew?', PAUSE_BREW)
+            }}>Pause</Button> : null}
         {this.state.status.active_step > 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
-              this.actionBrew('Do you want resume brew? Check if you\'ve secure water volume at kettle.', RESUME_BREW,
-                () => { this.props.enqueueSnackbar('Anti Cavitation test started.', { variant: 'info', autoHideDuration: 2000, }) })
+              this.actionBrew('Do you want resume brew? Check if you\'ve secure water volume at kettle.', RESUME_BREW)
             }}>Resume</Button> : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.step_locked === 1 ?
           <Button variant="contained" color="secondary" className={classes.button}
@@ -237,6 +241,7 @@ class Brew extends Component {
         <Card className={classes.gadgetCard}>
           <CardContent>
             <BrewStatusGadget
+              BrewStarted={this.state.status.brew_started}
               Temperature={this.state.status.temperature}
               TargetTemperature={this.state.status.target_temperature}
               BoilTemperature={this.state.status.boil_target_temperature}

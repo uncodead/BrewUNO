@@ -26,6 +26,7 @@
 #define START_BREW_SERVICE_PATH "/rest/startbrew"
 #define STOP_BREW_SERVICE_PATH "/rest/stopbrew"
 #define NEXT_STEP_SERVICE_PATH "/rest/nextstepbrew"
+#define PAUSE_BREW_SERVICE_PATH "/rest/pausebrew"
 #define RESUME_BREW_SERVICE_PATH "/rest/resumebrew"
 #define UNLOCK_BREW_SERVICE_PATH "/rest/unlockbrew"
 #define GET_ACTIVE_STATUS_SERVICE_PATH "/rest/getactivestatus"
@@ -76,6 +77,7 @@ private:
   void unLockBrew(AsyncWebServerRequest *request);
   void startBoil(AsyncWebServerRequest *request);
   void startTuning(AsyncWebServerRequest *request);
+  void pauseBrew(AsyncWebServerRequest *request);
   void changeBoilPercentage(AsyncWebServerRequest *request, JsonDocument &json);
 };
 #endif

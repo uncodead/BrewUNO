@@ -38,7 +38,7 @@ class BrewStatusGadget extends Component {
   }, 1000);
 
   brewProgress() {
-    if (this.props.StartTime <= 0 || this.props.EndTime <= 0) {
+    if (!this.props.BrewStarted || this.props.StartTime <= 0 || this.props.EndTime <= 0) {
       this.setState({
         countdown: '00:00:00',
         progressCompleted: 0
@@ -158,7 +158,7 @@ class BrewStatusGadget extends Component {
               </Grid>
               : null
             }
-            {this.props.StepLocked ?
+            {this.props.StepLocked && this.props.BrewStarted ?
               <Grid item>
                 <Chronometer StartTime={this.props.EndTime} title="Step Locked" onRef={ref => (this.chronometer = ref)} />
               </Grid>

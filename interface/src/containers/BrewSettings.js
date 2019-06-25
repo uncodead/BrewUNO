@@ -4,8 +4,9 @@ import SectionContent from '../components/SectionContent';
 import BrewSettingsForm from '../forms/BrewSettingsForm';
 import { restComponent } from '../components/RestComponent';
 import {
-  ExecuteRestCall, GET_SENSORS
+  GET_SENSORS
 } from '../constants/Endpoints';
+import { ExecuteRestCall } from '../components/Utils';
 
 import { BREW_SETTINGS_ENDPOINT } from '../constants/Endpoints';
 

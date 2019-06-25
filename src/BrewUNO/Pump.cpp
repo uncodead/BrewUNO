@@ -83,13 +83,16 @@ void Pump::CheckRest()
 
 void Pump::AntiCavitation()
 {
-    for (byte i = 1; i < 6; i++)
+    if (!Debug)
     {
-        if (!_activeStatus->BrewStarted)
-            continue;
-        TurnPump(true);
-        delay(1500 + i * 250);
-        TurnPump(false);
-        delay(2000);
+        for (byte i = 1; i < 6; i++)
+        {
+            if (!_activeStatus->BrewStarted)
+                continue;
+            TurnPump(true);
+            delay(1500 + i * 250);
+            TurnPump(false);
+            delay(2000);
+        }
     }
 }
