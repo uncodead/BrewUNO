@@ -77,7 +77,7 @@ class Brew extends Component {
     }
     interval = setInterval(() => {
       this.getStatus();
-    }, 1000);
+    }, 2000);
   }
 
   updateStatus() {
@@ -132,7 +132,7 @@ class Brew extends Component {
     ExecuteRestCall(GET_ACTIVE_STATUS, 'GET', (json) => {
       if (json != null && json != undefined && json != '')
         this.setState({ status: json }, this.updateStatus)
-    }, null, this.props)
+    }, null, null)
   }
 
   getActiveStep() {

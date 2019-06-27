@@ -12,7 +12,7 @@
 #include <ESPAsyncWebServer.h>
 #include <AsyncArduinoJson6.h>
 #include <IPAddress.h>
-#include <AsyncJsonRequestWebHandler.h>
+#include <AsyncJsonWebHandler.h>
 #include <TimeLib.h>
 #include <NtpClientLib.h>
 #include <BrewUNO/enum.h>

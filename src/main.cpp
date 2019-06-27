@@ -10,14 +10,17 @@
 #endif
 
 #include <FS.h>
+#include <SecuritySettingsService.h>
 #include <WiFiSettingsService.h>
-#include <WiFiStatus.h>
-#include <WiFiScanner.h>
 #include <APSettingsService.h>
 #include <NTPSettingsService.h>
-#include <NTPStatus.h>
 #include <OTASettingsService.h>
+#include <AuthenticationService.h>
+#include <WiFiScanner.h>
+#include <WiFiStatus.h>
+#include <NTPStatus.h>
 #include <APStatus.h>
+#include <SystemStatus.h>
 
 #include <PID_v1.h>
 #include <OneWire.h>
@@ -43,15 +46,18 @@ int deviceCount = 0;
 
 AsyncWebServer server(80);
 
-WiFiSettingsService wifiSettingsService = WiFiSettingsService(&server, &SPIFFS);
-APSettingsService apSettingsService = APSettingsService(&server, &SPIFFS);
-NTPSettingsService ntpSettingsService = NTPSettingsService(&server, &SPIFFS);
-OTASettingsService otaSettingsService = OTASettingsService(&server, &SPIFFS);
+SecuritySettingsService securitySettingsService = SecuritySettingsService(&server, &SPIFFS);
+WiFiSettingsService wifiSettingsService = WiFiSettingsService(&server, &SPIFFS, &securitySettingsService);
+APSettingsService apSettingsService = APSettingsService(&server, &SPIFFS, &securitySettingsService);
+NTPSettingsService ntpSettingsService = NTPSettingsService(&server, &SPIFFS, &securitySettingsService);
+OTASettingsService otaSettingsService = OTASettingsService(&server, &SPIFFS, &securitySettingsService);
+AuthenticationService authenticationService = AuthenticationService(&server, &securitySettingsService);
 
-WiFiScanner wifiScanner = WiFiScanner(&server);
-WiFiStatus wifiStatus = WiFiStatus(&server);
-NTPStatus ntpStatus = NTPStatus(&server);
-APStatus apStatus = APStatus(&server);
+WiFiScanner wifiScanner = WiFiScanner(&server, &securitySettingsService);
+WiFiStatus wifiStatus = WiFiStatus(&server, &securitySettingsService);
+NTPStatus ntpStatus = NTPStatus(&server, &securitySettingsService);
+APStatus apStatus = APStatus(&server, &securitySettingsService);
+SystemStatus systemStatus = SystemStatus(&server, &securitySettingsService);
 
 //brewUNO
 ActiveStatus activeStatus = ActiveStatus(&SPIFFS);
@@ -69,69 +75,87 @@ BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilServi
 
 void setup()
 {
-    // Disable wifi config persistance
-    WiFi.persistent(false);
+  // Disable wifi config persistance and auto reconnect
+  WiFi.persistent(false);
+  WiFi.setAutoReconnect(false);
 
-    Serial.begin(SERIAL_BAUD_RATE);
-    SPIFFS.begin();
-    //SPIFFS.format();
+#if defined(ESP_PLATFORM)
+  // Init the wifi driver on ESP32
+  WiFi.mode(WIFI_MODE_MAX);
+  WiFi.mode(WIFI_MODE_NULL);
+#endif
 
-    // start services
-    ntpSettingsService.begin();
-    otaSettingsService.begin();
-    apSettingsService.begin();
-    wifiSettingsService.begin();
+  Serial.begin(SERIAL_BAUD_RATE);
+  SPIFFS.begin();
+  //SPIFFS.format();
 
-    brewSettingsService.begin();
+  // Start security settings service first
+  securitySettingsService.begin();
 
-    // Serving static resources from /www/
-    server.serveStatic("/js/", SPIFFS, "/www/js/");
-    server.serveStatic("/css/", SPIFFS, "/www/css/");
-    server.serveStatic("/fonts/", SPIFFS, "/www/fonts/");
-    server.serveStatic("/app/", SPIFFS, "/www/app/");
-    server.serveStatic("/favicon.ico", SPIFFS, "/www/favicon.ico");
+  // Start services
+  ntpSettingsService.begin();
+  otaSettingsService.begin();
+  apSettingsService.begin();
+  wifiSettingsService.begin();
 
-    // Serving all other get requests with "/www/index.htm"
-    // OPTIONS get a straight up 200 response
-    server.onNotFound([](AsyncWebServerRequest *request) {
-        if (request->method() == HTTP_GET)
-            request->send(SPIFFS, "/www/index.html");
-        else if (request->method() == HTTP_OPTIONS)
-            request->send(200);
-        else
-            request->send(404);
-    });
+  // Serving static resources from /www/
+  server.serveStatic("/js/", SPIFFS, "/www/js/");
+  server.serveStatic("/css/", SPIFFS, "/www/css/");
+  server.serveStatic("/fonts/", SPIFFS, "/www/fonts/");
+  server.serveStatic("/app/", SPIFFS, "/www/app/");
+  server.serveStatic("/favicon.ico", SPIFFS, "/www/favicon.ico");
+
+  // Serving all other get requests with "/www/index.htm"
+  // OPTIONS get a straight up 200 response
+  server.onNotFound([](AsyncWebServerRequest *request) {
+    if (request->method() == HTTP_GET)
+    {
+      request->send(SPIFFS, "/www/index.html");
+    }
+    else if (request->method() == HTTP_OPTIONS)
+    {
+      request->send(200);
+    }
+    else
+    {
+      request->send(404);
+    }
+  });
 
 // Disable CORS if required
 #if defined(ENABLE_CORS)
-    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
-    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "*");
+  DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", CORS_ORIGIN);
+  DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "Accept, Content-Type, Authorization");
+  DefaultHeaders::Instance().addHeader("Access-Control-Allow-Credentials", "true");
 #endif
 
-    server.begin();
+  server.begin();
 
-    pinMode(PUMP_BUS, OUTPUT);
-    pinMode(BUZZER_BUS, OUTPUT);
-    digitalWrite(BUZZER_BUS, LOW);
-    pinMode(HEATER_BUS, OUTPUT);
-    //pinMode(TEMPERATURE_BUS, OUTPUT);
-    pump.TurnPumpOff();
-    DS18B20.begin();
-    // locate devices on the bus
-    Serial.print("Locating devices...");
-    Serial.print("Found ");
-    deviceCount = DS18B20.getDeviceCount();
-    Serial.print(deviceCount, DEC);
-    Serial.println(" devices.");
-    Serial.println("");
-    temperatureService.DeviceCount = deviceCount;
-    brewService.begin();
+  //BrewUNO
+  pinMode(PUMP_BUS, OUTPUT);
+  pinMode(BUZZER_BUS, OUTPUT);
+  digitalWrite(BUZZER_BUS, LOW);
+  pinMode(HEATER_BUS, OUTPUT);
+  //pinMode(TEMPERATURE_BUS, OUTPUT);
+  pump.TurnPumpOff();
+  DS18B20.begin();
+  // locate devices on the bus
+  Serial.print("Locating devices...");
+  Serial.print("Found ");
+  deviceCount = DS18B20.getDeviceCount();
+  Serial.print(deviceCount, DEC);
+  Serial.println(" devices.");
+  Serial.println("");
+  temperatureService.DeviceCount = deviceCount;
+  brewSettingsService.begin();
+  brewService.begin();
 }
 
 void loop()
 {
-    apSettingsService.loop();
-    ntpSettingsService.loop();
-    otaSettingsService.loop();
-    brewService.loop();
+  wifiSettingsService.loop();
+  apSettingsService.loop();
+  ntpSettingsService.loop();
+  otaSettingsService.loop();
+  brewService.loop();
 }

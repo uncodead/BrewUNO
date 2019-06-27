@@ -1,5 +1,5 @@
-#ifndef APStatus_h
-#define APStatus_h
+#ifndef SystemStatus_h
+#define SystemStatus_h
 
 #if defined(ESP8266)
   #include <ESP8266WiFi.h>
@@ -12,25 +12,24 @@
 #include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
 #include <AsyncArduinoJson6.h>
-#include <IPAddress.h>
 #include <SecurityManager.h>
 
-#define MAX_AP_STATUS_SIZE 1024
-#define AP_STATUS_SERVICE_PATH "/rest/apStatus"
+#define MAX_ESP_STATUS_SIZE 1024
+#define SYSTEM_STATUS_SERVICE_PATH "/rest/systemStatus"
 
-class APStatus {
+class SystemStatus {
 
   public:
 
-    APStatus(AsyncWebServer *server, SecurityManager* securityManager);
+    SystemStatus(AsyncWebServer *server, SecurityManager* securityManager);
 
   private:
 
     AsyncWebServer* _server;
     SecurityManager* _securityManager;
 
-    void apStatus(AsyncWebServerRequest *request);
+    void systemStatus(AsyncWebServerRequest *request);
 
 };
 
-#endif // end APStatus_h
+#endif // end SystemStatus_h

@@ -158,7 +158,7 @@ class BrewStatusGadget extends Component {
               <Grid item>
                 <Card className={this.props.className}>
                   <CardContent>
-                    <Typography color="textSecondary" variant="subtitle1" gutterBottom>CountDown</Typography>
+                    <Typography color="textSecondary" variant="subtitle1" gutterBottom>Timer</Typography>
                     <Typography variant="h5">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
                   </CardContent>
                 </Card>
@@ -192,7 +192,7 @@ class BrewStatusGadgetItem extends Component {
                 endAngle={0}
                 innerRadius={30}
                 outerRadius={40}
-                paddingAngle={0}
+                paddingAngle={3}
                 stroke={0}
               >
 

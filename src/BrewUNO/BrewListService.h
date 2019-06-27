@@ -12,7 +12,7 @@
 #include <ESPAsyncWebServer.h>
 #include <AsyncArduinoJson6.h>
 #include <IPAddress.h>
-#include <AsyncJsonRequestWebHandler.h>
+#include <AsyncJsonWebHandler.h>
 #include <BrewUNO/ActiveStatus.h>
 
 class BrewListService
@@ -37,7 +37,7 @@ private:
   FS *_fs;
   AsyncWebServer *_server;
   String _settingsFile;
-  AsyncJsonRequestWebHandler _updateHandler;
+  AsyncJsonWebHandler _updateHandler;
 
   void save(AsyncWebServerRequest *request, JsonDocument &json)
   {
