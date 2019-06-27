@@ -46,7 +46,6 @@ boolean ActiveStatus::LoadActiveStatusSettings()
 
 String ActiveStatus::GetJson()
 {
-    Serial.println("GET Json:");
     String status = "{\"active_step\":" + String(ActiveStep) + "," +
                     "\"active_mash_step_index\":" + String(ActiveMashStepIndex) + "," +
                     "\"active_mash_step_name\":\"" + String(ActiveMashStepName) + "\"" + "," +
@@ -74,7 +73,6 @@ String ActiveStatus::GetJson()
                     "\"pump_is_resting\":" + String(PumpIsResting) + "," +
                     "\"boil_power_percentage\":" + String(BoilPowerPercentage) +
                     "}";
-    Serial.println(status);
     return status;
 }
 

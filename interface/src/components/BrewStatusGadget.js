@@ -192,7 +192,7 @@ class BrewStatusGadgetItem extends Component {
                 endAngle={0}
                 innerRadius={30}
                 outerRadius={40}
-                paddingAngle={0}
+                paddingAngle={3}
                 stroke={0}
               >
 

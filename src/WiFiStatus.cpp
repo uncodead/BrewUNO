@@ -1,7 +1,9 @@
 #include <WiFiStatus.h>
 
-WiFiStatus::WiFiStatus(AsyncWebServer *server) : _server(server) {
-  _server->on(WIFI_STATUS_SERVICE_PATH, HTTP_GET, std::bind(&WiFiStatus::wifiStatus, this, std::placeholders::_1));
+WiFiStatus::WiFiStatus(AsyncWebServer *server, SecurityManager* securityManager) : _server(server), _securityManager(securityManager) {
+  _server->on(WIFI_STATUS_SERVICE_PATH, HTTP_GET, 
+    _securityManager->wrapRequest(std::bind(&WiFiStatus::wifiStatus, this, std::placeholders::_1), AuthenticationPredicates::IS_AUTHENTICATED)
+  );
 #if defined(ESP8266)
   _onStationModeConnectedHandler = WiFi.onStationModeConnected(onStationModeConnected);
   _onStationModeDisconnectedHandler = WiFi.onStationModeDisconnected(onStationModeDisconnected);
@@ -32,7 +34,7 @@ void WiFiStatus::onStationModeGotIP(const WiFiEventStationModeGotIP& event) {
 }
 #elif defined(ESP_PLATFORM)
 void WiFiStatus::onStationModeConnected(WiFiEvent_t event, WiFiEventInfo_t info) {
-  Serial.print("WiFi Connected.");
+  Serial.println("WiFi Connected.");
 }
 
 void WiFiStatus::onStationModeDisconnected(WiFiEvent_t event, WiFiEventInfo_t info) {
@@ -55,6 +57,7 @@ void WiFiStatus::wifiStatus(AsyncWebServerRequest *request) {
   root["status"] = (uint8_t) status;
   if (status == WL_CONNECTED){
     root["local_ip"] = WiFi.localIP().toString();
+    root["mac_address"] = WiFi.macAddress();
     root["rssi"] = WiFi.RSSI();
     root["ssid"] = WiFi.SSID();
     root["bssid"] = WiFi.BSSIDstr();

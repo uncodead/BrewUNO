@@ -9,10 +9,11 @@
 #include <AsyncTCP.h>
 #endif
 
+#include <SecurityManager.h>
 #include <SettingsPersistence.h>
 #include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
-#include <AsyncJsonRequestWebHandler.h>
+#include <AsyncJsonWebHandler.h>
 #include <AsyncArduinoJson6.h>
 
 /*
@@ -21,11 +22,37 @@
 class SettingsService : public SettingsPersistence
 {
 
-private:
-  AsyncJsonRequestWebHandler _updateHandler;
-
-  void fetchConfig(AsyncWebServerRequest *request)
+public:
+  SettingsService(AsyncWebServer *server, FS *fs, char const *servicePath, char const *filePath) : SettingsPersistence(fs, filePath), _server(server)
   {
+
+    // configure fetch config handler
+    _server->on(servicePath, HTTP_GET, std::bind(&SettingsService::fetchConfig, this, std::placeholders::_1));
+
+    // configure update settings handler
+    _updateHandler.setUri(servicePath);
+    _updateHandler.setMethod(HTTP_POST);
+    _updateHandler.setMaxContentLength(MAX_SETTINGS_SIZE);
+    _updateHandler.onRequest(std::bind(&SettingsService::updateConfig, this, std::placeholders::_1, std::placeholders::_2));
+    _server->addHandler(&_updateHandler);
+  }
+
+  virtual ~SettingsService() {}
+
+  virtual void begin()
+  {
+    readFromFS();
+  }
+
+protected:
+  // will serve setting endpoints from here
+  AsyncWebServer *_server;
+
+  AsyncJsonWebHandler _updateHandler;
+
+  virtual void fetchConfig(AsyncWebServerRequest *request)
+  {
+    // handle the request
     AsyncJsonResponse *response = new AsyncJsonResponse(MAX_SETTINGS_SIZE);
     JsonObject jsonObject = response->getRoot();
     writeToJsonObject(jsonObject);
@@ -33,8 +60,9 @@ private:
     request->send(response);
   }
 
-  void updateConfig(AsyncWebServerRequest *request, JsonDocument &jsonDocument)
+  virtual void updateConfig(AsyncWebServerRequest *request, JsonDocument &jsonDocument)
   {
+    // handle the request
     if (jsonDocument.is<JsonObject>())
     {
       JsonObject newConfig = jsonDocument.as<JsonObject>();
@@ -54,33 +82,54 @@ private:
     }
   }
 
-protected:
-  // will serve setting endpoints from here
-  AsyncWebServer *_server;
-
   // implement to perform action when config has been updated
   virtual void onConfigUpdated() {}
+};
 
+class AdminSettingsService : public SettingsService
+{
 public:
-  SettingsService(AsyncWebServer *server, FS *fs, char const *servicePath, char const *filePath) : SettingsPersistence(fs, servicePath, filePath), _server(server)
+  AdminSettingsService(AsyncWebServer *server, FS *fs, SecurityManager *securityManager, char const *servicePath, char const *filePath) : SettingsService(server, fs, servicePath, filePath), _securityManager(securityManager)
   {
-
-    // configure fetch config handler
-    _server->on(servicePath, HTTP_GET, std::bind(&SettingsService::fetchConfig, this, std::placeholders::_1));
-
-    // configure update settings handler
-    _updateHandler.setUri(servicePath);
-    _updateHandler.setMethod(HTTP_POST);
-    _updateHandler.setMaxContentLength(MAX_SETTINGS_SIZE);
-    _updateHandler.onRequest(std::bind(&SettingsService::updateConfig, this, std::placeholders::_1, std::placeholders::_2));
-    _server->addHandler(&_updateHandler);
   }
 
-  virtual ~SettingsService() {}
+protected:
+  // will validate the requests with the security manager
+  SecurityManager *_securityManager;
 
-  virtual void begin()
+  void fetchConfig(AsyncWebServerRequest *request)
   {
-    readFromFS();
+    // verify the request against the predicate
+    Authentication authentication = _securityManager->authenticateRequest(request);
+    /* 
+      if (!getAuthenticationPredicate()(authentication)) {
+        request->send(401);
+        return;
+      }
+      */
+    // delegate to underlying implemetation
+    SettingsService::fetchConfig(request);
+  }
+
+  void updateConfig(AsyncWebServerRequest *request, JsonDocument &jsonDocument)
+  {
+    // verify the request against the predicate
+    Authentication authentication = _securityManager->authenticateRequest(request);
+    /*
+    if (!getAuthenticationPredicate()(authentication))
+    {
+      request->send(401);
+      return;
+    }
+     */
+    // delegate to underlying implemetation
+    SettingsService::updateConfig(request, jsonDocument);
+  }
+
+  // override to override the default authentication predicate, IS_ADMIN
+  AuthenticationPredicate getAuthenticationPredicate()
+  {
+    return AuthenticationPredicates::IS_ADMIN;
   }
 };
 

@@ -12,7 +12,7 @@
 #include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
 #include <IPAddress.h>
-#include <AsyncJsonRequestWebHandler.h>
+#include <AsyncJsonWebHandler.h>
 #include <TimeLib.h>
 #include <NtpClientLib.h>
 #include <BrewUNO/enum.h>
@@ -67,7 +67,7 @@ private:
   Pump *_pump;
   ActiveStatus *_activeStatus;
 
-  AsyncJsonRequestWebHandler _updateHandler;
+  AsyncJsonWebHandler _updateHandler;
 
   void getActiveStatus(AsyncWebServerRequest *request);
   void startBrew(AsyncWebServerRequest *request);
