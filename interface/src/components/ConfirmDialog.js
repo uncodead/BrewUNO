@@ -5,6 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 class ConfirmDialog extends Component {
 
@@ -33,6 +34,15 @@ class ConfirmDialog extends Component {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
+          {this.props.copy ?
+            <CopyToClipboard
+              text={this.props.confirmDialogMessage}
+              onCopy={() => {
+                //do stuff here, like summon a confirmation prompt
+              }}>
+              <Button onClick={() => this.props.confirmAction(false)} color="secondary">Copy</Button>
+            </CopyToClipboard>
+            : null}
           <Button onClick={() => this.props.confirmAction(false)} color="secondary">
             No
          </Button>
