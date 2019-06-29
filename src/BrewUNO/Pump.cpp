@@ -32,6 +32,7 @@ void Pump::TurnPumpOn()
     TurnPump(true);
     recirculationOn = true;
     lastPumpStarted = now();
+    lastPumpRest = 0;
     CheckRest();
 }
 
@@ -40,6 +41,7 @@ void Pump::TurnPumpOff()
     TurnPump(false);
     recirculationOn = false;
     lastPumpStarted = 0;
+    lastPumpRest = 0;
     CheckRest();
 }
 
@@ -58,6 +60,7 @@ void Pump::CheckRest()
         time_t timeNow = now();
         if (!isResting && timeNow - lastPumpStarted >= _brewSettingsService->PumpRestInterval)
         {
+            Serial.println("Pump Rest time to sleep!");
             TurnPump(false);
             isResting = true;
             lastPumpStarted = 0;
@@ -67,6 +70,7 @@ void Pump::CheckRest()
 
         if (isResting && timeNow - lastPumpRest >= _brewSettingsService->PumpRestTime)
         {
+            Serial.println("Pump Rest wake up!");
             TurnPump(true);
             isResting = false;
             lastPumpRest = 0;
@@ -77,6 +81,7 @@ void Pump::CheckRest()
     }
     else
     {
+        Serial.println("No Pump Rest");
         _activeStatus->PumpIsResting = false;
     }
 }

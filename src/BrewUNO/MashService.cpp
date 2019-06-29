@@ -66,6 +66,7 @@ void MashService::loop(ActiveStatus *activeStatus)
             JsonObject step = steps[nextMashStep];
             activeStatus->ActiveMashStepIndex = nextMashStep;
             activeStatus->ActiveMashStepName = getMashName(step) + " [not started]";
+            Serial.println(getMashName(step));
             activeStatus->StartTime = 0;
             activeStatus->EndTime = 0;
             activeStatus->TargetTemperature = step["t"];
