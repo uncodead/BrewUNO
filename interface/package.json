@@ -12,6 +12,7 @@
     "npm": "^6.9.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
+    "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.8.6",
     "react-form-validator-core": "^0.6.2",
     "react-input-mask": "^2.0.4",

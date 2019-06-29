@@ -73,7 +73,8 @@ class Brew extends Component {
       confirmDialogOpen: false,
       boilPower: 0,
       activeStepName: "",
-      statusInitialized: false
+      statusInitialized: false,
+      copyDialogMessage : false
     }
     interval = setInterval(() => {
       this.getStatus();
@@ -171,10 +172,23 @@ class Brew extends Component {
     });
   };
 
+  reportLog = () => {
+    this.setState({
+      confirmDialogOpen: true,
+      copyDialogMessage: true,
+      confirmDialogMessage: JSON.stringify(this.state.status),
+      confirmAction: (confirm) => {
+        this.setState({ confirmDialogOpen: false })
+        document.execCommand('copy');
+      }
+    });
+  }
+
   actionBrew = (message, url, callback) => {
     if (message !== '') {
       this.setState({
         confirmDialogOpen: true,
+        copyDialogMessage: false,
         confirmDialogMessage: message,
         confirmAction: (confirm) => {
           if (confirm) {
@@ -236,6 +250,9 @@ class Brew extends Component {
         <Button variant="contained" color="secondary" className={classes.button}
           onClick={() => { this.actionBrew('', this.state.status.pump_on ? STOP_PUMP : START_PUMP) }}>
           Pump</Button>
+        <Button variant="contained" color="secondary" className={classes.button}
+          onClick={() => { this.reportLog() }}>
+          Report log</Button>
 
         <Divider />
         <Card className={classes.gadgetCard}>
@@ -312,8 +329,8 @@ class Brew extends Component {
           confirmAction={this.state.confirmAction}
           confirmDialogOpen={this.state.confirmDialogOpen}
           confirmDialogMessage={this.state.confirmDialogMessage}
+          copy={this.state.copyDialogMessage}
         />
-
       </SectionContent >
     )
   }
