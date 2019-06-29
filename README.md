@@ -21,9 +21,10 @@ A low cost, open source, online and extensible homebrew automation on top of ESP
 
 You will need the following before you can get started.
 
-* [PlatformIO](https://platformio.org/) - IDE for development
+* [PlatformIO](https://platformio.org/) - IDE for development **with ESP8266 v2.2.2 platform installed**
 * [NPM](https://www.npmjs.com/) - For building the interface (if you want)
 * Bash shell, or Git Bash if you are under windows
+
 
 ### Installing & Deployment
 
@@ -35,7 +36,7 @@ Once the platform and libraries are downloaded the back end should be compiling.
 
 Edit /data/config/wifiSettings.json with yours wifi configurations.
 
-Under PlatformIO menu: Upload File System image, and then, Upload and Monitor. You will see the ip address to access interface.
+Under PlatformIO menu: Upload File System image, and then, Upload and Monitor. You will see the ip address to access interface. AP mode ip: 192.168.4.1
 
 ### Building the interface
 
@@ -91,7 +92,7 @@ wifiSettings.json | WiFi connection settings
 The default settings configure the device to bring up an access point on start up which can be used to configure the device:
 
 * SSID: BrewUNO
-* Password: brewuno
+* Password: brew-uno
 
 # Thanks to:
 
