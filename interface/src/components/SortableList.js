@@ -66,10 +66,6 @@ class SortableList extends Component {
                 }
                 label="Recirculation"
               /> : null}
-          </ListItem>
-          : null}
-        {!this.props.brewDay ?
-          <ListItem color="black">
             {!this.props.boil ?
               <FormControlLabel
                 control={
@@ -80,10 +76,6 @@ class SortableList extends Component {
                 }
                 label="Heater OFF"
               /> : null}
-          </ListItem>
-          : null}
-        {!this.props.brewDay ?
-          <ListItem color="black">
             {!this.props.boil ?
               <FormControlLabel
                 control={
