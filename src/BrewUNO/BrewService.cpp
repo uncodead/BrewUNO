@@ -38,11 +38,6 @@ BrewService::~BrewService() {}
 
 void BrewService::startBrew(AsyncWebServerRequest *request)
 {
-    if (timeStatus() != timeSet)
-    {
-        request->send(500, APPLICATION_JSON_TYPE, NPT_JSON_ERROR_MESSAGE);
-        return;
-    }
     _activeStatus->TimeNow = now();
     _activeStatus->ActiveStep = mash;
     _activeStatus->BrewStarted = true;
@@ -60,11 +55,6 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
 
 void BrewService::unLockBrew(AsyncWebServerRequest *request)
 {
-    if (timeStatus() != timeSet)
-    {
-        request->send(500, APPLICATION_JSON_TYPE, NPT_JSON_ERROR_MESSAGE);
-        return;
-    }
     _activeStatus->StepLock = false;
     _activeStatus->SaveActiveStatus();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
@@ -88,11 +78,6 @@ void BrewService::pauseBrew(AsyncWebServerRequest *request)
 
 void BrewService::resumeBrew(AsyncWebServerRequest *request)
 {
-    if (timeStatus() != timeSet)
-    {
-        request->send(500, APPLICATION_JSON_TYPE, NPT_JSON_ERROR_MESSAGE);
-        return;
-    }
     if (_activeStatus->StartTime > 0 && _activeStatus->EndTime > 0)
     {
         int timeTotal = _activeStatus->EndTime - _activeStatus->StartTime;
@@ -115,11 +100,6 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
 
 void BrewService::nextStep(AsyncWebServerRequest *request)
 {
-    if (timeStatus() != timeSet)
-    {
-        request->send(500, APPLICATION_JSON_TYPE, NPT_JSON_ERROR_MESSAGE);
-        return;
-    }
     _activeStatus->StepLock = false;
     _activeStatus->EndTime = now();
     _activeStatus->SaveActiveStatus();
@@ -128,11 +108,6 @@ void BrewService::nextStep(AsyncWebServerRequest *request)
 
 void BrewService::startBoil(AsyncWebServerRequest *request)
 {
-    if (timeStatus() != timeSet)
-    {
-        request->send(500, APPLICATION_JSON_TYPE, NPT_JSON_ERROR_MESSAGE);
-        return;
-    }
     _activeStatus->TimeNow = now();
     _activeStatus->ActiveStep = boil;
     _activeStatus->BrewStarted = true;

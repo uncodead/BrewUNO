@@ -34,7 +34,7 @@ void MashService::loop(ActiveStatus *activeStatus)
     {
         activeStatus->TargetTemperature = steps[0]["t"];
         activeStatus->ActiveMashStepIndex = 0;
-        activeStatus->ActiveMashStepName = getMashName(steps[0]) + " [request]";
+        activeStatus->ActiveMashStepName = getMashName(steps[0]) + " [req]";
         _pump->AntiCavitation();
         _pump->TurnPumpOn();
 
@@ -65,7 +65,7 @@ void MashService::loop(ActiveStatus *activeStatus)
         {
             JsonObject step = steps[nextMashStep];
             activeStatus->ActiveMashStepIndex = nextMashStep;
-            activeStatus->ActiveMashStepName = getMashName(step) + " [request]";
+            activeStatus->ActiveMashStepName = getMashName(step) + " [req]";
             Serial.println(getMashName(step));
             activeStatus->StartTime = 0;
             activeStatus->EndTime = 0;
@@ -126,6 +126,6 @@ void MashService::loop(ActiveStatus *activeStatus)
 String MashService::getMashName(JsonObject step)
 {
     return step["n"].as<String>() + " " +
-           step["tm"].as<String>() + "mins at " +
+           step["tm"].as<String>() + "' @ " +
            step["t"].as<String>() + "ºC";
 }
