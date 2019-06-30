@@ -25,6 +25,7 @@
 #include <PID_v1.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <LiquidCrystal_I2C.h>
 
 #include <BrewUNO/MashSettingsService.h>
 #include <BrewUNO/BoilSettingsService.h>
@@ -37,12 +38,15 @@
 #include <BrewUNO/ActiveStatus.h>
 #include <BrewUNO/Buzzer.h>
 #include <BrewUNO/Pump.h>
+#include <BrewUNO/DisplayService.h>
 
 #define SERIAL_BAUD_RATE 115200
 
 OneWire oneWire(TEMPERATURE_BUS);
 DallasTemperature DS18B20(&oneWire);
 int deviceCount = 0;
+
+LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 AsyncWebServer server(80);
 
@@ -68,6 +72,7 @@ MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
 
 Pump pump = Pump(&server, &activeStatus, &brewSettingsService);
+DisplayService display = DisplayService(&activeStatus, &lcd);
 KettleHeaterService kettleHeaterService = KettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
 MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService);
@@ -149,6 +154,7 @@ void setup()
   temperatureService.DeviceCount = deviceCount;
   brewSettingsService.begin();
   brewService.begin();
+  display.begin();
 }
 
 void loop()
@@ -158,4 +164,5 @@ void loop()
   ntpSettingsService.loop();
   otaSettingsService.loop();
   brewService.loop();
+  display.loop();
 }
