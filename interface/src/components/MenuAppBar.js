@@ -26,6 +26,7 @@ import Assignment from '@material-ui/icons/Assignment'
 import ContactSupport from '@material-ui/icons/ContactSupport'
 
 const drawerWidth = 250;
+const drawerWidthPermanent = 60
 
 const styles = theme => ({
   root: {
@@ -52,12 +53,13 @@ const styles = theme => ({
     position: 'absolute',
     marginLeft: drawerWidth,
     [theme.breakpoints.up('md')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
+      width: `calc(100% - 80px)`,
     },
   },
   navIconHide: {
+    marginRight: 20,
     [theme.breakpoints.up('md')]: {
-      display: 'none',
+      display: 'block',
     },
   },
   drawerPaper: {
@@ -71,12 +73,23 @@ const styles = theme => ({
       overflow: 'auto'
     },
   },
+  drawerWidthPermanent: {
+    width: drawerWidthPermanent,
+    height: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: drawerWidthPermanent,
+      position: 'fixed',
+      left: 0,
+      top: 0,
+      overflow: 'auto'
+    },
+  },
   content: {
     backgroundColor: theme.palette.background.default,
     width: "100%",
     marginTop: 56,
     [theme.breakpoints.up('md')]: {
-      paddingLeft: drawerWidth
+      paddingLeft: drawerWidthPermanent
     },
     [theme.breakpoints.up('sm')]: {
       height: 'calc(100% - 64px)',
@@ -99,55 +112,63 @@ class MenuAppBar extends React.Component {
 
     const drawer = (
       <div>
-        <Toolbar >
-          <Typography variant="title" color="secondary">
-            <img src="/app/logo.png" alt="Logo"/>
-          </Typography>
-          <Divider absolute />
-        </Toolbar>
         <Divider />
         <List>
           <ListItem button component={Link} to='/brew'>
             <ListItemIcon>
               <LocalDrink />
             </ListItemIcon>
-            <ListItemText primary="Brew" />
+            {this.state.mobileOpen ?
+              <ListItemText primary="Brew" />
+              : null}
           </ListItem>
           <ListItem button component={Link} to='/brew-configuration'>
             <ListItemIcon>
               <Assignment />
             </ListItemIcon>
-            <ListItemText primary="Brew Settings" />
+            {this.state.mobileOpen ?
+              <ListItemText primary="Brew Settings" />
+              : null}
           </ListItem>
           <ListItem button component={Link} to='/wifi-configuration'>
             <ListItemIcon>
               <WifiIcon />
             </ListItemIcon>
-            <ListItemText primary="WiFi Settings" />
+            {this.state.mobileOpen ?
+              <ListItemText primary="WiFi Settings" />
+              : null}
           </ListItem>
           <ListItem button component={Link} to='/ap-configuration'>
             <ListItemIcon>
               <SettingsInputAntennaIcon />
             </ListItemIcon>
-            <ListItemText primary="AP Mode" />
+            {this.state.mobileOpen ?
+              <ListItemText primary="AP Mode" />
+              : null}
           </ListItem>
           <ListItem button component={Link} to='/ntp-configuration'>
             <ListItemIcon>
               <AccessTimeIcon />
             </ListItemIcon>
-            <ListItemText primary="NTP Settings" />
+            {this.state.mobileOpen ?
+              <ListItemText primary="NTP Settings" />
+              : null}
           </ListItem>
           <ListItem button component={Link} to='/ota-configuration'>
             <ListItemIcon>
               <SystemUpdateIcon />
             </ListItemIcon>
-            <ListItemText primary="OTA Settings" />
+            {this.state.mobileOpen ?
+              <ListItemText primary="OTA Settings" />
+              : null}
           </ListItem>
           <ListItem button component={Link} to='/about'>
             <ListItemIcon>
               <ContactSupport />
             </ListItemIcon>
-            <ListItemText primary="About" />
+            {this.state.mobileOpen ?
+              <ListItemText primary="About" />
+              : null}
           </ListItem>
         </List>
       </div>
@@ -166,12 +187,10 @@ class MenuAppBar extends React.Component {
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant="title" color="inherit" noWrap>
-                {sectionTitle}
-              </Typography>
+              <img src="/app/logo.png" alt="Logo" />
             </Toolbar>
           </AppBar>
-          <Hidden mdUp>
+          <Hidden>
             <Drawer
               variant="temporary"
               anchor={theme.direction === 'rtl' ? 'right' : 'left'}
@@ -192,7 +211,7 @@ class MenuAppBar extends React.Component {
               variant="permanent"
               open
               classes={{
-                paper: classes.drawerPaper,
+                paper: classes.drawerWidthPermanent,
               }}
             >
               {drawer}

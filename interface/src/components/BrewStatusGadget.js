@@ -132,6 +132,18 @@ class BrewStatusGadget extends Component {
           <Grid container justify="center" spacing={16}>
             <Grid item>
               <Card className={this.props.className}>
+                <CardContent>
+                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Active Step - {this.props.ActiveStep}</Typography>
+                  <Typography variant="h5">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container justify="center" spacing={16}>
+            <Grid item>
+              <Card className={this.props.className}>
                 <CardContent align="center">
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Pump</Typography>
                   {this.props.PumpOn !== undefined && this.props.PumpOn === 1 ?
@@ -143,14 +155,6 @@ class BrewStatusGadget extends Component {
                       <PauseCircleFilled style={{ fontSize: 28 }} align="center" color="disabled" /> :
                       <Cancel style={{ fontSize: 28 }} align="center" color="disabled" />
                   }
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item>
-              <Card className={this.props.className}>
-                <CardContent>
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Active Step - {this.props.ActiveStep}</Typography>
-                  <Typography variant="h5">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
                 </CardContent>
               </Card>
             </Grid>
