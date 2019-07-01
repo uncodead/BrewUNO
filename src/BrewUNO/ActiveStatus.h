@@ -36,6 +36,7 @@ public:
   
   int BoilTime;
   int PWM;
+  int SpargePWM;
   boolean PIDActing;
 
   double BoilTargetTemperature;

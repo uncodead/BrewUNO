@@ -30,6 +30,7 @@ boolean ActiveStatus::LoadActiveStatusSettings()
                 TimeNow = _activeStatus["time_now"];
                 BrewStarted = _activeStatus["brew_started"];
                 PWM = _activeStatus["pwm"];
+                SpargePWM = _activeStatus["sparge_pwm"];
                 Recirculation = _activeStatus["recirculation"];
                 HeaterOff = _activeStatus["heater_off"];
                 StepLock = _activeStatus["step_lock"];
@@ -64,6 +65,7 @@ String ActiveStatus::GetJson()
                     "\"main_sensor\": \"" + MainSensor + "\"," +
                     "\"sparge_sensor\": \"" + SpargeSensor + "\"," +
                     "\"pwm\":" + String(PWM) + ',' +
+                    "\"sparge_pwm\":" + String(SpargePWM) + ',' +
                     "\"recirculation\":" + String(Recirculation) + "," +
                     "\"heater_off\":" + String(HeaterOff) + "," +
                     "\"step_lock\":" + String(StepLock) + "," +
@@ -102,6 +104,7 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     BrewStarted = brewStarted;
     Temperature = 0;
     PWM = 0;
+    SpargePWM = 0;
     Recirculation = false;
     HeaterOff = false;
     StepLock = false;
@@ -141,6 +144,7 @@ void ActiveStatus::SaveActiveStatus()
     _activeStatus["brew_started"] = BrewStarted;
     _activeStatus["temperature"] = Temperature;
     _activeStatus["pwm"] = PWM;
+    _activeStatus["sparge_pwm"] = SpargePWM;
     _activeStatus["recirculation"] = Recirculation;
     _activeStatus["heater_off"] = HeaterOff;
     _activeStatus["step_lock"] = StepLock;

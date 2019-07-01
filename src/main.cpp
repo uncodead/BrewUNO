@@ -34,7 +34,9 @@
 #include <BrewUNO/MashService.h>
 #include <BrewUNO/BoilService.h>
 #include <BrewUNO/TemperatureService.h>
-#include <BrewUNO/KettleHeaterService.h>
+#include <BrewUNO/HeaterService.h>
+#include <BrewUNO/MashKettleHeaterService.h>
+#include <BrewUNO/SpargeKettleHeaterService.h>
 #include <BrewUNO/ActiveStatus.h>
 #include <BrewUNO/Buzzer.h>
 #include <BrewUNO/Pump.h>
@@ -71,12 +73,19 @@ BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS, 
 MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
 
+double _mashKettleSetpoint, _mashKettleInput, _mashKettleOutput;
+PID _mashKettlePID = PID(&_mashKettleInput, &_mashKettleOutput, &_mashKettleSetpoint, 1, 1, 1, P_ON_M, DIRECT);
+
+double _spargeKettleSetpoint, _spargeKettleInput, _spargeKettleOutput;
+PID _spargeKettlePID = PID(&_spargeKettleInput, &_spargeKettleOutput, &_spargeKettleSetpoint, 1, 1, 1, P_ON_M, DIRECT);
+
 Pump pump = Pump(&server, &activeStatus, &brewSettingsService);
 DisplayService display = DisplayService(&activeStatus, &lcd);
-KettleHeaterService kettleHeaterService = KettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
+MashKettleHeaterService mashKettleHeaterService = MashKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService, &_mashKettlePID, HEATER_BUS);
+SpargeKettleHeaterService spargeKettleHeaterService = SpargeKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService, &_spargeKettlePID, SPARGE_HEATER_BUS);
 MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService);
-BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &kettleHeaterService, &activeStatus, &temperatureService, &pump);
+BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &activeStatus, &temperatureService, &pump);
 
 void setup()
 {
