@@ -6,5 +6,5 @@ SpargeKettleHeaterService::SpargeKettleHeaterService(TemperatureService *tempera
 
 boolean SpargeKettleHeaterService::StopCompute()
 {
-  return !_activeStatus->BrewStarted || _activeStatus->ActiveStep != mash;
+  return !_activeStatus->BrewStarted || _activeStatus->ActiveStep != mash || _activeStatus->PWM > 100;
 }
