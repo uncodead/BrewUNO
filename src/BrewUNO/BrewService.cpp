@@ -50,6 +50,7 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _activeStatus->BoilPowerPercentage = _brewSettingsService->BoilPowerPercentage;
     _activeStatus->SaveActiveStatus();
     _mashKettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
+    _spargeKettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
@@ -67,6 +68,7 @@ void BrewService::stopBrew(AsyncWebServerRequest *request)
     _activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
     _pump->TurnPumpOff();
     _mashKettleHeaterService->Compute(_activeStatus->Temperature, _activeStatus->TargetTemperature, _brewSettingsService->MashHeaterPercentage);
+    _spargeKettleHeaterService->Compute(_activeStatus->SpargeTemperature, 76, 100);
     //STOP other heater
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
@@ -92,6 +94,7 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
     _activeStatus->BrewStarted = true;
     _activeStatus->SaveActiveStatus();
     _mashKettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
+    _spargeKettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
     if (_activeStatus->Recirculation || _activeStatus->StartTime <= 0)

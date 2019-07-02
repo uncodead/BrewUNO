@@ -123,17 +123,11 @@ void setup()
   // OPTIONS get a straight up 200 response
   server.onNotFound([](AsyncWebServerRequest *request) {
     if (request->method() == HTTP_GET)
-    {
       request->send(SPIFFS, "/www/index.html");
-    }
     else if (request->method() == HTTP_OPTIONS)
-    {
       request->send(200);
-    }
     else
-    {
       request->send(404);
-    }
   });
 
 // Disable CORS if required
@@ -150,7 +144,8 @@ void setup()
   pinMode(BUZZER_BUS, OUTPUT);
   digitalWrite(BUZZER_BUS, LOW);
   pinMode(HEATER_BUS, OUTPUT);
-  //pinMode(TEMPERATURE_BUS, OUTPUT);
+  pinMode(SPARGE_HEATER_BUS, OUTPUT);
+  
   pump.TurnPumpOff();
   DS18B20.begin();
   // locate devices on the bus

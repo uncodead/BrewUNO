@@ -125,7 +125,8 @@ class BrewStatusGadget extends Component {
               <BrewStatusGadgetItem className={classes.temperatureCard} title={getTemperatureText(value)} colors={getColor(value)} value={getTemperatureValue(value, this.props) + 'ºC'} data={getTemperatureData(value, this.props)} />
             ))}
             <BrewStatusGadgetItem className={classes.temperatureCard} title="PWM" colors={PWMCOLORS} value={this.props.PWM} data={getPWMData(this.props)} />
-            <BrewStatusGadgetItem className={classes.temperatureCard} title="Progress" colors={PROGRESSCOLORS} value={this.state.progressCompleted + '%'} data={getProgressData(this.state.progressCompleted)} />
+            <BrewStatusGadgetItem className={classes.temperatureCard} title="PWM Sparge" colors={PWMCOLORS} value={this.props.SpargePWM} data={getPWMData(this.props)} />
+            { /*<BrewStatusGadgetItem className={classes.temperatureCard} title="Progress" colors={PROGRESSCOLORS} value={this.state.progressCompleted + '%'} data={getProgressData(this.state.progressCompleted)} /> */}
           </Grid>
         </Grid>
         <Grid item xs={12}>
