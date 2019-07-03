@@ -68,7 +68,7 @@ void BrewService::stopBrew(AsyncWebServerRequest *request)
     _activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
     _pump->TurnPumpOff();
     _mashKettleHeaterService->Compute(_activeStatus->Temperature, _activeStatus->TargetTemperature, _brewSettingsService->MashHeaterPercentage);
-    _spargeKettleHeaterService->Compute(_activeStatus->SpargeTemperature, 76, 100);
+    _spargeKettleHeaterService->Compute(_activeStatus->SpargeTemperature, _brewSettingsService->SpargeTemperature, _brewSettingsService->SpargePowerPercentage);
     //STOP other heater
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
@@ -195,11 +195,9 @@ void BrewService::loop()
 
 void BrewService::HeaterCompute()
 {
-    HeaterServiceStatus mashStatus;
-    HeaterServiceStatus spargeStatus;
-    mashStatus = _mashKettleHeaterService->Compute(_activeStatus->Temperature, _activeStatus->TargetTemperature, _brewSettingsService->MashHeaterPercentage);
-    spargeStatus = _spargeKettleHeaterService->Compute(_activeStatus->SpargeTemperature, 76, 100); // _brewSettingsService->SpargeTemperature, _brewSettingsService->SpargeHeaterPercentage);
-    _activeStatus->SpargePWM = spargeStatus.PWM;
+    HeaterServiceStatus mashStatus = _mashKettleHeaterService->Compute(_activeStatus->Temperature, _activeStatus->TargetTemperature, _brewSettingsService->MashHeaterPercentage);
+    HeaterServiceStatus spargeStatus = _spargeKettleHeaterService->Compute(_activeStatus->SpargeTemperature, _brewSettingsService->SpargeTemperature, _brewSettingsService->SpargePowerPercentage);
     _activeStatus->PWM = mashStatus.PWM;
+    _activeStatus->SpargePWM = spargeStatus.PWM;
     _activeStatus->PIDActing = mashStatus.PIDActing;
 }

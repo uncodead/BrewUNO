@@ -28,6 +28,14 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import BrewStatusGadget from '../components/BrewStatusGadget'
+import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
+import PlayCircleFilledWhite from '@material-ui/icons/PlayCircleFilledWhite';
+import Cancel from '@material-ui/icons/Cancel';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
@@ -58,6 +66,12 @@ const styles = theme => ({
   chartCard: {
     background: "#262626",
   },
+  pumpColor1: {
+    color: "#447bd6",
+  },
+  pumpColor2: {
+    color: "#5c94f2",
+  },
 });
 
 
@@ -74,7 +88,7 @@ class Brew extends Component {
       boilPower: 0,
       activeStepName: "",
       statusInitialized: false,
-      copyDialogMessage : false
+      copyDialogMessage: false
     }
     interval = setInterval(() => {
       this.getStatus();
@@ -249,11 +263,28 @@ class Brew extends Component {
             onClick={() => { this.actionBrew('Do you want start boil?', START_BOIL) }}>Boil</Button> : null}
         <Button variant="contained" color="secondary" className={classes.button}
           onClick={() => { this.actionBrew('', this.state.status.pump_on ? STOP_PUMP : START_PUMP) }}>
-          Pump</Button>
-        <Button variant="contained" color="secondary" className={classes.button}
-          onClick={() => { this.reportLog() }}>
-          Report log</Button>
-
+          {this.state.status.pump_on ?
+            <PlayCircleFilledWhite color="disabled" />
+            :
+            this.state.status.pump_is_resting ?
+              <PauseCircleFilled size="small" color="disabled" /> :
+              <Cancel size="small" color="disabled" />
+          }
+          PUMP
+        </Button>
+        <PopupState>
+          {popupState => (
+            <React.Fragment>
+              <IconButton variant="contained" {...bindTrigger(popupState)}>
+                <ArrowDropDown />
+              </IconButton>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem onClick={popupState.close}>Pump Prime</MenuItem>
+                <MenuItem onClick={() => { this.reportLog() }}>Report Log</MenuItem>
+              </Menu>
+            </React.Fragment>
+          )}
+        </PopupState>
         <Divider />
         <Card className={classes.gadgetCard}>
           <CardContent>
@@ -263,6 +294,7 @@ class Brew extends Component {
               TargetTemperature={this.state.status.target_temperature}
               BoilTemperature={this.state.status.boil_target_temperature}
               PWM={this.state.status.pwm}
+              SpargePWM={this.state.status.sparge_pwm}
               ActiveStep={this.getActiveStep()}
               BoilTime={this.state.status.boil_time}
               StartTime={this.state.status.start_time > 0 ? this.state.status.start_time : null}
@@ -271,6 +303,9 @@ class Brew extends Component {
               ActiveStepName={this.state.activeStepName}
               StepLocked={this.state.status.step_locked > 0}
               PumpIsResting={this.state.status.pump_is_resting > 0}
+              SpargeTemperature={this.state.status.sparge_temperature}
+              SpargeTargetTemperature={this.state.status.sparge_target_temperature}
+              EnableSparge={this.state.status.enable_sparge}
             />
           </CardContent>
         </Card>

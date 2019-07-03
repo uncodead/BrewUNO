@@ -47,6 +47,9 @@ public:
   double SpargeTemperature;
   String Temperatures;
 
+  bool EnableSparge;
+  double SpargeTargetTemperature;
+
   String MainSensor;
   String SpargeSensor;
 

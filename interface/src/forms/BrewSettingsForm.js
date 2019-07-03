@@ -130,6 +130,18 @@ class BrewSettingsForm extends Component {
                 />
 
                 <TextValidator className={classes.formControl}
+                  name="spargeTemperature"
+                  validators={['required']}
+                  label="Sparge Temperature"
+                  type="number"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
+                  value={brewSettings.spargeTemperature}
+                  onChange={handleValueChange("spargeTemperature")}
+                  errorMessages={['this field is required']}
+                />
+
+                <TextValidator className={classes.formControl}
                   name="pumpRestInterval"
                   validators={['required']}
                   label="Pump Rest Interval"

@@ -66,6 +66,8 @@ String ActiveStatus::GetJson()
                     "\"sparge_sensor\": \"" + SpargeSensor + "\"," +
                     "\"pwm\":" + String(PWM) + ',' +
                     "\"sparge_pwm\":" + String(SpargePWM) + ',' +
+                    "\"enable_sparge\":" + String(EnableSparge) + ',' +
+                    "\"sparge_target_temperature\":" + String(SpargeTargetTemperature) + ',' +
                     "\"recirculation\":" + String(Recirculation) + "," +
                     "\"heater_off\":" + String(HeaterOff) + "," +
                     "\"step_lock\":" + String(StepLock) + "," +

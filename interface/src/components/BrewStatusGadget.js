@@ -5,22 +5,14 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { PieChart, Pie, Cell, } from 'recharts';
 import { withStyles } from '@material-ui/core/styles';
-import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
-import Chronometer from './Chronometer'
 import { getDateTime, pad } from '../components/Utils';
-import PlayCircleFilledWhite from '@material-ui/icons/PlayCircleFilledWhite';
-import Cancel from '@material-ui/icons/Cancel';
+import Chronometer from './Chronometer'
+
 
 const styles = theme => ({
   temperatureCard: {
     background: "#31313152",
   },
-  pumpColor1: {
-    color: "#447bd6",
-  },
-  pumpColor2: {
-    color: "#5c94f2",
-  }
 });
 
 class BrewStatusGadget extends Component {
@@ -74,59 +66,37 @@ class BrewStatusGadget extends Component {
   }
 
   render() {
-    const PWMCOLORS = ['#1b5e20', '#424242'];
+    const PWMCOLORS = ['#f9a825', '#424242'];
+    const SPARGEPWMCOLORS = ['#119636', '#424242'];
     const PROGRESSCOLORS = ['#1565c0', '#424242'];
-    const { classes } = this.props;
+    const TEMPERATURECOLORS = ['#c62828', '#424242'];
+    const { classes } = this.props
 
-    const getTemperatureData = (index, props) => {
-      return [{ name: 'A', value: getTemperatureValue(index, props) }, { name: 'B', value: 100 - getTemperatureValue(index, props) }]
-    }
-
-    const getColor = (index) => {
-      switch (index) {
-        case 0:
-          return ['#c62828', '#424242'];
-        case 1:
-          return ['#f9a825', '#424242'];
-      }
-    }
-
-    const getTemperatureValue = (index, props) => {
-      switch (index) {
-        case 0:
-          return props.Temperature != undefined ? props.Temperature : 0
-        case 1:
-          return props.TargetTemperature != undefined ? props.TargetTemperature : 0
-      }
-    }
-
-    const getTemperatureText = (index) => {
-      switch (index) {
-        case 0:
-          return 'Temperature'
-        case 1:
-          return 'Target ºC'
-      }
-    }
-
-    const getPWMData = (props) => {
-      return [{ name: 'A', value: props.PWM }, { name: 'B', value: 1023 - props.PWM }]
+    const getPWMData = (pwm) => {
+      return [{ name: 'A', value: pwm }, { name: 'B', value: 1023 - pwm }]
     }
 
     const getProgressData = (progress) => {
       return [{ name: 'A', value: progress }, { name: 'B', value: 100 - progress }]
     }
 
+    const getPWMPercentage = (pwm) => {
+      return parseFloat(pwm * 100 / 1023).toFixed(1)
+    }
+
     return (
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={16}>
-            {[0, 1].map(value => (
-              <BrewStatusGadgetItem className={classes.temperatureCard} title={getTemperatureText(value)} colors={getColor(value)} value={getTemperatureValue(value, this.props) + 'ºC'} data={getTemperatureData(value, this.props)} />
-            ))}
-            <BrewStatusGadgetItem className={classes.temperatureCard} title="PWM" colors={PWMCOLORS} value={this.props.PWM} data={getPWMData(this.props)} />
-            <BrewStatusGadgetItem className={classes.temperatureCard} title="PWM Sparge" colors={PWMCOLORS} value={this.props.SpargePWM} data={getPWMData(this.props)} />
-            { /*<BrewStatusGadgetItem className={classes.temperatureCard} title="Progress" colors={PROGRESSCOLORS} value={this.state.progressCompleted + '%'} data={getProgressData(this.state.progressCompleted)} /> */}
+            <BrewStatusGadgetItem className={classes.temperatureCard} title={"Mash [" + this.props.TargetTemperature + 'ºC]'} colors={TEMPERATURECOLORS} value={this.props.Temperature + 'ºC'} data={getProgressData(this.props.Temperature)} />
+            <BrewStatusGadgetItem className={classes.temperatureCard} title="PWM" colors={PWMCOLORS} value={getPWMPercentage(this.props.PWM) + '%'} data={getPWMData(this.props.PWM)} />
+            {this.props.EnableSparge ?
+              <BrewStatusGadgetItem className={classes.temperatureCard} title={"Sparge [" + this.props.SpargeTargetTemperature + 'ºC]'} colors={TEMPERATURECOLORS} value={this.props.SpargeTemperature + 'ºC'} data={getProgressData(this.props.SpargeTemperature)} />
+            : null}
+            {this.props.EnableSparge ?
+              <BrewStatusGadgetItem className={classes.temperatureCard} title="Sparge PWM" colors={PWMCOLORS} value={getPWMPercentage(this.props.SpargePWM) + '%'} data={getPWMData(this.props.SpargePWM)} />
+            : null}
+            <BrewStatusGadgetItem className={classes.temperatureCard} title="Progress" colors={PROGRESSCOLORS} value={this.state.progressCompleted + '%'} data={getProgressData(this.state.progressCompleted)} />
           </Grid>
         </Grid>
         <Grid item xs={12}>
@@ -136,26 +106,6 @@ class BrewStatusGadget extends Component {
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Active Step - {this.props.ActiveStep}</Typography>
                   <Typography variant="h5">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container justify="center" spacing={16}>
-            <Grid item>
-              <Card className={this.props.className}>
-                <CardContent align="center">
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Pump</Typography>
-                  {this.props.PumpOn !== undefined && this.props.PumpOn === 1 ?
-                    new Date().getSeconds() % 2 == 0 ?
-                      <PlayCircleFilledWhite className={classes.pumpColor1} color="primary" style={{ fontSize: 28 }} align="center" /> :
-                      <PlayCircleFilledWhite className={classes.pumpColor2} color="secondary" style={{ fontSize: 28 }} align="center" />
-                    :
-                    this.props.PumpIsResting ?
-                      <PauseCircleFilled style={{ fontSize: 28 }} align="center" color="disabled" /> :
-                      <Cancel style={{ fontSize: 28 }} align="center" color="disabled" />
-                  }
                 </CardContent>
               </Card>
             </Grid>
@@ -200,27 +150,10 @@ class BrewStatusGadgetItem extends Component {
                 paddingAngle={3}
                 stroke={0}
               >
-
-                {/*
-              <Pie data={this.props.data}
-                cx={45} cy={40}
-                startAngle={180} endAngle={0} 
-                innerRadius={30} outerRadius={40} 
-                paddingAngle={3} legendType='line'>
-                {this.props.data.map((entry, index) => <Cell fill={this.props.colors[index % this.props.colors.length]} />)}
-              </Pie>
-              */}
-
                 {this.props.data.map((entry, index) => <Cell fill={this.props.colors[index % this.props.colors.length]} />)}
               </Pie>
             </PieChart>
-            <Typography top="20" align="center" variant="h5">{this.props.value}</Typography>
-            {/*
-            <LinearProgress
-              variant="determinate"
-              color="secondary"
-              value={50}
-            />*/}
+            <Typography top="20" align="center" variant="h5" >{this.props.value}</Typography>
           </CardContent>
         </Card>
       </Grid>
