@@ -12,19 +12,7 @@ byte termometer[] = //icon for termometer
   B11111,
   B01110,
 };
- /* 
-byte gota[] = //icon for water droplet
-{
-    B00100,
-    B00100,
-    B01010,
-    B01010,
-    B10001,
-    B10001,
-    B10001,
-    B01110,
-};
-*/
+
 byte gwifist[] = //Wifi Station
 {
   B00000,
@@ -109,6 +97,19 @@ byte ppwm[] = //graphic pwm flame
   B00100,
 };
 
+/* 
+byte gota[] = //icon gota
+{
+    B00100,
+    B00100,
+    B01010,
+    B01010,
+    B10001,
+    B10001,
+    B10001,
+    B01110,
+};
+
 byte gwifiap[] = //Wifi AP
 {
   B10001,
@@ -120,6 +121,7 @@ byte gwifiap[] = //Wifi AP
   B00100,
   B00100,
 };
+*/
 
 DisplayService::DisplayService(ActiveStatus *activeStatus, LiquidCrystal_I2C *lcd) : _activeStatus(activeStatus), _lcd(lcd)
 {
@@ -139,12 +141,15 @@ void DisplayService::begin()
   _lcd->createChar(6,gcelsius);
   _lcd->createChar(7,gpwm);
   _lcd->createChar(8,ppwm);
+  //_lcd->createChar(9,gota);
   //_lcd->createChar(9,gwifiap);
 }
 
 time_t lastUpdate = now();
+
 void DisplayService::loop()
 {
+
   if (now() - lastUpdate > 1)
   {
     lastUpdate = now();
@@ -159,7 +164,6 @@ void DisplayService::loop()
 
     //PRIMARY HEATER
     _lcd->setCursor(0, 1);
-    //_lcd->print("H ");
     _lcd->write(1);
     _lcd->write(4);
     _lcd->setCursor(2, 1);
@@ -175,14 +179,12 @@ void DisplayService::loop()
     _lcd->setCursor(13, 1);
     _lcd->print(_activeStatus->TargetTemperature);
     _lcd->setCursor(18, 1);
-    //_lcd->print("c");
     _lcd->write(6);
 
     //SPARGE/SECONDARY HEATER
     _lcd->setCursor(0, 2);
     _lcd->write(1);
     _lcd->write(5);
-    //_lcd->print("S ");
     _lcd->setCursor(2, 2);
     _lcd->print(_activeStatus->SpargeTemperature);
     _lcd->setCursor(7, 2);
@@ -197,11 +199,33 @@ void DisplayService::loop()
     _lcd->setCursor(13, 2);
     _lcd->print(_activeStatus->PWM);
     _lcd->setCursor(0, 3);
-    _lcd->print("Step ");
-    _lcd->setCursor(5, 3);
-    _lcd->print(_activeStatus->ActiveMashStepIndex);
-    //_lcd->print(_activeStatus->ActiveMashStepName);
-    //_lcd->print("Cerveja Sem Imposto$");
+    _lcd->print(_activeStatus->ActiveMashStepName);
+
+  if (_activeStatus->PumpOn == 0) {
+    _lcd->setCursor(8, 2);
+    //_lcd->write(9);
+    _lcd->print(" | ");
+   }  else {
+    _lcd->setCursor(8, 2);
+    //_lcd->write(9);
+    _lcd->print(" p ");
+   }
+   
+  if (!_activeStatus->BrewStarted) {
+
+    //SP CLEAR
+    _lcd->setCursor(13, 1);
+    _lcd->print("00.00");
+
+    //PWM CLEAR
+    _lcd->setCursor(13, 2);
+    _lcd->print("00% ");
+
+    //LASTLINE CLEAR
+    _lcd->setCursor(0, 3);
+    _lcd->print("Cerveja Sem Imposto$"); 
+    }
+
     _lcd->setCursor(0, 1);
   }
 }

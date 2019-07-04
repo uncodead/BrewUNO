@@ -17,22 +17,15 @@ struct HeaterServiceStatus
 class HeaterService
 {
 public:
-  HeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus, BrewSettingsService *brewSettingsService, PID *kettlePID, int heaterBus) : _temperatureService(temperatureService),
-                                                                                                                                                               _activeStatus(activeStatus),
-                                                                                                                                                               _brewSettingsService(brewSettingsService),
-                                                                                                                                                               _kettlePID(kettlePID)
+  HeaterService(TemperatureService *temperatureService,
+                ActiveStatus *activeStatus,
+                BrewSettingsService *brewSettingsService,
+                int heaterBus) : _temperatureService(temperatureService),
+                                 _activeStatus(activeStatus),
+                                 _brewSettingsService(brewSettingsService)
 
   {
     _heaterBus = heaterBus;
-  }
-
-  void StartPID(double kp, double ki, double kd)
-  {
-    _kettlePID->SetOutputLimits(0.0, 1.0);  // Forces minimum up to 0.0
-    _kettlePID->SetOutputLimits(-1.0, 0.0); // Forces maximum down to 0.0
-    _kettlePID->SetTunings(kp, ki, kd, P_ON_M);
-    _kettlePID->SetOutputLimits(0, 1023);
-    _kettlePID->SetMode(AUTOMATIC);
   }
 
   HeaterServiceStatus Compute(double input, double target, double heaterPercentage)
@@ -46,8 +39,7 @@ public:
       return status;
     }
 
-    _kettleInput = input;
-    _kettleSetpoint = target;
+    SetPidParameters(input, target);
 
     if (_activeStatus->PIDSettingsUpdated)
     {
@@ -65,7 +57,7 @@ public:
       return status;
     }
 
-    if (_kettleSetpoint - _kettleInput > _brewSettingsService->PIDStart)
+    if (GetPidSetPoint() - GetPidInput() > _brewSettingsService->PIDStart)
     {
       status.PIDActing = false;
       status.PWM = ((1023 * heaterPercentage) / 100);
@@ -74,7 +66,7 @@ public:
     }
 
     // to prevent pid overshoot
-    if (_kettleInput > _kettleSetpoint + 0.1)
+    if (GetPidInput() > GetPidSetPoint() + 0.1)
     {
       status.PWM = 0;
       status.PIDActing = false;
@@ -83,10 +75,10 @@ public:
       return status;
     }
 
-    _kettlePID->Compute();
+    PidCompute();
 
     int maxPWM = ((1023 * heaterPercentage) / 100);
-    status.PWM = _kettleOutput > maxPWM ? maxPWM : _kettleOutput;
+    status.PWM = GetPidOutput() > maxPWM ? maxPWM : GetPidOutput();
 
     analogWrite(_heaterBus, status.PWM);
 
@@ -95,12 +87,18 @@ public:
   }
 
 protected:
-  virtual bool StopCompute();
+  virtual boolean StopCompute();
+  virtual void StartPID(double kp, double ki, double kd);
+  virtual void PidCompute();
+  virtual double GetPidOutput();
+  virtual double GetPidInput();
+  virtual double GetPidSetPoint();
+  virtual void SetPidParameters(double input, double setpoint);
+
   TemperatureService *_temperatureService;
   ActiveStatus *_activeStatus;
   BrewSettingsService *_brewSettingsService;
   PID *_kettlePID;
   int _heaterBus;
-  double _kettleSetpoint, _kettleInput, _kettleOutput;
 };
 #endif
