@@ -45,6 +45,17 @@ class BrewSettingsForm extends Component {
             </div>
             : brewSettings ?
               <ValidatorForm onSubmit={onSubmit} ref="BrewSettingsForm" className={classes.root}>
+                <TextValidator
+                  name="boilTime"
+                  validators={['required']}
+                  label="Boil time"
+                  type="number"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">min</InputAdornment> }}
+                  value={brewSettings.boilTime}
+                  onChange={handleValueChange("boilTime")}
+                  errorMessages={['this field is required']}
+                />
                 <TextValidator className={classes.formControl}
                   name="boilTemperature"
                   validators={['required']}
@@ -56,7 +67,6 @@ class BrewSettingsForm extends Component {
                   onChange={handleValueChange("boilTemperature")}
                   errorMessages={['this field is required']}
                 />
-
                 <TextValidator className={classes.formControl}
                   name="boilPowerPercentage"
                   validators={['required']}

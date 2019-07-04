@@ -42,6 +42,9 @@ const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
   },
+  button_pump: {
+    marginRight: theme.spacing.unit,
+  },
   input: {
     display: 'none',
   },
@@ -186,7 +189,7 @@ class Brew extends Component {
     });
   };
 
-  reportLog = () => {
+  reportLog = (callback) => {
     this.setState({
       confirmDialogOpen: true,
       copyDialogMessage: true,
@@ -196,6 +199,7 @@ class Brew extends Component {
         document.execCommand('copy');
       }
     });
+    callback()
   }
 
   actionBrew = (message, url, callback) => {
@@ -264,11 +268,11 @@ class Brew extends Component {
         <Button variant="contained" color="secondary" className={classes.button}
           onClick={() => { this.actionBrew('', this.state.status.pump_on ? STOP_PUMP : START_PUMP) }}>
           {this.state.status.pump_on ?
-            <PlayCircleFilledWhite color="disabled" />
+            <PlayCircleFilledWhite color="disabled" className={classes.button_pump} />
             :
             this.state.status.pump_is_resting ?
-              <PauseCircleFilled size="small" color="disabled" /> :
-              <Cancel size="small" color="disabled" />
+              <PauseCircleFilled size="small" color="disabled" className={classes.button_pump} /> :
+              <Cancel size="small" color="disabled" className={classes.button_pump} />
           }
           PUMP
         </Button>
@@ -279,8 +283,9 @@ class Brew extends Component {
                 <ArrowDropDown />
               </IconButton>
               <Menu {...bindMenu(popupState)}>
+                <MenuItem key="placeholder" style={{ display: "none" }} />
                 <MenuItem onClick={popupState.close}>Pump Prime</MenuItem>
-                <MenuItem onClick={() => { this.reportLog() }}>Report Log</MenuItem>
+                <MenuItem onClick={() => { this.reportLog(popupState.close) }}>Report Log</MenuItem>
               </Menu>
             </React.Fragment>
           )}

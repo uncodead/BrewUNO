@@ -88,14 +88,14 @@ class BrewStatusGadget extends Component {
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={16}>
-            <BrewStatusGadgetItem className={classes.temperatureCard} title={"Mash [" + this.props.TargetTemperature + 'ºC]'} colors={TEMPERATURECOLORS} value={this.props.Temperature + 'ºC'} data={getProgressData(this.props.Temperature)} />
-            <BrewStatusGadgetItem className={classes.temperatureCard} title="PWM" colors={PWMCOLORS} value={getPWMPercentage(this.props.PWM) + '%'} data={getPWMData(this.props.PWM)} />
+            <BrewStatusGadgetItem className={classes.temperatureCard} title={"Main:"} titlesufix={this.props.TargetTemperature + 'ºC'} colors={TEMPERATURECOLORS} value={this.props.Temperature + 'ºC'} data={getProgressData(this.props.Temperature)} />
+            <BrewStatusGadgetItem className={classes.temperatureCard} title="Main PWM" colors={PWMCOLORS} value={getPWMPercentage(this.props.PWM) + '%'} data={getPWMData(this.props.PWM)} />
             {this.props.EnableSparge ?
-              <BrewStatusGadgetItem className={classes.temperatureCard} title={"Sparge [" + this.props.SpargeTargetTemperature + 'ºC]'} colors={TEMPERATURECOLORS} value={this.props.SpargeTemperature + 'ºC'} data={getProgressData(this.props.SpargeTemperature)} />
-            : null}
+              <BrewStatusGadgetItem className={classes.temperatureCard} title={"Sparge:"} titlesufix={this.props.SpargeTargetTemperature + 'ºC'} colors={TEMPERATURECOLORS} value={this.props.SpargeTemperature + 'ºC'} data={getProgressData(this.props.SpargeTemperature)} />
+              : null}
             {this.props.EnableSparge ?
               <BrewStatusGadgetItem className={classes.temperatureCard} title="Sparge PWM" colors={PWMCOLORS} value={getPWMPercentage(this.props.SpargePWM) + '%'} data={getPWMData(this.props.SpargePWM)} />
-            : null}
+              : null}
             <BrewStatusGadgetItem className={classes.temperatureCard} title="Progress" colors={PROGRESSCOLORS} value={this.state.progressCompleted + '%'} data={getProgressData(this.state.progressCompleted)} />
           </Grid>
         </Grid>
@@ -139,7 +139,11 @@ class BrewStatusGadgetItem extends Component {
       <Grid item>
         <Card className={this.props.className}>
           <CardContent>
-            <Typography color="textSecondary" variant="subtitle1" gutterBottom>{this.props.title}</Typography>
+            <div style={{ display: "flex" }}>
+              <Typography color="textSecondary" variant="subtitle1" gutterBottom noWrap>{this.props.title}</Typography>
+              &nbsp;
+              <Typography color="textPrimary" variant="h6">{this.props.titlesufix}</Typography>
+            </div>
             <PieChart width={100} height={45}>
               <Pie data={this.props.data}
                 cx={45} cy={40}
