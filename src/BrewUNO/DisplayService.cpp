@@ -158,7 +158,6 @@ void DisplayService::loop()
 
     //PRIMARY HEATER
     _lcd->setCursor(0, 1);
-    //_lcd->write(1);
     _lcd->write(4);
     _lcd->setCursor(2, 1);
     _lcd->print(_activeStatus->Temperature);
@@ -168,21 +167,24 @@ void DisplayService::loop()
 
     //SETPOINT
     _lcd->setCursor(11, 1);
-    //_lcd->write(1);
     _lcd->write(3);
-    _lcd->setCursor(13, 1);
-    _lcd->print(_activeStatus->TargetTemperature);
-    _lcd->setCursor(18, 1);
-    _lcd->write(6);
+    if (_activeStatus->TargetTemperature > 0)
+    {
+      _lcd->setCursor(13, 1);
+      _lcd->print(_activeStatus->TargetTemperature);
+      _lcd->write(6);
+    }
 
     //SPARGE/SECONDARY HEATER
     _lcd->setCursor(0, 2);
     _lcd->write(5);
-    _lcd->setCursor(2, 2);
-    _lcd->print(_activeStatus->SpargeTemperature);
-    _lcd->setCursor(7, 2);
-    _lcd->write(6);
-    _lcd->print(" | ");
+    if (_activeStatus->SpargeTemperature > 0)
+    {
+      _lcd->setCursor(2, 2);
+      _lcd->print(_activeStatus->SpargeTemperature);
+      _lcd->setCursor(7, 2);
+      _lcd->write(6);
+    }
 
     //PWM POWER
     _lcd->setCursor(13, 2);
@@ -192,14 +194,18 @@ void DisplayService::loop()
       _lcd->setCursor(11, 2);
       _lcd->write(7);
       _lcd->setCursor(13, 2);
-      _lcd->print(_activeStatus->PWMPercentage + '%');
+      _lcd->print(_activeStatus->PWMPercentage);
+      _lcd->setCursor(19, 2);
+      _lcd->print("%");
     }
-    else
+    else if (_activeStatus->SpargePWM > 0)
     {
       _lcd->setCursor(11, 2);
       _lcd->write(8);
       _lcd->setCursor(13, 2);
-      _lcd->print(_activeStatus->SpargePWMPercentage + '%');
+      _lcd->print(_activeStatus->SpargePWMPercentage);
+      _lcd->setCursor(19, 2);
+      _lcd->print("%");
     }
 
     _lcd->setCursor(0, 3);
@@ -226,10 +232,14 @@ void DisplayService::loop()
       _lcd->setCursor(11, 2);
       _lcd->write(7);
 
-      _lcd->setCursor(13, 2);
-      _lcd->print("    ");
-    }
+      _lcd->setCursor(2, 2);
+      _lcd->print("00.00");
 
-    _lcd->setCursor(0, 1);
+      _lcd->setCursor(13, 2);
+      _lcd->print("00.00");
+
+      _lcd->setCursor(0, 3);
+      _lcd->print("                    ");
+    }
   }
 }

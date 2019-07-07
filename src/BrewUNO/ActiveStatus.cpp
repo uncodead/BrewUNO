@@ -108,7 +108,9 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     BrewStarted = brewStarted;
     Temperature = 0;
     PWM = 0;
+    PWMPercentage = 0;
     SpargePWM = 0;
+    SpargePWMPercentage = 0;
     Recirculation = false;
     HeaterOff = false;
     StepLock = false;
