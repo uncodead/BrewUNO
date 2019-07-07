@@ -64,8 +64,10 @@ String ActiveStatus::GetJson()
                     "\"temperatures\":" + Temperatures + "," +
                     "\"main_sensor\": \"" + MainSensor + "\"," +
                     "\"sparge_sensor\": \"" + SpargeSensor + "\"," +
-                    "\"pwm\":" + String(PWM) + ',' +
-                    "\"sparge_pwm\":" + String(SpargePWM) + ',' +
+                    "\"pwm\":" + String(PWM, 2) + ',' +
+                    "\"pwm_percentage\":" + String(PWMPercentage, 2) + ',' +
+                    "\"sparge_pwm\":" + String(SpargePWM, 2) + ',' +
+                    "\"sparge_pwm_percentage\":" + String(SpargePWMPercentage, 2) + ',' +
                     "\"enable_sparge\":" + String(EnableSparge) + ',' +
                     "\"sparge_target_temperature\":" + String(SpargeTargetTemperature) + ',' +
                     "\"recirculation\":" + String(Recirculation) + "," +

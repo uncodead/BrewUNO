@@ -10,7 +10,8 @@
 
 struct HeaterServiceStatus
 {
-  int PWM;
+  double PWM;
+  double PWMPercentage;
   boolean PIDActing;
 };
 
@@ -35,6 +36,7 @@ public:
     {
       status.PIDActing = false;
       status.PWM = 0;
+      status.PWMPercentage = 0;
       analogWrite(_heaterBus, 0);
       return status;
     }
@@ -53,6 +55,7 @@ public:
     {
       status.PIDActing = false;
       status.PWM = ((1023 * _activeStatus->BoilPowerPercentage) / 100);
+      status.PWMPercentage = (status.PWM * 100) / 1023;
       analogWrite(_heaterBus, status.PWM);
       return status;
     }
@@ -61,6 +64,7 @@ public:
     {
       status.PIDActing = false;
       status.PWM = ((1023 * heaterPercentage) / 100);
+      status.PWMPercentage = (status.PWM * 100) / 1023;
       analogWrite(_heaterBus, status.PWM);
       return status;
     }
@@ -69,6 +73,7 @@ public:
     if (GetPidInput() > GetPidSetPoint() + 0.1)
     {
       status.PWM = 0;
+      status.PWMPercentage = 0;
       status.PIDActing = false;
       analogWrite(_heaterBus, _activeStatus->PWM);
       StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
@@ -79,6 +84,7 @@ public:
 
     int maxPWM = ((1023 * heaterPercentage) / 100);
     status.PWM = GetPidOutput() > maxPWM ? maxPWM : GetPidOutput();
+    status.PWMPercentage = (status.PWM * 100) / 1023;
 
     analogWrite(_heaterBus, status.PWM);
 

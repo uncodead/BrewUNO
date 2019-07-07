@@ -198,6 +198,8 @@ void BrewService::HeaterCompute()
     HeaterServiceStatus mashStatus = _mashKettleHeaterService->Compute(_activeStatus->Temperature, _activeStatus->TargetTemperature, _brewSettingsService->MashHeaterPercentage);
     HeaterServiceStatus spargeStatus = _spargeKettleHeaterService->Compute(_activeStatus->SpargeTemperature, _brewSettingsService->SpargeTemperature, _brewSettingsService->SpargePowerPercentage);
     _activeStatus->PWM = mashStatus.PWM;
+    _activeStatus->PWMPercentage = mashStatus.PWMPercentage;
     _activeStatus->SpargePWM = spargeStatus.PWM;
+    _activeStatus->SpargePWMPercentage = spargeStatus.PWMPercentage;
     _activeStatus->PIDActing = mashStatus.PIDActing;
 }

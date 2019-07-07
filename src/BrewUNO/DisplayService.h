@@ -6,11 +6,13 @@
 #include <BrewUNO/enum.h>
 #include <BrewUNO/ActiveStatus.h>
 #include <LiquidCrystal_I2C.h>
+#include <WiFiStatus.h>
+#include <APStatus.h>
 
 class DisplayService
 {
 public:
-  DisplayService(ActiveStatus *activeStatus, LiquidCrystal_I2C *lcd);
+  DisplayService(ActiveStatus *activeStatus, WiFiStatus *wifiStatus, LiquidCrystal_I2C *lcd);
 
   ~DisplayService();
 
@@ -19,6 +21,7 @@ public:
 
 private:
   LiquidCrystal_I2C *_lcd;
+  WiFiStatus *_wifiStatus;
   ActiveStatus *_activeStatus;
 };
 #endif

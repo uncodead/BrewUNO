@@ -35,8 +35,10 @@ public:
   String ActiveMashStepName;
   
   int BoilTime;
-  int PWM;
-  int SpargePWM;
+  double PWM;
+  double PWMPercentage;
+  double SpargePWM;
+  double SpargePWMPercentage;
   boolean PIDActing;
 
   double BoilTargetTemperature;

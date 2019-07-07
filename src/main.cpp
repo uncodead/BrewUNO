@@ -74,7 +74,7 @@ MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
 
 Pump pump = Pump(&server, &activeStatus, &brewSettingsService);
-DisplayService display = DisplayService(&activeStatus, &lcd);
+DisplayService display = DisplayService(&activeStatus, &wifiStatus, &lcd);
 MashKettleHeaterService mashKettleHeaterService = MashKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService, HEATER_BUS);
 SpargeKettleHeaterService spargeKettleHeaterService = SpargeKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService, SPARGE_HEATER_BUS);
 MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
