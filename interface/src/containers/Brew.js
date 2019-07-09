@@ -30,20 +30,34 @@ import Paper from '@material-ui/core/Paper';
 import BrewStatusGadget from '../components/BrewStatusGadget'
 import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
 import PlayCircleFilledWhite from '@material-ui/icons/PlayCircleFilledWhite';
+import Stop from '@material-ui/icons/Stop'
+import LockOpen from '@material-ui/icons/LockOpen'
 import Cancel from '@material-ui/icons/Cancel';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
+import SkipNext from '@material-ui/icons/SkipNext';
+import SvgIcon from '@material-ui/core/SvgIcon';
 import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit * 0.45,
+    padding: theme.spacing.unit * 0.7,
+  },
+  button_icons: {
+    marginRight: theme.spacing.unit * 0,
+    padding: 0,
   },
   button_pump: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing.unit * 0.33,
+    padding: 0,
+  },
+  button_pop: {
+    marginRight: theme.spacing.unit * 0.5,
+    padding: 2,
   },
   input: {
     display: 'none',
@@ -247,39 +261,46 @@ class Brew extends Component {
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew('Do you want pause brew?', PAUSE_BREW)
-            }}>Pause</Button> : null}
+            }}><PauseCircleFilled size="small" color="action" className={classes.button_icons} /></Button> : null}
         {this.state.status.active_step > 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew('Do you want resume brew? Check if you\'ve secure water volume at kettle.', RESUME_BREW)
             }}>Resume</Button> : null}
-        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.step_locked === 1 ?
-          <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want unlock the current step?', UNLOCK_STEP_BREW) }}>Unlock Step</Button> : null}
         {this.state.status.active_step > 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW, () => { this.setState({ data: [] }) }) }}>Stop</Button> : null}
+            onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW, () => { this.setState({ data: [] }) }) }}><Stop size="small" color="action" className={classes.button_icons} /></Button> : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.pid_tuning === 0 && this.state.status.step_locked === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want skip the current step?', NEXT_STEP_BREW) }}>Next Step</Button> : null}
+            onClick={() => { this.actionBrew('Do you want skip the current step?', NEXT_STEP_BREW) }}><SkipNext size="small" color="action" className={classes.button_icons} /></Button> : null}
+        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.step_locked === 1 ?
+          <Button variant="contained" color="secondary" className={classes.button}
+            onClick={() => { this.actionBrew('Do you want unlock the current step?', UNLOCK_STEP_BREW) }}><LockOpen size="small" color="action" className={classes.button_icons} /></Button> : null}
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want start boil?', START_BOIL) }}>Boil</Button> : null}
         <Button variant="contained" color="secondary" className={classes.button}
           onClick={() => { this.actionBrew('', this.state.status.pump_on ? STOP_PUMP : START_PUMP) }}>
           {this.state.status.pump_on ?
-            <PlayCircleFilledWhite color="disabled" className={classes.button_pump} />
-            :
-            this.state.status.pump_is_resting ?
-              <PauseCircleFilled size="small" color="disabled" className={classes.button_pump} /> :
-              <Cancel size="small" color="disabled" className={classes.button_pump} />
+          <SvgIcon {...this.props} color="action">
+          <path d="M20 13.641c0 2-.779 4.109-2.34 5.67a7.992 7.992 0 0 1-11.32-.002C4.78 17.75 4 15.641 4 13.641A8.02 8.02 0 0 1 6.34 8L12 2.35 17.66 8A8.016 8.016 0 0 1 20 13.641z"/>
+          </SvgIcon>
+          : //pause icon
+          this.state.status.pump_is_resting ?
+          <SvgIcon {...this.props} color="disabled">
+          <path d="M17.66 8L12 2.35 6.34 8A8.02 8.02 0 0 0 4 13.641c0 2 .78 4.109 2.34 5.668a7.987 7.987 0 0 0 11.32.001c1.561-1.561 2.34-3.67 2.34-5.67S19.221 9.56 17.66 8zm-6.359 9.922H8.604V8.855h2.697v9.067zm4.068 0h-2.682V8.855h2.682v9.067z"/>            
+          </SvgIcon>
+          : //stop icon
+          <SvgIcon {...this.props} color="disabled">
+          <path d="M17.66 8L12 2.35 6.34 8A8.02 8.02 0 0 0 4 13.641c0 2 .78 4.109 2.34 5.67a7.98 7.98 0 0 0 11.32 0c1.561-1.561 2.34-3.67 2.34-5.67A8.016 8.016 0 0 0 17.66 8zM6 14c.01-2 .62-3.27 1.76-4.4L12 5.27l4.24 4.38C17.38 10.77 17.99 12 18 14c0 0-.313 5.5-6 5.625C6.737 19.74 6 14 6 14z"/>
+          </SvgIcon>
           }
-          PUMP
+        
         </Button>
         <PopupState>
           {popupState => (
             <React.Fragment>
-              <IconButton variant="contained" {...bindTrigger(popupState)}>
+              <IconButton variant="contained" {...bindTrigger(popupState)} size="small" className={classes.button_pop}>
                 <ArrowDropDown />
               </IconButton>
               <Menu {...bindMenu(popupState)}>
