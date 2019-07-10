@@ -33,6 +33,7 @@ public:
 
   int ActiveMashStepIndex;
   String ActiveMashStepName;
+  String ActiveMashStepSufixName;
   
   int BoilTime;
   double PWM;

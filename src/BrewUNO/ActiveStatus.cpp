@@ -52,6 +52,7 @@ String ActiveStatus::GetJson()
                     "\"active_mash_step_name\":\"" + String(ActiveMashStepName) + "\"" + "," +
                     "\"active_boil_step_index\":\"" + String(ActiveBoilStepIndex) + "\"" + "," +
                     "\"active_boil_step_name\":\"" + String(ActiveBoilStepName) + "\"" + "," +
+                    "\"active_boil_step_sufix_name\":\"" + String(ActiveMashStepSufixName) + "\"" + "," +
                     "\"boil_time\":" + String(BoilTime) + "," +
                     "\"boil_target_temperature\":" + String(BoilTargetTemperature) + "," +
                     "\"target_temperature\":" + String(TargetTemperature) + "," +
@@ -97,6 +98,7 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
 
     ActiveMashStepIndex = activeMashStepIndex;
     ActiveMashStepName = "";
+    ActiveMashStepSufixName = "";
     ActiveBoilStepIndex = activeBoilStepIndex;
     ActiveBoilStepName = "";
     BoilTime = boilTime;

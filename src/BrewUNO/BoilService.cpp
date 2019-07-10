@@ -1,7 +1,8 @@
 #include <BrewUNO/BoilService.h>
 
-BoilService::BoilService(FS *fs, TemperatureService *temperatureService) : _fs(fs),
-                                                                           _temperatureService(temperatureService)
+BoilService::BoilService(FS *fs, TemperatureService *temperatureService, BrewSettingsService *brewSettingsService) : _fs(fs),
+                                                                                                                     _temperatureService(temperatureService),
+                                                                                                                     _brewSettingsService(brewSettingsService)
 {
 }
 
@@ -26,6 +27,8 @@ void BoilService::loop(ActiveStatus *activeStatus)
         return;
 
     time_t timeNow = now();
+    activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
+    activeStatus->TargetTemperature = _brewSettingsService->BoilTemperature;
 
     if (activeStatus->StartTime == 0 && activeStatus->Temperature >= activeStatus->BoilTargetTemperature)
     {

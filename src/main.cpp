@@ -78,7 +78,7 @@ DisplayService display = DisplayService(&activeStatus, &wifiStatus, &lcd);
 MashKettleHeaterService mashKettleHeaterService = MashKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService, HEATER_BUS);
 SpargeKettleHeaterService spargeKettleHeaterService = SpargeKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService, SPARGE_HEATER_BUS);
 MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
-BoilService boilService = BoilService(&SPIFFS, &temperatureService);
+BoilService boilService = BoilService(&SPIFFS, &temperatureService, &brewSettingsService);
 BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &activeStatus, &temperatureService, &pump);
 
 void setup()
@@ -139,7 +139,7 @@ void setup()
   digitalWrite(BUZZER_BUS, LOW);
   pinMode(HEATER_BUS, OUTPUT);
   pinMode(SPARGE_HEATER_BUS, OUTPUT);
-  
+
   pump.TurnPumpOff();
   DS18B20.begin();
   // locate devices on the bus

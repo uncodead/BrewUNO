@@ -14,3 +14,4 @@ platformio.ini
 .vscode/launch.json
 node_modules/
 data/config/wifiSettings.json
+interface/.env.development

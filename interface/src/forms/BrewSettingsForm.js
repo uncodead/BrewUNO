@@ -95,13 +95,10 @@ class BrewSettingsForm extends Component {
                   value={brewSettings.mainSensor}
                   onChange={handleValueChange("mainSensor")}
                   fullWidth
-                  native
-                  required
                   inputProps={{ required: true }}
                 >
-                  <option value=''></option>
                   {this.props.sensors.map(value => (
-                    <option value={value.address}>{value.address} - {value.value}ºC</option>
+                    <MenuItem value={value.address}>{value.address} - {value.value}ºC</MenuItem>
                   ))}
                 </Select>
                 <FormControlLabel

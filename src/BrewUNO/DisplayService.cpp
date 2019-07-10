@@ -1,15 +1,15 @@
 #include <BrewUNO/DisplayService.h>
 
-
-byte apmode[] = { //icon for wifi ap
-        B10101,
-        B10101,
-        B10101,
-        B01110,
-        B00100,
-        B00100,
-        B00100,
-        B00100,
+byte apmode[] = {
+    //icon for wifi ap
+    B10101,
+    B10101,
+    B10101,
+    B01110,
+    B00100,
+    B00100,
+    B00100,
+    B00100,
 };
 
 byte stmode[] = //icon for wifi station
@@ -23,7 +23,7 @@ byte stmode[] = //icon for wifi station
         B00000,
         B00000,
 };
- 
+
 byte gpump[] = //new icon for pumpgota
     {
         B00100,
@@ -34,21 +34,9 @@ byte gpump[] = //new icon for pumpgota
         B11101,
         B11011,
         B01110,
-        
+
 };
-/*
-byte gpump[] = //new icon for pump motor
-    {
-        B11111,
-        B00100,
-        B01110,
-        B11011,
-        B10101,
-        B11011,
-        B01110,
-        B11111,
-};
-*/
+
 byte pheater[] = //icon for primary heater
     {
         B11100,
@@ -86,27 +74,27 @@ byte gcelsius[] = //graphic °C
 };
 
 byte gwm[] = // WM
-{
-  B11111,
-  B01000,
-  B00100,
-  B01000,
-  B11111,
-  B00000,
-  B11111,
-  B00110,
+    {
+        B11111,
+        B01000,
+        B00100,
+        B01000,
+        B11111,
+        B00000,
+        B11111,
+        B00110,
 };
 
 byte gpw[] = //PW
-{ 
-  B00110,
-  B11111,
-  B00000,
-  B11100,
-  B10100,
-  B10100,
-  B11111,
-  B00000,
+    {
+        B00110,
+        B11111,
+        B00000,
+        B11100,
+        B10100,
+        B10100,
+        B11111,
+        B00000,
 };
 
 DisplayService::DisplayService(ActiveStatus *activeStatus, WiFiStatus *wifiStatus, LiquidCrystal_I2C *lcd) : _activeStatus(activeStatus),
@@ -172,105 +160,112 @@ void DisplayService::loop()
     _lcd->print(_activeStatus->SpargeTemperature);
     _lcd->setCursor(7, 2);
     _lcd->print(">");
-   
-//BOIL WHERE
 
- if (_activeStatus->BrewStarted) 
-    { 
-    //@START PROCESS
+    //BOIL WHERE
+    if (_activeStatus->BrewStarted)
+    {
+      //@START PROCESS
 
-     //SETPOINT PRIMARY
+      //SETPOINT PRIMARY
       _lcd->setCursor(8, 1);
-    if (_activeStatus->TargetTemperature > 99)
+      if (_activeStatus->TargetTemperature > 99)
       {
-       _lcd->print("1h"); 
-      } else
-      {
-       _lcd->print(_activeStatus->TargetTemperature);
+        _lcd->print("1h");
       }
-     _lcd->setCursor(10, 1);
-     _lcd->write(6);
-     _lcd->setCursor(11, 1);
-     _lcd->print("  ");
-
-    //PWM PRIMARY
-     _lcd->setCursor(13, 1);
-     _lcd->write(7);
-     _lcd->setCursor(14, 1);
-     _lcd->print(" ");
-     if (_activeStatus->PWMPercentage > 0)
-     {
-      if (_activeStatus->PWMPercentage > 99)
-       {
-        _lcd->setCursor(14, 1);
-        _lcd->print("100"); 
-       } else
-       {
-        _lcd->print(_activeStatus->PWMPercentage);
-       }  
-     } else {
-       _lcd->print("00");
-     }
-     _lcd->setCursor(17, 1);
-     _lcd->print("%  ");
-
-
-     //SETPOINT SECONDARY
-     _lcd->setCursor(8, 2);
-    if (_activeStatus->SpargeTargetTemperature > 99)
+      else
       {
-       _lcd->print("1h"); 
-      } else
-      {
-       _lcd->print(_activeStatus->SpargeTargetTemperature);
+        _lcd->print(_activeStatus->TargetTemperature);
       }
-     _lcd->setCursor(10, 2);
-     _lcd->write(6);
-     _lcd->setCursor(11, 2);
-     _lcd->print("  ");
+      _lcd->setCursor(10, 1);
+      _lcd->write(6);
+      _lcd->setCursor(11, 1);
+      _lcd->print("  ");
 
-    //PWM SECONDARY
-     _lcd->setCursor(13, 2);
-     _lcd->write(8);
-     _lcd->setCursor(14, 2);
-     _lcd->print(" ");
-     if (_activeStatus->SpargePWMPercentage > 0)
-     {
+      //PWM PRIMARY
+      _lcd->setCursor(13, 1);
+      _lcd->write(7);
+      _lcd->setCursor(14, 1);
+      _lcd->print(" ");
+      if (_activeStatus->PWMPercentage > 0)
+      {
+        if (_activeStatus->PWMPercentage > 99)
+        {
+          _lcd->setCursor(14, 1);
+          _lcd->print("100");
+        }
+        else
+        {
+          _lcd->print(_activeStatus->PWMPercentage);
+        }
+      }
+      else
+      {
+        _lcd->print("00");
+      }
+      _lcd->setCursor(17, 1);
+      _lcd->print("%  ");
+
+      //SETPOINT SECONDARY
+      _lcd->setCursor(8, 2);
+      if (_activeStatus->SpargeTargetTemperature > 99)
+      {
+        _lcd->print("1h");
+      }
+      else
+      {
+        _lcd->print(_activeStatus->SpargeTargetTemperature);
+      }
+      _lcd->setCursor(10, 2);
+      _lcd->write(6);
+      _lcd->setCursor(11, 2);
+      _lcd->print("  ");
+
+      //PWM SECONDARY
+      _lcd->setCursor(13, 2);
+      _lcd->write(8);
+      _lcd->setCursor(14, 2);
+      _lcd->print(" ");
+      if (_activeStatus->SpargePWMPercentage > 0)
+      {
         if (_activeStatus->SpargePWMPercentage > 99)
         {
-         _lcd->setCursor(14, 2);
-         _lcd->print("100"); 
-        } else
+          _lcd->setCursor(14, 2);
+          _lcd->print("100");
+        }
+        else
         {
-         _lcd->print(_activeStatus->SpargePWMPercentage);
-        }      
-     } else {
-       _lcd->print("00");
-     }
-     _lcd->setCursor(17, 2);
-     _lcd->print("%  ");
+          _lcd->print(_activeStatus->SpargePWMPercentage);
+        }
+      }
+      else
+      {
+        _lcd->print("00");
+      }
+      _lcd->setCursor(17, 2);
+      _lcd->print("%  ");
 
-    // ACTUAL STATUS INFO
-    _lcd->setCursor(0, 3);
-    _lcd->print("                    ");
-     _lcd->setCursor(0, 3);
-    String MessageStats, MessageStats2;
-    int  MessageStatsSz;
-    MessageStats = _activeStatus->ActiveMashStepName;
-    MessageStatsSz = (MessageStats.length() - 3);
-    MessageStats = MessageStats.substring(0, MessageStatsSz);
-    MessageStats2 = MessageStats;
-    MessageStats2.replace(" @ ", "@");
-    _lcd->print(MessageStats2.substring(0, 14));
-    _lcd->setCursor(15, 3);
-    _lcd->print("00:00");
-    } else
+      // ACTUAL STATUS INFO
+      _lcd->setCursor(0, 3);
+      _lcd->print("                    ");
+      _lcd->setCursor(0, 3);
+      String MessageStats, MessageStats2;
+      int MessageStatsSz;
+      MessageStats = _activeStatus->ActiveMashStepName;
+      MessageStatsSz = (MessageStats.length() - 3);
+      MessageStats = MessageStats.substring(0, MessageStatsSz);
+      MessageStats2 = MessageStats;
+      MessageStats2.replace(" @ ", "@");
+      _lcd->print(MessageStats2.substring(0, 14));
+      _lcd->setCursor(15, 3);
+      _lcd->print("00:00");
+    }
+    else
     {
       //LINE 1 INFOS
       //SP CLEAR
       _lcd->setCursor(8, 1);
       _lcd->print("00"); //SP TEMP
-      _lcd->write(6); //°C ICON
+      _lcd->write(6);    //°C ICON
       _lcd->setCursor(11, 1);
       _lcd->print("  ");
       //PWM CLEAR
@@ -284,7 +279,7 @@ void DisplayService::loop()
       //SP CLEAR
       _lcd->setCursor(8, 2);
       _lcd->print("00"); //SP TEMP
-      _lcd->write(6); //°C ICON
+      _lcd->write(6);    //°C ICON
       _lcd->setCursor(11, 2);
       _lcd->print("  ");
       //PWM CLEAR
@@ -295,26 +290,25 @@ void DisplayService::loop()
       _lcd->print("%  ");
       _lcd->setCursor(0, 3);
       _lcd->print("                    ");
-    } 
+    }
 
-
- if (_activeStatus->ActiveStep == boil)
- {
-    _lcd->setCursor(7, 1);
-    _lcd->print(">");
-    if (_activeStatus->BoilPowerPercentage > 99)
+    if (_activeStatus->ActiveStep == boil)
+    {
+      _lcd->setCursor(7, 1);
+      _lcd->print(">");
+      if (_activeStatus->BoilPowerPercentage > 99)
       {
-       _lcd->print("1h"); 
-      } else
-      {
-       _lcd->print(_activeStatus->BoilTargetTemperature);
+        _lcd->print("1h");
       }
-    _lcd->setCursor(0, 3);
-    _lcd->print("To Boil Step   ");
-    _lcd->setCursor(15, 3);
-    _lcd->print("00:00");
- }
-
+      else
+      {
+        _lcd->print(_activeStatus->BoilTargetTemperature);
+      }
+      _lcd->setCursor(0, 3);
+      _lcd->print("To Boil Step   ");
+      _lcd->setCursor(15, 3);
+      _lcd->print("00:00");
+    }
 
     if (_activeStatus->PumpOn == 0)
     {
@@ -327,6 +321,6 @@ void DisplayService::loop()
       _lcd->write(3);
     }
 
-	_lcd->setCursor(0, 1);
+    _lcd->setCursor(0, 1);
   }
 }

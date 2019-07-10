@@ -132,7 +132,7 @@ class Brew extends Component {
     }
 
     if (this.state.statusInitialized) {
-      this.notification(this.getActiveStep(), this.state.status.active_mash_step_name, "Mash")
+      this.notification(this.getActiveStep(), this.state.status.active_boil_step_name + ' ' + this.state.status.active_boil_step_sufix_name, "Mash")
       this.notification(this.getActiveStep(), this.state.status.active_boil_step_name, "Boil")
 
       if (this.getActiveStep() == "Stopped") {
