@@ -11,7 +11,7 @@ import Chronometer from './Chronometer'
 
 const styles = theme => ({
   temperatureCard: {
-    background: "#31313152",
+    background: "#313131",
   },
 });
 
@@ -96,25 +96,19 @@ class BrewStatusGadget extends Component {
             {this.props.EnableSparge ?
               <BrewStatusGadgetItem className={classes.temperatureCard} title="Sparge PWM" colors={PWMCOLORS} value={getPWMPercentage(this.props.SpargePWM) + '%'} data={getPWMData(this.props.SpargePWM)} />
               : null}
+              {/*}
             <BrewStatusGadgetItem className={classes.temperatureCard} title="Progress" colors={PROGRESSCOLORS} value={this.state.progressCompleted + '%'} data={getProgressData(this.state.progressCompleted)} />
+            */}
           </Grid>
         </Grid>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={16}>
-            <Grid item>
-              <Card className={this.props.className}>
-                <CardContent>
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Active Step - {this.props.ActiveStep}</Typography>
-                  <Typography variant="h5">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
             {!this.props.StepLocked ?
               <Grid item>
                 <Card className={this.props.className}>
                   <CardContent>
                     <Typography color="textSecondary" variant="subtitle1" gutterBottom>Timer</Typography>
-                    <Typography variant="h5">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
+                    <Typography variant="h4">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
                   </CardContent>
                 </Card>
               </Grid>
@@ -126,6 +120,14 @@ class BrewStatusGadget extends Component {
               </Grid>
               : null
             }
+            <Grid item>
+              <Card className={this.props.className}>
+                <CardContent>
+                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Active Step - {this.props.ActiveStep}</Typography>
+                  <Typography variant="h6">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>            
           </Grid>
         </Grid>
       </Grid>
@@ -141,8 +143,8 @@ class BrewStatusGadgetItem extends Component {
           <CardContent>
             <div style={{ display: "flex" }}>
               <Typography color="textSecondary" variant="subtitle1" gutterBottom noWrap>{this.props.title}</Typography>
-              &nbsp;
-              <Typography color="textPrimary" variant="h6">{this.props.titlesufix}</Typography>
+              &nbsp;&nbsp;
+              <Typography color="error" variant="subtitle1">{this.props.titlesufix}</Typography>
             </div>
             <PieChart width={100} height={45}>
               <Pie data={this.props.data}
