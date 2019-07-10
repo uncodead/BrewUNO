@@ -12,6 +12,7 @@
     "notistack": "^0.8.6",
     "npm": "^6.9.0",
     "prop-types": "^15.7.2",
+    "rc-progress": "^2.5.1",
     "react": "^16.8.6",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.8.6",
