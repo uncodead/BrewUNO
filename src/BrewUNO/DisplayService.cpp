@@ -1,14 +1,14 @@
 #include <BrewUNO/DisplayService.h>
 
 byte apmode[] = //icon for wifi ap
-{
+{ 
 B01000,
 B10100,
 B11100,
-B10100,
-B00110,
-B00101,
-B00110,
+B10111,
+B10101,
+B00111,
+B00100,
 B00100
 };
 
@@ -128,20 +128,8 @@ void DisplayService::loop()
 
   //TITLE
   _lcd->home();
-  _lcd->print("BrewUNO 0.6       ");
-
-  //WIFI ST9 AP10
-  wl_status_t status = WiFi.status();
-  WiFiMode_t currentWiFiMode = WiFi.getMode();
-  _lcd->setCursor(19, 0);
-  if (status == WL_CONNECTED)
-  {
-    _lcd->write(2);
-  }
-  else if (currentWiFiMode == WIFI_AP || currentWiFiMode == WIFI_AP_STA)
-  {
-    _lcd->write(1);
-  }
+  _lcd->setCursor(0, 0);
+  _lcd->print("  BrewUNO   ");
 
   //PRIMARY HEATER
   _lcd->setCursor(0, 1);
@@ -159,7 +147,7 @@ void DisplayService::loop()
   _lcd->setCursor(7, 2);
   _lcd->print(">");
 
-  //BOIL WHERE
+  //BREW STARTS WHERE
   if (_activeStatus->BrewStarted)
 {
   //@START PROCESS
@@ -246,16 +234,17 @@ void DisplayService::loop()
   _lcd->setCursor(0, 3);
   _lcd->print("                    ");
   _lcd->setCursor(0, 3);
-  String MessageStats, MessageStats2;
-  int MessageStatsSz;
-  MessageStats = _activeStatus->ActiveMashStepName;
-  MessageStatsSz = (MessageStats.length() - 3);
-  MessageStats = MessageStats.substring(0, MessageStatsSz);
-  MessageStats2 = MessageStats;
-  MessageStats2.replace(" @ ", "@");
-  _lcd->print(MessageStats2.substring(0, 14));
-  _lcd->setCursor(15, 3);
-  _lcd->print("00:00");
+  //String MessageStats, MessageStats2;
+  //int MessageStatsSz;
+  //MessageStats = _activeStatus->ActiveMashStepName;
+  //MessageStatsSz = (MessageStats.length() - 3);
+  //MessageStats = MessageStats.substring(0, MessageStatsSz);
+  //MessageStats2 = MessageStats;
+  //MessageStats2.replace(" @ ", "@");
+  //_lcd->print(MessageStats2.substring(0, 14));
+  _lcd->print(_activeStatus->ActiveMashStepName.substring(0,12) + " " + _activeStatus->ActiveMashStepSufixName.substring(0,6));
+  _lcd->setCursor(12, 0);
+  _lcd->print("00:00:00");
   }
   else
   {
@@ -290,23 +279,56 @@ void DisplayService::loop()
   _lcd->print("                    ");
   }
 
+  //WIFI ST AP IP
+  wl_status_t status = WiFi.status();
+  WiFiMode_t currentWiFiMode = WiFi.getMode();
+  _lcd->setCursor(0, 0);
+  if (status == WL_CONNECTED)
+  {
+    _lcd->write(2);
+      if (!_activeStatus->BrewStarted) {
+       _lcd->setCursor(0, 3);
+       _lcd->print("IP: ");
+       _lcd->setCursor(4, 3);
+       _lcd->print(WiFi.localIP());
+       //delay(1000);
+      } 
+  }
+  else if (currentWiFiMode == WIFI_AP || currentWiFiMode == WIFI_AP_STA)
+  {
+    _lcd->write(1);
+      if (!_activeStatus->BrewStarted) {    
+        _lcd->setCursor(0, 3);
+        _lcd->print("IP: ");
+        _lcd->setCursor(4, 3);
+        //_lcd->print("192.168.4.1     ");
+        _lcd->print(WiFi.softAPIP());
+        //delay(1000);
+      }
+  }
+
   if (_activeStatus->ActiveStep == boil)
   {
   _lcd->setCursor(7, 1);
   _lcd->print(">");
-  if (_activeStatus->BoilPowerPercentage > 99)
+  if (_activeStatus->BoilTargetTemperature > 99)
   {
   _lcd->print("1h");
   }
   else
   {
   _lcd->print(_activeStatus->BoilTargetTemperature);
+  _lcd->setCursor(10, 1);
+  _lcd->write(6);    //°C ICON
+  _lcd->print("  ");
   }
   _lcd->setCursor(0, 3);
-  _lcd->print("To Boil Step   ");
-  _lcd->setCursor(15, 3);
-  _lcd->print("00:00");
+  //_lcd->print("To Boil Step        ");
+  _lcd->print(_activeStatus->ActiveBoilStepName.substring(0,19));
+  _lcd->setCursor(12, 0);
+  _lcd->print("00:00:00");
   }
+
   if (_activeStatus->PumpOn == 0)
   {
   _lcd->setCursor(19, 1);
