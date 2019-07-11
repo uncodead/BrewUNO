@@ -21,7 +21,8 @@ import YAxis from 'recharts/lib/cartesian/YAxis';
 import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
 import Tooltip from 'recharts/lib/component/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/lab/Slider';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 import Divider from '@material-ui/core/Divider';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -123,12 +124,8 @@ class Brew extends Component {
 
       this.setState({
         data: [...splice_data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature }],
+        boilPower: this.state.status.boil_power_percentage
       })
-
-      if (this.state.boilPower == 0)
-        this.setState({
-          boilPower: this.state.status.boil_power_percentage
-        })
     }
 
     if (this.state.statusInitialized) {
@@ -178,11 +175,12 @@ class Brew extends Component {
     }
   }
 
-  handleChangeBoilPowerPercentage = (event, value) => {
+  handleChangeBoilPowerPercentage = (value) => {
     this.setState({ boilPower: value });
   }
 
-  handleSaveChangeBoilPowerPercentage = () => {
+  handleSaveChangeBoilPowerPercentage = (value) => {
+    this.setState({ boilPower: value });
     fetch(CHANGE_BOIL_PERCENTAGE, {
       method: 'POST',
       body: JSON.stringify({ "boil_power_percentage": this.state.boilPower }),
@@ -190,17 +188,7 @@ class Brew extends Component {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-    }).then(response => {
-      if (response.ok) {
-        this.props.enqueueSnackbar("Boiling power configured.", { variant: 'info', autoHideDuration: 2000, });
-        return;
-      }
-      response.text().then(function (data) {
-        throw Error(data);
-      }).catch(error => {
-        this.props.enqueueSnackbar(error.message, { variant: 'error', autoHideDuration: 2000, });
-      });
-    });
+    })
   };
 
   reportLog = (callback) => {
@@ -344,6 +332,23 @@ class Brew extends Component {
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Boil Power {this.state.boilPower}%</Typography>
                   <Slider
+                    railStyle={{ backgroundColor: '#ccc', height: 5 }}
+                    trackStyle={{ backgroundColor: '#5c6bc0', height: 5 }}
+                    handleStyle={{
+                      borderColor: '#fff',
+                      height: 22,
+                      width: 22,
+                      marginLeft: -14,
+                      marginTop: -9,
+                      backgroundColor: '#5c6bc0',
+                    }}
+                    value={this.state.boilPower}
+                    onChange={this.handleChangeBoilPowerPercentage}
+                    onAfterChange={this.handleSaveChangeBoilPowerPercentage}
+                  />
+                  {
+                    /*
+                    <Slider
                     classes={{
                       container: classes.slider, thumb: classes.sliderThumb, trackBefore: classes.trackBefore,
                       trackAfter: classes.trackAfter,
@@ -353,6 +358,9 @@ class Brew extends Component {
                     onChange={this.handleChangeBoilPowerPercentage}
                     onDragEnd={this.handleSaveChangeBoilPowerPercentage}
                   />
+                    */
+                  }
+
                 </CardContent>
               </Card>
             </Grid>
