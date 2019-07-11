@@ -12,6 +12,7 @@ import {
   MuiThemeProvider,
   createMuiTheme,
 } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
 
 const themeMain = createMuiTheme({
   palette: {
@@ -39,6 +40,11 @@ const styles = theme => ({
     background: "#313131",
   },
 });
+
+var cardStyle = {
+  background: '#313131',
+  display: 'block',
+}
 
 class BrewStatusGadget extends Component {
   constructor(props) {
@@ -107,30 +113,33 @@ class BrewStatusGadget extends Component {
             {this.props.EnableSparge ?
               <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Sparge:"} colorPWM={"#2196f3"} PWM={this.props.SpargePWM} titlesufix={this.props.SpargeTargetTemperature + 'ºC'} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature + 'ºC'} data={getProgressData(this.props.SpargeTemperature)} />
               : null}
+
+        {!this.props.StepLocked ?
+          <Grid item>
+            <Card className={this.props.className} style={cardStyle}>
+              <CardContent>
+                <Typography color="textSecondary" variant="caption" gutterBottom>Timer</Typography>
+                <Typography variant="h4">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
+                &nbsp;
+                <div style={{paddingTop: 10, paddingBotton: 10}}>
+                <Divider variant="fullWidth" />
+                </div>
+                &nbsp;
+                <div style={{paddingTop: 10}}>
+                <Typography color="textSecondary" variant="caption" gutterBottom>Active Step{/*} - {this.props.ActiveStep}*/}</Typography>
+                <Typography variant="subtitle1">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
+                </div>
+              </CardContent>
+            </Card>
           </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container justify="center" spacing={16}>
-            {!this.props.StepLocked ?
-              <Grid item>
-                <Card className={this.props.className}>
-                  <CardContent>
-                    <Typography color="textSecondary" variant="caption" gutterBottom>Timer</Typography>
-                    <Typography variant="h4">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
-                    &nbsp;
-                    <Typography color="textSecondary" variant="caption" gutterBottom>Active Step{/*} - {this.props.ActiveStep}*/}</Typography>
-                    <Typography variant="subtitle1">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              : null
-            }
-            {this.props.StepLocked ?
-              <Grid item>
-                <Chronometer BrewStarted={this.props.BrewStarted} StartTime={this.props.EndTime} title="Step Locked" onRef={ref => (this.chronometer = ref)} />
-              </Grid>
-              : null
-            }
+          : null
+        }
+        {this.props.StepLocked ?
+          <Grid item>
+            <Chronometer BrewStarted={this.props.BrewStarted} StartTime={this.props.EndTime} title="Step Locked" onRef={ref => (this.chronometer = ref)} />
+          </Grid>
+          : null
+        }
           </Grid>
         </Grid>
       </Grid>
