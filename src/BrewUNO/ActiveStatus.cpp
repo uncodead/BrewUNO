@@ -50,9 +50,9 @@ String ActiveStatus::GetJson()
     String status = "{\"active_step\":" + String(ActiveStep) + "," +
                     "\"active_mash_step_index\":" + String(ActiveMashStepIndex) + "," +
                     "\"active_mash_step_name\":\"" + String(ActiveMashStepName) + "\"" + "," +
+                    "\"active_mash_step_sufix_name\":\"" + String(ActiveMashStepSufixName) + "\"" + "," +
                     "\"active_boil_step_index\":\"" + String(ActiveBoilStepIndex) + "\"" + "," +
                     "\"active_boil_step_name\":\"" + String(ActiveBoilStepName) + "\"" + "," +
-                    "\"active_boil_step_sufix_name\":\"" + String(ActiveMashStepSufixName) + "\"" + "," +
                     "\"boil_time\":" + String(BoilTime) + "," +
                     "\"boil_target_temperature\":" + String(BoilTargetTemperature) + "," +
                     "\"target_temperature\":" + String(TargetTemperature) + "," +

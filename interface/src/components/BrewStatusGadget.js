@@ -104,10 +104,6 @@ class BrewStatusGadget extends Component {
       return [{ name: 'A', value: progress }, { name: 'B', value: 100 - progress }]
     }
 
-    const getPWMPercentage = (pwm) => {
-      return parseFloat(pwm * 100 / 1023).toFixed(1)
-    }
-
     return (
       <Grid container spacing={16}>
         <Grid item xs={12}>

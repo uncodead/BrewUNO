@@ -34,7 +34,8 @@ void MashService::loop(ActiveStatus *activeStatus)
     {
         activeStatus->TargetTemperature = steps[0]["t"];
         activeStatus->ActiveMashStepIndex = 0;
-        activeStatus->ActiveMashStepName = getMashName(steps[0]);
+        activeStatus->ActiveMashStepName = steps[0]["n"].as<String>();
+        activeStatus->ActiveMashStepSufixName = getMashName(steps[0]);
         _pump->AntiCavitation();
         _pump->TurnPumpOn();
 
