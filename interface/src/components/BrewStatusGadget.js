@@ -91,14 +91,9 @@ class BrewStatusGadget extends Component {
   }
 
   render() {
-    const PWMCOLORS = ['#f9a825', '#424242'];
     const SPARGEPWMCOLORS = ['#f0e50e', '#424242'];
     const TEMPERATURECOLORS = ['#c62828', '#424242'];
     const { classes } = this.props
-
-    const getPWMData = (pwm) => {
-      return [{ name: 'A', value: pwm }, { name: 'B', value: 1023 - pwm }]
-    }
 
     const getProgressData = (progress) => {
       return [{ name: 'A', value: progress }, { name: 'B', value: 100 - progress }]
