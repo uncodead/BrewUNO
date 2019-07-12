@@ -114,32 +114,28 @@ class BrewStatusGadget extends Component {
               <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Sparge:"} colorPWM={"#2196f3"} PWM={this.props.SpargePWM} titlesufix={this.props.SpargeTargetTemperature + 'ºC'} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature + 'ºC'} data={getProgressData(this.props.SpargeTemperature)} />
               : null}
 
-        {!this.props.StepLocked ?
-          <Grid item>
-            <Card className={this.props.className} style={cardStyle}>
-              <CardContent>
-                <Typography color="textSecondary" variant="caption" gutterBottom>Timer</Typography>
-                <Typography variant="h4">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
-                &nbsp;
-                <div style={{paddingTop: 10, paddingBotton: 10}}>
-                <Divider variant="fullWidth" />
-                </div>
-                &nbsp;
-                <div style={{paddingTop: 10}}>
-                <Typography color="textSecondary" variant="caption" gutterBottom>Active Step{/*} - {this.props.ActiveStep}*/}</Typography>
-                <Typography variant="subtitle1">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
-          : null
-        }
-        {this.props.StepLocked ?
-          <Grid item>
-            <Chronometer BrewStarted={this.props.BrewStarted} StartTime={this.props.EndTime} title="Step Locked" onRef={ref => (this.chronometer = ref)} />
-          </Grid>
-          : null
-        }
+            <Grid item>
+              <Card className={this.props.className} style={cardStyle}>
+                <CardContent>
+                  {this.props.StepLocked ?
+                    <Chronometer BrewStarted={this.props.BrewStarted} StartTime={this.props.EndTime} title="Step Locked" onRef={ref => (this.chronometer = ref)} />
+                    : <div>
+                      <Typography color="textSecondary" variant="caption" gutterBottom>Timer</Typography>
+                      <Typography variant="h4">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
+                    </div>
+                  }
+                  &nbsp;
+                <div style={{ paddingTop: 10, paddingBotton: 10 }}>
+                    <Divider variant="fullWidth" />
+                  </div>
+                  &nbsp;
+                <div style={{ paddingTop: 10 }}>
+                    <Typography color="textSecondary" variant="caption" gutterBottom>Active Step{/*} - {this.props.ActiveStep}*/}</Typography>
+                    <Typography variant="subtitle1">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
+                  </div>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
