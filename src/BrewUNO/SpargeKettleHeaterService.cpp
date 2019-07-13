@@ -52,5 +52,5 @@ boolean SpargeKettleHeaterService::StopCompute()
   _activeStatus->EnableSparge = _brewSettingsService->EnableSparge;
   _activeStatus->SpargeTargetTemperature = _brewSettingsService->SpargeTemperature;
 
-  return !_activeStatus->BrewStarted || _activeStatus->ActiveStep != mash || _activeStatus->PWM > 100;
+  return !_activeStatus->BrewStarted || !_activeStatus->EnableSparge || _activeStatus->ActiveStep != mash || _activeStatus->PWM > 100;
 }

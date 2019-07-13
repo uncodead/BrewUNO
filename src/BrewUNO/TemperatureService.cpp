@@ -45,8 +45,12 @@ Temperatures TemperatureService::GetTemperatures(String main, String sparge)
 
         if (main != "" && GetAddressToString(Thermometer) == main)
             temps.Main = temp;
+        else
+            temps.Main = 00.00;
         if (sparge != "" && GetAddressToString(Thermometer) == sparge)
             temps.Sparge = temp;
+        else
+            temps.Sparge = 00.00;
     }
     json = _json + "]}";
     temps.Json = json;
