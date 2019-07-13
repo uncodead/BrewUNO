@@ -60,6 +60,8 @@ void DisplayService::printHead()
     _lcd->print(" BrewUNO   ");
     if (_activeStatus->BrewStarted)
         _lcd->print(GetCountDown());
+    else
+        _lcd->print("        ");
 }
 
 void DisplayService::printBody(int line, byte heatIcon, byte pwmIcon, double temperature, double targetTemperature,
@@ -67,8 +69,13 @@ void DisplayService::printBody(int line, byte heatIcon, byte pwmIcon, double tem
 {
     _lcd->setCursor(0, line);
     _lcd->write(heatIcon);
-    _lcd->print(" " + getTargetTemp(temperature, enableSparge, sparge, false) +
-                ">" + (brewStarted ? getTargetTemp(targetTemperature, enableSparge, sparge, true) : "00"));
+
+    if (sparge && !enableSparge)
+        _lcd->print(" 00.00>00");
+    else
+        _lcd->print(" " + getTemperature(temperature, false) +
+                    ">" + (brewStarted ? getTemperature(targetTemperature, true) : "00"));
+
     _lcd->setCursor(10, line);
     _lcd->write(gcelsius_icon);
     _lcd->setCursor(13, line);
@@ -120,18 +127,17 @@ void DisplayService::printFooter()
         _lcd->print(blankline);
 }
 
-String DisplayService::getTargetTemp(double targetTemperature, bool enableSparge, bool sparge, bool target)
+String DisplayService::getTemperature(double temperature, bool target)
 {
-    String temp = "";
-    if (targetTemperature <= 0 || (!enableSparge && sparge))
-        temp = "00";
-    else if (targetTemperature >= 100)
-        temp = target ? "1H" : "100";
-    else if (target)
-        temp = String(targetTemperature).substring(0, 2);
+    if (target)
+        if (temperature <= 99)
+            return String(temperature).substring(0, 2);
+        else
+            return "1H";
+    else if (temperature >= 100)
+        return "100.0";
     else
-        temp = String(targetTemperature);
-    return temp;
+        return String(temperature);
 }
 
 void DisplayService::RemoveLastChars(String text)
