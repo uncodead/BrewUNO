@@ -50,7 +50,7 @@ class SortableList extends Component {
           {!this.props.brewDay ?
             <IconButton aria-label="Delete"
               onClick={() => this.deleteItem(itemIndex)}>
-              <DeleteIcon fontSize="madium" />
+              <DeleteIcon fontSize="default" />
             </IconButton>
             : null}
         </ListItem>
@@ -64,7 +64,7 @@ class SortableList extends Component {
                     disabled
                   />
                 }
-                label="Recirculation"
+                label="Pump"
               /> : null}
             {!this.props.boil ?
               <FormControlLabel
@@ -79,7 +79,7 @@ class SortableList extends Component {
             {!this.props.boil ?
               <FormControlLabel
                 control={
-                  <Checkbox
+                  <Checkbox 
                     checked={value.sl}
                     disabled
                   />

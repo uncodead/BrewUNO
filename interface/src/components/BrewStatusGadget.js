@@ -109,27 +109,27 @@ class BrewStatusGadget extends Component {
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={16}>
-            <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main:"} colorPWM={"#76ff03"} PWM={this.props.PWM} titlesufix={this.props.TargetTemperature + 'ºC'} colors={TEMPERATURECOLORS} value={this.props.Temperature + 'ºC'} data={getProgressData(this.props.Temperature)} />
+            <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main:"} colorPWM={"#83f316"} PWM={this.props.PWM} titlesufix={this.props.TargetTemperature + 'ºC'} colors={TEMPERATURECOLORS} value={this.props.Temperature + 'ºC'} data={getProgressData(this.props.Temperature)} />
             {this.props.EnableSparge ?
               <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Sparge:"} colorPWM={"#2196f3"} PWM={this.props.SpargePWM} titlesufix={this.props.SpargeTargetTemperature + 'ºC'} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature + 'ºC'} data={getProgressData(this.props.SpargeTemperature)} />
-              : null}
+            : null}
 
             <Grid item>
               <Card className={this.props.className} style={cardStyle}>
                 <CardContent>
-                  {this.props.StepLocked ?
+                    {this.props.StepLocked ?
                     <Chronometer BrewStarted={this.props.BrewStarted} StartTime={this.props.EndTime} title="Step Locked" onRef={ref => (this.chronometer = ref)} />
                     : <div>
-                      <Typography color="textSecondary" variant="caption" gutterBottom>Timer</Typography>
+                      <Typography color="textSecondary" variant="subtitle2" gutterBottom>Timer</Typography>
                       <Typography variant="h4">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
                     </div>
-                  }
-                  &nbsp;
-                <div style={{ paddingTop: 10, paddingBotton: 10 }}>
+                    }
+                    &nbsp;
+                    <div style={{ paddingTop: 7, paddingBotton: 0 }}>
                     <Divider variant="fullWidth" />
-                  </div>
-                  &nbsp;
-                <div style={{ paddingTop: 10 }}>
+                    </div>
+                    &nbsp;
+                    <div style={{ paddingTop: 7 }}>
                     <Typography color="textSecondary" variant="caption" gutterBottom>Active Step{/*} - {this.props.ActiveStep}*/}</Typography>
                     <Typography variant="subtitle1">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
                   </div>
@@ -176,7 +176,7 @@ class BrewStatusGadgetItem extends Component {
               &nbsp;
               <Typography color="secondaryText" variant="subtitle2">{this.props.PWM}%</Typography>
             </div>
-            <Line percent={this.props.PWM} strokeWidth="8" strokeColor={this.props.colorPWM} />
+            <Line percent={this.props.PWM} strokeWidth="8" strokeColor={this.props.colorPWM} trailWidth="4" trailColor="#424242"/>
           </CardContent>
         </Card>
       </Grid>

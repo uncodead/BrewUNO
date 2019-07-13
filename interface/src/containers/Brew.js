@@ -332,10 +332,10 @@ class Brew extends Component {
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Boil Power {this.state.boilPower}%</Typography>
                   <Slider
-                    railStyle={{ backgroundColor: '#ccc', height: 5 }}
+                    railStyle={{ backgroundColor: '#313131', height: 5 }}
                     trackStyle={{ backgroundColor: '#5c6bc0', height: 5 }}
                     handleStyle={{
-                      borderColor: '#fff',
+                      borderColor: '#5c6bc0',
                       height: 22,
                       width: 22,
                       marginLeft: -14,

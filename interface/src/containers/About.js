@@ -18,11 +18,11 @@ const styles = theme => ({
     margin: '0 2px',
     transform: 'scale(0.8)',
   },
-  title: {
-    fontSize: 14,
-  },
   pos: {
     marginBottom: 12,
+  },
+  pos2x: {
+    marginBottom: 20,
   },
 });
 
@@ -34,19 +34,19 @@ class About extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <SectionContent title="">
-        <Card className={classes.card}>
+      <SectionContent title="About">
+        <Card className={this.props.className}>
           <CardContent>
-            <Typography variant="h6" component="h1">
+            <Typography variant="h6" component="h1" className={classes.pos}>
               Author:
             </Typography>
             <Typography className={classes.pos} variant="h7" color="textSecondary">
               Bruno Leitão de Oliveira
             </Typography>
-            <Typography className={classes.pos} variant="h7" color="textSecondary">
+            <Typography className={classes.pos2x} variant="h7" color="textSecondary">
               uncodead@gmail.com
             </Typography>
-            <Typography variant="h6" component="h1">
+            <Typography variant="h6" component="h1" className={classes.pos}>
               Thanks:
             </Typography>
             <Typography className={classes.pos} variant="h8" color="textSecondary">
