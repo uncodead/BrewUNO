@@ -46,11 +46,9 @@ void MashService::loop(ActiveStatus *activeStatus)
 
     if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)
     {
-        Serial.println("Step over..");
         activeStatus->StepLocked = activeStatus->StepLock;
         if (activeStatus->StepLock)
         {
-            Serial.println("Step locked...");
             _pump->CheckRest();
             if (timeNow - lastBeep > 15)
             {

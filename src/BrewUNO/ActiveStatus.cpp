@@ -21,7 +21,10 @@ boolean ActiveStatus::LoadActiveStatusSettings()
                 JsonObject _activeStatus = _activeStatusJsonDocument.as<JsonObject>();
                 ActiveStep = _activeStatus["active_step"];
                 ActiveMashStepIndex = _activeStatus["active_mash_step_index"];
+                ActiveMashStepName = _activeStatus["active_mash_step_name"] | "";
+                ActiveMashStepSufixName = _activeStatus["active_mash_step_sufix_name"] | "";
                 ActiveBoilStepIndex = _activeStatus["active_boil_step_index"] | "";
+                ActiveBoilStepName = _activeStatus["active_boil_step_name"] | "";
                 BoilTime = _activeStatus["boil_time"];
                 BoilTargetTemperature = _activeStatus["boil_target_temperature"];
                 TargetTemperature = _activeStatus["target_temperature"];
@@ -142,7 +145,10 @@ void ActiveStatus::SaveActiveStatus()
 
     _activeStatus["active_step"] = ActiveStep;
     _activeStatus["active_mash_step_index"] = ActiveMashStepIndex;
+    _activeStatus["active_mash_step_name"] = ActiveMashStepName;
+    _activeStatus["active_mash_step_sufix_name"] = ActiveMashStepSufixName;
     _activeStatus["active_boil_step_index"] = ActiveBoilStepIndex;
+    _activeStatus["active_boil_step_name"] = ActiveBoilStepName;
     _activeStatus["boil_time"] = BoilTime;
     _activeStatus["boil_target_temperature"] = BoilTargetTemperature;
     _activeStatus["target_temperature"] = TargetTemperature;
@@ -175,12 +181,14 @@ float ReferenceRange = ReferenceHigh - ReferenceLow;
 
 void ActiveStatus::SetTemperature(float temperature)
 {
-    Temperature = temperature;
+    if (temperature >= 0)
+        Temperature = temperature;
 }
 
 void ActiveStatus::SetSpargeTemperature(float temperature)
 {
-    SpargeTemperature = temperature;
+    if (temperature >= 0)
+        SpargeTemperature = temperature;
 }
 
 void ActiveStatus::SetJsonTemperatures(String json)

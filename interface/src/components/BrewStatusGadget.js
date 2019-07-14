@@ -6,8 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { PieChart, Pie, Cell, } from 'recharts';
 import { withStyles } from '@material-ui/core/styles';
 import { getDateTime, pad } from '../components/Utils';
-import Chronometer from './Chronometer'
-import { Line, Circle } from 'rc-progress';
+import { Line } from 'rc-progress';
 import {
   MuiThemeProvider,
   createMuiTheme,
@@ -61,13 +60,6 @@ class BrewStatusGadget extends Component {
   }, 1000);
 
   brewProgress() {
-    if (!this.props.BrewStarted && this.props.StepLocked) {
-      this.chronometer._handleStop();
-    }
-    else if (this.props.StepLocked) {
-      this.chronometer._handleStart();
-    }
-
     if (!this.props.BrewStarted || this.props.StartTime <= 0 || this.props.EndTime <= 0) {
       this.setState({
         countdown: '00:00:00',
@@ -77,8 +69,8 @@ class BrewStatusGadget extends Component {
     }
     var dateEntered = getDateTime(this.props.EndTime);
     var now = new Date();
-    var difference = dateEntered.getTime() - now.getTime();
-    if (difference <= 0) {
+    var difference = !this.props.StepLocked ? dateEntered.getTime() - now.getTime() : now.getTime() - dateEntered.getTime();
+    if (difference <= 0 && !this.props.StepLocked) {
       this.setState({
         countdown: '00:00:00',
         progressCompleted: 100
@@ -112,23 +104,20 @@ class BrewStatusGadget extends Component {
             <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main:"} colorPWM={"#83f316"} PWM={this.props.PWM} titlesufix={this.props.TargetTemperature + 'ºC'} colors={TEMPERATURECOLORS} value={this.props.Temperature + 'ºC'} data={getProgressData(this.props.Temperature)} />
             {this.props.EnableSparge ?
               <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Sparge:"} colorPWM={"#2196f3"} PWM={this.props.SpargePWM} titlesufix={this.props.SpargeTargetTemperature + 'ºC'} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature + 'ºC'} data={getProgressData(this.props.SpargeTemperature)} />
-            : null}
+              : null}
 
             <Grid item>
               <Card className={this.props.className} style={cardStyle}>
                 <CardContent>
-                    {this.props.StepLocked ?
-                    <Chronometer BrewStarted={this.props.BrewStarted} StartTime={this.props.EndTime} title="Step Locked" onRef={ref => (this.chronometer = ref)} />
-                    : <div>
-                      <Typography color="textSecondary" variant="subtitle2" gutterBottom>Timer</Typography>
-                      <Typography variant="h4">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
-                    </div>
-                    }
-                    &nbsp;
+                  <div>
+                    <Typography color="textSecondary" variant="subtitle2" gutterBottom>Timer</Typography>
+                    <Typography variant="h4">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
+                  </div>
+                  &nbsp;
                     <div style={{ paddingTop: 7, paddingBotton: 0 }}>
                     <Divider variant="fullWidth" />
-                    </div>
-                    &nbsp;
+                  </div>
+                  &nbsp;
                     <div style={{ paddingTop: 7 }}>
                     <Typography color="textSecondary" variant="caption" gutterBottom>Active Step{/*} - {this.props.ActiveStep}*/}</Typography>
                     <Typography variant="subtitle1">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
@@ -176,7 +165,7 @@ class BrewStatusGadgetItem extends Component {
               &nbsp;
               <Typography color="secondaryText" variant="subtitle2">{this.props.PWM}%</Typography>
             </div>
-            <Line percent={this.props.PWM} strokeWidth="8" strokeColor={this.props.colorPWM} trailWidth="4" trailColor="#424242"/>
+            <Line percent={this.props.PWM} strokeWidth="8" strokeColor={this.props.colorPWM} trailWidth="4" trailColor="#424242" />
           </CardContent>
         </Card>
       </Grid>

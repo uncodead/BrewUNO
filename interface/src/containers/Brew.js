@@ -110,7 +110,7 @@ class Brew extends Component {
     }
     interval = setInterval(() => {
       this.getStatus();
-    }, 2000);
+    }, 5000);
   }
 
   updateStatus() {
@@ -142,13 +142,13 @@ class Brew extends Component {
   notification(getActiveStep, stepName, step) {
     if (getActiveStep === step && this.state.activeStepName !== stepName) {
       this.setState({ activeStepName: stepName });
-      if (stepName !== "") {
+      if (stepName !== "" && stepName !== undefined) {
         const action = (key) => (
           <Button color="Primary" onClick={() => { this.props.closeSnackbar(key) }}>
             {'Dismiss'}
           </Button>
         );
-        this.props.enqueueSnackbar(step + " Step: " + stepName, {
+        this.props.enqueueSnackbar(stepName, {
           persist: true,
           action,
           variant: 'warning'
@@ -346,21 +346,6 @@ class Brew extends Component {
                     onChange={this.handleChangeBoilPowerPercentage}
                     onAfterChange={this.handleSaveChangeBoilPowerPercentage}
                   />
-                  {
-                    /*
-                    <Slider
-                    classes={{
-                      container: classes.slider, thumb: classes.sliderThumb, trackBefore: classes.trackBefore,
-                      trackAfter: classes.trackAfter,
-                    }}
-                    step={1}
-                    value={this.state.boilPower}
-                    onChange={this.handleChangeBoilPowerPercentage}
-                    onDragEnd={this.handleSaveChangeBoilPowerPercentage}
-                  />
-                    */
-                  }
-
                 </CardContent>
               </Card>
             </Grid>

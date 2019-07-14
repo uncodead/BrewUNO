@@ -81,7 +81,6 @@ void Pump::CheckRest()
     }
     else
     {
-        Serial.println("No Pump Rest");
         _activeStatus->PumpIsResting = false;
     }
 }

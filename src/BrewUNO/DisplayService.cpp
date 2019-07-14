@@ -57,11 +57,13 @@ void DisplayService::printHead()
         _lcd->write(2);
     else if (currentWiFiMode == WIFI_AP || currentWiFiMode == WIFI_AP_STA)
         _lcd->write(1);
-    _lcd->print(" BrewUNO   ");
-    if (_activeStatus->BrewStarted)
-        _lcd->print(GetCountDown());
+    _lcd->print(" BrewUNO  ");
+    if (_activeStatus->BrewStarted && !_activeStatus->StepLocked)
+        _lcd->print(" " + GetCount(true));
+    else if (_activeStatus->StepLocked)
+        _lcd->print(GetCount(false) + 'L');
     else
-        _lcd->print("        ");
+        _lcd->print("         ");
 }
 
 void DisplayService::printBody(int line, byte heatIcon, byte pwmIcon, double temperature, double targetTemperature,
@@ -84,6 +86,8 @@ void DisplayService::printBody(int line, byte heatIcon, byte pwmIcon, double tem
 
     if (pwm <= 0)
         _lcd->print("  0%");
+    else if (pwm < 10)
+        _lcd->print("  " + String(pwm).substring(0, 1) + "%");
     else if (pwm <= 99)
         _lcd->print(" " + String(pwm).substring(0, 2) + "%");
     else
@@ -146,12 +150,11 @@ void DisplayService::RemoveLastChars(String text)
         _lcd->print(" ");
 }
 
-String DisplayService::GetCountDown()
+String DisplayService::GetCount(bool down)
 {
     char buffer[16];
-    int dateEntered = _activeStatus->EndTime;
-    int difference = dateEntered - now();
-    if (difference <= 0)
+    int difference = down ? _activeStatus->EndTime - now() : now() - _activeStatus->EndTime;
+    if (difference <= 0 && down)
         return "00:00:00";
     int seconds = floor(difference);
     int minutes = floor(seconds / 60);
