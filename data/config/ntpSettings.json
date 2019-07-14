@@ -1,4 +1,4 @@
 {
   "server":"b.st1.ntp.br",
-  "interval":60
+  "interval":3600
 }
