@@ -100,7 +100,7 @@ class Brew extends Component {
     super(props)
     this.getStatus();
     this.state = {
-      status: { temperature: '-' },
+      status: { temperature: '' },
       data: [],
       confirmDialogOpen: false,
       boilPower: 0,
@@ -108,6 +108,7 @@ class Brew extends Component {
       statusInitialized: false,
       copyDialogMessage: false
     }
+
     interval = setInterval(() => {
       this.getStatus();
     }, 5000);
@@ -231,6 +232,10 @@ class Brew extends Component {
     }
   }
 
+  componentDidMount() {
+    this.getStatus();
+  }
+
   componentWillUnmount() {
     clearInterval(interval);
   }
@@ -305,7 +310,7 @@ class Brew extends Component {
             <BrewStatusGadget
               BrewStarted={this.state.status.brew_started}
               Temperature={this.state.status.temperature}
-              TargetTemperature={this.state.status.target_temperature}
+              TargetTemperature={this.state.status.target_temperature > 0 ? this.state.status.target_temperature : ''}
               BoilTemperature={this.state.status.boil_target_temperature}
               PWM={this.state.status.pwm_percentage}
               SpargePWM={this.state.status.sparge_pwm_percentage}
@@ -318,7 +323,7 @@ class Brew extends Component {
               StepLocked={this.state.status.step_locked > 0}
               PumpIsResting={this.state.status.pump_is_resting > 0}
               SpargeTemperature={this.state.status.sparge_temperature}
-              SpargeTargetTemperature={this.state.status.sparge_target_temperature}
+              SpargeTargetTemperature={this.state.status.sparge_target_temperature > 0 ? this.state.status.sparge_target_temperature : ''}
               EnableSparge={this.state.status.enable_sparge}
             />
           </CardContent>
