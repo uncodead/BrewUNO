@@ -8,7 +8,7 @@
     "pumpRestInterval": 300,
     "pumpRestTime": 60,
     "mashHeaterPercentage": 66,
-    "enableSparge": true,
+    "enableSparge": false,
     "spargeTemperature": 75,
     "spargePowerPercentage": 100,
     "pidStart": 0.5

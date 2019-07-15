@@ -79,7 +79,6 @@ private:
   void resumeBrew(AsyncWebServerRequest *request);
   void unLockBrew(AsyncWebServerRequest *request);
   void startBoil(AsyncWebServerRequest *request);
-  void startTuning(AsyncWebServerRequest *request);
   void pauseBrew(AsyncWebServerRequest *request);
   void changeBoilPercentage(AsyncWebServerRequest *request, JsonDocument &json);
 

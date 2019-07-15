@@ -28,7 +28,6 @@ BrewService::BrewService(AsyncWebServer *server,
     _server->on(RESUME_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::resumeBrew, this, std::placeholders::_1));
     _server->on(UNLOCK_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::unLockBrew, this, std::placeholders::_1));
     _server->on(START_BOIL_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBoil, this, std::placeholders::_1));
-    _server->on(START_TUNING_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startTuning, this, std::placeholders::_1));
     _updateHandler.setUri(CHANGE_BOIL_PERCENTAGE_SERVICE_PATH);
     _updateHandler.setMethod(HTTP_POST);
     _updateHandler.setMaxContentLength(1024);
@@ -69,7 +68,6 @@ void BrewService::stopBrew(AsyncWebServerRequest *request)
     _pump->TurnPumpOff();
     _mashKettleHeaterService->Compute(_activeStatus->Temperature, _activeStatus->TargetTemperature, _brewSettingsService->MashHeaterPercentage);
     _spargeKettleHeaterService->Compute(_activeStatus->SpargeTemperature, _brewSettingsService->SpargeTemperature, _brewSettingsService->SpargePowerPercentage);
-    //STOP other heater
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
@@ -139,15 +137,6 @@ void BrewService::changeBoilPercentage(AsyncWebServerRequest *request, JsonDocum
     }
     else
         request->send(500, APPLICATION_JSON_TYPE, INVALID_JSON_ERROR);
-}
-
-void BrewService::startTuning(AsyncWebServerRequest *request)
-{
-    /*
-    _kettleHeaterService->StartAutoTune();
-    _activeStatus->PIDTuning = true;
-    */
-    request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
 void BrewService::getActiveStatus(AsyncWebServerRequest *request)

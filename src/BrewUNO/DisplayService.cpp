@@ -113,19 +113,19 @@ void DisplayService::printFooter()
         else if (currentWiFiMode == WIFI_AP || currentWiFiMode == WIFI_AP_STA)
             ip = "IP: " + WiFi.softAPIP().toString();
         _lcd->print(ip);
-        RemoveLastChars(ip);
+        RemoveLastChars(ip.length());
     }
     else if (_activeStatus->ActiveStep == mash)
     {
         String step = _activeStatus->ActiveMashStepName.substring(0, 13) + " " + _activeStatus->ActiveMashStepSufixName.substring(0, 6);
         _lcd->print(step);
-        RemoveLastChars(step);
+        RemoveLastChars(step.length());
     }
     else if (_activeStatus->ActiveStep == boil && _activeStatus->ActiveBoilStepName != "")
     {
         String boil = _activeStatus->ActiveBoilStepName.substring(0, 20);
         _lcd->print(boil);
-        RemoveLastChars(boil);
+        RemoveLastChars(boil.length());
     }
     else
         _lcd->print(blankline);
@@ -138,30 +138,34 @@ String DisplayService::getTemperature(double temperature, bool target)
             return String(temperature).substring(0, 2);
         else
             return "1H";
+    else if (temperature <= 0)
+        return "00.00";
     else if (temperature >= 100)
         return "100.0";
     else
         return String(temperature);
 }
 
-void DisplayService::RemoveLastChars(String text)
+void DisplayService::RemoveLastChars(int length)
 {
-    for (int i = 0; i < 20 - text.length(); i++)
+    for (int i = 0; i < 20 - length; i++)
         _lcd->print(" ");
 }
 
 String DisplayService::GetCount(bool down)
 {
-    char buffer[16];
     int difference = down ? _activeStatus->EndTime - now() : now() - _activeStatus->EndTime;
     if (difference <= 0 && down)
         return "00:00:00";
+    if (difference >= 1800)
+        return "00:30:00";
     int seconds = floor(difference);
     int minutes = floor(seconds / 60);
     int hours = floor(minutes / 60);
     hours %= 24;
     minutes %= 60;
     seconds %= 60;
+    char buffer[16];
     sprintf(buffer, "%02u:%02u:%02u", hours, minutes, seconds);
     return buffer;
 }

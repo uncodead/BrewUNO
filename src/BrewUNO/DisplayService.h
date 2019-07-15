@@ -34,7 +34,7 @@ private:
     void printHead();
     void printFooter();
     String GetCount(bool down);
-    void RemoveLastChars(String text);
+    void RemoveLastChars(int length);
     String getTemperature(double targetTemperature, bool target);
     void printBody(int line, byte heatIcon, byte pwmIcon, double temperature, double targetTemperature, double pwm, bool pump, bool brewStarted, bool showPump, bool sparge, bool EnableSparge);
 };
