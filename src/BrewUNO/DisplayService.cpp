@@ -157,8 +157,6 @@ String DisplayService::GetCount(bool down)
     int difference = down ? _activeStatus->EndTime - now() : now() - _activeStatus->EndTime;
     if (difference <= 0 && down)
         return "00:00:00";
-    if (difference >= 1800)
-        return "00:30:00";
     int seconds = floor(difference);
     int minutes = floor(seconds / 60);
     int hours = floor(minutes / 60);

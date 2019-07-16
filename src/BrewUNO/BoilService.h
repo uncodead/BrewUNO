@@ -38,5 +38,6 @@ private:
   TemperatureService *_temperatureService;
   BrewSettingsService *_brewSettingsService;
   void SetBoiIndexStep(ActiveStatus *activeStatus, int);
+  String getStepName(String name, String time, String amount);
 };
 #endif
