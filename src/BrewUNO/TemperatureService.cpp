@@ -36,6 +36,7 @@ Temperatures TemperatureService::GetTemperatures(String main, String sparge)
     DeviceAddress Thermometer;
     _dallasTemperature.requestTemperatures();
     String _json = "{ \"sensors\": [ ";
+    String addr = "";
     for (int i = 0; i < DeviceCount; i++)
     {
         _dallasTemperature.getAddress(Thermometer, i);
@@ -44,7 +45,7 @@ Temperatures TemperatureService::GetTemperatures(String main, String sparge)
         if (i < DeviceCount - 1)
             _json += ',';
 
-        String addr = GetAddressToString(Thermometer);
+        addr = GetAddressToString(Thermometer);
         if (main != "" && addr == main)
             temps.Main = temp;
 
