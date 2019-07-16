@@ -38,7 +38,6 @@ void DisplayService::loop()
     if (now() - lastUpdate > 1)
     {
         lastUpdate = now();
-        _lcd->home();
         printHead();
         printBody(1, pheater_icon, gwm_icon, _activeStatus->Temperature, _activeStatus->TargetTemperature, _activeStatus->PWMPercentage,
                   _activeStatus->PumpOn, _activeStatus->BrewStarted, true, false, _activeStatus->EnableSparge);

@@ -27,7 +27,6 @@ void MashService::loop(ActiveStatus *activeStatus)
     if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
         return;
 
-    time_t timeNow = now();
     JsonArray steps = _mashSettings["st"].as<JsonArray>();
 
     if (activeStatus->TargetTemperature == 0)
@@ -43,7 +42,8 @@ void MashService::loop(ActiveStatus *activeStatus)
         if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
             return;
     }
-
+    
+    time_t timeNow = now();
     if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)
     {
         activeStatus->StepLocked = activeStatus->StepLock;
