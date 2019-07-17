@@ -31,21 +31,25 @@ String TemperatureService::GetSensorsJson()
 Temperatures TemperatureService::GetTemperatures(String main, String sparge)
 {
     Temperatures temps;
+    temps.Main = 0;
+    temps.Sparge = 0;
     DeviceAddress Thermometer;
     _dallasTemperature.requestTemperatures();
     String _json = "{ \"sensors\": [ ";
+    String addr = "";
     for (int i = 0; i < DeviceCount; i++)
     {
         _dallasTemperature.getAddress(Thermometer, i);
         float temp = _dallasTemperature.getTempC(Thermometer);
-        _json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",";
-        _json += "\"value\": \"" + String(_dallasTemperature.getTempC(Thermometer)) + "\"}";
+        _json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",\"value\": \"" + String(_dallasTemperature.getTempC(Thermometer)) + "\"}";
         if (i < DeviceCount - 1)
             _json += ',';
 
-        if (main != "" && GetAddressToString(Thermometer) == main)
+        addr = GetAddressToString(Thermometer);
+        if (main != "" && addr == main)
             temps.Main = temp;
-        if (sparge != "" && GetAddressToString(Thermometer) == sparge)
+
+        if (sparge != "" && addr == sparge)
             temps.Sparge = temp;
     }
     json = _json + "]}";

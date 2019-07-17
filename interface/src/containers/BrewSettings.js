@@ -40,6 +40,7 @@ class BrewSettings extends Component {
           errorMessage={errorMessage}
           onSubmit={this.props.saveData}
           handleValueChange={this.props.handleValueChange}
+          handleCheckboxChange={this.props.handleCheckboxChange}
           sensors={this.state.sensors}
         />
       </SectionContent>

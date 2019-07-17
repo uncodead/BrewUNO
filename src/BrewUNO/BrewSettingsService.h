@@ -24,6 +24,9 @@ public:
   int BoilTime;
   double RampPowerPercentage;
   double BoilPowerPercentage;
+  double SpargePowerPercentage;
+  double SpargeTemperature;
+  bool EnableSparge;
   double BoilTemperature;
   double PIDStart;
   double MashHeaterPercentage;

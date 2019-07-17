@@ -18,7 +18,8 @@
 #include <BrewUNO/enum.h>
 #include <BrewUNO/MashService.h>
 #include <BrewUNO/BoilService.h>
-#include <BrewUNO/KettleHeaterService.h>
+#include <BrewUNO/MashKettleHeaterService.h>
+#include <BrewUNO/SpargeKettleHeaterService.h>
 #include <BrewUNO/BrewSettingsService.h>
 #include <BrewUNO/ActiveStatus.h>
 #include <BrewUNO/Pump.h>
@@ -46,7 +47,8 @@ public:
               MashService *mashService,
               BoilService *boilService,
               BrewSettingsService *brewSettingsService,
-              KettleHeaterService *kettleHeaterService,
+              MashKettleHeaterService *kettleHeaterService,
+              SpargeKettleHeaterService *spargeKettleHeaterService,
               ActiveStatus *activeStatus,
               TemperatureService *temperatureService,
               Pump *pump);
@@ -62,7 +64,8 @@ private:
   BoilService *_boilService;
   MashService *_mashService;
   BrewSettingsService *_brewSettingsService;
-  KettleHeaterService *_kettleHeaterService;
+  MashKettleHeaterService *_mashKettleHeaterService;
+  SpargeKettleHeaterService *_spargeKettleHeaterService;
   TemperatureService *_temperatureService;
   Pump *_pump;
   ActiveStatus *_activeStatus;
@@ -76,8 +79,9 @@ private:
   void resumeBrew(AsyncWebServerRequest *request);
   void unLockBrew(AsyncWebServerRequest *request);
   void startBoil(AsyncWebServerRequest *request);
-  void startTuning(AsyncWebServerRequest *request);
   void pauseBrew(AsyncWebServerRequest *request);
   void changeBoilPercentage(AsyncWebServerRequest *request, JsonDocument &json);
+
+  void HeaterCompute();
 };
 #endif

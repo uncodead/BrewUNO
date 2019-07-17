@@ -33,9 +33,13 @@ public:
 
   int ActiveMashStepIndex;
   String ActiveMashStepName;
+  String ActiveMashStepSufixName;
   
   int BoilTime;
-  int PWM;
+  double PWM;
+  double PWMPercentage;
+  double SpargePWM;
+  double SpargePWMPercentage;
   boolean PIDActing;
 
   double BoilTargetTemperature;
@@ -45,6 +49,9 @@ public:
   double Temperature;
   double SpargeTemperature;
   String Temperatures;
+
+  bool EnableSparge;
+  double SpargeTargetTemperature;
 
   String MainSensor;
   String SpargeSensor;
@@ -59,7 +66,7 @@ public:
   boolean PumpIsResting;
   boolean PIDSettingsUpdated;
 
-  boolean HeaterOff;
+  boolean HeaterOn;
   boolean StepLock;
   boolean StepLocked;
 

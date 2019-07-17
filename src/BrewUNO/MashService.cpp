@@ -27,14 +27,14 @@ void MashService::loop(ActiveStatus *activeStatus)
     if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
         return;
 
-    time_t timeNow = now();
     JsonArray steps = _mashSettings["st"].as<JsonArray>();
 
     if (activeStatus->TargetTemperature == 0)
     {
         activeStatus->TargetTemperature = steps[0]["t"];
         activeStatus->ActiveMashStepIndex = 0;
-        activeStatus->ActiveMashStepName = getMashName(steps[0]) + " [req]";
+        activeStatus->ActiveMashStepName = steps[0]["n"].as<String>();
+        activeStatus->ActiveMashStepSufixName = getMashName(steps[0]);
         _pump->AntiCavitation();
         _pump->TurnPumpOn();
 
@@ -42,14 +42,13 @@ void MashService::loop(ActiveStatus *activeStatus)
         if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
             return;
     }
-
+    
+    time_t timeNow = now();
     if (activeStatus->EndTime > 0 && timeNow > activeStatus->EndTime)
     {
-        Serial.println("Step over..");
         activeStatus->StepLocked = activeStatus->StepLock;
         if (activeStatus->StepLock)
         {
-            Serial.println("Step locked...");
             _pump->CheckRest();
             if (timeNow - lastBeep > 15)
             {
@@ -59,38 +58,11 @@ void MashService::loop(ActiveStatus *activeStatus)
             return;
         }
 
-        Serial.println("Next step: ");
         unsigned int nextMashStep = activeStatus->ActiveMashStepIndex + 1;
         if (steps.size() > nextMashStep)
-        {
-            JsonObject step = steps[nextMashStep];
-            activeStatus->ActiveMashStepIndex = nextMashStep;
-            activeStatus->ActiveMashStepName = getMashName(step) + " [req]";
-            Serial.println(getMashName(step));
-            activeStatus->StartTime = 0;
-            activeStatus->EndTime = 0;
-            activeStatus->TargetTemperature = step["t"];
-            activeStatus->Recirculation = ((int)step["r"]) == 1;
-            activeStatus->HeaterOff = ((int)step["ho"]) == 1;
-            activeStatus->StepLock = ((int)step["sl"]) == 1;
-            Buzzer().Ring(1, 2000);
-            _pump->TurnPumpOn();
-            activeStatus->SaveActiveStatus();
-        }
+            NextStep(activeStatus, steps, timeNow, nextMashStep);
         else
-        {
-            Serial.println("Boil Time");
-            activeStatus->ActiveStep = boil;
-            activeStatus->StartTime = 0;
-            activeStatus->EndTime = 0;
-            activeStatus->ActiveMashStepIndex = -1;
-            activeStatus->ActiveMashStepName = "";
-            activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
-            activeStatus->Recirculation = false;
-            Buzzer().Ring(2, 2000);
-            _pump->TurnPumpOff();
-            activeStatus->SaveActiveStatus();
-        }
+            BoilTime(activeStatus);
     }
     else
     {
@@ -98,34 +70,74 @@ void MashService::loop(ActiveStatus *activeStatus)
             _pump->CheckRest();
 
         if (activeStatus->Temperature >= (activeStatus->TargetTemperature) && activeStatus->StartTime == 0)
-        {
-            Serial.println("Step Started");
-            JsonObject step = steps[activeStatus->ActiveMashStepIndex];
-            activeStatus->StartTime = timeNow;
-            activeStatus->EndTime = timeNow + (int(step["tm"]) * 60);
-            activeStatus->HeaterOff = ((int)step["ho"]) == 1;
-            activeStatus->StepLock = ((int)step["sl"]) == 1;
-            activeStatus->ActiveMashStepName = getMashName(step);
-
-            Serial.print("Start time: ");
-            Serial.println(activeStatus->StartTime);
-            Serial.print("End Time: ");
-            Serial.println(activeStatus->EndTime);
-            Buzzer().Ring(1, 2000);
-
-            activeStatus->Recirculation = ((int)step["r"]) == 1;
-            if (activeStatus->Recirculation)
-                _pump->TurnPumpOn();
-            else
-                _pump->TurnPumpOff();
-            activeStatus->SaveActiveStatus();
-        }
+            StepStarted(activeStatus, steps, timeNow);
     }
+}
+
+void MashService::NextStep(ActiveStatus *activeStatus, JsonArray steps, time_t timeNow, int nextMashStep)
+{
+    JsonObject step = steps[nextMashStep];
+    activeStatus->ActiveMashStepIndex = nextMashStep;
+    activeStatus->ActiveMashStepName = step["n"].as<String>();
+    activeStatus->ActiveMashStepSufixName = getMashName(step);
+    activeStatus->StartTime = 0;
+    activeStatus->EndTime = 0;
+    activeStatus->TargetTemperature = step["t"];
+    activeStatus->Recirculation = ((int)step["r"]) == 1;
+    activeStatus->HeaterOn = ((int)step["ho"]) == 1;
+    activeStatus->StepLock = ((int)step["sl"]) == 1;
+    Buzzer().Ring(1, 2000);
+    if (!activeStatus->HeaterOn)
+        StepStarted(activeStatus, steps, timeNow);
+    else
+        _pump->TurnPumpOn();
+
+    activeStatus->SaveActiveStatus();
+}
+
+void MashService::BoilTime(ActiveStatus *activeStatus)
+{
+    Serial.println("Boil Time");
+    activeStatus->ActiveStep = boil;
+    activeStatus->StartTime = 0;
+    activeStatus->EndTime = 0;
+    activeStatus->ActiveMashStepIndex = -1;
+    activeStatus->ActiveMashStepName = "";
+    activeStatus->ActiveMashStepSufixName = "";
+    activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
+    activeStatus->Recirculation = false;
+    Buzzer().Ring(2, 2000);
+    _pump->TurnPumpOff();
+    activeStatus->SaveActiveStatus();
+}
+
+void MashService::StepStarted(ActiveStatus *activeStatus, JsonArray steps, time_t timeNow)
+{
+    Serial.println("Step Started");
+    JsonObject step = steps[activeStatus->ActiveMashStepIndex];
+    activeStatus->StartTime = timeNow;
+    activeStatus->EndTime = timeNow + (int(step["tm"]) * 60);
+    activeStatus->HeaterOn = ((int)step["ho"]) == 1;
+    activeStatus->StepLock = ((int)step["sl"]) == 1;
+    activeStatus->ActiveMashStepName = step["n"].as<String>();
+    activeStatus->ActiveMashStepSufixName = getMashName(step);
+
+    Serial.print("Start time: ");
+    Serial.println(activeStatus->StartTime);
+    Serial.print("End Time: ");
+    Serial.println(activeStatus->EndTime);
+    Buzzer().Ring(1, 2000);
+
+    activeStatus->Recirculation = ((int)step["r"]) == 1;
+    if (activeStatus->Recirculation)
+        _pump->TurnPumpOn();
+    else
+        _pump->TurnPumpOff();
+    activeStatus->SaveActiveStatus();
 }
 
 String MashService::getMashName(JsonObject step)
 {
-    return step["n"].as<String>() + " " +
-           step["tm"].as<String>() + "' @ " +
-           step["t"].as<String>() + "ºC";
+    return step["tm"].as<String>() + "'@" +
+           step["t"].as<String>() + "c";
 }

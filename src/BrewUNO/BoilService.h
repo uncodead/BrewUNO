@@ -17,6 +17,7 @@
 #include <NtpClientLib.h>
 #include <BrewUNO/enum.h>
 #include <BrewUNO/TemperatureService.h>
+#include <BrewUNO/BrewSettingsService.h>
 #include <BrewUNO/ActiveStatus.h>
 #include <BrewUNO/Buzzer.h>
 
@@ -25,7 +26,7 @@
 class BoilService
 {
 public:
-  BoilService(FS *fs, TemperatureService *temperatureService);
+  BoilService(FS *fs, TemperatureService *temperatureService, BrewSettingsService *brewSettingsService);
 
   ~BoilService();
 
@@ -35,6 +36,8 @@ public:
 private:
   FS *_fs;
   TemperatureService *_temperatureService;
+  BrewSettingsService *_brewSettingsService;
   void SetBoiIndexStep(ActiveStatus *activeStatus, int);
+  String getStepName(String name, String time, String amount);
 };
 #endif

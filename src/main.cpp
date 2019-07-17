@@ -34,7 +34,9 @@
 #include <BrewUNO/MashService.h>
 #include <BrewUNO/BoilService.h>
 #include <BrewUNO/TemperatureService.h>
-#include <BrewUNO/KettleHeaterService.h>
+#include <BrewUNO/HeaterService.h>
+#include <BrewUNO/MashKettleHeaterService.h>
+#include <BrewUNO/SpargeKettleHeaterService.h>
 #include <BrewUNO/ActiveStatus.h>
 #include <BrewUNO/Buzzer.h>
 #include <BrewUNO/Pump.h>
@@ -72,11 +74,12 @@ MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
 
 Pump pump = Pump(&server, &activeStatus, &brewSettingsService);
-DisplayService display = DisplayService(&activeStatus, &lcd);
-KettleHeaterService kettleHeaterService = KettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
+DisplayService display = DisplayService(&activeStatus, &wifiStatus, &lcd);
+MashKettleHeaterService mashKettleHeaterService = MashKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService, HEATER_BUS);
+SpargeKettleHeaterService spargeKettleHeaterService = SpargeKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService, SPARGE_HEATER_BUS);
 MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
-BoilService boilService = BoilService(&SPIFFS, &temperatureService);
-BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &kettleHeaterService, &activeStatus, &temperatureService, &pump);
+BoilService boilService = BoilService(&SPIFFS, &temperatureService, &brewSettingsService);
+BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &activeStatus, &temperatureService, &pump);
 
 void setup()
 {
@@ -114,17 +117,11 @@ void setup()
   // OPTIONS get a straight up 200 response
   server.onNotFound([](AsyncWebServerRequest *request) {
     if (request->method() == HTTP_GET)
-    {
       request->send(SPIFFS, "/www/index.html");
-    }
     else if (request->method() == HTTP_OPTIONS)
-    {
       request->send(200);
-    }
     else
-    {
       request->send(404);
-    }
   });
 
 // Disable CORS if required
@@ -141,7 +138,8 @@ void setup()
   pinMode(BUZZER_BUS, OUTPUT);
   digitalWrite(BUZZER_BUS, LOW);
   pinMode(HEATER_BUS, OUTPUT);
-  //pinMode(TEMPERATURE_BUS, OUTPUT);
+  pinMode(SPARGE_HEATER_BUS, OUTPUT);
+
   pump.TurnPumpOff();
   DS18B20.begin();
   // locate devices on the bus

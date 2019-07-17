@@ -1,7 +1,8 @@
 #include <BrewUNO/BoilService.h>
 
-BoilService::BoilService(FS *fs, TemperatureService *temperatureService) : _fs(fs),
-                                                                           _temperatureService(temperatureService)
+BoilService::BoilService(FS *fs, TemperatureService *temperatureService, BrewSettingsService *brewSettingsService) : _fs(fs),
+                                                                                                                     _temperatureService(temperatureService),
+                                                                                                                     _brewSettingsService(brewSettingsService)
 {
 }
 
@@ -26,6 +27,8 @@ void BoilService::loop(ActiveStatus *activeStatus)
         return;
 
     time_t timeNow = now();
+    activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
+    activeStatus->TargetTemperature = _brewSettingsService->BoilTemperature;
 
     if (activeStatus->StartTime == 0 && activeStatus->Temperature >= activeStatus->BoilTargetTemperature)
     {
@@ -66,7 +69,7 @@ void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, int second)
             String amount = step["a"];
             currentStep = currentStep == "" ? String(index) : currentStep + "," + String(index);
             currentStepName +=
-                currentStepName == "" ? name + " " + amount + "g at " + time + " min" : currentStepName + " / " + name + " " + amount + "g at " + time + " min";
+                currentStepName == "" ? getStepName(name, time, amount) : currentStepName + " / " + getStepName(name, time, amount);
         }
         index++;
     }
@@ -81,4 +84,9 @@ void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, int second)
         Buzzer().Ring(1, 1000);
         activeStatus->SaveActiveStatus();
     }
+}
+
+String BoilService::getStepName(String name, String time, String amount)
+{
+    return name + " " + amount + "g@" + time + "'";
 }

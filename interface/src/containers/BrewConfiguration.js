@@ -25,7 +25,7 @@ class BrewConfiguration extends Component {
     const { selectedTab } = this.state
     return (
       <MenuAppBar sectionTitle="Brew Settings">
-        <Tabs value={selectedTab} onChange={this.handleTabChange} indicatorColor="secondary" textColor="secondary" fullWidth scrollable>
+        <Tabs value={selectedTab} onChange={this.handleTabChange} indicatorColor="secondary" textColor="contrastText" fullWidth scrollable>
           <Tab value="MashSettings" label="Mash" />
           <Tab value="BoilSettings" label="Boil" />
           <Tab value="BrewSettings" label="Settings" />

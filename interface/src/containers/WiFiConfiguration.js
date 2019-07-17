@@ -38,7 +38,7 @@ class WiFiConfiguration extends Component {
     const { selectedTab } = this.state;
     return (
       <MenuAppBar sectionTitle="WiFi Configuration">
-        <Tabs value={selectedTab} onChange={this.handleTabChange} indicatorColor="secondary" textColor="secondary" fullWidth scrollable>
+        <Tabs value={selectedTab} onChange={this.handleTabChange} indicatorColor="secondary" textColor="contrastText" fullWidth scrollable>
            <Tab value="wifiStatus" label="WiFi Status" />
            <Tab value="networkScanner" label="Network Scanner" />
            <Tab value="wifiSettings" label="WiFi Settings" />

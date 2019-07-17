@@ -43,14 +43,14 @@ class SortableList extends Component {
             primary={value.n}
             secondary={<Typography>{this.getItemText(value)}
               {this.props.brewDay && !this.props.boil && value.r ? ' (Recirculation) ' : null}
-              {this.props.brewDay && !this.props.boil && value.ho ? ' (Heater OFF) ' : null}
+              {this.props.brewDay && !this.props.boil && value.ho ? ' (Heater) ' : null}
               {this.props.brewDay && !this.props.boil && value.sl ? ' (Step LOCK)' : null}
             </Typography>}
           />
           {!this.props.brewDay ?
             <IconButton aria-label="Delete"
               onClick={() => this.deleteItem(itemIndex)}>
-              <DeleteIcon fontSize="madium" />
+              <DeleteIcon fontSize="default" />
             </IconButton>
             : null}
         </ListItem>
@@ -64,7 +64,7 @@ class SortableList extends Component {
                     disabled
                   />
                 }
-                label="Recirculation"
+                label="Pump"
               /> : null}
             {!this.props.boil ?
               <FormControlLabel
@@ -74,12 +74,12 @@ class SortableList extends Component {
                     disabled
                   />
                 }
-                label="Heater OFF"
+                label="Heater"
               /> : null}
             {!this.props.boil ?
               <FormControlLabel
                 control={
-                  <Checkbox
+                  <Checkbox 
                     checked={value.sl}
                     disabled
                   />

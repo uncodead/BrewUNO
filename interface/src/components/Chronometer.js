@@ -86,12 +86,10 @@ class Chronometer extends React.Component {
 
     render() {
         return (
-            <Card>
-                <CardContent>
-                    <Typography color="textSecondary" variant="subtitle1" gutterBottom>{this.props.title}</Typography>
-                    <Typography variant="h5">{this.zeroPad(this.state.minutes)}:{this.zeroPad(this.state.seconds)}</Typography>
-                </CardContent>
-            </Card>
+            <div>
+                <Typography color="textSecondary" variant="caption" gutterBottom>{this.props.title}</Typography>
+                <Typography variant="h4">{this.zeroPad(this.state.minutes)}:{this.zeroPad(this.state.seconds)}</Typography>
+            </div>
         )
     }
 }

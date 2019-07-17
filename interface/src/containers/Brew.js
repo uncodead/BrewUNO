@@ -21,18 +21,44 @@ import YAxis from 'recharts/lib/cartesian/YAxis';
 import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
 import Tooltip from 'recharts/lib/component/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/lab/Slider';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 import Divider from '@material-ui/core/Divider';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import BrewStatusGadget from '../components/BrewStatusGadget'
+import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
+import PlayCircleFilledWhite from '@material-ui/icons/PlayCircleFilledWhite';
+import Stop from '@material-ui/icons/Stop'
+import LockOpen from '@material-ui/icons/LockOpen'
+import Cancel from '@material-ui/icons/Cancel';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
+import SkipNext from '@material-ui/icons/SkipNext';
+import SvgIcon from '@material-ui/core/SvgIcon';
 import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit * 0.45,
+    padding: theme.spacing.unit * 0.7,
+  },
+  button_icons: {
+    marginRight: theme.spacing.unit * 0,
+    padding: 0,
+  },
+  button_pump: {
+    marginRight: theme.spacing.unit * 0.33,
+    padding: 0,
+  },
+  button_pop: {
+    marginRight: theme.spacing.unit * 0.5,
+    padding: 2,
   },
   input: {
     display: 'none',
@@ -58,6 +84,12 @@ const styles = theme => ({
   chartCard: {
     background: "#262626",
   },
+  pumpColor1: {
+    color: "#447bd6",
+  },
+  pumpColor2: {
+    color: "#5c94f2",
+  },
 });
 
 
@@ -68,17 +100,18 @@ class Brew extends Component {
     super(props)
     this.getStatus();
     this.state = {
-      status: { temperature: '-' },
+      status: { temperature: '' },
       data: [],
       confirmDialogOpen: false,
       boilPower: 0,
       activeStepName: "",
       statusInitialized: false,
-      copyDialogMessage : false
+      copyDialogMessage: false
     }
+
     interval = setInterval(() => {
       this.getStatus();
-    }, 2000);
+    }, 5000);
   }
 
   updateStatus() {
@@ -92,16 +125,12 @@ class Brew extends Component {
 
       this.setState({
         data: [...splice_data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature }],
+        boilPower: this.state.status.boil_power_percentage
       })
-
-      if (this.state.boilPower == 0)
-        this.setState({
-          boilPower: this.state.status.boil_power_percentage
-        })
     }
 
     if (this.state.statusInitialized) {
-      this.notification(this.getActiveStep(), this.state.status.active_mash_step_name, "Mash")
+      this.notification(this.getActiveStep(), this.state.status.active_mash_step_name + ' ' + this.state.status.active_mash_step_sufix_name, "Mash")
       this.notification(this.getActiveStep(), this.state.status.active_boil_step_name, "Boil")
 
       if (this.getActiveStep() == "Stopped") {
@@ -114,13 +143,13 @@ class Brew extends Component {
   notification(getActiveStep, stepName, step) {
     if (getActiveStep === step && this.state.activeStepName !== stepName) {
       this.setState({ activeStepName: stepName });
-      if (stepName !== "") {
+      if (stepName !== "" && stepName !== undefined) {
         const action = (key) => (
           <Button color="Primary" onClick={() => { this.props.closeSnackbar(key) }}>
             {'Dismiss'}
           </Button>
         );
-        this.props.enqueueSnackbar(step + " Step: " + stepName, {
+        this.props.enqueueSnackbar(stepName, {
           persist: true,
           action,
           variant: 'warning'
@@ -147,11 +176,12 @@ class Brew extends Component {
     }
   }
 
-  handleChangeBoilPowerPercentage = (event, value) => {
+  handleChangeBoilPowerPercentage = (value) => {
     this.setState({ boilPower: value });
   }
 
-  handleSaveChangeBoilPowerPercentage = () => {
+  handleSaveChangeBoilPowerPercentage = (value) => {
+    this.setState({ boilPower: value });
     fetch(CHANGE_BOIL_PERCENTAGE, {
       method: 'POST',
       body: JSON.stringify({ "boil_power_percentage": this.state.boilPower }),
@@ -159,20 +189,10 @@ class Brew extends Component {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-    }).then(response => {
-      if (response.ok) {
-        this.props.enqueueSnackbar("Boiling power configured.", { variant: 'info', autoHideDuration: 2000, });
-        return;
-      }
-      response.text().then(function (data) {
-        throw Error(data);
-      }).catch(error => {
-        this.props.enqueueSnackbar(error.message, { variant: 'error', autoHideDuration: 2000, });
-      });
-    });
+    })
   };
 
-  reportLog = () => {
+  reportLog = (callback) => {
     this.setState({
       confirmDialogOpen: true,
       copyDialogMessage: true,
@@ -182,6 +202,7 @@ class Brew extends Component {
         document.execCommand('copy');
       }
     });
+    callback()
   }
 
   actionBrew = (message, url, callback) => {
@@ -211,6 +232,10 @@ class Brew extends Component {
     }
   }
 
+  componentDidMount() {
+    this.getStatus();
+  }
+
   componentWillUnmount() {
     clearInterval(interval);
   }
@@ -229,40 +254,66 @@ class Brew extends Component {
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew('Do you want pause brew?', PAUSE_BREW)
-            }}>Pause</Button> : null}
+            }}><PauseCircleFilled size="small" color="action" className={classes.button_icons} /></Button> : null}
         {this.state.status.active_step > 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew('Do you want resume brew? Check if you\'ve secure water volume at kettle.', RESUME_BREW)
             }}>Resume</Button> : null}
-        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.step_locked === 1 ?
-          <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want unlock the current step?', UNLOCK_STEP_BREW) }}>Unlock Step</Button> : null}
         {this.state.status.active_step > 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW, () => { this.setState({ data: [] }) }) }}>Stop</Button> : null}
+            onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW, () => { this.setState({ data: [] }) }) }}><Stop size="small" color="action" className={classes.button_icons} /></Button> : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.pid_tuning === 0 && this.state.status.step_locked === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want skip the current step?', NEXT_STEP_BREW) }}>Next Step</Button> : null}
+            onClick={() => { this.actionBrew('Do you want skip the current step?', NEXT_STEP_BREW) }}><SkipNext size="small" color="action" className={classes.button_icons} /></Button> : null}
+        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.step_locked === 1 ?
+          <Button variant="contained" color="secondary" className={classes.button}
+            onClick={() => { this.actionBrew('Do you want unlock the current step?', UNLOCK_STEP_BREW) }}><LockOpen size="small" color="action" className={classes.button_icons} /></Button> : null}
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want start boil?', START_BOIL) }}>Boil</Button> : null}
         <Button variant="contained" color="secondary" className={classes.button}
           onClick={() => { this.actionBrew('', this.state.status.pump_on ? STOP_PUMP : START_PUMP) }}>
-          Pump</Button>
-        <Button variant="contained" color="secondary" className={classes.button}
-          onClick={() => { this.reportLog() }}>
-          Report log</Button>
+          {this.state.status.pump_on ?
+            <SvgIcon {...this.props} color="action">
+              <path d="M20 13.641c0 2-.779 4.109-2.34 5.67a7.992 7.992 0 0 1-11.32-.002C4.78 17.75 4 15.641 4 13.641A8.02 8.02 0 0 1 6.34 8L12 2.35 17.66 8A8.016 8.016 0 0 1 20 13.641z" />
+            </SvgIcon>
+            : //pause icon
+            this.state.status.pump_is_resting ?
+              <SvgIcon {...this.props} color="disabled">
+                <path d="M17.66 8L12 2.35 6.34 8A8.02 8.02 0 0 0 4 13.641c0 2 .78 4.109 2.34 5.668a7.987 7.987 0 0 0 11.32.001c1.561-1.561 2.34-3.67 2.34-5.67S19.221 9.56 17.66 8zm-6.359 9.922H8.604V8.855h2.697v9.067zm4.068 0h-2.682V8.855h2.682v9.067z" />
+              </SvgIcon>
+              : //stop icon
+              <SvgIcon {...this.props} color="disabled">
+                <path d="M17.66 8L12 2.35 6.34 8A8.02 8.02 0 0 0 4 13.641c0 2 .78 4.109 2.34 5.67a7.98 7.98 0 0 0 11.32 0c1.561-1.561 2.34-3.67 2.34-5.67A8.016 8.016 0 0 0 17.66 8zM6 14c.01-2 .62-3.27 1.76-4.4L12 5.27l4.24 4.38C17.38 10.77 17.99 12 18 14c0 0-.313 5.5-6 5.625C6.737 19.74 6 14 6 14z" />
+              </SvgIcon>
+          }
 
+        </Button>
+        <PopupState>
+          {popupState => (
+            <React.Fragment>
+              <IconButton variant="contained" {...bindTrigger(popupState)} size="small" className={classes.button_pop}>
+                <ArrowDropDown />
+              </IconButton>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem key="placeholder" style={{ display: "none" }} />
+                <MenuItem onClick={popupState.close}>Pump Prime</MenuItem>
+                <MenuItem onClick={() => { this.reportLog(popupState.close) }}>Report Log</MenuItem>
+              </Menu>
+            </React.Fragment>
+          )}
+        </PopupState>
         <Divider />
         <Card className={classes.gadgetCard}>
           <CardContent>
             <BrewStatusGadget
               BrewStarted={this.state.status.brew_started}
               Temperature={this.state.status.temperature}
-              TargetTemperature={this.state.status.target_temperature}
+              TargetTemperature={this.state.status.target_temperature > 0 ? this.state.status.target_temperature : ''}
               BoilTemperature={this.state.status.boil_target_temperature}
-              PWM={this.state.status.pwm}
+              PWM={this.state.status.pwm_percentage}
+              SpargePWM={this.state.status.sparge_pwm_percentage}
               ActiveStep={this.getActiveStep()}
               BoilTime={this.state.status.boil_time}
               StartTime={this.state.status.start_time > 0 ? this.state.status.start_time : null}
@@ -271,6 +322,9 @@ class Brew extends Component {
               ActiveStepName={this.state.activeStepName}
               StepLocked={this.state.status.step_locked > 0}
               PumpIsResting={this.state.status.pump_is_resting > 0}
+              SpargeTemperature={this.state.status.sparge_temperature}
+              SpargeTargetTemperature={this.state.status.sparge_target_temperature > 0 ? this.state.status.sparge_target_temperature : ''}
+              EnableSparge={this.state.status.enable_sparge}
             />
           </CardContent>
         </Card>
@@ -283,14 +337,19 @@ class Brew extends Component {
                 <CardContent>
                   <Typography color="textSecondary" variant="subtitle1" gutterBottom>Boil Power {this.state.boilPower}%</Typography>
                   <Slider
-                    classes={{
-                      container: classes.slider, thumb: classes.sliderThumb, trackBefore: classes.trackBefore,
-                      trackAfter: classes.trackAfter,
+                    railStyle={{ backgroundColor: '#313131', height: 5 }}
+                    trackStyle={{ backgroundColor: '#5c6bc0', height: 5 }}
+                    handleStyle={{
+                      borderColor: '#5c6bc0',
+                      height: 22,
+                      width: 22,
+                      marginLeft: -14,
+                      marginTop: -9,
+                      backgroundColor: '#5c6bc0',
                     }}
-                    step={1}
                     value={this.state.boilPower}
                     onChange={this.handleChangeBoilPowerPercentage}
-                    onDragEnd={this.handleSaveChangeBoilPowerPercentage}
+                    onAfterChange={this.handleSaveChangeBoilPowerPercentage}
                   />
                 </CardContent>
               </Card>

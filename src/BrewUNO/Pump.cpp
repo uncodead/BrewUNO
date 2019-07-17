@@ -50,7 +50,6 @@ void Pump::TurnPump(bool on)
     on = INVERT_PUMP ? !on : on;
     digitalWrite(PUMP_BUS, on ? HIGH : LOW);
     _activeStatus->PumpOn = INVERT_PUMP ? !on : on;
-    Serial.println("Recirculation: " + String(INVERT_PUMP ? !on : on));
 }
 
 void Pump::CheckRest()
@@ -81,7 +80,6 @@ void Pump::CheckRest()
     }
     else
     {
-        Serial.println("No Pump Rest");
         _activeStatus->PumpIsResting = false;
     }
 }
