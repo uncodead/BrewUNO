@@ -84,10 +84,10 @@ void MashService::NextStep(ActiveStatus *activeStatus, JsonArray steps, time_t t
     activeStatus->EndTime = 0;
     activeStatus->TargetTemperature = step["t"];
     activeStatus->Recirculation = ((int)step["r"]) == 1;
-    activeStatus->HeaterOff = ((int)step["ho"]) == 1;
+    activeStatus->HeaterOn = ((int)step["ho"]) == 1;
     activeStatus->StepLock = ((int)step["sl"]) == 1;
     Buzzer().Ring(1, 2000);
-    if (activeStatus->HeaterOff)
+    if (!activeStatus->HeaterOn)
         StepStarted(activeStatus, steps, timeNow);
     else
         _pump->TurnPumpOn();
@@ -117,7 +117,7 @@ void MashService::StepStarted(ActiveStatus *activeStatus, JsonArray steps, time_
     JsonObject step = steps[activeStatus->ActiveMashStepIndex];
     activeStatus->StartTime = timeNow;
     activeStatus->EndTime = timeNow + (int(step["tm"]) * 60);
-    activeStatus->HeaterOff = ((int)step["ho"]) == 1;
+    activeStatus->HeaterOn = ((int)step["ho"]) == 1;
     activeStatus->StepLock = ((int)step["sl"]) == 1;
     activeStatus->ActiveMashStepName = step["n"].as<String>();
     activeStatus->ActiveMashStepSufixName = getMashName(step);

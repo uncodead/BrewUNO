@@ -66,7 +66,7 @@ public:
   boolean PumpIsResting;
   boolean PIDSettingsUpdated;
 
-  boolean HeaterOff;
+  boolean HeaterOn;
   boolean StepLock;
   boolean StepLocked;
 

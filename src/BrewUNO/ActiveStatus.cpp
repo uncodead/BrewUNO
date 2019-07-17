@@ -35,7 +35,7 @@ boolean ActiveStatus::LoadActiveStatusSettings()
                 PWM = _activeStatus["pwm"];
                 SpargePWM = _activeStatus["sparge_pwm"];
                 Recirculation = _activeStatus["recirculation"];
-                HeaterOff = _activeStatus["heater_off"];
+                HeaterOn = _activeStatus["heater_on"];
                 StepLock = _activeStatus["step_lock"];
                 BoilPowerPercentage = _activeStatus["boil_power_percentage"];
                 PIDTuning = _activeStatus["pid_tuning"];
@@ -75,7 +75,7 @@ String ActiveStatus::GetJson()
            "\"enable_sparge\":" + String(EnableSparge) + ',' +
            "\"sparge_target_temperature\":" + String(SpargeTargetTemperature) + ',' +
            "\"recirculation\":" + String(Recirculation) + "," +
-           "\"heater_off\":" + String(HeaterOff) + "," +
+           "\"heater_off\":" + String(HeaterOn) + "," +
            "\"step_lock\":" + String(StepLock) + "," +
            "\"step_locked\":" + String(StepLocked) + "," +
            "\"pid_tuning\":" + String(PIDTuning) + "," +
@@ -116,7 +116,7 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     SpargePWM = 0;
     SpargePWMPercentage = 0;
     Recirculation = false;
-    HeaterOff = false;
+    HeaterOn = true;
     StepLock = false;
     StepLocked = false;
     PIDTuning = false;
@@ -159,7 +159,7 @@ void ActiveStatus::SaveActiveStatus()
     _activeStatus["pwm"] = PWM;
     _activeStatus["sparge_pwm"] = SpargePWM;
     _activeStatus["recirculation"] = Recirculation;
-    _activeStatus["heater_off"] = HeaterOff;
+    _activeStatus["heater_off"] = HeaterOn;
     _activeStatus["step_lock"] = StepLock;
     _activeStatus["boil_power_percentage"] = BoilPowerPercentage;
     _activeStatus["pid_tuning"] = PIDTuning;

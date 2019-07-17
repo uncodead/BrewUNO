@@ -53,5 +53,5 @@ void MashKettleHeaterService::SetPidParameters(double input, double setpoint)
 
 boolean MashKettleHeaterService::StopCompute()
 {
-  return !_activeStatus->BrewStarted || _activeStatus->ActiveStep == none || _activeStatus->PumpIsResting || _activeStatus->HeaterOff;
+  return !_activeStatus->BrewStarted || _activeStatus->ActiveStep == none || _activeStatus->PumpIsResting || !_activeStatus->HeaterOn;
 }
