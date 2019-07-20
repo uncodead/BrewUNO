@@ -80,10 +80,9 @@ class BrewStatusGadget extends Component {
       var minutes = Math.floor(seconds / 60);
       var hours = Math.floor(minutes / 60);
       var days = Math.floor(hours / 24);
-      hours %= 24; minutes %= 60; seconds %= 60;
+      minutes %= 60; seconds %= 60;
       this.setState({
         countdown: pad(hours, 2) + ':' + pad(minutes, 2) + ':' + pad(seconds, 2),
-        progressCompleted: Math.round(((now - getDateTime(this.props.StartTime)) / (getDateTime(this.props.EndTime) - getDateTime(this.props.StartTime))) * 100)
       })
     }
   }

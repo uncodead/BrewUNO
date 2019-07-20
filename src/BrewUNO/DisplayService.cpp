@@ -35,7 +35,7 @@ void DisplayService::begin()
 
 void DisplayService::loop()
 {
-    if (now() - lastUpdate > 1)
+    if (now() - lastUpdate > 0.8)
     {
         lastUpdate = now();
         printHead();
@@ -159,7 +159,7 @@ String DisplayService::GetCount(bool down)
     int seconds = floor(difference);
     int minutes = floor(seconds / 60);
     int hours = floor(minutes / 60);
-    hours %= 24;
+    //hours %= 24;
     minutes %= 60;
     seconds %= 60;
     char buffer[16];
