@@ -21,6 +21,7 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 
 ### Installing with Flash Download Tools
 
+* Download [bin files](https://github.com/uncodead/BrewUNO/tree/master/bin)
 * Download [Flash Download Tools](https://www.espressif.com/sites/default/files/tools/flash_download_tools_v3.6.6_0.zip)
 * Setup like this: [setup](http://brewuno.com/download/esp8266-download-tool.png)
 * firmware.bin offset: 0x0
