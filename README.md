@@ -28,8 +28,16 @@ You will need the following before you can get started.
 * [NPM](https://www.npmjs.com/) - For building the interface (if you want)
 * Bash shell, or Git Bash if you are under windows
 
+### Installing with Flash Download Tools
 
-### Installing & Deployment
+* Download [Flash Download Tools](https://www.espressif.com/sites/default/files/tools/flash_download_tools_v3.6.6_0.zip)
+* Setup like this: [setup](http://brewuno.com/download/esp8266-download-tool.png)
+* firmware.bin offset: 0x0
+* spiffs.bin offset: 0x00300000
+* Click ERASE button
+* Click START button
+
+### Installing & Deployment with VS Code
 
 Pull the project and add it to PlatformIO as a project folder (File > Add Project Folder).
 
