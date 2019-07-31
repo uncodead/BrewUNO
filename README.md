@@ -27,6 +27,8 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 * spiffs.bin offset: 0x00300000
 * Click ERASE button
 * Click START button
+* Connect to BrewUNO wifi. AP mode ip: 192.168.4.1
+* Scan and configure your wifi under menu
 
 ### Installing & Deployment with VS Code
 
