@@ -7,13 +7,15 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 ## Features:
 * Brew with Start/Stop/Resume 
 * Responsive interface with stats
-* PID control to heat kettle
+* PID control to heat mash SSR
+* PID control to heat sparge SSR
 * Mash configurations with different steps/temperature and recirculation
 * Boil configurations with hops additions
 * Configurable WiFi
 * Configurable access point
 * Synchronization with NTP
 * The ability to perform OTA updates
+* LCD display
 
 ## Getting Started
 
@@ -21,6 +23,7 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 
 You will need the following before you can get started.
 
+* VS Code
 * [PlatformIO](https://platformio.org/) - IDE for development **with ESP8266 v2.2.2 platform installed**
 * [NPM](https://www.npmjs.com/) - For building the interface (if you want)
 * Bash shell, or Git Bash if you are under windows
