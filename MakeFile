@@ -1,6 +1,22 @@
-push:
+.PHONY : push build pull push all
+
+build: | pull
+	platformio run
 	cd interface;npm run build
+	platformio run -v -t buildfs
+
+publish:
+	rm -rf bin/
+	mkdir bin/
+	cp .pio/build/esp12e/firmware.bin bin/firmware.bin
+	cp .pio/build/esp12e/spiffs.bin bin/spiffs.bin
+
+pull:
 	git pull
+
+push:
 	git add .
 	git commit -am '$(message)'
 	git push
+
+all:  | build publish push
