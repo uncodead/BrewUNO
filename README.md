@@ -34,7 +34,7 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 
 You will need the following before you can get started.
 
-* VS Code
+* [VS Code](https://code.visualstudio.com/)
 * [PlatformIO](https://platformio.org/) - IDE for development **with ESP8266 v2.2.2 platform installed**
 * [NPM](https://www.npmjs.com/) - For building the interface (if you want)
 * Bash shell, or Git Bash if you are under windows
