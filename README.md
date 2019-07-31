@@ -19,15 +19,6 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 
 ## Getting Started
 
-### Prerequisites
-
-You will need the following before you can get started.
-
-* VS Code
-* [PlatformIO](https://platformio.org/) - IDE for development **with ESP8266 v2.2.2 platform installed**
-* [NPM](https://www.npmjs.com/) - For building the interface (if you want)
-* Bash shell, or Git Bash if you are under windows
-
 ### Installing with Flash Download Tools
 
 * Download [Flash Download Tools](https://www.espressif.com/sites/default/files/tools/flash_download_tools_v3.6.6_0.zip)
@@ -38,6 +29,15 @@ You will need the following before you can get started.
 * Click START button
 
 ### Installing & Deployment with VS Code
+
+### Prerequisites
+
+You will need the following before you can get started.
+
+* VS Code
+* [PlatformIO](https://platformio.org/) - IDE for development **with ESP8266 v2.2.2 platform installed**
+* [NPM](https://www.npmjs.com/) - For building the interface (if you want)
+* Bash shell, or Git Bash if you are under windows
 
 Pull the project and add it to PlatformIO as a project folder (File > Add Project Folder).
 
