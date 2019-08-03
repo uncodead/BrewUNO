@@ -2,7 +2,7 @@
 
 High precision and accuracy, open source, online, extensible and low cost homebrew automation on top of ESP8266 microchip.
 
-![BrewUNO](https://a.imge.to/2019/05/30/vQ5nR.jpg)
+![BrewUNO](http://brewuno.com/images/home-brewuno.png)
 
 ## Features:
 * Brew with Start/Stop/Resume 
