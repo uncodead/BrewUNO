@@ -115,6 +115,7 @@ void BrewService::startBoil(AsyncWebServerRequest *request)
     _activeStatus->TimeNow = now();
     _activeStatus->ActiveStep = boil;
     _activeStatus->BrewStarted = true;
+    _activeStatus->HeaterOn = true;
     _activeStatus->ActiveBoilStepIndex = "";
     _activeStatus->BoilTime = _brewSettingsService->BoilTime * 60;
     _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
