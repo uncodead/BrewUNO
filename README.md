@@ -5,6 +5,7 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 ![BrewUNO](http://brewuno.com/images/home-brewuno.png)
 
 ## Features:
+* 100% mobile interface
 * Brew with Start/Stop/Resume 
 * Responsive interface with stats
 * PID control to heat mash SSR
