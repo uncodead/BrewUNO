@@ -26,6 +26,7 @@ public:
   ~ActiveStatus();
 
   int ActiveStep;
+  int LastActiveStep;
   boolean BrewStarted;
 
   String ActiveBoilStepIndex;

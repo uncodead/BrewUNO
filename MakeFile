@@ -5,6 +5,10 @@ build: | pull
 	cd interface;npm run build
 	platformio run -v -t buildfs
 
+deploy: | build
+	platformio run -t uploadfs
+	platformio run -t upload
+
 publish:
 	rm -rf bin/
 	mkdir bin/

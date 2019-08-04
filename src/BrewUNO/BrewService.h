@@ -34,6 +34,7 @@
 #define CHANGE_BOIL_PERCENTAGE_SERVICE_PATH "/rest/changeboilpercentage"
 #define START_BOIL_SERVICE_PATH "/rest/startboil"
 #define START_TUNING_SERVICE_PATH "/rest/starttuning"
+#define START_ANTICAVITATION_SERVICE_PATH "/rest/startanticavitation"
 
 #define APPLICATION_JSON_TYPE "application/json"
 #define NPT_JSON_ERROR_MESSAGE "{ \"error\": true, \"message\":\"NTP server not reachable\"}"
@@ -80,6 +81,7 @@ private:
   void unLockBrew(AsyncWebServerRequest *request);
   void startBoil(AsyncWebServerRequest *request);
   void pauseBrew(AsyncWebServerRequest *request);
+  void startAnticavitation(AsyncWebServerRequest *request);
   void changeBoilPercentage(AsyncWebServerRequest *request, JsonDocument &json);
 
   void HeaterCompute();

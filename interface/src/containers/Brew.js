@@ -10,7 +10,8 @@ import {
   GET_ACTIVE_STATUS, START_BREW, UNLOCK_STEP_BREW,
   NEXT_STEP_BREW, STOP_BREW, RESUME_BREW,
   CHANGE_BOIL_PERCENTAGE,
-  START_BOIL, START_TUNING, PAUSE_BREW
+  START_BOIL, START_TUNING, PAUSE_BREW,
+  START_ANTICAVITATION
 } from '../constants/Endpoints';
 import { getDateTime, ExecuteRestCall } from '../components/Utils';
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
@@ -171,6 +172,8 @@ class Brew extends Component {
         return "Mash"
       case 2:
         return "Boil"
+      case 3:
+        return "Anti Cavitation"
       default:
         return "Stopped"
     }
@@ -247,20 +250,19 @@ class Brew extends Component {
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
-              this.actionBrew('Do you want start brew? Check if you\'ve secure water volume at kettle.', START_BREW,
-                () => { this.props.enqueueSnackbar('Anti Cavitation test started.', { variant: 'info', autoHideDuration: 2000, }) })
+              this.actionBrew('Do you want start brew? Check if you\'ve secure water volume at kettle.', START_BREW)
             }}>Start</Button> : null}
         {this.state.status.active_step > 0 && this.state.status.brew_started === 1 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew('Do you want pause brew?', PAUSE_BREW)
             }}><PauseCircleFilled size="small" color="action" className={classes.button_icons} /></Button> : null}
-        {this.state.status.active_step > 0 && this.state.status.brew_started === 0 ?
+        {this.state.status.active_step > 0 && this.state.status.active_step !== 3 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew('Do you want resume brew? Check if you\'ve secure water volume at kettle.', RESUME_BREW)
             }}>Resume</Button> : null}
-        {this.state.status.active_step > 0 ?
+        {this.state.status.active_step > 0 && this.state.status.active_step !== 3 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW, () => { this.setState({ data: [] }) }) }}><Stop size="small" color="action" className={classes.button_icons} /></Button> : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.pid_tuning === 0 && this.state.status.step_locked === 0 ?
@@ -298,7 +300,16 @@ class Brew extends Component {
               </IconButton>
               <Menu {...bindMenu(popupState)}>
                 <MenuItem key="placeholder" style={{ display: "none" }} />
-                <MenuItem onClick={popupState.close}>Pump Prime</MenuItem>
+                {this.state.status.active_step === 0 ?
+                  <MenuItem onClick={() => {
+                    this.actionBrew('Do you want start anticavitation? Check if you\'ve secure water volume at kettle.', START_ANTICAVITATION,
+                      () => {
+                        this.props.enqueueSnackbar('Anti Cavitation test started.', { variant: 'info', autoHideDuration: 2000, })
+                        popupState.close()
+                      })
+                  }
+                  }>Pump Prime</MenuItem>
+                  : null}
                 <MenuItem onClick={() => { this.reportLog(popupState.close) }}>Report Log</MenuItem>
               </Menu>
             </React.Fragment>

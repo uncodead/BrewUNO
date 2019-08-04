@@ -23,7 +23,7 @@ public:
   void TurnPumpOn();
   void TurnPumpOff();
   void CheckRest();
-  void AntiCavitation();
+  void antiCavitation();
   void startPumpHttpService(AsyncWebServerRequest *request);
   void stopPumpHttpService(AsyncWebServerRequest *request);
 

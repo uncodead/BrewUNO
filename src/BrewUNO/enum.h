@@ -5,7 +5,8 @@ enum StepType
 {
   none,
   mash,
-  boil
+  boil,
+  anticavitation
 };
 
 #endif

@@ -79,23 +79,20 @@ void Pump::CheckRest()
         _activeStatus->PumpIsResting = isResting;
     }
     else
-    {
         _activeStatus->PumpIsResting = false;
-    }
 }
 
-void Pump::AntiCavitation()
+void Pump::antiCavitation()
 {
-    if (!Debug)
+    if (_activeStatus->ActiveStep == anticavitation)
     {
         for (byte i = 1; i < 6; i++)
         {
-            if (!_activeStatus->BrewStarted)
-                continue;
             TurnPump(true);
             delay(1500 + i * 250);
             TurnPump(false);
             delay(2000);
         }
+        _activeStatus->ActiveStep = _activeStatus->LastActiveStep;
     }
 }
