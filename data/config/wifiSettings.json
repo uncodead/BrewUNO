@@ -1,6 +1,6 @@
 {
-  "ssid":"VIVOFIBRA-50C7",
-  "password":"TeH3WM6JjQ",
+  "ssid":"ssid",
+  "password":"password",
   "hostname":"BrewUNO",
   "static_ip_config":false
 }
