@@ -75,7 +75,7 @@ String ActiveStatus::GetJson()
            "\"enable_sparge\":" + String(EnableSparge) + ',' +
            "\"sparge_target_temperature\":" + String(SpargeTargetTemperature) + ',' +
            "\"recirculation\":" + String(Recirculation) + "," +
-           "\"heater_off\":" + String(HeaterOn) + "," +
+           "\"heater_on\":" + String(HeaterOn) + "," +
            "\"step_lock\":" + String(StepLock) + "," +
            "\"step_locked\":" + String(StepLocked) + "," +
            "\"pid_tuning\":" + String(PIDTuning) + "," +
@@ -159,7 +159,7 @@ void ActiveStatus::SaveActiveStatus()
     _activeStatus["pwm"] = PWM;
     _activeStatus["sparge_pwm"] = SpargePWM;
     _activeStatus["recirculation"] = Recirculation;
-    _activeStatus["heater_off"] = HeaterOn;
+    _activeStatus["heater_on"] = HeaterOn;
     _activeStatus["step_lock"] = StepLock;
     _activeStatus["boil_power_percentage"] = BoilPowerPercentage;
     _activeStatus["pid_tuning"] = PIDTuning;

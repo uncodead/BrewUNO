@@ -33,9 +33,9 @@ void MashService::loop(ActiveStatus *activeStatus)
     {
         activeStatus->TargetTemperature = steps[0]["t"];
         activeStatus->ActiveMashStepIndex = 0;
+        activeStatus->HeaterOn = ((int) steps[0]["ho"]) == 1;
         activeStatus->ActiveMashStepName = steps[0]["n"].as<String>();
         activeStatus->ActiveMashStepSufixName = getMashName(steps[0]);
-        _pump->AntiCavitation();
         _pump->TurnPumpOn();
 
         // brew was stopped during anti cavitatiton
@@ -106,6 +106,7 @@ void MashService::BoilTime(ActiveStatus *activeStatus)
     activeStatus->ActiveMashStepSufixName = "";
     activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
     activeStatus->Recirculation = false;
+    activeStatus->HeaterOn = true;
     Buzzer().Ring(2, 2000);
     _pump->TurnPumpOff();
     activeStatus->SaveActiveStatus();

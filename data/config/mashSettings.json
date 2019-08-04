@@ -6,7 +6,7 @@
             "tm": 1,
             "r": true,
             "sl": false,
-            "ho": false
+            "ho": true
         },
         {
             "n": "Mash In",
@@ -14,7 +14,7 @@
             "tm": 0,
             "r": false,
             "sl": true,
-            "ho": true
+            "ho": false
         },
         {
             "n": "Mash",
@@ -22,7 +22,7 @@
             "tm": 2,
             "r": true,
             "sl": true,
-            "ho": false
+            "ho": true
         },
         {
             "n": "MashOut",
@@ -30,7 +30,7 @@
             "tm": 1,
             "r": true,
             "sl": true,
-            "ho": false
+            "ho": true
         }
     ]
 }
