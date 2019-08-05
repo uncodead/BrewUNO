@@ -1,33 +1,41 @@
 {
     "st": [
-         {
-            "n": "Pre Mash",
-            "t": 32,
+        {
+            "n": "PreMash",
+            "t": 52,
             "tm": 1,
             "r": true,
             "sl": false,
             "ho": true
         },
         {
-            "n": "Mash In",
-            "t": 30,
+            "n": "MashIn",
+            "t": 50,
             "tm": 0,
             "r": false,
             "sl": true,
             "ho": false
         },
         {
-            "n": "Mash",
-            "t": 30,
-            "tm": 2,
+            "n": "MashOne",
+            "t": 50,
+            "tm": 35,
+            "r": true,
+            "sl": false,
+            "ho": true
+        },
+        {
+            "n": "MashTwo",
+            "t": 64,
+            "tm": 55,
             "r": true,
             "sl": true,
             "ho": true
         },
         {
             "n": "MashOut",
-            "t": 31,
-            "tm": 1,
+            "t": 78,
+            "tm": 5,
             "r": true,
             "sl": true,
             "ho": true

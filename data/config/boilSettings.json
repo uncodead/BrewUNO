@@ -1,19 +1,19 @@
 {
     "st": [
         {
-            "n": "BoilZero",
-            "tm": 2,
-            "a": 1
+            "n": "1stHopBitter",
+            "tm": 60,
+            "a": 10
         },
         {
-            "n": "BoilUno",
-            "tm": 1,
-            "a": 1
+            "n": "2ndHopFlavor",
+            "tm": 30,
+            "a": 20
         },
         {
-            "n": "BoilDuo",
-            "tm": 0,
-            "a": 1
+            "n": "3rtHopAroma",
+            "tm": 15,
+            "a": 30
         }
     ]
 }
