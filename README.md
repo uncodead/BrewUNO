@@ -20,7 +20,7 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 
 ## Getting Started
 
-### Installing with Flash Download Tools
+### Installing with Flash Download Tools ([video](http://www.brewuno.com/download/install.mp4))
 
 * Download [bin files](https://github.com/uncodead/BrewUNO/tree/master/bin)
 * Download [Flash Download Tools](https://www.espressif.com/sites/default/files/tools/flash_download_tools_v3.6.6_0.zip)
