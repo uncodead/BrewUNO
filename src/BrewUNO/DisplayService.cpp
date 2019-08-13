@@ -19,8 +19,27 @@ DisplayService::DisplayService(ActiveStatus *activeStatus, WiFiStatus *wifiStatu
 
 DisplayService::~DisplayService() {}
 
+void DisplayService::autoScan()
+{
+    byte error, address;
+    Serial.println("Scanning I2C bus...");
+    for (address = 1; address < 127; address++)
+    {
+        if (address == PCF8574_ADDRESS)
+            continue;
+        Wire.beginTransmission(address);
+        error = Wire.endTransmission();
+        if (error == 0)
+        {
+            _lcd->updateAddress(address);
+            break;
+        }
+    }
+}
+
 void DisplayService::begin()
 {
+    autoScan();
     _lcd->init();
     _lcd->backlight();
     _lcd->createChar(apmode_icon, apmode);
