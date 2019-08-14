@@ -48,7 +48,7 @@ OneWire oneWire(TEMPERATURE_BUS);
 DallasTemperature DS18B20(&oneWire);
 int deviceCount = 0;
 
-LiquidCrystal_I2C lcd(0, 20, 4);
+LiquidCrystal_I2C lcd(0x0, 20, 4);
 AsyncWebServer server(80);
 
 SecuritySettingsService securitySettingsService = SecuritySettingsService(&server, &SPIFFS);

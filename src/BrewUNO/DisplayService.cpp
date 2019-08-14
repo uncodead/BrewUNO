@@ -15,6 +15,7 @@ DisplayService::DisplayService(ActiveStatus *activeStatus, WiFiStatus *wifiStatu
                                                                                                              _wifiStatus(wifiStatus),
                                                                                                              _lcd(lcd)
 {
+    Wire.begin();
 }
 
 DisplayService::~DisplayService() {}
@@ -31,6 +32,8 @@ void DisplayService::autoScan()
         error = Wire.endTransmission();
         if (error == 0)
         {
+            Serial.print("Found: ");
+            Serial.println(address, HEX);
             _lcd->updateAddress(address);
             break;
         }
