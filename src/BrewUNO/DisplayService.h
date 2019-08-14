@@ -9,6 +9,8 @@
 #include <WiFiStatus.h>
 #include <APStatus.h>
 
+#define PCF8574_ADDRESS 0x20
+
 #define apmode_icon 1
 #define stmode_icon 2
 #define gpump_icon 3
@@ -31,6 +33,7 @@ private:
     WiFiStatus *_wifiStatus;
     ActiveStatus *_activeStatus;
 
+    void autoScan();
     void printHead();
     void printFooter();
     String GetCount(bool down);
