@@ -1,0 +1,45 @@
+{
+    "name": "LiquidCrystal_I2C", 
+    "version": "1.1.4", 
+    "keywords": [
+        "display"
+    ], 
+    "description": "A library for I2C LCD displays.", 
+    "frameworks": [
+        "arduino"
+    ], 
+    "platforms": [
+        "atmelavr"
+    ], 
+    "authors": [
+        {
+            "email": null, 
+            "url": null, 
+            "maintainer": false, 
+            "name": "Frank de Brabander"
+        }, 
+        {
+            "email": "marcolivier.schwartz@gmail.com", 
+            "url": null, 
+            "maintainer": true, 
+            "name": "Marco Schwartz"
+        }
+    ], 
+    "repository": {
+        "type": "git", 
+        "url": "https://github.com/marcoschwartz/LiquidCrystal_I2C"
+    }, 
+    "homepage": null, 
+    "export": {
+        "include": null, 
+        "exclude": [
+            "extras", 
+            "docs", 
+            "tests", 
+            "test", 
+            "*.doxyfile", 
+            "*.pdf"
+        ]
+    }, 
+    "id": 576
+}
