@@ -12,8 +12,8 @@ deploy: | build
 publish:
 	rm -rf bin/
 	mkdir bin/
-	cp .pio/build/esp12e/firmware.bin bin/firmware.bin
-	cp .pio/build/esp12e/spiffs.bin bin/spiffs.bin
+	cp .pio/build/esp12e/firmware.bin bin/firmware_$(version).bin
+	cp .pio/build/esp12e/spiffs.bin bin/spiffs_$(version).bin
 
 pull:
 	git pull
