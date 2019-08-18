@@ -19,7 +19,8 @@ export const restComponent = (endpointUrl, FormComponent) => {
         this.state = {
           data: null,
           fetched: false,
-          errorMessage: null
+          errorMessage: null,
+          floats: [],
         };
 
         this.setState = this.setState.bind(this);
@@ -58,6 +59,11 @@ export const restComponent = (endpointUrl, FormComponent) => {
 
       saveData(e) {
         this.setState({ fetched: false });
+        this.state.floats.map((name, i) => {
+          const { data } = this.state;
+          data[name] = parseFloat(data[name])
+          this.setState({ data });
+        });
         fetch(endpointUrl, {
           method: 'POST',
           body: JSON.stringify(this.state.data),
@@ -80,6 +86,14 @@ export const restComponent = (endpointUrl, FormComponent) => {
           });
       }
 
+      handleFloatValueChange = name => event => {
+        if (!this.state.floats.includes(name))
+          this.setState({
+            floats: [...this.state.floats, name],
+          });
+        this.handleValueChange(name)(event)
+      };
+
       handleValueChange = name => event => {
         const { data } = this.state;
         data[name] = event.target.value;
@@ -95,6 +109,7 @@ export const restComponent = (endpointUrl, FormComponent) => {
       render() {
         return <FormComponent
           handleValueChange={this.handleValueChange}
+          handleFloatValueChange={this.handleFloatValueChange}
           handleCheckboxChange={this.handleCheckboxChange}
           setData={this.setData}
           saveData={this.saveData}

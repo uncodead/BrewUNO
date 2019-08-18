@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
 import BrewSettingsForm from '../forms/BrewSettingsForm';
 import { restComponent } from '../components/RestComponent';
@@ -41,6 +40,7 @@ class BrewSettings extends Component {
           onSubmit={this.props.saveData}
           handleValueChange={this.props.handleValueChange}
           handleCheckboxChange={this.props.handleCheckboxChange}
+          handleFloatValueChange={this.props.handleFloatValueChange}
           sensors={this.state.sensors}
         />
       </SectionContent>

@@ -34,6 +34,9 @@ public:
   int PumpRestInterval;
   int PumpRestTime;
 
+  double MainSensorOffset;
+  double SpargeSensorOffset;
+
   String MainSensor;
   String SpargeSensor;
 

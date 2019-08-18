@@ -11,5 +11,7 @@
     "enableSparge": false,
     "spargeTemperature": 75,
     "spargePowerPercentage": 100,
-    "pidStart": 0.5
+    "pidStart": 0.5,
+    "mainSensorOffset": 0,
+    "spargeSensorOffset": 0
 }

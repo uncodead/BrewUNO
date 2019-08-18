@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import FormGroup from '@material-ui/core/FormGroup';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -9,7 +8,6 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { Divider } from '@material-ui/core';
@@ -31,7 +29,7 @@ const styles = theme => ({
 class BrewSettingsForm extends Component {
 
   render() {
-    const { classes, formRef, brewSettingsFetched, brewSettings, errorMessage, handleValueChange, handleCheckboxChange, onSubmit, onReset } = this.props;
+    const { classes, brewSettings, errorMessage, handleValueChange, handleFloatValueChange, handleCheckboxChange, onSubmit } = this.props;
 
     return (
       <div>
@@ -45,7 +43,7 @@ class BrewSettingsForm extends Component {
             </div>
             : brewSettings ?
               <ValidatorForm onSubmit={onSubmit} ref="BrewSettingsForm" className={classes.root}>
-                <TextValidator
+                <TextValidator className={classes.formControl}
                   name="boilTime"
                   validators={['required']}
                   label="Boil time"
@@ -78,7 +76,6 @@ class BrewSettingsForm extends Component {
                   onChange={handleValueChange("boilPowerPercentage")}
                   errorMessages={['this field is required']}
                 />
-
                 <TextValidator className={classes.formControl}
                   name="MashHeaterPercentage"
                   validators={['required']}
@@ -101,6 +98,16 @@ class BrewSettingsForm extends Component {
                     <MenuItem value={value.address}>{value.address} - {value.value}ºC</MenuItem>
                   ))}
                 </Select>
+                <TextValidator className={classes.formControl}
+                  name="MainSensorOffset"
+                  validators={['required', 'isFloat']}
+                  label="Main Sensor Offset (Calibration)"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
+                  value={brewSettings.mainSensorOffset}
+                  onChange={handleFloatValueChange("mainSensorOffset")}
+                  errorMessages={['this field is required']}
+                />
                 <FormControlLabel
                   control={
                     <Switch
@@ -124,7 +131,16 @@ class BrewSettingsForm extends Component {
                     <MenuItem value={value.address}>{value.address} - {value.value}ºC</MenuItem>
                   ))}
                 </Select>
-
+                <TextValidator className={classes.formControl}
+                  name="SpargeSensorOffset"
+                  validators={['required', 'isFloat']}
+                  label="Sparge Sensor Offset (Calibration)"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
+                  value={brewSettings.spargeSensorOffset}
+                  onChange={handleFloatValueChange("spargeSensorOffset")}
+                  errorMessages={['this field is required']}
+                />
                 <TextValidator className={classes.formControl}
                   name="spargePowerPercentage"
                   validators={['required']}
@@ -139,9 +155,8 @@ class BrewSettingsForm extends Component {
 
                 <TextValidator className={classes.formControl}
                   name="spargeTemperature"
-                  validators={['required']}
+                  validators={['required', 'isFloat']}
                   label="Sparge Temperature"
-                  type="number"
                   fullWidth
                   InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
                   value={brewSettings.spargeTemperature}
@@ -174,8 +189,7 @@ class BrewSettingsForm extends Component {
                 <TextValidator className={classes.formControl}
                   name="kp"
                   label="kP"
-                  type="number"
-                  validators={['required']}
+                  validators={['required', 'isFloat']}
                   fullWidth
                   value={brewSettings.kP}
                   onChange={handleValueChange("kP")}
@@ -184,8 +198,7 @@ class BrewSettingsForm extends Component {
                 <TextValidator className={classes.formControl}
                   name="ki"
                   label="kI"
-                  type="number"
-                  validators={['required']}
+                  validators={['required', 'isFloat']}
                   fullWidth
                   value={brewSettings.kI}
                   onChange={handleValueChange("kI")}
@@ -194,8 +207,7 @@ class BrewSettingsForm extends Component {
                 <TextValidator className={classes.formControl}
                   name="kd"
                   label="kD"
-                  type="number"
-                  validators={['required']}
+                  validators={['required', 'isFloat']}
                   fullWidth
                   value={brewSettings.kD}
                   onChange={handleValueChange("kD")}
@@ -203,9 +215,8 @@ class BrewSettingsForm extends Component {
                 />
                 <TextValidator className={classes.formControl}
                   name="pidStart"
-                  validators={['required']}
+                  validators={['required', 'isFloat']}
                   label="PID Start at"
-                  type="number"
                   fullWidth
                   InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
                   value={brewSettings.pidStart}
@@ -235,6 +246,7 @@ BrewSettingsForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   handleValueChange: PropTypes.func.isRequired,
   handleCheckboxChange: PropTypes.func.isRequired,
+  handleFloatValueChange: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(BrewSettingsForm);

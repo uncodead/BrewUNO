@@ -67,8 +67,8 @@ SystemStatus systemStatus = SystemStatus(&server, &securitySettingsService);
 //brewUNO
 ActiveStatus activeStatus = ActiveStatus(&SPIFFS);
 
-TemperatureService temperatureService = TemperatureService(&server, &SPIFFS, DS18B20);
 BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS, &activeStatus);
+TemperatureService temperatureService = TemperatureService(&server, &SPIFFS, DS18B20, &brewSettingsService);
 MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
 
