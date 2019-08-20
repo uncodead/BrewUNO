@@ -16,7 +16,7 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 * Configurable access point
 * Synchronization with NTP
 * The ability to perform OTA updates
-* LCD display
+* 20x4 LCD display
 
 ## Getting Started
 
