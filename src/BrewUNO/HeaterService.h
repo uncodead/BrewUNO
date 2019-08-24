@@ -60,6 +60,9 @@ public:
       return status;
     }
 
+    if (_activeStatus->FullPower)
+      heaterPercentage = 100;
+
     if (GetPidSetPoint() - GetPidInput() > _brewSettingsService->PIDStart)
     {
       status.PIDActing = false;

@@ -34,6 +34,7 @@ void MashService::loop(ActiveStatus *activeStatus)
         activeStatus->TargetTemperature = steps[0]["t"];
         activeStatus->ActiveMashStepIndex = 0;
         activeStatus->HeaterOn = ((int) steps[0]["ho"]) == 1;
+        activeStatus->FullPower = ((int) steps[0]["fp"]) == 1;
         activeStatus->ActiveMashStepName = steps[0]["n"].as<String>();
         activeStatus->ActiveMashStepSufixName = getMashName(steps[0]);
         _pump->TurnPumpOn();
@@ -85,6 +86,7 @@ void MashService::NextStep(ActiveStatus *activeStatus, JsonArray steps, time_t t
     activeStatus->TargetTemperature = step["t"];
     activeStatus->Recirculation = ((int)step["r"]) == 1;
     activeStatus->HeaterOn = ((int)step["ho"]) == 1;
+    activeStatus->FullPower = ((int)step["fp"]) == 1;
     activeStatus->StepLock = ((int)step["sl"]) == 1;
     Buzzer().Ring(1, 2000);
     if (!activeStatus->HeaterOn)

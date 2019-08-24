@@ -68,6 +68,7 @@ public:
   boolean PIDSettingsUpdated;
 
   boolean HeaterOn;
+  boolean FullPower;
   boolean StepLock;
   boolean StepLocked;
 

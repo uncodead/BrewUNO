@@ -34,6 +34,7 @@ class MashBoilSettingsForm extends Component {
       t: '',
       tm: '',
       a: '',
+      fp: false,
       r: true,
       sl: false,
       ho: true
@@ -42,7 +43,7 @@ class MashBoilSettingsForm extends Component {
 
   addItem = (event) => {
     this.props.callbackItemAdded(this.state)
-    this.setState({ n: '', t: '', tm: '', a: '', r: true, sl: false, ho: true })
+    this.setState({ n: '', t: '', tm: '', a: '', r: true, sl: false, ho: true, fp:false })
   }
 
   handleNameChange = (e) => {
@@ -71,6 +72,14 @@ class MashBoilSettingsForm extends Component {
 
   handleHeaterOn = (e, checked) => {
     this.setState({ ho: checked })
+    if (!checked)
+      this.setState({ fp: checked })
+  }
+
+  handleFullPower = (e, checked) => {
+    this.setState({ fp: checked })
+    if (checked)
+      this.setState({ ho: checked })
   }
 
   render() {
@@ -127,6 +136,7 @@ class MashBoilSettingsForm extends Component {
         }
         {!this.props.boil ? <FormControlLabel control={<ONCSwitch ref="r" checked={this.state.r} onChange={this.handleRecirculationChange} />} label="Pump" /> : null}
         {!this.props.boil ? <FormControlLabel control={<ONCSwitch ref="ho" checked={this.state.ho} onChange={this.handleHeaterOn} />} label="Heater" /> : null}
+        {!this.props.boil ? <FormControlLabel control={<ONCSwitch ref="fp" checked={this.state.fp} onChange={this.handleFullPower} />} label="Full Power Heater" /> : null}
         {!this.props.boil ? <FormControlLabel control={<ONCSwitch ref="sl" checked={this.state.sl} onChange={this.handleStepLock} />} label="Step LOCK" /> : null}
         <Divider />
         <Button type="submit" variant="contained" fullWidth color="secondary">Add</Button>

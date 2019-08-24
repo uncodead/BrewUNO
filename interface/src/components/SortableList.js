@@ -4,7 +4,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Switch from '@material-ui/core/Switch';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator'
@@ -44,6 +43,7 @@ class SortableList extends Component {
             secondary={<Typography>{this.getItemText(value)}
               {this.props.brewDay && !this.props.boil && value.r ? ' (Recirculation) ' : null}
               {this.props.brewDay && !this.props.boil && value.ho ? ' (Heater) ' : null}
+              {this.props.brewDay && !this.props.boil && value.fp ? ' (Full Power)' : null}
               {this.props.brewDay && !this.props.boil && value.sl ? ' (Step LOCK)' : null}
             </Typography>}
           />
@@ -76,6 +76,16 @@ class SortableList extends Component {
                 }
                 label="Heater"
               /> : null}
+              {!this.props.boil ?
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={value.fp}
+                      disabled
+                    />
+                  }
+                  label="Full Power"
+                /> : null}
             {!this.props.boil ?
               <FormControlLabel
                 control={
