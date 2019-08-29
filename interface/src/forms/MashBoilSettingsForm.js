@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Switch from '@material-ui/core/Switch';
-import TextField from '@material-ui/core/TextField';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { Divider } from '@material-ui/core';
-import InputMask from 'react-input-mask'
 import { indigo } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -37,13 +34,22 @@ class MashBoilSettingsForm extends Component {
       fp: false,
       r: true,
       sl: false,
-      ho: true
+      ho: true,
+      index: null
     }
   }
 
   addItem = (event) => {
     this.props.callbackItemAdded(this.state)
-    this.setState({ n: '', t: '', tm: '', a: '', r: true, sl: false, ho: true, fp:false })
+    this.cancel()
+  }
+
+  cancel = () => {
+    this.setState({ n: '', t: '', tm: '', a: '', r: true, sl: false, ho: true, fp: false, index: null })
+  }
+
+  handleIndexChange = (index) => {
+    this.setState({ index: index })
   }
 
   handleNameChange = (e) => {
@@ -62,21 +68,21 @@ class MashBoilSettingsForm extends Component {
     this.setState({ a: e.target.value })
   }
 
-  handleRecirculationChange = (e, checked) => {
+  handleRecirculationChange = (checked) => {
     this.setState({ r: checked })
   }
 
-  handleStepLock = (e, checked) => {
+  handleStepLock = (checked) => {
     this.setState({ sl: checked })
   }
 
-  handleHeaterOn = (e, checked) => {
+  handleHeaterOn = (checked) => {
     this.setState({ ho: checked })
     if (!checked)
       this.setState({ fp: checked })
   }
 
-  handleFullPower = (e, checked) => {
+  handleFullPower = (checked) => {
     this.setState({ fp: checked })
     if (checked)
       this.setState({ ho: checked })
@@ -139,7 +145,10 @@ class MashBoilSettingsForm extends Component {
         {!this.props.boil ? <FormControlLabel control={<ONCSwitch ref="fp" checked={this.state.fp} onChange={this.handleFullPower} />} label="Full Power Heater" /> : null}
         {!this.props.boil ? <FormControlLabel control={<ONCSwitch ref="sl" checked={this.state.sl} onChange={this.handleStepLock} />} label="Step LOCK" /> : null}
         <Divider />
-        <Button type="submit" variant="contained" fullWidth color="secondary">Add</Button>
+        <Button type="submit" variant="contained" fullWidth color="secondary">save</Button>
+        {this.state.index !== null ?
+          <Button variant="contained" fullWidth color="primary" onClick={this.cancel}>cancel</Button>
+          : null}
       </ValidatorForm>
     )
   }

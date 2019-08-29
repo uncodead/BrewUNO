@@ -12,6 +12,7 @@ class MashSettings extends Component {
     super(props)
     this.state = { items: [] }
     this.getMashSettings();
+    this.child = React.createRef();
   }
 
   getMashSettings = () => {
@@ -31,7 +32,7 @@ class MashSettings extends Component {
       },
     }).then(response => {
       if (response.ok) {
-        this.props.enqueueSnackbar("Mash settings saved.", { variant: 'info', autoHideDuration: 2000, });
+        this.props.enqueueSnackbar("Mash settings saved.", { variant: 'info', autoHideDuration: 500, });
         return;
       }
       response.text().then(function (data) {
@@ -44,9 +45,17 @@ class MashSettings extends Component {
   }
 
   itemAdded = (newelement) => {
-    this.setState({
-      items: [...this.state.items, newelement]
-    }, this.saveMashSettings)
+    if (newelement.index !== null) {
+      var array = this.state.items.slice();
+      array[newelement.index] = newelement;
+      this.setState({
+        items: array
+      }, this.saveMashSettings);
+    }
+    else
+      this.setState({
+        items: [...this.state.items, newelement]
+      }, this.saveMashSettings)
   }
 
   itemsSorted = (items) => {
@@ -64,15 +73,41 @@ class MashSettings extends Component {
     }, this.saveMashSettings);
   }
 
+  itemEdited = (index, name, value, textValue) => {
+    var array = this.state.items.slice();
+    array[index][name] = value;
+    this.setState({
+      items: array
+    }, this.saveMashSettings);
+  }
+
+  itemFormEdited = index => event => {
+    var array = this.state.items.slice();
+    this.child.current.handleNameChange({ target: { value: array[index]['n'] } })
+    this.child.current.handleTemperatureChange({ target: { value: array[index]['t'] } })
+    this.child.current.handleTimeChange({ target: { value: array[index]['tm'] } })
+    this.child.current.handleRecirculationChange(array[index]['r'])
+    this.child.current.handleStepLock(array[index]['sl'])
+    this.child.current.handleHeaterOn(array[index]['ho'])
+    this.child.current.handleFullPower(array[index]['fp'])
+    this.child.current.handleIndexChange(index)
+    window.scrollTo(0, 0)
+  }
+
   render() {
     return (
       <SectionContent title="Mash Settings" selected={this.props.selectedIndex >= 0}>
-        {!this.props.listOnly ? <MashSettingsForm callbackItemAdded={this.itemAdded} /> : null}
+        {!this.props.listOnly ?
+          <MashSettingsForm callbackItemAdded={this.itemAdded} ref={this.child} />
+          : null}
         <Divider />
         <SortableList
           items={this.state.items}
           callbackItemsSorted={this.itemsSorted}
           callbackItemDeleted={this.itemDeleted}
+          callbackItemEdited={this.itemEdited}
+          callbackFormEdited={this.itemFormEdited}
+          editItem
           dragHandle={!this.props.brewDay}
           boil={false}
           brewDay={this.props.brewDay}
