@@ -68,21 +68,21 @@ class MashBoilSettingsForm extends Component {
     this.setState({ a: e.target.value })
   }
 
-  handleRecirculationChange = (checked) => {
+  handleRecirculationChange = (e, checked) => {
     this.setState({ r: checked })
   }
 
-  handleStepLock = (checked) => {
+  handleStepLock = (e, checked) => {
     this.setState({ sl: checked })
   }
 
-  handleHeaterOn = (checked) => {
+  handleHeaterOn = (e, checked) => {
     this.setState({ ho: checked })
     if (!checked)
       this.setState({ fp: checked })
   }
 
-  handleFullPower = (checked) => {
+  handleFullPower = (e, checked) => {
     this.setState({ fp: checked })
     if (checked)
       this.setState({ ho: checked })
