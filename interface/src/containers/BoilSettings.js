@@ -5,6 +5,7 @@ import BoilSettingsForm from '../forms/MashBoilSettingsForm';
 import SortableList from '../components/SortableList';
 import { withSnackbar } from 'notistack';
 import { SAVE_BOIL_SETTINGS_SERVICE_PATH, GET_BOIL_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
+import { ExecuteRestCall } from '../components/Utils';
 
 class BoilSettings extends Component {
   constructor() {
@@ -12,28 +13,14 @@ class BoilSettings extends Component {
 
     this.state = { items: [] }
     this.getBoilSettings();
+    this.child = React.createRef();
   }
 
   getBoilSettings = () => {
-    fetch(GET_BOIL_SETTINGS_SERVICE_PATH, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }).then(response => {
-      if (response.ok) {
-        response.json().then(json => {
-          if (json.st != undefined && json.st != null)
-            this.setState({ items: json.st })
-        });
-        return;
-      }
-      throw Error("Boil Setings service returned unexpected response code: " + response.status);
-    }).catch(error => {
-      this.props.enqueueSnackbar("Problem getting Boil Settings: " + error.message, { variant: 'error', autoHideDuration: 2000, });
-      this.setState({ items: [] })
-    });
+    ExecuteRestCall(GET_BOIL_SETTINGS_SERVICE_PATH, 'GET', (json) => {
+      if (json.st != undefined && json.st != null)
+        this.setState({ items: json.st })
+    }, this.setState({ items: [] }), this.props)
   }
 
   saveBoilSettings = () => {
@@ -59,9 +46,17 @@ class BoilSettings extends Component {
   }
 
   itemAdded = (newelement) => {
-    this.setState({
-      items: this.orderArray([...this.state.items, newelement])
-    }, this.saveBoilSettings)
+    if (newelement.index !== null) {
+      var array = this.state.items.slice();
+      array[newelement.index] = newelement;
+      this.setState({
+        items: array
+      }, this.saveBoilSettings);
+    }
+    else
+      this.setState({
+        items: this.orderArray([...this.state.items, newelement])
+      }, this.saveBoilSettings)
   }
 
   itemDeleted = (index) => {
@@ -73,6 +68,15 @@ class BoilSettings extends Component {
     }, this.saveBoilSettings);
   }
 
+  itemFormEdited = index => event => {
+    var array = this.state.items.slice();
+    this.child.current.handleNameChange({ target: { value: array[index]['n'] } })
+    this.child.current.handleAmountChange({ target: { value: array[index]['a'] } })
+    this.child.current.handleTimeChange({ target: { value: array[index]['tm'] } })
+    this.child.current.handleIndexChange(index)
+    window.scrollTo(0, 0)
+  }
+
   orderArray = (array) => {
     return array.sort((a, b) => b.tm - a.tm);
   }
@@ -80,11 +84,13 @@ class BoilSettings extends Component {
   render() {
     return (
       <SectionContent title="Boil Timing" selected={this.props.active_boil_step_index >= 0}>
-        {!this.props.listOnly ? <BoilSettingsForm callbackItemAdded={this.itemAdded} boil={true} /> : null}
+        {!this.props.listOnly ?
+          <BoilSettingsForm callbackItemAdded={this.itemAdded} boil={true} ref={this.child} /> : null}
         <Divider />
         <SortableList
           items={this.state.items}
           callbackItemDeleted={this.itemDeleted}
+          callbackFormEdited={this.itemFormEdited}
           dragHandle={false}
           boil={true}
           brewDay={this.props.brewDay}
