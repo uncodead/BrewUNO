@@ -31,10 +31,8 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import BrewStatusGadget from '../components/BrewStatusGadget'
 import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
-import PlayCircleFilledWhite from '@material-ui/icons/PlayCircleFilledWhite';
 import Stop from '@material-ui/icons/Stop'
 import LockOpen from '@material-ui/icons/LockOpen'
-import Cancel from '@material-ui/icons/Cancel';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
@@ -43,6 +41,9 @@ import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import SkipNext from '@material-ui/icons/SkipNext';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import { withSnackbar } from 'notistack';
+import T from 'i18n-react';
+
+
 
 const styles = theme => ({
   button: {
@@ -251,7 +252,7 @@ class Brew extends Component {
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew('Do you want start brew? Check if you\'ve secure water volume at kettle.', START_BREW)
-            }}>Start</Button> : null}
+            }}><T.span text="Brew.Start"/></Button> : null}
         {this.state.status.active_step > 0 && this.state.status.brew_started === 1 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {

@@ -1,0 +1,21 @@
+{
+  "ui": {
+    "Brew": {
+      "Start": "Start",
+      "StartConfirmation": "Do you want start brew? Check if you've secure water volume at kettle.",
+      "StopConfirmation": "Do you want stop brew?",
+      "NextConfirmation": "Do you want skip the current step?",
+      "Resume": "Resume",
+      "Boil": "Boil",
+      "BoilConfirmation": "Do you want start boil?",
+      "PumpPrime": "Pump Prime",
+      "PumpPrimeConfirmation": "Do you want start anticavitation? Check if you've secure water volume at kettle.",
+      "ReportLog": "Report Log"
+    },
+    "Confirmation": {
+      "Dialog": "Confirmation Dialog",
+      "ButtonYes": "Yes",
+      "ButtonNo": "No"
+    }
+  }
+}

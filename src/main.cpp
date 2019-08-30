@@ -41,6 +41,7 @@
 #include <BrewUNO/Buzzer.h>
 #include <BrewUNO/Pump.h>
 #include <BrewUNO/DisplayService.h>
+#include <BrewUNO/InternationalizationService.h>
 
 #define SERIAL_BAUD_RATE 115200
 
@@ -79,6 +80,7 @@ SpargeKettleHeaterService spargeKettleHeaterService = SpargeKettleHeaterService(
 MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService, &brewSettingsService);
 BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &activeStatus, &temperatureService, &pump);
+InternationalizationService internationalizationService = InternationalizationService(&server, &SPIFFS, &brewSettingsService);
 
 void setup()
 {

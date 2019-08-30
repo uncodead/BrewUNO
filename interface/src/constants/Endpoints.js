@@ -28,3 +28,4 @@ export const START_PUMP = ENDPOINT_ROOT + 'startpump';
 export const STOP_PUMP = ENDPOINT_ROOT + 'stoppump';
 export const GET_SENSORS = ENDPOINT_ROOT + 'getsensors';
 export const START_ANTICAVITATION = ENDPOINT_ROOT + 'startanticavitation';
+export const GET_LANGUAGES = ENDPOINT_ROOT + 'getlang';

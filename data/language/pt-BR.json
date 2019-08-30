@@ -1,0 +1,21 @@
+{
+  "ui": {
+    "Brew": {
+      "Start": "Iniciar",
+      "StartConfirmation": "Você deseja iniciar a brassagem? Verifique se há água na panela.",
+      "StopConfirmation": "Você deseja parar a brassagem?",
+      "NextConfirmation": "Você deseja pular para o próximo passo?",
+      "Resume": "Reiniciar",
+      "Boil": "Fervura",
+      "BoilConfirmation": "Você deseja iniciar fervura?",
+      "PumpPrime": "Anti Cavitação",
+      "PumpPrimeConfirmation": "Você deseja retirar ar da bomba? Verifique se há água suficiente na panela",
+      "ReportLog": "Reportar Log"
+    },
+    "Confirmation": {
+      "Dialog": "Confirmação",
+      "ButtonYes": "Sim",
+      "ButtonNo": "Não"
+    }
+  }
+}

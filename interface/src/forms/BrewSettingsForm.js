@@ -10,7 +10,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import { Divider } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
@@ -43,6 +42,16 @@ class BrewSettingsForm extends Component {
             </div>
             : brewSettings ?
               <ValidatorForm onSubmit={onSubmit} ref="BrewSettingsForm" className={classes.root}>
+                <Typography className={classes.formControl} color="textSecondary">Language</Typography>
+                <Select className={classes.formControl}
+                  value={brewSettings.language}
+                  onChange={handleValueChange("language")}
+                  fullWidth
+                  inputProps={{ required: true }}
+                >
+                  <MenuItem value={'/language/pt-BR.json'}>Português</MenuItem>
+                  <MenuItem value={'/language/en.json'}>English</MenuItem>
+                </Select>
                 <TextValidator className={classes.formControl}
                   name="boilTime"
                   validators={['required']}

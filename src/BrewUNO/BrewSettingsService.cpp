@@ -22,9 +22,9 @@ void BrewSettingsService::readFromJsonObject(JsonObject &root)
     MashHeaterPercentage = root["mashHeaterPercentage"];
     MainSensor = root["mainSensor"] | "";
     SpargeSensor = root["spargeSensor"] | "";
-    
     MainSensorOffset = root["mainSensorOffset"];
     SpargeSensorOffset = root["spargeSensorOffset"];
+    Language = root["language"] | "";
 }
 
 void BrewSettingsService::writeToJsonObject(JsonObject &root)
@@ -44,9 +44,9 @@ void BrewSettingsService::writeToJsonObject(JsonObject &root)
     root["mashHeaterPercentage"] = MashHeaterPercentage;
     root["mainSensor"] = MainSensor;
     root["spargeSensor"] = SpargeSensor;
-    
     root["mainSensorOffset"] = MainSensorOffset;
     root["spargeSensorOffset"] = SpargeSensorOffset;
+    root["language"] = Language;
     _activeStatus->PIDSettingsUpdated = true;
 }
 
