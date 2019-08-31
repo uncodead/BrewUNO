@@ -7,11 +7,9 @@ import { PieChart, Pie, Cell, } from 'recharts';
 import { withStyles } from '@material-ui/core/styles';
 import { getDateTime, pad } from '../components/Utils';
 import { Line } from 'rc-progress';
-import {
-  MuiThemeProvider,
-  createMuiTheme,
-} from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
+import IntText from './IntText'
 
 const themeMain = createMuiTheme({
   palette: {
@@ -100,16 +98,16 @@ class BrewStatusGadget extends Component {
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={16}>
-            <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main:"} colorPWM={"#83f316"} PWM={this.props.PWM} titlesufix={this.props.TargetTemperature + 'ºC'} colors={TEMPERATURECOLORS} value={this.props.Temperature + 'ºC'} data={getProgressData(this.props.Temperature)} />
+            <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main"} colorPWM={"#83f316"} PWM={this.props.PWM} titlesufix={this.props.TargetTemperature + 'ºC'} colors={TEMPERATURECOLORS} value={this.props.Temperature + 'ºC'} data={getProgressData(this.props.Temperature)} />
             {this.props.EnableSparge ?
-              <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Sparge:"} colorPWM={"#2196f3"} PWM={this.props.SpargePWM} titlesufix={this.props.SpargeTargetTemperature + 'ºC'} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature + 'ºC'} data={getProgressData(this.props.SpargeTemperature)} />
+              <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Secondary"} colorPWM={"#2196f3"} PWM={this.props.SpargePWM} titlesufix={this.props.SpargeTargetTemperature + 'ºC'} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature + 'ºC'} data={getProgressData(this.props.SpargeTemperature)} />
               : null}
 
             <Grid item>
               <Card className={this.props.className} style={cardStyle}>
                 <CardContent>
                   <div>
-                    <Typography color="textSecondary" variant="subtitle2" gutterBottom>Timer</Typography>
+                    <Typography color="textSecondary" variant="subtitle2" gutterBottom><IntText text="Timer" /></Typography>
                     <Typography variant="h4">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
                   </div>
                   &nbsp;
@@ -118,7 +116,7 @@ class BrewStatusGadget extends Component {
                   </div>
                   &nbsp;
                     <div style={{ paddingTop: 7 }}>
-                    <Typography color="textSecondary" variant="caption" gutterBottom>Active Step{/*} - {this.props.ActiveStep}*/}</Typography>
+                    <Typography color="textSecondary" variant="caption" gutterBottom><IntText text="Brew.ActiveStep" /></Typography>
                     <Typography variant="subtitle1">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
                   </div>
                 </CardContent>
@@ -139,9 +137,9 @@ class BrewStatusGadgetItem extends Component {
           <CardContent >
             <MuiThemeProvider theme={this.props.theme}>
               <div style={{ display: "flex" }}>
-                <Typography color="primary" variant="subtitle2" gutterBottom noWrap>{this.props.title}</Typography>
+                <Typography color="primary" variant="subtitle2" gutterBottom noWrap><IntText text={this.props.title} />:</Typography>
                 &nbsp;&nbsp;
-              <Typography color="secondary" variant="subtitle2">{this.props.titlesufix}</Typography>
+              <Typography color="secondary" variant="subtitle2"><IntText text={this.props.titlesufix} />:</Typography>
               </div>
             </MuiThemeProvider>
             <PieChart width={100} height={50}>

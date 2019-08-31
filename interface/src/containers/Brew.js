@@ -10,7 +10,7 @@ import {
   GET_ACTIVE_STATUS, START_BREW, UNLOCK_STEP_BREW,
   NEXT_STEP_BREW, STOP_BREW, RESUME_BREW,
   CHANGE_BOIL_PERCENTAGE,
-  START_BOIL, START_TUNING, PAUSE_BREW,
+  START_BOIL, PAUSE_BREW,
   START_ANTICAVITATION
 } from '../constants/Endpoints';
 import { getDateTime, ExecuteRestCall } from '../components/Utils';
@@ -22,7 +22,7 @@ import YAxis from 'recharts/lib/cartesian/YAxis';
 import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
 import Tooltip from 'recharts/lib/component/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import Slider, { Range } from 'rc-slider';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import Divider from '@material-ui/core/Divider';
 import Card from '@material-ui/core/Card';
@@ -41,59 +41,8 @@ import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import SkipNext from '@material-ui/icons/SkipNext';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import { withSnackbar } from 'notistack';
-import T from 'i18n-react';
-
-
-
-const styles = theme => ({
-  button: {
-    margin: theme.spacing.unit * 0.45,
-    padding: theme.spacing.unit * 0.7,
-  },
-  button_icons: {
-    marginRight: theme.spacing.unit * 0,
-    padding: 0,
-  },
-  button_pump: {
-    marginRight: theme.spacing.unit * 0.33,
-    padding: 0,
-  },
-  button_pop: {
-    marginRight: theme.spacing.unit * 0.5,
-    padding: 2,
-  },
-  input: {
-    display: 'none',
-  },
-  gadgetCard: {
-    background: "#303030",
-  },
-  slider: {
-    padding: '22px 0px',
-  },
-  sliderThumb: {
-    background: '#fff',
-  },
-  trackBefore: {
-    background: '#536dfe',
-  },
-  trackAfter: {
-    background: '#fff',
-  },
-  brewSettingsCard: {
-    background: "#303030",
-  },
-  chartCard: {
-    background: "#262626",
-  },
-  pumpColor1: {
-    color: "#447bd6",
-  },
-  pumpColor2: {
-    color: "#5c94f2",
-  },
-});
-
+import BrewStyles from '../style/BrewStyle'
+import IntText from '../components/IntText'
 
 let interval;
 
@@ -110,10 +59,7 @@ class Brew extends Component {
       statusInitialized: false,
       copyDialogMessage: false
     }
-
-    interval = setInterval(() => {
-      this.getStatus();
-    }, 5000);
+    interval = setInterval(() => { this.getStatus(); }, 5000);
   }
 
   updateStatus() {
@@ -132,8 +78,8 @@ class Brew extends Component {
     }
 
     if (this.state.statusInitialized) {
-      this.notification(this.getActiveStep(), this.state.status.active_mash_step_name + ' ' + this.state.status.active_mash_step_sufix_name, "Mash")
-      this.notification(this.getActiveStep(), this.state.status.active_boil_step_name, "Boil")
+      this.notification(this.getActiveStep(), this.state.status.active_mash_step_name + ' ' + this.state.status.active_mash_step_sufix_name, <IntText text="Mash" />)
+      this.notification(this.getActiveStep(), this.state.status.active_boil_step_name, <IntText text="Boil" />)
 
       if (this.getActiveStep() == "Stopped") {
         this.setState({ activeStepName: '-' })
@@ -148,7 +94,7 @@ class Brew extends Component {
       if (stepName !== "" && stepName !== undefined) {
         const action = (key) => (
           <Button color="Primary" onClick={() => { this.props.closeSnackbar(key) }}>
-            {'Dismiss'}
+            <IntText text="Dismiss" />
           </Button>
         );
         this.props.enqueueSnackbar(stepName, {
@@ -161,22 +107,22 @@ class Brew extends Component {
   }
 
   getStatus() {
-    ExecuteRestCall(GET_ACTIVE_STATUS, 'GET', (json) => {
+    ExecuteRestCall(GET_ACTIVE_STATUS, 'GET', json => {
       if (json != null && json != undefined && json != '')
         this.setState({ status: json }, this.updateStatus)
-    }, null, null)
+    })
   }
 
   getActiveStep() {
     switch (this.state.status.active_step) {
       case 1:
-        return "Mash"
+        return <IntText text="Mash" />
       case 2:
-        return "Boil"
+        return <IntText text="Boil" />
       case 3:
-        return "Anti Cavitation"
+        return <IntText text="Brew.PumpPrime" />
       default:
-        return "Stopped"
+        return <IntText text="Stopped" />
     }
   }
 
@@ -218,7 +164,7 @@ class Brew extends Component {
         confirmAction: (confirm) => {
           if (confirm) {
             ExecuteRestCall(url, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
-            if (callback) { callback() }
+            if (callback) callback()
           }
           this.setState({ confirmDialogOpen: false })
         }
@@ -226,13 +172,7 @@ class Brew extends Component {
     }
     else {
       ExecuteRestCall(url, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
-      if (callback) { callback() }
-    }
-  }
-
-  startTuning = () => {
-    if (this.state.status.pid_tuning === 0) {
-      this.actionBrew('Do you want start PID tune?', START_TUNING)
+      if (callback) callback()
     }
   }
 
@@ -251,30 +191,36 @@ class Brew extends Component {
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
-              this.actionBrew('Do you want start brew? Check if you\'ve secure water volume at kettle.', START_BREW)
-            }}><T.span text="Brew.Start"/></Button> : null}
+              this.actionBrew(<IntText text="Brew.StartConfirmation" />, START_BREW)
+            }}><IntText text="Start" /></Button> : null}
         {this.state.status.active_step > 0 && this.state.status.brew_started === 1 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
-              this.actionBrew('Do you want pause brew?', PAUSE_BREW)
-            }}><PauseCircleFilled size="small" color="action" className={classes.button_icons} /></Button> : null}
+              this.actionBrew(<IntText text="Brew.PauseConfirmation" />, PAUSE_BREW)
+            }}><PauseCircleFilled size="small" color="action" className={classes.button_icons} /></Button>
+          : null}
         {this.state.status.active_step > 0 && this.state.status.active_step !== 3 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
-              this.actionBrew('Do you want resume brew? Check if you\'ve secure water volume at kettle.', RESUME_BREW)
-            }}>Resume</Button> : null}
+              this.actionBrew(<IntText text="Brew.ResumeConfirmation" />, RESUME_BREW)
+            }}><IntText text="Resume" /></Button>
+          : null}
         {this.state.status.active_step > 0 && this.state.status.active_step !== 3 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want stop brew?', STOP_BREW, () => { this.setState({ data: [] }) }) }}><Stop size="small" color="action" className={classes.button_icons} /></Button> : null}
+            onClick={() => { this.actionBrew(<IntText text="Brew.StopConfirmation" />, STOP_BREW, () => { this.setState({ data: [] }) }) }}><Stop size="small" color="action" className={classes.button_icons} /></Button>
+          : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.pid_tuning === 0 && this.state.status.step_locked === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want skip the current step?', NEXT_STEP_BREW) }}><SkipNext size="small" color="action" className={classes.button_icons} /></Button> : null}
+            onClick={() => { this.actionBrew(<IntText text="Brew.NextConfirmation" />, NEXT_STEP_BREW) }}><SkipNext size="small" color="action" className={classes.button_icons} /></Button>
+          : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.step_locked === 1 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want unlock the current step?', UNLOCK_STEP_BREW) }}><LockOpen size="small" color="action" className={classes.button_icons} /></Button> : null}
+            onClick={() => { this.actionBrew(<IntText text="Brew.UnLockconfirmation" />, UNLOCK_STEP_BREW) }}><LockOpen size="small" color="action" className={classes.button_icons} /></Button>
+          : null}
         {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew('Do you want start boil?', START_BOIL) }}>Boil</Button> : null}
+            onClick={() => { this.actionBrew(<IntText text="Brew.BoilConfirmation" />, START_BOIL) }}><IntText text="Boil" /></Button>
+          : null}
         <Button variant="contained" color="secondary" className={classes.button}
           onClick={() => { this.actionBrew('', this.state.status.pump_on ? STOP_PUMP : START_PUMP) }}>
           {this.state.status.pump_on ?
@@ -303,15 +249,14 @@ class Brew extends Component {
                 <MenuItem key="placeholder" style={{ display: "none" }} />
                 {this.state.status.active_step === 0 ?
                   <MenuItem onClick={() => {
-                    this.actionBrew('Do you want start anticavitation? Check if you\'ve secure water volume at kettle.', START_ANTICAVITATION,
+                    this.actionBrew(<IntText text="Brew.PumpPrimeConfirmation" />, START_ANTICAVITATION,
                       () => {
-                        this.props.enqueueSnackbar('Anti Cavitation test started.', { variant: 'info', autoHideDuration: 2000, })
+                        this.props.enqueueSnackbar(<IntText text="Brew.PumpPrimeStarted" />, { variant: 'info', autoHideDuration: 2000, })
                         popupState.close()
                       })
-                  }
-                  }>Pump Prime</MenuItem>
+                  }}><IntText text="Brew.PumpPrime" /></MenuItem>
                   : null}
-                <MenuItem onClick={() => { this.reportLog(popupState.close) }}>Report Log</MenuItem>
+                <MenuItem onClick={() => { this.reportLog(popupState.close) }}><IntText text="Brew.ReportLog" /></MenuItem>
               </Menu>
             </React.Fragment>
           )}
@@ -347,7 +292,7 @@ class Brew extends Component {
             <Grid item>
               <Card className={this.props.className}>
                 <CardContent>
-                  <Typography color="textSecondary" variant="subtitle1" gutterBottom>Boil Power {this.state.boilPower}%</Typography>
+                  <Typography color="textSecondary" variant="subtitle1" gutterBottom><IntText text="Brew.BoilPower" /> {this.state.boilPower}%</Typography>
                   <Slider
                     railStyle={{ backgroundColor: '#313131', height: 5 }}
                     trackStyle={{ backgroundColor: '#5c6bc0', height: 5 }}
@@ -407,4 +352,4 @@ class Brew extends Component {
   }
 }
 
-export default withSnackbar(withStyles(styles)(Brew));
+export default withSnackbar(withStyles(BrewStyles)(Brew));

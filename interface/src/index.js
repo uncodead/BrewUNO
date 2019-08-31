@@ -7,9 +7,7 @@ import T from 'i18n-react';
 import { GET_LANGUAGES } from './constants/Endpoints';
 import { ExecuteRestCall } from './components/Utils'
 
-ExecuteRestCall(GET_LANGUAGES, 'GET', (json) => {
-  T.setTexts(json.ui);
-}, null, null)
+ExecuteRestCall(GET_LANGUAGES, 'GET', json => T.setTexts(json.ui))
 
 render((
   <Router history={history}>

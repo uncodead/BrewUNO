@@ -1,21 +1,34 @@
 {
   "ui": {
+    "Start": "Start",
+    "Pause": "Pause",
+    "Resume": "Resume",
+    "Stopped": "Stopped",
+    "Mash": "Mash",
+    "Boil": "Boil",
+    "Dismiss": "Dismiss",
+    "Yes": "Yes",
+    "No": "No",
+    "Timer": "Timer",
+    "Main": "Main",
+    "Secondary": "Secondary",
     "Brew": {
-      "Start": "Start",
       "StartConfirmation": "Do you want start brew? Check if you've secure water volume at kettle.",
+      "PauseConfirmation": "Do you want pause brew?",
+      "ResumeConfirmation": "Do you want resume brew? Check if you've secure water volume at kettle.",
       "StopConfirmation": "Do you want stop brew?",
       "NextConfirmation": "Do you want skip the current step?",
-      "Resume": "Resume",
-      "Boil": "Boil",
+      "UnLockconfirmation": "Do you want unlock the current step?",
       "BoilConfirmation": "Do you want start boil?",
+      "BoilPower": "Boil Power",
       "PumpPrime": "Pump Prime",
       "PumpPrimeConfirmation": "Do you want start anticavitation? Check if you've secure water volume at kettle.",
-      "ReportLog": "Report Log"
+      "PumpPrimeStarted": "Anti Cavitation test started",
+      "ReportLog": "Report Log",
+      "ActiveStep": "Active Step"
     },
     "Confirmation": {
-      "Dialog": "Confirmation Dialog",
-      "ButtonYes": "Yes",
-      "ButtonNo": "No"
+      "Dialog": "Confirmation Dialog"
     }
   }
 }
