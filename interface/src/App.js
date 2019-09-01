@@ -17,6 +17,12 @@ import {
   jssPreset,
 } from '@material-ui/core/styles';
 
+import T from 'i18n-react';
+import { GET_LANGUAGES } from './constants/Endpoints';
+import { ExecuteRestCall } from './components/Utils'
+
+
+
 // Our theme
 /*
 const theme = createMuiTheme({
@@ -69,6 +75,14 @@ const jss = create(jssPreset());
 const generateClassName = createGenerateClassName();
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    ExecuteRestCall(GET_LANGUAGES, 'GET', json => {
+      T.setTexts(json.ui)
+      this.forceUpdate()
+    })
+  }
+
   render() {
     return (
       <JssProvider jss={jss} generateClassName={generateClassName}>

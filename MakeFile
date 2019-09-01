@@ -5,6 +5,15 @@ build: | pull
 	cd interface;npm run build
 	platformio run -v -t buildfs
 
+uploadfs:
+	platformio run -t uploadfs
+
+uploadfw:
+	platformio run -t upload
+
+monitor: 
+	platformio device monitor
+
 deploy: | build
 	platformio run -t uploadfs
 	platformio run -t upload

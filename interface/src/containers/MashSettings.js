@@ -6,6 +6,7 @@ import SortableList from '../components/SortableList';
 import { withSnackbar } from 'notistack';
 import { SAVE_MASH_SETTINGS_SERVICE_PATH, GET_MASH_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
 import { ExecuteRestCall } from '../components/Utils';
+import IntText from '../components/IntText'
 
 class MashSettings extends Component {
   constructor(props) {
@@ -32,11 +33,11 @@ class MashSettings extends Component {
       },
     }).then(response => {
       if (response.ok) {
-        this.props.enqueueSnackbar("Mash settings saved.", { variant: 'info', autoHideDuration: 500, });
+        this.props.enqueueSnackbar(<IntText text="Mash.SavedAlert" />, { variant: 'info', autoHideDuration: 500, });
         return;
       }
       response.text().then(function (data) {
-        throw Error("Mash Setings service returned unexpected response code: " + response.status + " Message: " + data);
+        throw Error(<IntText text="Mash.ErrorAlert" /> + response.status + " - " + data);
       }).catch(error => {
         this.props.enqueueSnackbar(error.message, { variant: 'error', autoHideDuration: 2000, });
         this.getMashSettings();
@@ -96,7 +97,7 @@ class MashSettings extends Component {
 
   render() {
     return (
-      <SectionContent title="Mash Settings" selected={this.props.selectedIndex >= 0}>
+      <SectionContent title={<IntText text="MashSettings.Settings" />} selected={this.props.selectedIndex >= 0}>
         {!this.props.listOnly ?
           <MashSettingsForm callbackItemAdded={this.itemAdded} ref={this.child} />
           : null}

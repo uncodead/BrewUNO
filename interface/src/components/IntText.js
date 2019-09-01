@@ -8,7 +8,11 @@ class IntText extends Component {
 
   render() {
     return (
-      <T.span text={this.props.text} />
+      <span>
+        {this.props.spaceBefore ? ' ' : null}
+        <T.span text={this.props.text} />
+        {this.props.spaceAfter ? ' ' : null}
+      </span>
     )
   }
 }

@@ -11,6 +11,7 @@ import DragIndicatorIcon from '@material-ui/icons/DragIndicator'
 import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Divider from '@material-ui/core/Divider';
+import IntText from '../components/IntText'
 
 class SortableList extends Component {
   constructor(props) {
@@ -48,10 +49,10 @@ class SortableList extends Component {
             onDoubleClick={this.props.callbackFormEdited(itemIndex)}
             primary={value.n}
             secondary={<Typography>{this.getItemText(value)}
-              {this.props.brewDay && !this.props.boil && value.r ? ' (Recirculation) ' : null}
-              {this.props.brewDay && !this.props.boil && value.ho ? ' (Heater) ' : null}
-              {this.props.brewDay && !this.props.boil && value.fp ? ' (Full Power)' : null}
-              {this.props.brewDay && !this.props.boil && value.sl ? ' (Step LOCK)' : null}
+              {this.props.brewDay && !this.props.boil && value.r ? <IntText text="Recirculation" spaceBefore={true} spaceAfter={true} /> : null}
+              {this.props.brewDay && !this.props.boil && value.ho ? <IntText text="Heater" spaceBefore={true} spaceAfter={true} /> : null}
+              {this.props.brewDay && !this.props.boil && value.fp ? <IntText text="FullPower" spaceBefore={true} spaceAfter={true} /> : null}
+              {this.props.brewDay && !this.props.boil && value.sl ? <IntText text="StepLock" spaceBefore={true} spaceAfter={true} /> : null}
             </Typography>}
           />
           {!this.props.brewDay ?
@@ -77,7 +78,7 @@ class SortableList extends Component {
                     onChange={() => { this.props.callbackItemEdited(itemIndex, 'r', !value.r) }}
                   />
                 }
-                label="Pump"
+                label={<IntText text="Pump" />}
               /> : null}
             {!this.props.boil ?
               <FormControlLabel
@@ -87,7 +88,7 @@ class SortableList extends Component {
                     onChange={() => { this.props.callbackItemEdited(itemIndex, 'ho', !value.ho) }}
                   />
                 }
-                label="Heater"
+                label={<IntText text="Heater" />}
               /> : null}
             {!this.props.boil ?
               <FormControlLabel
@@ -97,7 +98,7 @@ class SortableList extends Component {
                     onChange={() => { this.props.callbackItemEdited(itemIndex, 'fp', !value.fp) }}
                   />
                 }
-                label="Full Power"
+                label={<IntText text="FullPower" />}
               /> : null}
             {!this.props.boil ?
               <FormControlLabel
@@ -107,7 +108,7 @@ class SortableList extends Component {
                     onChange={() => { this.props.callbackItemEdited(itemIndex, 'sl', !value.sl) }}
                   />
                 }
-                label="Step LOCK"
+                label={<IntText text="StepLock" />}
               /> : null}
           </ListItem>
           : null}

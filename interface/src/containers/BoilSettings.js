@@ -6,6 +6,7 @@ import SortableList from '../components/SortableList';
 import { withSnackbar } from 'notistack';
 import { SAVE_BOIL_SETTINGS_SERVICE_PATH, GET_BOIL_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
 import { ExecuteRestCall } from '../components/Utils';
+import IntText from '../components/IntText'
 
 class BoilSettings extends Component {
   constructor() {
@@ -33,11 +34,11 @@ class BoilSettings extends Component {
       },
     }).then(response => {
       if (response.ok) {
-        this.props.enqueueSnackbar("Boil settings saved.", { variant: 'info', autoHideDuration: 2000, });
+        this.props.enqueueSnackbar(<IntText text="BoilSettings.SavedAlert" />, { variant: 'info', autoHideDuration: 2000, });
         return;
       }
       response.text().then(function (data) {
-        throw Error("Boil Setings service returned unexpected response code: " + response.status + " Message: " + data);
+        throw Error(<IntText text="BoilSettings.ErrorAlert" /> + response.status + " - " + data);
       }).catch(error => {
         this.props.enqueueSnackbar(error.message, { variant: 'error', autoHideDuration: 2000, });
         this.getBoilSettings();
@@ -83,7 +84,7 @@ class BoilSettings extends Component {
 
   render() {
     return (
-      <SectionContent title="Boil Timing" selected={this.props.active_boil_step_index >= 0}>
+      <SectionContent title={<IntText text="BoilSettings.Settings" />} selected={this.props.active_boil_step_index >= 0}>
         {!this.props.listOnly ?
           <BoilSettingsForm callbackItemAdded={this.itemAdded} boil={true} ref={this.child} /> : null}
         <Divider />

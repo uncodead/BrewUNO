@@ -6,6 +6,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import IntText from '../components/IntText'
 
 class ConfirmDialog extends Component {
 
@@ -27,7 +28,7 @@ class ConfirmDialog extends Component {
         onClose={() => this.props.confirmAction(false)}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description">
-        <DialogTitle id="alert-dialog-title">{"Confirmation Dialog"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title"><IntText text="Confirmation.Dialog" /></DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {this.props.confirmDialogMessage}
@@ -40,15 +41,15 @@ class ConfirmDialog extends Component {
               onCopy={() => {
                 //do stuff here, like summon a confirmation prompt
               }}>
-              <Button onClick={() => this.props.confirmAction(false)} color="secondary">Copy</Button>
+              <Button onClick={() => this.props.confirmAction(false)} color="secondary"><IntText text="Copy" /></Button>
             </CopyToClipboard>
             : null}
           <Button onClick={() => this.props.confirmAction(false)} color="secondary">
-            No
-         </Button>
+            <IntText text="No" />
+          </Button>
           <Button onClick={() => this.props.confirmAction(true)} color="secondary" autoFocus>
-            Yes
-         </Button>
+            <IntText text="Yes" />
+          </Button>
         </DialogActions>
       </Dialog>
     )

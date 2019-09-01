@@ -120,7 +120,7 @@ class Brew extends Component {
       case 2:
         return <IntText text="Boil" />
       case 3:
-        return <IntText text="Brew.PumpPrime" />
+        return <IntText text="PumpPrime" />
       default:
         return <IntText text="Stopped" />
     }
@@ -254,7 +254,7 @@ class Brew extends Component {
                         this.props.enqueueSnackbar(<IntText text="Brew.PumpPrimeStarted" />, { variant: 'info', autoHideDuration: 2000, })
                         popupState.close()
                       })
-                  }}><IntText text="Brew.PumpPrime" /></MenuItem>
+                  }}><IntText text="PumpPrime" /></MenuItem>
                   : null}
                 <MenuItem onClick={() => { this.reportLog(popupState.close) }}><IntText text="Brew.ReportLog" /></MenuItem>
               </Menu>
