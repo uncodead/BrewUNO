@@ -26,17 +26,18 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 
 This is the easiest way to mount your brewuno, you can improve it!
 
-### Installing with Flash Download Tools ([video](http://www.brewuno.com/download/install.mp4))
+### Installing with Flash Download Tools ([video](https://www.youtube.com/watch?v=xouQFcmvW0Y&feature=youtu.be))
 
 * Download [bin files](https://github.com/uncodead/BrewUNO/tree/master/bin)
 * Download [Flash Download Tools](http://brewuno.com/download/flash_download_tools_v3.6.6_0.zip)
 * Setup like this: [setup](http://brewuno.com/download/esp8266-download-tool.png)
 * firmware.bin offset: 0x0
 * spiffs.bin offset: 0x00300000
-* Click ERASE button
 * Click START button
-* Connect to BrewUNO wifi (SSID: BrewUNO, Password: brew-uno). AP mode ip: 192.168.4.1
-* Scan and configure your wifi under menu
+* Restart WEMOS
+* Connect to BrewUNO wifi (SSID: BrewUNO, Password: brew-uno). 
+* Access AP mode ip: 192.168.4.1
+* Scan and configure your wifi under WiFi menu
 
 ### Installing & Deployment with VS Code
 
