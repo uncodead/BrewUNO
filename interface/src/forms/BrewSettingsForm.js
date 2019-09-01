@@ -10,11 +10,19 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import { Grid, Paper, Divider } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
+    flexGrow: 1,
+    width: '100%',
+    maxWidth: '900px',
+  },
+  paper: {
+    padding: theme.spacing.unit * 3,
+    textAlign: 'left',
   },
   formControl: {
     margin: theme.spacing.unit,
@@ -42,6 +50,11 @@ class BrewSettingsForm extends Component {
             </div>
             : brewSettings ?
               <ValidatorForm onSubmit={onSubmit} ref="BrewSettingsForm" className={classes.root}>
+                
+                <Grid container spacing={16}> 
+
+                <Grid item xs={6}>
+                <Paper className={classes.root}>
                 <Typography className={classes.formControl} color="textSecondary">Language</Typography>
                 <Select className={classes.formControl}
                   value={brewSettings.language}
@@ -52,6 +65,60 @@ class BrewSettingsForm extends Component {
                   <MenuItem value={'/language/pt-BR.json'}>Português</MenuItem>
                   <MenuItem value={'/language/en.json'}>English</MenuItem>
                 </Select>
+                <Typography className={classes.formControl} color="textSecondary">Temperature Unit</Typography>
+                <Select className={classes.formControl}
+                  value={brewSettings.language}
+                  onChange={handleValueChange("tempunit")}
+                  fullWidth
+                  inputProps={{ required: true }}
+                >
+                  <MenuItem value={''}>Celsius</MenuItem>
+                  <MenuItem value={''}>Fahrenheit</MenuItem>
+                </Select>
+
+                </Paper>
+                </Grid>
+
+                <Grid item xs={6}>
+                <Paper className={classes.root}>
+                <Typography className={classes.formControl} color="textSecondary">Main Sensor</Typography>
+                <Select className={classes.formControl}
+                  value={brewSettings.mainSensor}
+                  onChange={handleValueChange("mainSensor")}
+                  fullWidth
+                  inputProps={{ required: true }}
+                >
+                  {this.props.sensors.map(value => (
+                    <MenuItem value={value.address}>{value.address} - {value.value}ºC</MenuItem>
+                  ))}
+                </Select>
+                <TextValidator className={classes.formControl}
+                  name="MainSensorOffset"
+                  validators={['required', 'isFloat']}
+                  label="Offset (Calibration)"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
+                  value={brewSettings.mainSensorOffset}
+                  onChange={handleFloatValueChange("mainSensorOffset")}
+                  errorMessages={['this field is required']}
+                />
+                </Paper>
+                </Grid>
+
+                <Grid item xs={6}>
+                <Paper className={classes.root}>
+                <Typography className={classes.formControl} color="textSecondary">Mash & Boil PWM</Typography>
+                <TextValidator className={classes.formControl}
+                  name="MashHeaterPercentage"
+                  validators={['required']}
+                  label="Mash Heater %"
+                  type="number"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">%</InputAdornment> }}
+                  value={brewSettings.mashHeaterPercentage}
+                  onChange={handleValueChange("mashHeaterPercentage")}
+                  errorMessages={['this field is required']}
+                />
                 <TextValidator className={classes.formControl}
                   name="boilTime"
                   validators={['required']}
@@ -85,50 +152,26 @@ class BrewSettingsForm extends Component {
                   onChange={handleValueChange("boilPowerPercentage")}
                   errorMessages={['this field is required']}
                 />
-                <TextValidator className={classes.formControl}
-                  name="MashHeaterPercentage"
-                  validators={['required']}
-                  label="Mash Heater %"
-                  type="number"
-                  fullWidth
-                  InputProps={{ endAdornment: <InputAdornment position="start">%</InputAdornment> }}
-                  value={brewSettings.mashHeaterPercentage}
-                  onChange={handleValueChange("mashHeaterPercentage")}
-                  errorMessages={['this field is required']}
-                />
-                <Typography className={classes.formControl} color="textSecondary">Main Sensor</Typography>
-                <Select className={classes.formControl}
-                  value={brewSettings.mainSensor}
-                  onChange={handleValueChange("mainSensor")}
-                  fullWidth
-                  inputProps={{ required: true }}
-                >
-                  {this.props.sensors.map(value => (
-                    <MenuItem value={value.address}>{value.address} - {value.value}ºC</MenuItem>
-                  ))}
-                </Select>
-                <TextValidator className={classes.formControl}
-                  name="MainSensorOffset"
-                  validators={['required', 'isFloat']}
-                  label="Main Sensor Offset (Calibration)"
-                  fullWidth
-                  InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
-                  value={brewSettings.mainSensorOffset}
-                  onChange={handleFloatValueChange("mainSensorOffset")}
-                  errorMessages={['this field is required']}
-                />
-                <FormControlLabel
+                </Paper>
+                </Grid>
+
+                <Grid item xs={6}>
+                <Paper className={classes.root}>
+                <Typography className={classes.formControl} color="textSecondary">Sparge Sensor</Typography>
+                <div style={{ marginTop: 0, marginLeft: 20, padding: 0 }}>
+                <FormControlLabel 
                   control={
                     <Switch
                       checked={brewSettings.enableSparge}
                       value={'enableSparge'}
                       onChange={handleCheckboxChange('enableSparge')}
                       color="secondary"
+                      margin
                     />
                   }
                   label="Enable Sparge"
                 />
-                <Typography className={classes.formControlTypography} color="textSecondary">Sparge Sensor</Typography>
+                </div>
                 <Select className={classes.formControl}
                   value={brewSettings.spargeSensor}
                   onChange={handleValueChange("spargeSensor")}
@@ -143,7 +186,7 @@ class BrewSettingsForm extends Component {
                 <TextValidator className={classes.formControl}
                   name="SpargeSensorOffset"
                   validators={['required', 'isFloat']}
-                  label="Sparge Sensor Offset (Calibration)"
+                  label="Offset (Calibration)"
                   fullWidth
                   InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
                   value={brewSettings.spargeSensorOffset}
@@ -161,7 +204,6 @@ class BrewSettingsForm extends Component {
                   onChange={handleValueChange("spargePowerPercentage")}
                   errorMessages={['this field is required']}
                 />
-
                 <TextValidator className={classes.formControl}
                   name="spargeTemperature"
                   validators={['required', 'isFloat']}
@@ -172,29 +214,12 @@ class BrewSettingsForm extends Component {
                   onChange={handleValueChange("spargeTemperature")}
                   errorMessages={['this field is required']}
                 />
+                </Paper>
+                </Grid>
 
-                <TextValidator className={classes.formControl}
-                  name="pumpRestInterval"
-                  validators={['required']}
-                  label="Pump Rest Interval"
-                  type="number"
-                  fullWidth
-                  InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
-                  value={brewSettings.pumpRestInterval}
-                  onChange={handleValueChange("pumpRestInterval")}
-                  errorMessages={['this field is required']}
-                />
-                <TextValidator className={classes.formControl}
-                  name="pumpRestTime"
-                  validators={['required']}
-                  label="Pump Rest Time"
-                  type="number"
-                  fullWidth
-                  InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
-                  value={brewSettings.pumpRestTime}
-                  onChange={handleValueChange("pumpRestTime")}
-                  errorMessages={['this field is required']}
-                />
+                <Grid item xs={6}>
+                <Paper className={classes.root}>
+                <Typography className={classes.formControl} color="textSecondary">PID</Typography>
                 <TextValidator className={classes.formControl}
                   name="kp"
                   label="kP"
@@ -232,9 +257,113 @@ class BrewSettingsForm extends Component {
                   onChange={handleValueChange("pidStart")}
                   errorMessages={['this field is required']}
                 />
-                <Button variant="raised" color="secondary" type="submit">
+                </Paper>
+                </Grid>
+
+                <Grid item xs={6}>
+                <Paper className={classes.root}>
+                <Typography className={classes.formControl} color="textSecondary">Auxiliary Sensor 1</Typography>
+                <Select className={classes.formControl}
+                  value={brewSettings.auxSensorOne}
+                  onChange={handleValueChange("auxSensorOne")}
+                  fullWidth
+                  inputProps={{ required: true }}
+                >
+                  {this.props.sensors.map(value => (
+                    <MenuItem value={value.address}>{value.address} - {value.value}ºC</MenuItem>
+                  ))}
+                </Select>
+                <TextValidator className={classes.formControl}
+                  name="auxSensorOneOffset"
+                  validators={['required', 'isFloat']}
+                  label="Offset (Calibration) 1"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
+                  value={brewSettings.auxSensorOneOffset}
+                  onChange={handleFloatValueChange("auxSensorOneOffset")}
+                  errorMessages={['this field is required']}
+                />
+                <Typography className={classes.formControl} color="textSecondary">Auxiliary Sensor 2</Typography>
+                <Select className={classes.formControl}
+                  value={brewSettings.auxSensorTwo}
+                  onChange={handleValueChange("auxSensorTwo")}
+                  fullWidth
+                  inputProps={{ required: true }}
+                >
+                  {this.props.sensors.map(value => (
+                    <MenuItem value={value.address}>{value.address} - {value.value}ºC</MenuItem>
+                  ))}
+                </Select>
+                <TextValidator className={classes.formControl}
+                  name="auxSensorTwoOffset"
+                  validators={['required', 'isFloat']}
+                  label="Offset (Calibration) 2"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
+                  value={brewSettings.auxSensorTwoOffset}
+                  onChange={handleFloatValueChange("auxSensorTwoOffset")}
+                  errorMessages={['this field is required']}
+                />
+                <Typography className={classes.formControl} color="textSecondary">Auxiliary Sensor 3</Typography>
+                <Select className={classes.formControl}
+                  value={brewSettings.auxSensorThree}
+                  onChange={handleValueChange("auxSensorThree")}
+                  fullWidth
+                  inputProps={{ required: true }}
+                >
+                  {this.props.sensors.map(value => (
+                    <MenuItem value={value.address}>{value.address} - {value.value}ºC</MenuItem>
+                  ))}
+                </Select>
+                <TextValidator className={classes.formControl}
+                  name="auxSensorThreeOffset"
+                  validators={['required', 'isFloat']}
+                  label="Offset (Calibration) 3"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
+                  value={brewSettings.auxSensorThreeOffset}
+                  onChange={handleFloatValueChange("auxSensorThreeOffset")}
+                  errorMessages={['this field is required']}
+                />
+                </Paper>
+                </Grid>
+
+                <Grid item xs={6}>
+                <Paper className={classes.root}>
+                <Typography className={classes.formControl} color="textSecondary">Pump Prime</Typography>
+                <TextValidator className={classes.formControl}
+                  name="pumpRestInterval"
+                  validators={['required']}
+                  label="Pump Rest Interval"
+                  type="number"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
+                  value={brewSettings.pumpRestInterval}
+                  onChange={handleValueChange("pumpRestInterval")}
+                  errorMessages={['this field is required']}
+                />
+                <TextValidator className={classes.formControl}
+                  name="pumpRestTime"
+                  validators={['required']}
+                  label="Pump Rest Time"
+                  type="number"
+                  fullWidth
+                  InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
+                  value={brewSettings.pumpRestTime}
+                  onChange={handleValueChange("pumpRestTime")}
+                  errorMessages={['this field is required']}
+                />
+                </Paper>
+                </Grid>
+
+                </Grid>
+
+                <div style={{ marginTop: 20, marginLeft: 5, padding: 0 }}>
+                <Button variant="raised" color="secondary" type="submit" margin="20">
                   Save
-              </Button>
+                </Button>
+                </div>
+
               </ValidatorForm>
               :
               <div>
