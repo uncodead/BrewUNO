@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import { WIFI_SETTINGS_ENDPOINT }  from  '../constants/Endpoints';
 import { restComponent } from '../components/RestComponent';
 import SectionContent from '../components/SectionContent';
 import WiFiSettingsForm from '../forms/WiFiSettingsForm';
+import IntText from '../components/IntText'
 
 class WiFiSettings extends Component {
 
@@ -37,7 +37,7 @@ class WiFiSettings extends Component {
   render() {
     const { data, fetched, errorMessage, selectedNetwork } = this.props;
     return (
-      <SectionContent title="WiFi Settings">
+      <SectionContent title={<IntText text="WiFiSettings.Settings" />}>
       	<WiFiSettingsForm
           wifiSettings={data}
           wifiSettingsFetched={fetched}

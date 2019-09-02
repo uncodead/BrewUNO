@@ -1,41 +1,20 @@
 import React, { Component } from 'react';
-
 import AppRouting from './AppRouting';
-import SnackbarNotification from './components/SnackbarNotification';
-
 import CssBaseline from '@material-ui/core/CssBaseline';
-
 import { SnackbarProvider } from 'notistack';
-
 import JssProvider from 'react-jss/lib/JssProvider';
 import { create } from 'jss';
-
 import {
   MuiThemeProvider,
   createMuiTheme,
   createGenerateClassName,
   jssPreset,
 } from '@material-ui/core/styles';
-
 import T from 'i18n-react';
-import { GET_LANGUAGES } from './constants/Endpoints';
 import { ExecuteRestCall } from './components/Utils'
-
-
-
-// Our theme
-/*
-const theme = createMuiTheme({
-  palette: {
-    primary: indigo,
-    secondary: blueGrey,
-    highlight_idle: blueGrey[900],
-    highlight_warn: orange[500],
-    highlight_error: red[500],
-    highlight_success: green[500],
-  },
-});
-*/
+import { BREW_SETTINGS_ENDPOINT } from './constants/Endpoints';
+import en from "./language/en.json"
+import ptBR from "./language/pt-BR.json"
 
 const theme = createMuiTheme({
   palette: {
@@ -77,8 +56,18 @@ const generateClassName = createGenerateClassName();
 class App extends Component {
   constructor(props) {
     super(props)
-    ExecuteRestCall(GET_LANGUAGES, 'GET', json => {
-      T.setTexts(json.ui)
+    ExecuteRestCall(BREW_SETTINGS_ENDPOINT, 'GET', json => {
+      switch (json.language) {
+        case "pt-BR":
+          T.setTexts(ptBR)
+          break
+        case "en":
+          T.setTexts(en);
+          break
+        default:
+          T.setTexts(en)
+          break
+      }
       this.forceUpdate()
     })
   }

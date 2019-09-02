@@ -13,11 +13,13 @@ import SettingsInputAntennaIcon from '@material-ui/icons/SettingsInputAntenna';
 import DeviceHubIcon from '@material-ui/icons/DeviceHub';
 import ComputerIcon from '@material-ui/icons/Computer';
 
-import {restComponent} from '../components/RestComponent';
+import { restComponent } from '../components/RestComponent';
 import SectionContent from '../components/SectionContent'
 
 import * as Highlight from '../constants/Highlight';
-import { AP_STATUS_ENDPOINT }  from  '../constants/Endpoints';
+import { AP_STATUS_ENDPOINT } from '../constants/Endpoints';
+
+import IntText from '../components/IntText'
 
 const styles = theme => ({
   ["apStatus_" + Highlight.SUCCESS]: {
@@ -42,15 +44,15 @@ class APStatus extends Component {
     this.props.loadData();
   }
 
-  apStatusHighlight(data){
+  apStatusHighlight(data) {
     return data.active ? Highlight.SUCCESS : Highlight.IDLE;
   }
 
-  apStatus(data){
-    return data.active ? "Active" : "Inactive";
+  apStatus(data) {
+    return data.active ? <IntText text="Active" /> : <IntText text="Inactive" />;
   }
 
-  createListItems(data, fullDetails, classes){
+  createListItems(data, fullDetails, classes) {
     return (
       <Fragment>
         <ListItem>
@@ -61,30 +63,30 @@ class APStatus extends Component {
         </ListItem>
         <Divider inset component="li" />
         <ListItem>
-          <Avatar>IP</Avatar>
-          <ListItemText primary="IP Address" secondary={data.ip_address} />
+          <Avatar><IntText text="Ip" /></Avatar>
+          <ListItemText primary={<IntText text="IPAddress" />} secondary={data.ip_address} />
         </ListItem>
         <Divider inset component="li" />
         <ListItem>
           <Avatar>
             <DeviceHubIcon />
           </Avatar>
-          <ListItemText primary="MAC Address" secondary={data.mac_address} />
+          <ListItemText primary={<IntText text="MACAddress" />} secondary={data.mac_address} />
         </ListItem>
         <Divider inset component="li" />
         <ListItem>
           <Avatar>
             <ComputerIcon />
           </Avatar>
-          <ListItemText primary="AP Clients" secondary={data.station_num} />
+          <ListItemText primary={<IntText text="APSettings.APClients" />} secondary={data.station_num} />
         </ListItem>
         <Divider inset component="li" />
       </Fragment>
     );
   }
 
-  renderAPStatus(data, fullDetails, classes){
-    return  (
+  renderAPStatus(data, fullDetails, classes) {
+    return (
       <div>
         <List>
           <Fragment>
@@ -92,37 +94,37 @@ class APStatus extends Component {
           </Fragment>
         </List>
         <Button variant="raised" color="secondary" className={classes.button} onClick={this.props.loadData}>
-          Refresh
+          {<IntText text="Refresh" />}
         </Button>
       </div>
     );
   }
 
   render() {
-    const { data, fetched, errorMessage, classes, fullDetails }  = this.props;
+    const { data, fetched, errorMessage, classes, fullDetails } = this.props;
 
     return (
-      <SectionContent title="AP Status">
+      <SectionContent title={<IntText text="APSettings.APStatus" />}>
         {
-         !fetched ?
-         <div>
-           <LinearProgress className={classes.fetching}/>
-           <Typography variant="display1" className={classes.fetching}>
-             Loading...
+          !fetched ?
+            <div>
+              <LinearProgress className={classes.fetching} />
+              <Typography variant="display1" className={classes.fetching}>
+                {<IntText text="Loading" />}...
            </Typography>
-         </div>
-       :
-        data ? this.renderAPStatus(data, fullDetails, classes)
-       :
-        <div>
-          <Typography variant="display1" className={classes.fetching}>
-            {errorMessage}
-          </Typography>
-          <Button variant="raised" color="secondary" className={classes.button} onClick={this.props.loadData}>
-            Refresh
-          </Button>
-        </div>
-      }
+            </div>
+            :
+            data ? this.renderAPStatus(data, fullDetails, classes)
+              :
+              <div>
+                <Typography variant="display1" className={classes.fetching}>
+                  {errorMessage}
+                </Typography>
+                <Button variant="raised" color="secondary" className={classes.button} onClick={this.props.loadData}>
+                  {<IntText text="Refresh" />}
+                </Button>
+              </div>
+        }
       </SectionContent>
     )
   }

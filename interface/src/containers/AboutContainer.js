@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import MenuAppBar from '../components/MenuAppBar';
 import About from './About'
 
+import IntText from '../components/IntText'
+
 class AboutContainer extends Component {
   constructor() {
     super();
@@ -10,7 +12,7 @@ class AboutContainer extends Component {
   render() {
     const { data, fetched, errorMessage } = this.props;
     return (
-      <MenuAppBar sectionTitle="About">
+      <MenuAppBar sectionTitle={<IntText text="About" />}>
         <About />
       </MenuAppBar>
     )

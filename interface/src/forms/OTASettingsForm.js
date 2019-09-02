@@ -14,6 +14,8 @@ import isHostname from '../validators/isHostname';
 import or from '../validators/or';
 import PasswordValidator from '../components/PasswordValidator';
 
+import IntText from '../components/IntText'
+
 const styles = theme => ({
   loadingSettings: {
     margin: theme.spacing.unit,
@@ -47,74 +49,74 @@ class OTASettingsForm extends React.Component {
     return (
       <div>
         {
-         !otaSettingsFetched ?
+          !otaSettingsFetched ?
 
-         <div className={classes.loadingSettings}>
-           <LinearProgress className={classes.loadingSettingsDetails}/>
-           <Typography variant="display1" className={classes.loadingSettingsDetails}>
-             Loading...
+            <div className={classes.loadingSettings}>
+              <LinearProgress className={classes.loadingSettingsDetails} />
+              <Typography variant="display1" className={classes.loadingSettingsDetails}>
+                {<IntText text="Loading" />}...
            </Typography>
-         </div>
+            </div>
 
-         : otaSettings ?
+            : otaSettings ?
 
-      	 <ValidatorForm onSubmit={onSubmit}>
+              <ValidatorForm onSubmit={onSubmit}>
 
-            <FormControlLabel className={classes.switchControl}
-               control={
-                 <Switch
-                        checked={otaSettings.enabled}
-                        onChange={handleCheckboxChange('enabled')}
-                        value="enabled"
-                        color="secondary"
-                 />
-               }
-              label="Enable OTA Updates?"
-             />
+                <FormControlLabel className={classes.switchControl}
+                  control={
+                    <Switch
+                      checked={otaSettings.enabled}
+                      onChange={handleCheckboxChange('enabled')}
+                      value="enabled"
+                      color="secondary"
+                    />
+                  }
+                  label={<IntText text="OTASettings.EnableOTAUpdates" />}
+                />
 
-           <TextValidator
-               validators={['required', 'isNumber', 'minNumber:1025', 'maxNumber:65535']}
-               errorMessages={['Port is required', "Must be a number", "Must be greater than 1024 ", "Max value is 65535"]}
-               name="port"
-               label="Port"
-               className={classes.textField}
-               value={otaSettings.port}
-               type="number"
-               onChange={handleValueChange('port')}
-               margin="normal"
-             />
+                <TextValidator
+                  validators={['required', 'isNumber', 'minNumber:1025', 'maxNumber:65535']}
+                  errorMessages={[<IntText text="OTASettings.PortIsRequired" />, <IntText text="OTASettings.MustBeNumber" />, <IntText text="OTASettings.MustBeGreaterThan1024" />, <IntText text="OTASettings.MaxValueIs65535" />]}
+                  name="port"
+                  label={<IntText text="Port" />}
+                  className={classes.textField}
+                  value={otaSettings.port}
+                  type="number"
+                  onChange={handleValueChange('port')}
+                  margin="normal"
+                />
 
-             <PasswordValidator
-                   validators={['required', 'matchRegexp:^.{0,64}$']}
-                   errorMessages={['OTA Password is required', 'OTA Point Password must be 64 characters or less']}
-                   name="password"
-                   label="Password"
-                   className={classes.textField}
-                   value={otaSettings.password}
-                   onChange={handleValueChange('password')}
-                   margin="normal"
-             />
+                <PasswordValidator
+                  validators={['required', 'matchRegexp:^.{0,64}$']}
+                  errorMessages={[<IntText text="OTASettings.OTAPasswordIsRequired" />, <IntText text="OTASettings.OTAPointPasswordMustBe64" />]}
+                  name="password"
+                  label={<IntText text="Password" />}
+                  className={classes.textField}
+                  value={otaSettings.password}
+                  onChange={handleValueChange('password')}
+                  margin="normal"
+                />
 
-          <Button variant="raised" color="secondary" className={classes.button} type="submit">
-            Save
-          </Button>
-          <Button variant="raised" color="secondary" className={classes.button} onClick={onReset}>
-      		  Reset
-      		</Button>
+                <Button variant="raised" color="secondary" className={classes.button} type="submit">
+                  <IntText text="Save" />
+                </Button>
+                <Button variant="raised" color="secondary" className={classes.button} onClick={onReset}>
+                  <IntText text="Reset" />
+                </Button>
 
-         </ValidatorForm>
+              </ValidatorForm>
 
-        :
+              :
 
-        <div className={classes.loadingSettings}>
-          <Typography variant="display1" className={classes.loadingSettingsDetails}>
-            {errorMessage}
-          </Typography>
-          <Button variant="raised" color="secondary" className={classes.button} onClick={onReset}>
-      		  Reset
-      		</Button>
-        </div>
-      }
+              <div className={classes.loadingSettings}>
+                <Typography variant="display1" className={classes.loadingSettingsDetails}>
+                  {errorMessage}
+                </Typography>
+                <Button variant="raised" color="secondary" className={classes.button} onClick={onReset}>
+                  <IntText text="Reset" />
+                </Button>
+              </div>
+        }
       </div>
     );
   }

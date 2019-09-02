@@ -9,8 +9,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import { TextValidator, ValidatorForm, SelectValidator } from 'react-material-ui-form-validator';
 
-import {isAPEnabled} from '../constants/WiFiAPModes';
+import { isAPEnabled } from '../constants/WiFiAPModes';
 import PasswordValidator from '../components/PasswordValidator';
+
+import IntText from '../components/IntText'
 
 const styles = theme => ({
   loadingSettings: {
@@ -23,7 +25,7 @@ const styles = theme => ({
   textField: {
     width: "100%"
   },
-  selectField:{
+  selectField: {
     width: "100%",
     marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit
@@ -41,72 +43,72 @@ class APSettingsForm extends React.Component {
     return (
       <div>
         {
-         !apSettingsFetched ?
+          !apSettingsFetched ?
 
-         <div className={classes.loadingSettings}>
-           <LinearProgress className={classes.loadingSettingsDetails}/>
-           <Typography variant="display1" className={classes.loadingSettingsDetails}>
-             Loading...
+            <div className={classes.loadingSettings}>
+              <LinearProgress className={classes.loadingSettingsDetails} />
+              <Typography variant="display1" className={classes.loadingSettingsDetails}>
+                {<IntText text="Loading" />}...
            </Typography>
-         </div>
+            </div>
 
-         : apSettings ?
+            : apSettings ?
 
-        <ValidatorForm onSubmit={onSubmit} ref="APSettingsForm">
+              <ValidatorForm onSubmit={onSubmit} ref="APSettingsForm">
 
-          <SelectValidator name="provision_mode" label="Provide Access Point..." value={apSettings.provision_mode}  className={classes.selectField}
-           onChange={handleValueChange('provision_mode')}>
-            <MenuItem value={0}>Always</MenuItem>
-            <MenuItem value={1}>When WiFi Disconnected</MenuItem>
-            <MenuItem value={2}>Never</MenuItem>
-          </SelectValidator>
+                <SelectValidator name="provision_mode" label={<IntText text="APSettings.ProvideAccessPoint" />} value={apSettings.provision_mode} className={classes.selectField}
+                  onChange={handleValueChange('provision_mode')}>
+                  <MenuItem value={0}>{<IntText text="Always" />}</MenuItem>
+                  <MenuItem value={1}>{<IntText text="APSettings.WhenWiFiDisconnected" />}</MenuItem>
+                  <MenuItem value={2}>{<IntText text="Never" />}</MenuItem>
+                </SelectValidator>
 
-          {
-            isAPEnabled(apSettings.provision_mode) &&
-            <Fragment>
-              <TextValidator
-                validators={['required', 'matchRegexp:^.{0,32}$']}
-                errorMessages={['Access Point SSID is required', 'Access Point SSID must be 32 characeters or less']}
-                name="ssid"
-                label="Access Point SSID"
-                className={classes.textField}
-                value={apSettings.ssid}
-                onChange={handleValueChange('ssid')}
-                margin="normal"
-              />
-              <PasswordValidator
-                    validators={['required', 'matchRegexp:^.{0,64}$']}
-                    errorMessages={['Access Point Password is required', 'Access Point Password must be 64 characters or less']}
-                    name="password"
-                    label="Access Point Password"
-                    className={classes.textField}
-                    value={apSettings.password}
-                    onChange={handleValueChange('password')}
-                    margin="normal"
-              />
-            </Fragment>
-          }
+                {
+                  isAPEnabled(apSettings.provision_mode) &&
+                  <Fragment>
+                    <TextValidator
+                      validators={['required', 'matchRegexp:^.{0,32}$']}
+                      errorMessages={[<IntText text="APSettings.AccessPointSSIDRequired" />, <IntText text="APSettings.AccessPointSSIDMustBe32" />]}
+                      name="ssid"
+                      label={<IntText text="APSettings.AccessPointSSID" />}
+                      className={classes.textField}
+                      value={apSettings.ssid}
+                      onChange={handleValueChange('ssid')}
+                      margin="normal"
+                    />
+                    <PasswordValidator
+                      validators={['required', 'matchRegexp:^.{0,64}$']}
+                      errorMessages={[<IntText text="APSettings.AccessPointPasswordRequired" />, <IntText text="APSettings.AccessPointPasswordMustBe64" />]}
+                      name="password"
+                      label={<IntText text="APSettings.AccessPointPassword" />}
+                      className={classes.textField}
+                      value={apSettings.password}
+                      onChange={handleValueChange('password')}
+                      margin="normal"
+                    />
+                  </Fragment>
+                }
 
-          <Button variant="raised" color="secondary" className={classes.button} type="submit">
-            Save
-          </Button>
-          <Button variant="raised" color="secondary" className={classes.button} onClick={onReset}>
-      		  Reset
-      		</Button>
+                <Button variant="raised" color="secondary" className={classes.button} type="submit">
+                  {<IntText text="Save" />}
+                </Button>
+                <Button variant="raised" color="secondary" className={classes.button} onClick={onReset}>
+                  {<IntText text="Reset" />}
+                </Button>
 
-        </ValidatorForm>
+              </ValidatorForm>
 
-        :
+              :
 
-        <div className={classes.loadingSettings}>
-          <Typography variant="display1" className={classes.loadingSettingsDetails}>
-            {errorMessage}
-          </Typography>
-          <Button variant="raised" color="secondary" className={classes.button} onClick={onReset}>
-      		  Reset
-      		</Button>
-        </div>
-      }
+              <div className={classes.loadingSettings}>
+                <Typography variant="display1" className={classes.loadingSettingsDetails}>
+                  {errorMessage}
+                </Typography>
+                <Button variant="raised" color="secondary" className={classes.button} onClick={onReset}>
+                  {<IntText text="Reset" />}
+                </Button>
+              </div>
+        }
       </div>
     );
   }

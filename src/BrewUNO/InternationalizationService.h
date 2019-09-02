@@ -40,12 +40,12 @@ void InternationalizationService::getLang(AsyncWebServerRequest *request)
 {
   File configFile = _fs->open("/language/" + _brewSettingsService->Language + ".json", "r");
 
-  AsyncJsonResponse *response = new AsyncJsonResponse(5096);
+  AsyncJsonResponse *response = new AsyncJsonResponse(8196);
   JsonObject root = response->getRoot();
 
   if (configFile)
   {
-    DynamicJsonDocument _jsonDocument = DynamicJsonDocument(5096);
+    DynamicJsonDocument _jsonDocument = DynamicJsonDocument(8196);
     DeserializationError error = deserializeJson(_jsonDocument, configFile);
     if (error == DeserializationError::Ok && _jsonDocument.is<JsonObject>())
     {
