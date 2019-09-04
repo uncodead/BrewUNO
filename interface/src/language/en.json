@@ -96,7 +96,8 @@
     "AuxiliarySensor2": "Auxiliary Sensor 2",
     "AuxiliarySensor3": "Auxiliary Sensor 3",
     "PumpRestInterval": "Pump Rest Interval",
-    "PumpRestTime": "Pump Rest Time"
+    "PumpRestTime": "Pump Rest Time",
+    "PumpCycle": "Pump Cycle"
   },
   "WiFiSettings": {
     "Settings": "WiFi Settings",

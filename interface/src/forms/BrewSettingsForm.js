@@ -276,7 +276,7 @@ class BrewSettingsForm extends Component {
                       </Select>
                       <TextValidator className={classes.formControl}
                         name="auxSensorOneOffset"
-                        validators={['required', 'isFloat']}
+                        validators={['isFloat']}
                         label={<IntText text="BrewSettings.OffSetCalibration" />}
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
@@ -297,7 +297,7 @@ class BrewSettingsForm extends Component {
                       </Select>
                       <TextValidator className={classes.formControl}
                         name="auxSensorTwoOffset"
-                        validators={['required', 'isFloat']}
+                        validators={['isFloat']}
                         label={<IntText text="BrewSettings.OffSetCalibration" />}
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
@@ -318,7 +318,7 @@ class BrewSettingsForm extends Component {
                       </Select>
                       <TextValidator className={classes.formControl}
                         name="auxSensorThreeOffset"
-                        validators={['required', 'isFloat']}
+                        validators={['isFloat']}
                         label={<IntText text="BrewSettings.OffSetCalibration" />}
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
@@ -331,7 +331,7 @@ class BrewSettingsForm extends Component {
 
                   <Grid item xs={6}>
                     <Paper className={classes.root}>
-                      <Typography className={classes.formControl} color="textSecondary">{<IntText text="PumpPrime" />}</Typography>
+                      <Typography className={classes.formControl} color="textSecondary">{<IntText text="PumpCycle" />}</Typography>
                       <TextValidator className={classes.formControl}
                         name="pumpRestInterval"
                         validators={['required']}
