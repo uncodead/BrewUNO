@@ -40,6 +40,7 @@ public:
   String MainSensor;
   String SpargeSensor;
   String Language;
+  String TempUnit;
 
 protected:
   void readFromJsonObject(JsonObject &root);

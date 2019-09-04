@@ -14,7 +14,7 @@ uploadfw:
 monitor: 
 	platformio device monitor
 
-deploy: | build
+upload: | build
 	platformio run -t uploadfs
 	platformio run -t upload
 

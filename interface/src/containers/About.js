@@ -34,7 +34,7 @@ class About extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <SectionContent title="About">
+      <SectionContent title={<IntText text="About" />}>
         <Card className={this.props.className}>
           <CardContent>
             <Typography variant="h6" component="h1" className={classes.pos}>
@@ -47,7 +47,7 @@ class About extends Component {
               uncodead@gmail.com
             </Typography>
             <Typography variant="h6" component="h1" className={classes.pos}>
-              Thanks:
+              <IntText text="Thanks" />:
             </Typography>
             <Typography className={classes.pos} variant="h8" color="textSecondary">
               Luciano Rampanelli

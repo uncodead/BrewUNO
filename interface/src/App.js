@@ -10,11 +10,9 @@ import {
   createGenerateClassName,
   jssPreset,
 } from '@material-ui/core/styles';
-import T from 'i18n-react';
 import { ExecuteRestCall } from './components/Utils'
 import { BREW_SETTINGS_ENDPOINT } from './constants/Endpoints';
-import en from "./language/en.json"
-import ptBR from "./language/pt-BR.json"
+import IntText from "./components/IntText"
 
 const theme = createMuiTheme({
   palette: {
@@ -56,19 +54,9 @@ const generateClassName = createGenerateClassName();
 class App extends Component {
   constructor(props) {
     super(props)
+    this.child = React.createRef();
     ExecuteRestCall(BREW_SETTINGS_ENDPOINT, 'GET', json => {
-      switch (json.language) {
-        case "pt-BR":
-          T.setTexts(ptBR)
-          break
-        case "en":
-          T.setTexts(en);
-          break
-        default:
-          T.setTexts(en)
-          break
-      }
-      this.forceUpdate()
+      this.child.current.SetText(json.language)
     })
   }
 
@@ -82,6 +70,7 @@ class App extends Component {
             variantWarning: styles.warning,
             variantInfo: styles.info
           }}>
+            <IntText ref={this.child} />
             <CssBaseline />
             <AppRouting />
           </SnackbarProvider>

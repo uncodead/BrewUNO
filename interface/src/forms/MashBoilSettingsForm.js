@@ -108,7 +108,6 @@ class MashBoilSettingsForm extends Component {
               label={<IntText text="Temperature" />}
               type="number"
               fullWidth
-              InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
               value={this.state.t}
               onChange={this.handleTemperatureChange}
               errorMessages={[<IntText text="FieldRequired" />]}
@@ -134,7 +133,6 @@ class MashBoilSettingsForm extends Component {
               label={<IntText text="Amount" />}
               type="number"
               fullWidth
-              InputProps={{ endAdornment: <InputAdornment position="start">g</InputAdornment> }}
               value={this.state.a}
               onChange={this.handleAmountChange}
               errorMessages={[<IntText text="FieldRequired" />]}

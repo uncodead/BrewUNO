@@ -25,6 +25,7 @@ void BrewSettingsService::readFromJsonObject(JsonObject &root)
     MainSensorOffset = root["mainSensorOffset"];
     SpargeSensorOffset = root["spargeSensorOffset"];
     Language = root["language"] | "";
+    TempUnit = root["tempUnit"] | "";
 }
 
 void BrewSettingsService::writeToJsonObject(JsonObject &root)
@@ -47,6 +48,7 @@ void BrewSettingsService::writeToJsonObject(JsonObject &root)
     root["mainSensorOffset"] = MainSensorOffset;
     root["spargeSensorOffset"] = SpargeSensorOffset;
     root["language"] = Language;
+    root["tempUnit"] = TempUnit;
     _activeStatus->PIDSettingsUpdated = true;
 }
 

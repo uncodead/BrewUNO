@@ -43,8 +43,8 @@ Temperatures TemperatureService::GetTemperatures(String main, String sparge)
     for (int i = 0; i < DeviceCount; i++)
     {
         _dallasTemperature.getAddress(Thermometer, i);
-        float temp = _dallasTemperature.getTempC(Thermometer);
-        _json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",\"value\": \"" + String(_dallasTemperature.getTempC(Thermometer)) + "\"}";
+        float temp = _brewSettingsService->TempUnit == "C" ? _dallasTemperature.getTempC(Thermometer) : _dallasTemperature.getTempF(Thermometer);
+        _json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",\"value\": \"" + String(temp) + "\"}";
         if (i < DeviceCount - 1)
             _json += ',';
 

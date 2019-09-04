@@ -35,6 +35,10 @@ const styles = theme => ({
 })
 
 class BrewSettingsForm extends Component {
+  constructor(props) {
+    super(props)
+    this.child = React.createRef();
+  }
 
   render() {
     const { classes, brewSettings, errorMessage, handleValueChange, handleFloatValueChange, handleCheckboxChange, onSubmit } = this.props;
@@ -50,8 +54,12 @@ class BrewSettingsForm extends Component {
               </Typography>
             </div>
             : brewSettings ?
-              <ValidatorForm onSubmit={onSubmit} ref="BrewSettingsForm" className={classes.root}>
-
+              <ValidatorForm onSubmit={
+                () => {
+                  this.child.current.SetText(brewSettings.language)
+                  onSubmit()
+                }} ref="BrewSettingsForm" className={classes.root}>
+                <IntText ref={this.child} />
                 <Grid container spacing={16}>
 
                   <Grid item xs={6}>
@@ -63,18 +71,19 @@ class BrewSettingsForm extends Component {
                         fullWidth
                         inputProps={{ required: true }}
                       >
-                        <MenuItem value={'pt-BR'}><IntText text="Portuguese" /></MenuItem>
                         <MenuItem value={'en'}><IntText text="English" /></MenuItem>
+                        <MenuItem value={'pt-BR'}><IntText text="Portuguese" /></MenuItem>
+                        <MenuItem value={'ru-RU'}><IntText text="Russian" /></MenuItem>
                       </Select>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="TemperatureUnit" /></Typography>
                       <Select className={classes.formControl}
-                        value={brewSettings.language}
-                        onChange={handleValueChange("tempunit")}
+                        value={brewSettings.tempUnit}
+                        onChange={handleValueChange("tempUnit")}
                         fullWidth
                         inputProps={{ required: true }}
                       >
-                        <MenuItem value={''}><IntText text="Celsius" /></MenuItem>
-                        <MenuItem value={''}><IntText text="Fahrenheit" /></MenuItem>
+                        <MenuItem value={'C'}><IntText text="Celsius" /></MenuItem>
+                        <MenuItem value={'F'}><IntText text="Fahrenheit" /></MenuItem>
                       </Select>
 
                     </Paper>
@@ -361,8 +370,8 @@ class BrewSettingsForm extends Component {
 
                 <div style={{ marginTop: 20, marginLeft: 5, padding: 0 }}>
                   <Button variant="raised" color="secondary" type="submit" margin="20">
-                  {<IntText text="Save" />}
-                </Button>
+                    {<IntText text="Save" />}
+                  </Button>
                 </div>
 
               </ValidatorForm>
