@@ -30,7 +30,7 @@ class SortableList extends Component {
     if (this.props.boil) {
       return item.a + 'g@' + item.tm + '\'';
     }
-    return item.tm + '\'@' + item.t + 'º'
+    return item.tm + '\'@' + item.t + '°'
   }
 
 

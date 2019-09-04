@@ -98,9 +98,9 @@ class BrewStatusGadget extends Component {
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={16}>
-            <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main"} colorPWM={"#83f316"} PWM={this.props.PWM} titlesufix={this.props.TargetTemperature + 'º'} colors={TEMPERATURECOLORS} value={this.props.Temperature + 'º'} data={getProgressData(this.props.Temperature)} />
+            <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main"} colorPWM={"#83f316"} PWM={this.props.PWM} titlesufix={this.props.TargetTemperature + '°'} colors={TEMPERATURECOLORS} value={this.props.Temperature + '°'} data={getProgressData(this.props.Temperature)} />
             {this.props.EnableSparge ?
-              <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Secondary"} colorPWM={"#2196f3"} PWM={this.props.SpargePWM} titlesufix={this.props.SpargeTargetTemperature + 'º'} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature + 'º'} data={getProgressData(this.props.SpargeTemperature)} />
+              <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Secondary"} colorPWM={"#2196f3"} PWM={this.props.SpargePWM} titlesufix={this.props.SpargeTargetTemperature + '°'} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature + '°'} data={getProgressData(this.props.SpargeTemperature)} />
               : null}
 
             <Grid item>
@@ -137,9 +137,9 @@ class BrewStatusGadgetItem extends Component {
           <CardContent >
             <MuiThemeProvider theme={this.props.theme}>
               <div style={{ display: "flex" }}>
-                <Typography color="primary" variant="subtitle2" gutterBottom noWrap><IntText text={this.props.title} />:</Typography>
+                <Typography color="primary" variant="subtitle2" gutterBottom noWrap><IntText text={this.props.title} /></Typography>
                 &nbsp;&nbsp;
-              <Typography color="secondary" variant="subtitle2"><IntText text={this.props.titlesufix} />:</Typography>
+              <Typography color="secondary" variant="subtitle2"><IntText text={this.props.titlesufix} /></Typography>
               </div>
             </MuiThemeProvider>
             <PieChart width={100} height={50}>
