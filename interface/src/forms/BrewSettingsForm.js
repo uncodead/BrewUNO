@@ -267,6 +267,29 @@ class BrewSettingsForm extends Component {
                         onChange={handleValueChange("pidStart")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
+                      <Typography className={classes.formControl} color="textSecondary">{<IntText text="BrewSettings.PumpCycle" />}</Typography>
+                      <TextValidator className={classes.formControl}
+                        name="pumpRestInterval"
+                        validators={['required']}
+                        label={<IntText text="BrewSettings.PumpRestInterval" />}
+                        type="number"
+                        fullWidth
+                        InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
+                        value={brewSettings.pumpRestInterval}
+                        onChange={handleValueChange("pumpRestInterval")}
+                        errorMessages={[<IntText text="FieldRequired" />]}
+                      />
+                      <TextValidator className={classes.formControl}
+                        name="pumpRestTime"
+                        validators={['required']}
+                        label={<IntText text="BrewSettings.PumpRestTime" />}
+                        type="number"
+                        fullWidth
+                        InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
+                        value={brewSettings.pumpRestTime}
+                        onChange={handleValueChange("pumpRestTime")}
+                        errorMessages={[<IntText text="FieldRequired" />]}
+                      />
                     </Paper>
                   </Grid>
 
@@ -333,34 +356,6 @@ class BrewSettingsForm extends Component {
                         InputProps={{ endAdornment: <InputAdornment position="start">ºC</InputAdornment> }}
                         value={brewSettings.auxSensorThreeOffset}
                         onChange={handleFloatValueChange("auxSensorThreeOffset")}
-                        errorMessages={[<IntText text="FieldRequired" />]}
-                      />
-                    </Paper>
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Paper className={classes.root}>
-                      <Typography className={classes.formControl} color="textSecondary">{<IntText text="PumpCycle" />}</Typography>
-                      <TextValidator className={classes.formControl}
-                        name="pumpRestInterval"
-                        validators={['required']}
-                        label={<IntText text="BrewSettings.PumpRestInterval" />}
-                        type="number"
-                        fullWidth
-                        InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
-                        value={brewSettings.pumpRestInterval}
-                        onChange={handleValueChange("pumpRestInterval")}
-                        errorMessages={[<IntText text="FieldRequired" />]}
-                      />
-                      <TextValidator className={classes.formControl}
-                        name="pumpRestTime"
-                        validators={['required']}
-                        label={<IntText text="BrewSettings.PumpRestTime" />}
-                        type="number"
-                        fullWidth
-                        InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
-                        value={brewSettings.pumpRestTime}
-                        onChange={handleValueChange("pumpRestTime")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                     </Paper>

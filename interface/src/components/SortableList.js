@@ -52,7 +52,7 @@ class SortableList extends Component {
               {this.props.brewDay && !this.props.boil && value.r ? <IntText text="Recirculation" spaceBefore={true} spaceAfter={true} /> : null}
               {this.props.brewDay && !this.props.boil && value.ho ? <IntText text="Heater" spaceBefore={true} spaceAfter={true} /> : null}
               {this.props.brewDay && !this.props.boil && value.fp ? <IntText text="FullPower" spaceBefore={true} spaceAfter={true} /> : null}
-              {this.props.brewDay && !this.props.boil && value.sl ? <IntText text="StepLock" spaceBefore={true} spaceAfter={true} /> : null}
+              {this.props.brewDay && !this.props.boil && value.sl ? <IntText text="StepLockON" spaceBefore={true} spaceAfter={true} /> : null}
             </Typography>}
           />
           {!this.props.brewDay ?
@@ -108,7 +108,7 @@ class SortableList extends Component {
                     onChange={() => { this.props.callbackItemEdited(itemIndex, 'sl', !value.sl) }}
                   />
                 }
-                label={<IntText text="StepLock" />}
+                label={<IntText text="StepLockON" />}
               /> : null}
           </ListItem>
           : null}
