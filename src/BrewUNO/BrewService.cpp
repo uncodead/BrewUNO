@@ -181,6 +181,7 @@ void BrewService::loop()
         _activeStatus->SetJsonTemperatures(temps.Json);
         _activeStatus->MainSensor = _brewSettingsService->MainSensor;
         _activeStatus->SpargeSensor = _brewSettingsService->SpargeSensor;
+        _activeStatus->TempUnit = _brewSettingsService->TempUnit;
         lastReadTemperature = now();
     }
     _mashService->loop(_activeStatus);

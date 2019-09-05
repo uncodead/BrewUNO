@@ -282,6 +282,7 @@ class Brew extends Component {
               SpargeTemperature={this.state.status.sparge_temperature}
               SpargeTargetTemperature={this.state.status.sparge_target_temperature > 0 ? this.state.status.sparge_target_temperature : ''}
               EnableSparge={this.state.status.enable_sparge}
+              TempUnit={this.state.status.temp_unit}
             />
           </CardContent>
         </Card>

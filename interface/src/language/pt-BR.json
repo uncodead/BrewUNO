@@ -119,7 +119,6 @@
     "HostnameIsRequired": "Hostname é obrigatório",
     "NotValidHostname": "Não é um hostname válido",
     "StaticIPConfig": "Configurar IP fixo?",
-    "NotValidHostname": "Não é um hostname válido",
     "LocalIPRequired": "IP local é obrigatório",
     "MustBeIPAddress": "Deve ser um endereço IP",
     "Gateway": "Gateway",

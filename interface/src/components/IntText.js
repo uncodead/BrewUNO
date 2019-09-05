@@ -24,7 +24,6 @@ class IntText extends Component {
         T.setTexts(en)
         break
     }
-    debugger
     this.forceUpdate()
   }
 

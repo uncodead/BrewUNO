@@ -39,6 +39,7 @@ boolean ActiveStatus::LoadActiveStatusSettings()
                 StepLock = _activeStatus["step_lock"];
                 BoilPowerPercentage = _activeStatus["boil_power_percentage"];
                 PIDTuning = _activeStatus["pid_tuning"];
+                TempUnit = _activeStatus["temp_unit"] | "";
                 configFile.close();
             }
         }
@@ -81,6 +82,7 @@ String ActiveStatus::GetJson()
            "\"pid_tuning\":" + String(PIDTuning) + "," +
            "\"pump_on\":" + String(PumpOn) + "," +
            "\"pump_is_resting\":" + String(PumpIsResting) + "," +
+           "\"temp_unit\": \"" + TempUnit + "\"," +
            "\"boil_power_percentage\":" + String(BoilPowerPercentage) +
            "}";
 }
@@ -163,6 +165,8 @@ void ActiveStatus::SaveActiveStatus()
     _activeStatus["step_lock"] = StepLock;
     _activeStatus["boil_power_percentage"] = BoilPowerPercentage;
     _activeStatus["pid_tuning"] = PIDTuning;
+    _activeStatus["temp_unit"] = TempUnit;
+    
 
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "w");
     if (configFile)

@@ -67,6 +67,8 @@ public:
   boolean PumpIsResting;
   boolean PIDSettingsUpdated;
 
+  String TempUnit;
+
   boolean HeaterOn;
   boolean FullPower;
   boolean StepLock;

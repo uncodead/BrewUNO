@@ -98,9 +98,9 @@ class BrewStatusGadget extends Component {
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={16}>
-            <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main"} colorPWM={"#83f316"} PWM={this.props.PWM} titlesufix={this.props.TargetTemperature + '°'} colors={TEMPERATURECOLORS} value={this.props.Temperature + '°'} data={getProgressData(this.props.Temperature)} />
+            <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main"} colorPWM={"#83f316"} PWM={this.props.PWM} TempUnit={this.props.TempUnit} titlesufix={this.props.TargetTemperature} colors={TEMPERATURECOLORS} value={this.props.Temperature} data={getProgressData(this.props.Temperature)} />
             {this.props.EnableSparge ?
-              <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Secondary"} colorPWM={"#2196f3"} PWM={this.props.SpargePWM} titlesufix={this.props.SpargeTargetTemperature + '°'} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature + '°'} data={getProgressData(this.props.SpargeTemperature)} />
+              <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Secondary"} colorPWM={"#2196f3"} PWM={this.props.SpargePWM} TempUnit={this.props.TempUnit} titlesufix={this.props.SpargeTargetTemperature} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature} data={getProgressData(this.props.SpargeTemperature)} />
               : null}
 
             <Grid item>
@@ -139,7 +139,7 @@ class BrewStatusGadgetItem extends Component {
               <div style={{ display: "flex" }}>
                 <Typography color="primary" variant="subtitle2" gutterBottom noWrap><IntText text={this.props.title} /></Typography>
                 &nbsp;&nbsp;
-              <Typography color="secondary" variant="subtitle2"><IntText text={this.props.titlesufix} /></Typography>
+              <Typography color="secondary" variant="subtitle2">{this.props.titlesufix} º{this.props.TempUnit}</Typography>
               </div>
             </MuiThemeProvider>
             <PieChart width={100} height={50}>
@@ -155,7 +155,7 @@ class BrewStatusGadgetItem extends Component {
                 {this.props.data.map((entry, index) => <Cell fill={this.props.colors[index % this.props.colors.length]} />)}
               </Pie>
             </PieChart>
-            <Typography top="20" align="center" variant="h5" >{this.props.value}</Typography>
+            <Typography top="20" align="center" variant="h5" >{this.props.value} º{this.props.TempUnit}</Typography>
             &nbsp;
             <div style={{ display: "flex" }}>
               <Typography color="textSecondary" variant="subtitle2">PWM:</Typography>

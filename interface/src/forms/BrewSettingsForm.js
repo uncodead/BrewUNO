@@ -142,9 +142,8 @@ class BrewSettingsForm extends Component {
                       />
                       <TextValidator className={classes.formControl}
                         name="boilTemperature"
-                        validators={['required']}
+                        validators={['required', 'isFloat']}
                         label={<IntText text="BrewSettings.BoilTemperature" />}
-                        type="number"
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
                         value={brewSettings.boilTemperature}
