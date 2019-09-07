@@ -90,6 +90,11 @@ class SortableList extends Component {
                 }
                 label={<IntText text="Heater" />}
               /> : null}
+            
+          </ListItem>
+          : null}
+        {!this.props.brewDay ?
+          <ListItem color="black">
             {!this.props.boil ?
               <FormControlLabel
                 control={
