@@ -68,8 +68,10 @@ void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, int second)
             String time = step["tm"];
             String amount = step["a"];
             currentStep = currentStep == "" ? String(index) : currentStep + "," + String(index);
-            currentStepName +=
-                currentStepName == "" ? getStepName(name, time, amount) : currentStepName + " / " + getStepName(name, time, amount);
+            if (currentStepName == "")
+                currentStepName = getStepName(name, time, amount);
+            else
+                currentStepName += "/" + getStepName(name, time, amount);
         }
         index++;
     }

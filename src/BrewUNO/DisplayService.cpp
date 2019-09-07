@@ -8,6 +8,7 @@ byte gpump[] = {B00100, B00100, B01110, B01110, B11111, B11101, B11011, B01110};
 byte pheater[] = {B10100, B11100, B10100, B00010, B00110, B00010, B00010, B00111};
 byte sheater[] = {B10100, B11100, B10100, B00111, B00001, B00111, B00100, B00111};
 byte gcelsius[] = {B01000, B10100, B01000, B00110, B01001, B01000, B01001, B00110};
+byte gfahrenheit[] = {B01000, B10100, B01000, B00111, B00100, B00110, B00100, B00100};
 byte gwm[] = {B11111, B01000, B00100, B01000, B11111, B00000, B11111, B00110};
 byte gpw[] = {B00110, B11111, B00000, B11100, B10100, B10100, B11111, B00000};
 
@@ -51,6 +52,7 @@ void DisplayService::begin()
     _lcd->createChar(pheater_icon, pheater);
     _lcd->createChar(sheater_icon, sheater);
     _lcd->createChar(gcelsius_icon, gcelsius);
+    _lcd->createChar(gfahrenheit_icon, gfahrenheit);
     _lcd->createChar(gwm_icon, gwm);
     _lcd->createChar(gpw_icon, gpw);
 }
@@ -100,7 +102,10 @@ void DisplayService::printBody(int line, byte heatIcon, byte pwmIcon, double tem
                     ">" + (brewStarted ? getTemperature(targetTemperature, true) : "00"));
 
     _lcd->setCursor(10, line);
-    _lcd->write(gcelsius_icon);
+    if (_activeStatus->TempUnit == "C")
+        _lcd->write(gcelsius_icon);
+    else
+        _lcd->write(gfahrenheit_icon);
     _lcd->setCursor(13, line);
     _lcd->write(pwmIcon);
     _lcd->setCursor(14, line);
@@ -138,8 +143,8 @@ void DisplayService::printFooter()
     }
     else if (_activeStatus->ActiveStep == mash)
     {
-        String step = _activeStatus->ActiveMashStepName.substring(0, 13) + " " + _activeStatus->ActiveMashStepSufixName.substring(0, 6);
-        _lcd->print(step);
+        String step = _activeStatus->ActiveMashStepName.substring(0, 12) + " " + _activeStatus->ActiveMashStepSufixName.substring(0, 7);
+        _lcd->print(step.substring(0, 20));
         RemoveLastChars(step.length());
     }
     else if (_activeStatus->ActiveStep == boil && _activeStatus->ActiveBoilStepName != "")

@@ -81,15 +81,15 @@ class Brew extends Component {
       this.notification(this.getActiveStep(), this.state.status.active_mash_step_name + ' ' + this.state.status.active_mash_step_sufix_name, <IntText text="Mash" />)
       this.notification(this.getActiveStep(), this.state.status.active_boil_step_name, <IntText text="Boil" />)
 
-      if (this.getActiveStep() == "Stopped") {
+      if (this.getActiveStep() == "Stopped")
         this.setState({ activeStepName: '-' })
-      }
     }
     this.setState({ statusInitialized: true })
   }
 
   notification(getActiveStep, stepName, step) {
-    if (getActiveStep === step && this.state.activeStepName !== stepName) {
+    debugger
+    if (getActiveStep.props.text === step.props.text && this.state.activeStepName !== stepName) {
       this.setState({ activeStepName: stepName });
       if (stepName !== "" && stepName !== undefined) {
         const action = (key) => (
@@ -100,7 +100,7 @@ class Brew extends Component {
         this.props.enqueueSnackbar(stepName, {
           persist: true,
           action,
-          variant: 'warning'
+          variant: step.props.text == "Boil" ? 'success' : 'warning'
         });
       }
     }

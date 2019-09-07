@@ -19,18 +19,6 @@ bool BoilSettingsService::jsonSchemaIsValid(JsonDocument &jsonObj, String &messa
             validJson = false;
             messages += "Name could not be null. ";
         }
-        /*
-        if (step["a"] <= 0)
-        {
-            validJson = false;
-            messages += " - Amount could not be zero. ";
-        }
-        if (step["tm"] > _brewSettings->BoilTime)
-        {
-            validJson = false;
-            messages += " - Time exceeded the setting for boiling, check settings.";
-        }
-        */
     }
     return validJson;
 }
