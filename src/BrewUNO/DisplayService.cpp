@@ -84,7 +84,7 @@ void DisplayService::printHead()
     else if (_activeStatus->StepLocked)
         _lcd->print(GetCount(false) + 'L');
     else
-        _lcd->print("         ");
+        _lcd->print("v" + String(Version));
 }
 
 void DisplayService::printBody(int line, byte heatIcon, byte pwmIcon, double temperature, double targetTemperature,

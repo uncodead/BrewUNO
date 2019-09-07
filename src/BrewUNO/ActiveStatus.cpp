@@ -45,7 +45,6 @@ boolean ActiveStatus::LoadActiveStatusSettings()
         }
         configFile.close();
     }
-
     return true;
 }
 
@@ -83,6 +82,7 @@ String ActiveStatus::GetJson()
            "\"pump_on\":" + String(PumpOn) + "," +
            "\"pump_is_resting\":" + String(PumpIsResting) + "," +
            "\"temp_unit\": \"" + TempUnit + "\"," +
+           "\"version\": \"" + String(Version) + "\"," +
            "\"boil_power_percentage\":" + String(BoilPowerPercentage) +
            "}";
 }

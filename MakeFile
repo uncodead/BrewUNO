@@ -1,4 +1,4 @@
-.PHONY : push build pull push all
+.PHONY : push build pull push release setversion
 
 build: | pull
 	platformio run
@@ -32,4 +32,7 @@ push:
 	git commit -am '$(message)'
 	git push
 
-all:  | build publish push
+setversion:
+	python set_version.py $(version)
+
+release:  | build publish setversion push
