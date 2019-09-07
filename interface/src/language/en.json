@@ -58,6 +58,7 @@
   "Synchronized": "Synchronized",
   "About": "About",
   "Brew": {
+    "Title": "Brew",
     "StartConfirmation": "Do you want start brew? Check if you've secure water volume at kettle.",
     "PauseConfirmation": "Do you want pause brew?",
     "ResumeConfirmation": "Do you want resume brew? Check if you've secure water volume at kettle.",

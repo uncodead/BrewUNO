@@ -19,7 +19,6 @@
 #define gcelsius_icon 6
 #define gwm_icon 7
 #define gpw_icon 8
-#define gfahrenheit_icon 9
 
 class DisplayService
 {

@@ -88,7 +88,6 @@ class Brew extends Component {
   }
 
   notification(getActiveStep, stepName, step) {
-    debugger
     if (getActiveStep.props.text === step.props.text && this.state.activeStepName !== stepName) {
       this.setState({ activeStepName: stepName });
       if (stepName !== "" && stepName !== undefined) {

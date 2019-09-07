@@ -58,6 +58,7 @@
   "Synchronized": "Синхронно",
   "About": "Об этом",
   "Brew": {
+    "Title": "Brew",
     "StartConfirmation": "Начать варку? Проверьте воду в кубе.",
     "PauseConfirmation": "Сделать паузу?",
     "ResumeConfirmation": "Продолжить варку?",

@@ -8,7 +8,6 @@ byte gpump[] = {B00100, B00100, B01110, B01110, B11111, B11101, B11011, B01110};
 byte pheater[] = {B10100, B11100, B10100, B00010, B00110, B00010, B00010, B00111};
 byte sheater[] = {B10100, B11100, B10100, B00111, B00001, B00111, B00100, B00111};
 byte gcelsius[] = {B01000, B10100, B01000, B00110, B01001, B01000, B01001, B00110};
-byte gfahrenheit[] = {B01000, B10100, B01000, B00111, B00100, B00110, B00100, B00100};
 byte gwm[] = {B11111, B01000, B00100, B01000, B11111, B00000, B11111, B00110};
 byte gpw[] = {B00110, B11111, B00000, B11100, B10100, B10100, B11111, B00000};
 
@@ -52,7 +51,6 @@ void DisplayService::begin()
     _lcd->createChar(pheater_icon, pheater);
     _lcd->createChar(sheater_icon, sheater);
     _lcd->createChar(gcelsius_icon, gcelsius);
-    _lcd->createChar(gfahrenheit_icon, gfahrenheit);
     _lcd->createChar(gwm_icon, gwm);
     _lcd->createChar(gpw_icon, gpw);
 }
@@ -77,9 +75,9 @@ void DisplayService::printHead()
     wl_status_t status = WiFi.status();
     WiFiMode_t currentWiFiMode = WiFi.getMode();
     if (status == WL_CONNECTED)
-        _lcd->write(2);
+        _lcd->write(stmode_icon);
     else if (currentWiFiMode == WIFI_AP || currentWiFiMode == WIFI_AP_STA)
-        _lcd->write(1);
+        _lcd->write(apmode_icon);
     _lcd->print(" BrewUNO  ");
     if (_activeStatus->BrewStarted && !_activeStatus->StepLocked)
         _lcd->print(" " + GetCount(true));
@@ -105,7 +103,7 @@ void DisplayService::printBody(int line, byte heatIcon, byte pwmIcon, double tem
     if (_activeStatus->TempUnit == "C")
         _lcd->write(gcelsius_icon);
     else
-        _lcd->write(gfahrenheit_icon);
+        _lcd->print("F");
     _lcd->setCursor(13, line);
     _lcd->write(pwmIcon);
     _lcd->setCursor(14, line);

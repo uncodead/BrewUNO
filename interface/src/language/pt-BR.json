@@ -60,6 +60,7 @@
   "Author": "Criador",
   "Thanks": "Agradecimento",
   "Brew": {
+    "Title": "Brassagem",
     "StartConfirmation": "Deseja iniciar a brassagem? Verifique o volume de água na panela.",
     "PauseConfirmation": "Deseja pausar a brassagem?",
     "ResumeConfirmation": "Deseja retomar a brassagem? Verifique o volume de água na panela.",
