@@ -132,18 +132,17 @@ class BrewStatusGadget extends Component {
                 </CardContent>
               </Card>
             </Grid>
-            {this.props.AuxOneSendorEnabled ?
-              <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Auxiliary 1"} TempUnit={this.props.TempUnit} titlesufix={this.props.AuxOneTemperature} colors={TEMPERATURECOLORS} value={this.props.AuxOneTemperature} />
-              : null
-            }
-            {this.props.AuxTwoSendorEnabled ?
-              <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Auxiliary 2"} TempUnit={this.props.TempUnit} titlesufix={this.props.AuxTwoTemperature} colors={TEMPERATURECOLORS} value={this.props.AuxTwoTemperature} />
-              : null
-            }
-            {this.props.AuxThreeSendorEnabled ?
-              <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Auxiliary 3"} TempUnit={this.props.TempUnit} titlesufix={this.props.AuxThreeTemperature} colors={TEMPERATURECOLORS} value={this.props.AuxThreeTemperature} />
-              : null
-            }
+            <Grid item>
+              {this.props.AuxOneSendorEnabled ?
+                <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Auxiliary 1"} TempUnit={this.props.TempUnit} titlesufix={this.props.AuxOneTemperature} colors={TEMPERATURECOLORS} value={this.props.AuxOneTemperature} />
+                : null}
+              {this.props.AuxTwoSendorEnabled ?
+                <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Auxiliary 2"} TempUnit={this.props.TempUnit} titlesufix={this.props.AuxTwoTemperature} colors={TEMPERATURECOLORS} value={this.props.AuxTwoTemperature} />
+                : null}
+              {this.props.AuxThreeSendorEnabled ?
+                <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Auxiliary 3"} TempUnit={this.props.TempUnit} titlesufix={this.props.AuxThreeTemperature} colors={TEMPERATURECOLORS} value={this.props.AuxThreeTemperature} />
+                : null}
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
@@ -196,19 +195,17 @@ class BrewStatusGadgetItem extends Component {
 class BrewStatusAuxItem extends Component {
   render() {
     return (
-      <Grid item >
-        <Card className={this.props.className}>
-          <CardContent >
-            <MuiThemeProvider theme={this.props.theme}>
-              <div style={{ display: "flex" }}>
-                <Typography color="primary" variant="subtitle2" gutterBottom noWrap><IntText text={this.props.title} /></Typography>
-                &nbsp;&nbsp;
+      <Card className={this.props.className}>
+        <CardContent >
+          <MuiThemeProvider theme={this.props.theme}>
+            <div style={{ display: "flex" }}>
+              <Typography color="primary" variant="subtitle2" gutterBottom noWrap><IntText text={this.props.title} /></Typography>
+              &nbsp;&nbsp;
               <Typography color="secondary" variant="subtitle2">{this.props.titlesufix} º{this.props.TempUnit}</Typography>
-              </div>
-            </MuiThemeProvider>
-          </CardContent>
-        </Card>
-      </Grid>
+            </div>
+          </MuiThemeProvider>
+        </CardContent>
+      </Card>
     )
   }
 }
