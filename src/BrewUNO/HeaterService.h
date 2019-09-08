@@ -20,18 +20,17 @@ class HeaterService
 public:
   HeaterService(TemperatureService *temperatureService,
                 ActiveStatus *activeStatus,
-                BrewSettingsService *brewSettingsService,
-                int heaterBus) : _temperatureService(temperatureService),
-                                 _activeStatus(activeStatus),
-                                 _brewSettingsService(brewSettingsService)
+                BrewSettingsService *brewSettingsService) : _temperatureService(temperatureService),
+                                                            _activeStatus(activeStatus),
+                                                            _brewSettingsService(brewSettingsService)
 
   {
-    _heaterBus = heaterBus;
   }
 
   HeaterServiceStatus Compute(double input, double target, double heaterPercentage)
   {
     HeaterServiceStatus status;
+    uint8_t _heaterBus = GetBus();
     if (StopCompute())
     {
       status.PIDActing = false;
@@ -102,12 +101,12 @@ protected:
   virtual double GetPidOutput();
   virtual double GetPidInput();
   virtual double GetPidSetPoint();
+  virtual uint8_t GetBus();
   virtual void SetPidParameters(double input, double setpoint);
 
   TemperatureService *_temperatureService;
   ActiveStatus *_activeStatus;
   BrewSettingsService *_brewSettingsService;
   PID *_kettlePID;
-  int _heaterBus;
 };
 #endif

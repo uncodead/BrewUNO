@@ -1,12 +1,12 @@
-#ifndef MashKettleHeaterService_h
-#define MashKettleHeaterService_h
+#ifndef BoilKettleHeaterService_h
+#define BoilKettleHeaterService_h
 
 #include <BrewUNO/HeaterService.h>
 
-class MashKettleHeaterService : public HeaterService
+class BoilKettleHeaterService : public HeaterService
 {
 public:
-  MashKettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus, BrewSettingsService *brewSettingsService);
+  BoilKettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus, BrewSettingsService *brewSettingsService);
   void StartPID(double kp, double ki, double kd);
 
 protected:

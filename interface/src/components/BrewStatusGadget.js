@@ -31,6 +31,16 @@ const themeSparge = createMuiTheme({
     },
   },
 });
+const themeBoil = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#b5b5b5',
+    },
+    secondary: {
+      main: '#19982e',
+    },
+  },
+});
 const themeAuxiliary = createMuiTheme({
   palette: {
     primary: {
@@ -97,6 +107,7 @@ class BrewStatusGadget extends Component {
 
   render() {
     const SPARGEPWMCOLORS = ['#ffca28', '#424242'];
+    const BOILPWMCOLORS = ['#19982e', '#424242'];
     const TEMPERATURECOLORS = ['#f44336', '#424242'];
     const { classes } = this.props
 
@@ -108,9 +119,14 @@ class BrewStatusGadget extends Component {
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={16}>
-            <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main"} colorPWM={"#83f316"} PWM={this.props.PWM} TempUnit={this.props.TempUnit} titlesufix={this.props.TargetTemperature} colors={TEMPERATURECOLORS} value={this.props.Temperature} data={getProgressData(this.props.Temperature)} />
+            {this.props.ActiveStep.props.text === 'Mash' || this.props.ActiveStep.props.text === 'Stopped' ?
+              <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main"} colorPWM={"#83f316"} PWM={this.props.PWM} TempUnit={this.props.TempUnit} titlesufix={this.props.TargetTemperature} colors={TEMPERATURECOLORS} value={this.props.Temperature} data={getProgressData(this.props.Temperature)} />
+              : null}
             {this.props.EnableSparge ?
               <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Secondary"} colorPWM={"#2196f3"} PWM={this.props.SpargePWM} TempUnit={this.props.TempUnit} titlesufix={this.props.SpargeTargetTemperature} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature} data={getProgressData(this.props.SpargeTemperature)} />
+              : null}
+            {this.props.ActiveStep.props.text === 'Boil' ?
+              <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeBoil} title={"Boil"} colorPWM={"#d23d3d"} PWM={this.props.BoilPWM} TempUnit={this.props.TempUnit} titlesufix={this.props.BoilTargetTemperature} colors={BOILPWMCOLORS} value={this.props.BoilTemperature} data={getProgressData(this.props.BoilTemperature)} />
               : null}
 
             <Grid item>

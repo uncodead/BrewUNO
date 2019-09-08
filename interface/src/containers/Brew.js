@@ -206,7 +206,7 @@ class Brew extends Component {
           : null}
         {this.state.status.active_step > 0 && this.state.status.active_step !== 3 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew(<IntText text="Brew.StopConfirmation" />, STOP_BREW, () => { this.setState({ data: [] }) }) }}><Stop size="small" color="action" className={classes.button_icons} /></Button>
+            onClick={() => { this.actionBrew(<IntText text="Brew.StopConfirmation" />, STOP_BREW, () => { }) }}><Stop size="small" color="action" className={classes.button_icons} /></Button>
           : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.pid_tuning === 0 && this.state.status.step_locked === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
@@ -267,17 +267,16 @@ class Brew extends Component {
               BrewStarted={this.state.status.brew_started}
               Temperature={this.state.status.temperature}
               TargetTemperature={this.state.status.target_temperature > 0 ? this.state.status.target_temperature : ''}
-              BoilTemperature={this.state.status.boil_target_temperature}
+              BoilTemperature={this.state.status.boil_temperature}
+              BoilTargetTemperature={this.state.status.boil_target_temperature}
               PWM={this.state.status.pwm_percentage}
               SpargePWM={this.state.status.sparge_pwm_percentage}
+              BoilPWM={this.state.status.boil_pwm_percentage}
               ActiveStep={this.getActiveStep()}
-              BoilTime={this.state.status.boil_time}
               StartTime={this.state.status.start_time > 0 ? this.state.status.start_time : null}
               EndTime={this.state.status.end_time > 0 ? this.state.status.end_time : null}
-              PumpOn={this.state.status.pump_on}
               ActiveStepName={this.state.activeStepName}
               StepLocked={this.state.status.step_locked > 0}
-              PumpIsResting={this.state.status.pump_is_resting > 0}
               SpargeTemperature={this.state.status.sparge_temperature}
               AuxOneSendorEnabled={this.state.status.auxone_sensor !== ''}
               AuxTwoSendorEnabled={this.state.status.auxtwo_sensor !== ''}

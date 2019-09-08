@@ -75,11 +75,12 @@ BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, 
 
 Pump pump = Pump(&server, &activeStatus, &brewSettingsService);
 DisplayService display = DisplayService(&activeStatus, &wifiStatus, &lcd);
-MashKettleHeaterService mashKettleHeaterService = MashKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService, HEATER_BUS);
-SpargeKettleHeaterService spargeKettleHeaterService = SpargeKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService, SPARGE_HEATER_BUS);
+MashKettleHeaterService mashKettleHeaterService = MashKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
+SpargeKettleHeaterService spargeKettleHeaterService = SpargeKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
+BoilKettleHeaterService boilKettleHeaterService = BoilKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
 MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService, &brewSettingsService);
-BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &activeStatus, &temperatureService, &pump);
+BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &boilKettleHeaterService, &activeStatus, &temperatureService, &pump);
 InternationalizationService internationalizationService = InternationalizationService(&server, &SPIFFS, &brewSettingsService);
 
 void setup()

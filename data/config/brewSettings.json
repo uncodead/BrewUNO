@@ -15,5 +15,6 @@
     "pidStart": 0.5,
     "mainSensorOffset": 0,
     "spargeSensorOffset": 0,
+    "boilSensorOffset": 0,
     "tempUnit": "C"
 }

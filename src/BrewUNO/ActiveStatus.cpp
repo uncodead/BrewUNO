@@ -65,11 +65,13 @@ String ActiveStatus::GetJson()
            "\"brew_started\":" + String(BrewStarted) + "," +
            "\"temperature\":" + String(Temperature) + "," +
            "\"sparge_temperature\":" + String(SpargeTemperature) + "," +
+           "\"boil_temperature\":" + String(BoilTemperature) + "," +
            "\"auxone_temperature\":" + String(AuxOneTemperature) + "," +
            "\"auxtwo_temperature\":" + String(AuxTwoTemperature) + "," +
            "\"auxthree_temperature\":" + String(AuxThreeTemperature) + "," +
            "\"main_sensor\": \"" + MainSensor + "\"," +
            "\"sparge_sensor\": \"" + SpargeSensor + "\"," +
+           "\"boil_sensor\": \"" + BoilSensor + "\"," +
            "\"auxone_sensor\": \"" + AuxOneSensor + "\"," +
            "\"auxtwo_sensor\": \"" + AuxTwoSensor + "\"," +
            "\"auxthree_sensor\": \"" + AuxThreeSensor + "\"," +
@@ -77,7 +79,10 @@ String ActiveStatus::GetJson()
            "\"pwm_percentage\":" + String(PWMPercentage, 2) + ',' +
            "\"sparge_pwm\":" + String(SpargePWM, 2) + ',' +
            "\"sparge_pwm_percentage\":" + String(SpargePWMPercentage, 2) + ',' +
+           "\"boil_pwm\":" + String(BoilPWM, 2) + ',' +
+           "\"boil_pwm_percentage\":" + String(BoilPWMPercentage, 2) + ',' +
            "\"enable_sparge\":" + String(EnableSparge) + ',' +
+           "\"enable_boilkettle\":" + String(EnableBoilKettle) + ',' +
            "\"sparge_target_temperature\":" + String(SpargeTargetTemperature) + ',' +
            "\"recirculation\":" + String(Recirculation) + "," +
            "\"heater_on\":" + String(HeaterOn) + "," +
@@ -117,11 +122,12 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     EndTime = endTime;
     TimeNow = timeNow;
     BrewStarted = brewStarted;
-    Temperature = 0;
     PWM = 0;
     PWMPercentage = 0;
     SpargePWM = 0;
     SpargePWMPercentage = 0;
+    BoilPWM = 0;
+    BoilPWMPercentage = 0;
     Recirculation = false;
     HeaterOn = true;
     StepLock = false;
@@ -185,6 +191,8 @@ void ActiveStatus::SetTemperature(Temperatures temps)
         Temperature = temps.Main;
     if (temps.Sparge >= 0)
         SpargeTemperature = temps.Sparge;
+    if (temps.Boil >= 0)
+        BoilTemperature = temps.Boil;
     if (temps.AuxOne >= 0)
         AuxOneTemperature = temps.AuxOne;
     if (temps.AuxTwo >= 0)

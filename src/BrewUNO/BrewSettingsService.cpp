@@ -12,6 +12,7 @@ void BrewSettingsService::readFromJsonObject(JsonObject &root)
     SpargePowerPercentage = root["spargePowerPercentage"];
     SpargeTemperature = root["spargeTemperature"];
     EnableSparge = root["enableSparge"];
+    EnableBoilKettle = root["enableBoilKettle"];
     BoilTime = root["boilTime"];
     KP = root["kP"];
     KI = root["kI"];
@@ -22,6 +23,7 @@ void BrewSettingsService::readFromJsonObject(JsonObject &root)
     MashHeaterPercentage = root["mashHeaterPercentage"];
     MainSensor = root["mainSensor"] | "";
     SpargeSensor = root["spargeSensor"] | "";
+    BoilSensor = root["boilSensor"] | "";
     AuxOneSensor = root["auxSensorOne"] | "";
     AuxTwoSensor = root["auxSensorTwo"] | "";
     AuxThreeSensor = root["auxSensorThree"] | "";
@@ -30,6 +32,7 @@ void BrewSettingsService::readFromJsonObject(JsonObject &root)
     AuxSensorThreeOffset = root["auxSensorThreeOffset"];
     MainSensorOffset = root["mainSensorOffset"];
     SpargeSensorOffset = root["spargeSensorOffset"];
+    BoilSensorOffset = root["boilSensorOffset"];
     Language = root["language"] | "";
     TempUnit = root["tempUnit"] | "";
 }
@@ -40,6 +43,7 @@ void BrewSettingsService::writeToJsonObject(JsonObject &root)
     root["boilPowerPercentage"] = BoilPowerPercentage;
     root["spargePowerPercentage"] = SpargePowerPercentage;
     root["enableSparge"] = EnableSparge;
+    root["enableBoilKettle"] = EnableBoilKettle;
     root["spargeTemperature"] = SpargeTemperature;
     root["boilTime"] = BoilTime;
     root["kP"] = KP;
@@ -51,8 +55,10 @@ void BrewSettingsService::writeToJsonObject(JsonObject &root)
     root["mashHeaterPercentage"] = MashHeaterPercentage;
     root["mainSensor"] = MainSensor;
     root["spargeSensor"] = SpargeSensor;
+    root["boilSensor"] = BoilSensor;
     root["mainSensorOffset"] = MainSensorOffset;
     root["spargeSensorOffset"] = SpargeSensorOffset;
+    root["boilSensorOffset"] = BoilSensorOffset;
     root["language"] = Language;
     root["tempUnit"] = TempUnit;
     root["auxSensorOne"] = AuxOneSensor;

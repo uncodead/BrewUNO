@@ -6,7 +6,7 @@
 class SpargeKettleHeaterService : public HeaterService
 {
 public:
-  SpargeKettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus, BrewSettingsService *brewSettingsService, int heaterBus);
+  SpargeKettleHeaterService(TemperatureService *temperatureService, ActiveStatus *activeStatus, BrewSettingsService *brewSettingsService);
   void StartPID(double kp, double ki, double kd);
 
 protected:
@@ -15,6 +15,7 @@ protected:
   double GetPidOutput();
   double GetPidInput();
   double GetPidSetPoint();
+  uint8_t GetBus();
   void SetPidParameters(double input, double setpoint);
 };
 #endif

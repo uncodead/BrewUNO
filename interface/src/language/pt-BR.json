@@ -39,6 +39,7 @@
   "Fahrenheit": "Fahrenheit",
   "MainSensor": "SENSOR PRINCIPAL",
   "SpargeSensor": "SENSOR LAVAGEM",
+  "BoilSensor": "SENSOR FERVURA",
   "PumpPrime": "Retirar ar da bomba",
   "Security": "Segurança",
   "Active": "Ativa",
@@ -101,7 +102,8 @@
     "AuxiliarySensor3": "Sensor auxiliar  3",
     "PumpRestInterval": "Ciclo da bomba ligada",
     "PumpRestTime": "Tempo de descanso da bomba",
-    "PumpCycle": "CICLO DA BOMBA"
+    "PumpCycle": "CICLO DA BOMBA",
+    "EnableBoilKettle": "Habilitar Panela de Fervura"
   },
   "WiFiSettings": {
     "Settings": "WiFi - Definições",

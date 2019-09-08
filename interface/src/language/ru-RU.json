@@ -39,6 +39,7 @@
   "Fahrenheit": "Фаренгейт",
   "MainSensor": "Главный датчик",
   "SpargeSensor": "Датчик воды",
+  "BoilSensor": "BoilSensor",
   "PumpPrime": "Прокачка",
   "Security": "Безопасно",
   "Active": "Активно",
@@ -98,7 +99,8 @@
     "AuxiliarySensor2": "Сенсор 2",
     "AuxiliarySensor3": "Сенсор 3",
     "PumpRestInterval": "Отдых насоса",
-    "PumpRestTime": "Время отдыха насоса"
+    "PumpRestTime": "Время отдыха насоса",
+    "EnableBoilKettle": "Enable Boil Kettle"
   },
   "WiFiSettings": {
     "Settings": "WiFi Settings",

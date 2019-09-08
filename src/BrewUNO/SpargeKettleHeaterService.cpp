@@ -5,10 +5,9 @@ PID _spargeKettlePID = PID(&_spargeKettleInput, &_spargeKettleOutput, &_spargeKe
 
 SpargeKettleHeaterService::SpargeKettleHeaterService(TemperatureService *temperatureService,
                                                      ActiveStatus *activeStatus,
-                                                     BrewSettingsService *brewSettingsService,
-                                                     int heaterBus) : HeaterService(temperatureService,
-                                                                                    activeStatus,
-                                                                                    brewSettingsService, heaterBus)
+                                                     BrewSettingsService *brewSettingsService) : HeaterService(temperatureService,
+                                                                                                               activeStatus,
+                                                                                                               brewSettingsService)
 {
 }
 
@@ -25,6 +24,11 @@ double SpargeKettleHeaterService::GetPidInput()
 double SpargeKettleHeaterService::GetPidSetPoint()
 {
   return _spargeKettleSetpoint;
+}
+
+uint8_t SpargeKettleHeaterService::GetBus()
+{
+  return SPARGE_HEATER_BUS;
 }
 
 void SpargeKettleHeaterService::PidCompute()

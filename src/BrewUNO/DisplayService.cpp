@@ -61,8 +61,14 @@ void DisplayService::loop()
     {
         lastUpdate = now();
         printHead();
-        printBody(1, pheater_icon, gwm_icon, _activeStatus->Temperature, _activeStatus->TargetTemperature, _activeStatus->PWMPercentage,
-                  _activeStatus->PumpOn, _activeStatus->BrewStarted, true, false, _activeStatus->EnableSparge);
+
+        if (_activeStatus->ActiveStep == mash || _activeStatus->ActiveStep == none)
+            printBody(1, pheater_icon, gwm_icon, _activeStatus->Temperature, _activeStatus->TargetTemperature, _activeStatus->PWMPercentage,
+                      _activeStatus->PumpOn, _activeStatus->BrewStarted, true, false, _activeStatus->EnableSparge);
+        if (_activeStatus->ActiveStep == boil)
+            printBody(1, pheater_icon, gwm_icon, _activeStatus->BoilTemperature, _activeStatus->BoilTargetTemperature, _activeStatus->BoilPWMPercentage,
+                      _activeStatus->PumpOn, _activeStatus->BrewStarted, true, false, _activeStatus->EnableSparge);
+
         printBody(2, sheater_icon, gpw_icon, _activeStatus->SpargeTemperature, _activeStatus->SpargeTargetTemperature, _activeStatus->SpargePWMPercentage,
                   _activeStatus->PumpOn, _activeStatus->BrewStarted, false, true, _activeStatus->EnableSparge);
         printFooter();

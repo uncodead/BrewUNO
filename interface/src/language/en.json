@@ -39,6 +39,7 @@
   "Fahrenheit": "Fahrenheit",
   "MainSensor": "Main Sensor",
   "SpargeSensor": "Sparge Sensor",
+  "BoilSensor": "BoilSensor",
   "PumpPrime": "Pump Prime",
   "Security": "Security",
   "Active": "Active",
@@ -99,7 +100,8 @@
     "AuxiliarySensor3": "Auxiliary Sensor 3",
     "PumpRestInterval": "Pump Rest Interval",
     "PumpRestTime": "Pump Rest Time",
-    "PumpCycle": "Pump Cycle"
+    "PumpCycle": "Pump Cycle",
+    "EnableBoilKettle": "Enable Boil Kettle"
   },
   "WiFiSettings": {
     "Settings": "WiFi Settings",

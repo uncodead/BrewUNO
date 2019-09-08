@@ -42,6 +42,8 @@ public:
   double PWMPercentage;
   double SpargePWM;
   double SpargePWMPercentage;
+  double BoilPWM;
+  double BoilPWMPercentage;
   boolean PIDActing;
 
   double BoilTargetTemperature;
@@ -49,16 +51,19 @@ public:
 
   double TargetTemperature;
   double Temperature;
+  double BoilTemperature;
   double SpargeTemperature;
   double AuxOneTemperature;
   double AuxTwoTemperature;
   double AuxThreeTemperature;
 
   bool EnableSparge;
+  bool EnableBoilKettle;
   double SpargeTargetTemperature;
 
   String MainSensor;
   String SpargeSensor;
+  String BoilSensor;
   String AuxOneSensor;
   String AuxTwoSensor;
   String AuxThreeSensor;

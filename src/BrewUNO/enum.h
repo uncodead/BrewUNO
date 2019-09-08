@@ -14,6 +14,7 @@ struct Temperatures
 {
   float Main;
   float Sparge;
+  float Boil;
   float AuxOne;
   float AuxTwo;
   float AuxThree;
