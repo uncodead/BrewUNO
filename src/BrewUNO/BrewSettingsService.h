@@ -36,9 +36,15 @@ public:
 
   double MainSensorOffset;
   double SpargeSensorOffset;
+  double AuxSensorOneOffset;
+  double AuxSensorTwoOffset;
+  double AuxSensorThreeOffset;
 
   String MainSensor;
   String SpargeSensor;
+  String AuxOneSensor;
+  String AuxTwoSensor;
+  String AuxThreeSensor;
   String Language;
   String TempUnit;
 

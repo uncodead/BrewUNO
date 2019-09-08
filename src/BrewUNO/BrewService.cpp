@@ -175,12 +175,13 @@ void BrewService::loop()
 {
     if (now() - lastReadTemperature > 1)
     {
-        Temperatures temps = _temperatureService->GetTemperatures(_brewSettingsService->MainSensor, _brewSettingsService->SpargeSensor);
-        _activeStatus->SetTemperature(temps.Main);
-        _activeStatus->SetSpargeTemperature(temps.Sparge);
-        _activeStatus->SetJsonTemperatures(temps.Json);
+        Temperatures temps = _temperatureService->GetTemperatures();
+        _activeStatus->SetTemperature(temps);
         _activeStatus->MainSensor = _brewSettingsService->MainSensor;
         _activeStatus->SpargeSensor = _brewSettingsService->SpargeSensor;
+        _activeStatus->AuxOneSensor = _brewSettingsService->AuxOneSensor;
+        _activeStatus->AuxTwoSensor = _brewSettingsService->AuxTwoSensor;
+        _activeStatus->AuxThreeSensor = _brewSettingsService->AuxThreeSensor;
         _activeStatus->TempUnit = _brewSettingsService->TempUnit;
         lastReadTemperature = now();
     }

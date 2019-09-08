@@ -65,9 +65,14 @@ String ActiveStatus::GetJson()
            "\"brew_started\":" + String(BrewStarted) + "," +
            "\"temperature\":" + String(Temperature) + "," +
            "\"sparge_temperature\":" + String(SpargeTemperature) + "," +
-           "\"temperatures\":" + Temperatures + "," +
+           "\"auxone_temperature\":" + String(AuxOneTemperature) + "," +
+           "\"auxtwo_temperature\":" + String(AuxTwoTemperature) + "," +
+           "\"auxthree_temperature\":" + String(AuxThreeTemperature) + "," +
            "\"main_sensor\": \"" + MainSensor + "\"," +
            "\"sparge_sensor\": \"" + SpargeSensor + "\"," +
+           "\"auxone_sensor\": \"" + AuxOneSensor + "\"," +
+           "\"auxtwo_sensor\": \"" + AuxTwoSensor + "\"," +
+           "\"auxthree_sensor\": \"" + AuxThreeSensor + "\"," +
            "\"pwm\":" + String(PWM, 2) + ',' +
            "\"pwm_percentage\":" + String(PWMPercentage, 2) + ',' +
            "\"sparge_pwm\":" + String(SpargePWM, 2) + ',' +
@@ -166,7 +171,6 @@ void ActiveStatus::SaveActiveStatus()
     _activeStatus["boil_power_percentage"] = BoilPowerPercentage;
     _activeStatus["pid_tuning"] = PIDTuning;
     _activeStatus["temp_unit"] = TempUnit;
-    
 
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "w");
     if (configFile)
@@ -175,19 +179,16 @@ void ActiveStatus::SaveActiveStatus()
     configFile.close();
 }
 
-void ActiveStatus::SetTemperature(float temperature)
+void ActiveStatus::SetTemperature(Temperatures temps)
 {
-    if (temperature >= 0)
-        Temperature = temperature;
-}
-
-void ActiveStatus::SetSpargeTemperature(float temperature)
-{
-    if (temperature >= 0)
-        SpargeTemperature = temperature;
-}
-
-void ActiveStatus::SetJsonTemperatures(String json)
-{
-    Temperatures = json;
+    if (temps.Main >= 0)
+        Temperature = temps.Main;
+    if (temps.Sparge >= 0)
+        SpargeTemperature = temps.Sparge;
+    if (temps.AuxOne >= 0)
+        AuxOneTemperature = temps.AuxOne;
+    if (temps.AuxTwo >= 0)
+        AuxTwoTemperature = temps.AuxTwo;
+    if (temps.AuxThree >= 0)
+        AuxThreeTemperature = temps.AuxThree;
 }

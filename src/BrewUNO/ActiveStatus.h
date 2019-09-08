@@ -15,6 +15,7 @@
 #include <TimeLib.h>
 #include <NtpClientLib.h>
 #include <BrewUNO/enum.h>
+#include <BrewUNO/enum.h>
 
 #define MAX_ACTIVESTATUS_SIZE 2024
 #define ACTIVE_STATUS_FILE "/config/activeStatus.json"
@@ -35,7 +36,7 @@ public:
   int ActiveMashStepIndex;
   String ActiveMashStepName;
   String ActiveMashStepSufixName;
-  
+
   int BoilTime;
   double PWM;
   double PWMPercentage;
@@ -49,13 +50,18 @@ public:
   double TargetTemperature;
   double Temperature;
   double SpargeTemperature;
-  String Temperatures;
+  double AuxOneTemperature;
+  double AuxTwoTemperature;
+  double AuxThreeTemperature;
 
   bool EnableSparge;
   double SpargeTargetTemperature;
 
   String MainSensor;
   String SpargeSensor;
+  String AuxOneSensor;
+  String AuxTwoSensor;
+  String AuxThreeSensor;
 
   time_t EndTime;
   time_t StartTime;
@@ -87,8 +93,7 @@ public:
                         boolean brewStarted);
   void SaveActiveStatus();
   void SaveActiveStatusLoop();
-  void SetTemperature(float);
-  void SetSpargeTemperature(float);
+  void SetTemperature(Temperatures temps);
   void SetJsonTemperatures(String json);
   String GetJson();
 
