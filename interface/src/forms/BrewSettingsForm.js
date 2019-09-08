@@ -304,6 +304,7 @@ class BrewSettingsForm extends Component {
                         fullWidth
                         inputProps={{ required: true }}
                       >
+                        <option value=''></option>
                         {this.props.sensors.map(value => (
                           <MenuItem value={value.address}>{value.address} - {value.value}</MenuItem>
                         ))}
@@ -325,6 +326,7 @@ class BrewSettingsForm extends Component {
                         fullWidth
                         inputProps={{ required: true }}
                       >
+                        <option value=''></option>
                         {this.props.sensors.map(value => (
                           <MenuItem value={value.address}>{value.address} - {value.value}</MenuItem>
                         ))}
@@ -346,6 +348,7 @@ class BrewSettingsForm extends Component {
                         fullWidth
                         inputProps={{ required: true }}
                       >
+                        <option value=''></option>
                         {this.props.sensors.map(value => (
                           <MenuItem value={value.address}>{value.address} - {value.value}</MenuItem>
                         ))}

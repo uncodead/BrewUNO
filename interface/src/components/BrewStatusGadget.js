@@ -132,15 +132,15 @@ class BrewStatusGadget extends Component {
                 </CardContent>
               </Card>
             </Grid>
-            {this.props.AuxOneTemperature !== null ?
+            {this.props.AuxOneSendorEnabled ?
               <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Auxiliary 1"} TempUnit={this.props.TempUnit} titlesufix={this.props.AuxOneTemperature} colors={TEMPERATURECOLORS} value={this.props.AuxOneTemperature} />
               : null
             }
-            {this.props.AuxTwoTemperature !== null ?
+            {this.props.AuxTwoSendorEnabled ?
               <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Auxiliary 2"} TempUnit={this.props.TempUnit} titlesufix={this.props.AuxTwoTemperature} colors={TEMPERATURECOLORS} value={this.props.AuxTwoTemperature} />
               : null
             }
-            {this.props.AuxThreeTemperature !== null ?
+            {this.props.AuxThreeSendorEnabled ?
               <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Auxiliary 3"} TempUnit={this.props.TempUnit} titlesufix={this.props.AuxThreeTemperature} colors={TEMPERATURECOLORS} value={this.props.AuxThreeTemperature} />
               : null
             }
