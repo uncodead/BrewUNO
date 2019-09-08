@@ -33,6 +33,9 @@ const styles = theme => ({
     minWidth: '100%'
   }
 })
+var PaperStyle = {
+  background: '#313131'
+}
 
 class BrewSettingsForm extends Component {
   constructor(props) {
@@ -63,7 +66,7 @@ class BrewSettingsForm extends Component {
                 <Grid container spacing={16}>
 
                   <Grid item xs={6}>
-                    <Paper className={classes.root}>
+                    <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="Language" /></Typography>
                       <Select className={classes.formControl}
                         value={brewSettings.language}
@@ -90,7 +93,7 @@ class BrewSettingsForm extends Component {
                   </Grid>
 
                   <Grid item xs={6}>
-                    <Paper className={classes.root}>
+                    <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="MainSensor" /></Typography>
                       <Select className={classes.formControl}
                         value={brewSettings.mainSensor}
@@ -116,7 +119,7 @@ class BrewSettingsForm extends Component {
                   </Grid>
 
                   <Grid item xs={6}>
-                    <Paper className={classes.root}>
+                    <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="BrewSettings.MashBoilPWM" /></Typography>
                       <TextValidator className={classes.formControl}
                         name="MashHeaterPercentage"
@@ -165,7 +168,7 @@ class BrewSettingsForm extends Component {
                   </Grid>
 
                   <Grid item xs={6}>
-                    <Paper className={classes.root}>
+                    <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="SpargeSensor" /></Typography>
                       <div style={{ marginTop: 0, marginLeft: 20, padding: 0 }}>
                         <FormControlLabel
@@ -227,7 +230,7 @@ class BrewSettingsForm extends Component {
                   </Grid>
 
                   <Grid item xs={6}>
-                    <Paper className={classes.root}>
+                    <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary">PID</Typography>
                       <TextValidator className={classes.formControl}
                         name="kp"
@@ -293,7 +296,7 @@ class BrewSettingsForm extends Component {
                   </Grid>
 
                   <Grid item xs={6}>
-                    <Paper className={classes.root}>
+                    <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary">{<IntText text="BrewSettings.AuxiliarySensor1" />}</Typography>
                       <Select className={classes.formControl}
                         value={brewSettings.auxSensorOne}

@@ -31,6 +31,16 @@ const themeSparge = createMuiTheme({
     },
   },
 });
+const themeAuxiliary = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#b5b5b5',
+    },
+    secondary: {
+      main: '#ffca28',
+    },
+  },
+});
 
 const styles = theme => ({
   temperatureCard: {
@@ -122,6 +132,7 @@ class BrewStatusGadget extends Component {
                 </CardContent>
               </Card>
             </Grid>
+            <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Auxiliary 1"} colorPWM={"#83f316"} PWM={this.props.PWM} TempUnit={this.props.TempUnit} titlesufix={this.props.TargetTemperature} colors={TEMPERATURECOLORS} value={this.props.Temperature}/>
           </Grid>
         </Grid>
       </Grid>
@@ -167,6 +178,26 @@ class BrewStatusGadgetItem extends Component {
         </Card>
       </Grid>
 
+    )
+  }
+}
+
+class BrewStatusAuxItem extends Component {
+  render() {
+    return (
+      <Grid item >
+        <Card className={this.props.className}>
+          <CardContent >
+            <MuiThemeProvider theme={this.props.theme}>
+              <div style={{ display: "flex" }}>
+                <Typography color="primary" variant="subtitle2" gutterBottom noWrap><IntText text={this.props.title} /></Typography>
+                &nbsp;&nbsp;
+              <Typography color="secondary" variant="subtitle2">{this.props.titlesufix} º{this.props.TempUnit}</Typography>
+              </div>
+            </MuiThemeProvider>
+          </CardContent>
+        </Card>
+      </Grid>
     )
   }
 }
