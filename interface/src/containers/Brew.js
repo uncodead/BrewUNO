@@ -279,6 +279,9 @@ class Brew extends Component {
               StepLocked={this.state.status.step_locked > 0}
               PumpIsResting={this.state.status.pump_is_resting > 0}
               SpargeTemperature={this.state.status.sparge_temperature}
+              AuxOneTemperature={this.state.status.auxone_temperature}
+              AuxTwoTemperature={this.state.status.auxtwo_temperature}
+              AuxThreeTemperature={this.state.status.auxthree_temperature}
               SpargeTargetTemperature={this.state.status.sparge_target_temperature > 0 ? this.state.status.sparge_target_temperature : ''}
               EnableSparge={this.state.status.enable_sparge}
               TempUnit={this.state.status.temp_unit}
