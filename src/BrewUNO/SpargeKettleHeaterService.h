@@ -10,6 +10,7 @@ public:
   void StartPID(double kp, double ki, double kd);
 
 protected:
+  void SetUP();
   boolean StopCompute();
   void PidCompute();
   double GetPidOutput();

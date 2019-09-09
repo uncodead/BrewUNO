@@ -58,12 +58,15 @@ void BoilKettleHeaterService::SetPidParameters(double input, double setpoint)
   _boilKettleSetpoint = setpoint;
 }
 
-boolean BoilKettleHeaterService::StopCompute()
+void BoilKettleHeaterService::SetUP()
 {
   _activeStatus->EnableBoilKettle = _brewSettingsService->EnableBoilKettle;
   _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
   if (!_activeStatus->EnableBoilKettle)
     _activeStatus->BoilTemperature = _activeStatus->Temperature;
+}
 
+boolean BoilKettleHeaterService::StopCompute()
+{
   return !_activeStatus->BrewStarted || _activeStatus->ActiveStep != boil;
 }

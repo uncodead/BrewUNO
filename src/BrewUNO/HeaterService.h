@@ -31,6 +31,7 @@ public:
   {
     HeaterServiceStatus status;
     uint8_t _heaterBus = GetBus();
+    SetUP();
     if (StopCompute())
     {
       status.PIDActing = false;
@@ -95,6 +96,7 @@ public:
   }
 
 protected:
+  virtual void SetUP();
   virtual boolean StopCompute();
   virtual void StartPID(double kp, double ki, double kd);
   virtual void PidCompute();

@@ -51,10 +51,13 @@ void SpargeKettleHeaterService::SetPidParameters(double input, double setpoint)
   _spargeKettleSetpoint = setpoint;
 }
 
-boolean SpargeKettleHeaterService::StopCompute()
+void SpargeKettleHeaterService::SetUP()
 {
   _activeStatus->EnableSparge = _brewSettingsService->EnableSparge;
   _activeStatus->SpargeTargetTemperature = _brewSettingsService->SpargeTemperature;
+}
 
+boolean SpargeKettleHeaterService::StopCompute()
+{
   return !_activeStatus->BrewStarted || !_activeStatus->EnableSparge || _activeStatus->ActiveStep != mash || _activeStatus->PWM > 100;
 }
