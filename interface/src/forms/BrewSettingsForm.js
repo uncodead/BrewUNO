@@ -272,6 +272,34 @@ class BrewSettingsForm extends Component {
 
                   <Grid item xs={6}>
                     <Paper className={classes.root} style={PaperStyle}>
+                      <Typography className={classes.formControl} color="textSecondary">{<IntText text="BrewSettings.PumpCycle" />}</Typography>
+                      <TextValidator className={classes.formControl}
+                        name="pumpRestInterval"
+                        validators={['required']}
+                        label={<IntText text="BrewSettings.PumpRestInterval" />}
+                        type="number"
+                        fullWidth
+                        InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
+                        value={brewSettings.pumpRestInterval}
+                        onChange={handleValueChange("pumpRestInterval")}
+                        errorMessages={[<IntText text="FieldRequired" />]}
+                      />
+                      <TextValidator className={classes.formControl}
+                        name="pumpRestTime"
+                        validators={['required']}
+                        label={<IntText text="BrewSettings.PumpRestTime" />}
+                        type="number"
+                        fullWidth
+                        InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
+                        value={brewSettings.pumpRestTime}
+                        onChange={handleValueChange("pumpRestTime")}
+                        errorMessages={[<IntText text="FieldRequired" />]}
+                      />
+                    </Paper>
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary">PID</Typography>
                       <TextValidator className={classes.formControl}
                         name="kp"
@@ -308,29 +336,6 @@ class BrewSettingsForm extends Component {
                         InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
                         value={brewSettings.pidStart}
                         onChange={handleValueChange("pidStart")}
-                        errorMessages={[<IntText text="FieldRequired" />]}
-                      />
-                      <Typography className={classes.formControl} color="textSecondary">{<IntText text="BrewSettings.PumpCycle" />}</Typography>
-                      <TextValidator className={classes.formControl}
-                        name="pumpRestInterval"
-                        validators={['required']}
-                        label={<IntText text="BrewSettings.PumpRestInterval" />}
-                        type="number"
-                        fullWidth
-                        InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
-                        value={brewSettings.pumpRestInterval}
-                        onChange={handleValueChange("pumpRestInterval")}
-                        errorMessages={[<IntText text="FieldRequired" />]}
-                      />
-                      <TextValidator className={classes.formControl}
-                        name="pumpRestTime"
-                        validators={['required']}
-                        label={<IntText text="BrewSettings.PumpRestTime" />}
-                        type="number"
-                        fullWidth
-                        InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
-                        value={brewSettings.pumpRestTime}
-                        onChange={handleValueChange("pumpRestTime")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                     </Paper>

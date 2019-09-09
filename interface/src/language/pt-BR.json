@@ -98,12 +98,12 @@
     "EnableSparge": "Habilitar lavagem",
     "PIDStartAt": "Iniciar PID em",
     "AuxiliarySensor1": "Sensor auxiliar 1",
-    "AuxiliarySensor2": "Sensor auxiliar  2",
-    "AuxiliarySensor3": "Sensor auxiliar  3",
+    "AuxiliarySensor2": "Sensor auxiliar 2",
+    "AuxiliarySensor3": "Sensor auxiliar 3",
     "PumpRestInterval": "Ciclo da bomba ligada",
     "PumpRestTime": "Tempo de descanso da bomba",
     "PumpCycle": "CICLO DA BOMBA",
-    "EnableBoilKettle": "Habilitar Panela de Fervura"
+    "EnableBoilKettle": "Habilitar panela de fervura"
   },
   "WiFiSettings": {
     "Settings": "WiFi - Definições",
