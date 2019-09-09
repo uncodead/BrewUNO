@@ -62,6 +62,8 @@ boolean BoilKettleHeaterService::StopCompute()
 {
   _activeStatus->EnableBoilKettle = _brewSettingsService->EnableBoilKettle;
   _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
+  if (!_activeStatus->EnableBoilKettle)
+    _activeStatus->BoilTemperature = _activeStatus->Temperature;
 
   return !_activeStatus->BrewStarted || _activeStatus->ActiveStep != boil;
 }
