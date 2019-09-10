@@ -93,7 +93,7 @@ void DisplayService::printHead()
         _lcd->print(" BrewUNO  " + GetCount(false) + "L");
     }
     else
-        _lcd->print(" BrewUNO   v" + String(Version) + "  ");
+        _lcd->print(" BrewUNO  v" + String(Version) + "  ");
 }
 
 void DisplayService::printBody(int line, byte heatIcon, byte pwmIcon, double temperature, double targetTemperature,
