@@ -71,6 +71,7 @@ boolean MashKettleHeaterService::StopCompute()
 void MashKettleHeaterService::TurnOff()
 {
   if (!_activeStatus->BrewStarted ||
+      (_activeStatus->ActiveStep == boil && _activeStatus->EnableBoilKettle) ||
       (_activeStatus->ActiveStep == mash && _activeStatus->PumpIsResting) ||
       (_activeStatus->ActiveStep == mash && !_activeStatus->HeaterOn))
     analogWrite(GetBus(), 0);
