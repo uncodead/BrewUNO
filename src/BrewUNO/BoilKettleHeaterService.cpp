@@ -70,3 +70,12 @@ boolean BoilKettleHeaterService::StopCompute()
 {
   return !_activeStatus->BrewStarted || _activeStatus->ActiveStep != boil;
 }
+
+void BoilKettleHeaterService::TurnOff()
+{
+  if (!_activeStatus->BrewStarted || _activeStatus->EnableBoilKettle)
+  {
+    analogWrite(BOIL_HEATER_BUS, 0);
+    digitalWrite(BOIL_HEATER_BUS, HIGH);
+  }
+}

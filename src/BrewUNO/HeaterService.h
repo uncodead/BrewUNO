@@ -37,7 +37,7 @@ public:
       status.PIDActing = false;
       status.PWM = 0;
       status.PWMPercentage = 0;
-      analogWrite(_heaterBus, 0);
+      TurnOff();
       return status;
     }
 
@@ -104,6 +104,7 @@ protected:
   virtual double GetPidInput();
   virtual double GetPidSetPoint();
   virtual uint8_t GetBus();
+  virtual void TurnOff();
   virtual void SetPidParameters(double input, double setpoint);
 
   TemperatureService *_temperatureService;

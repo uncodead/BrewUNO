@@ -17,6 +17,7 @@ protected:
   double GetPidInput();
   double GetPidSetPoint();
   uint8_t GetBus();
+  void TurnOff();
   void SetPidParameters(double input, double setpoint);
 };
 #endif

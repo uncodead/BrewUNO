@@ -61,3 +61,8 @@ boolean SpargeKettleHeaterService::StopCompute()
 {
   return !_activeStatus->BrewStarted || !_activeStatus->EnableSparge || _activeStatus->ActiveStep != mash || _activeStatus->PWM > 100;
 }
+
+void SpargeKettleHeaterService::TurnOff()
+{
+  analogWrite(GetBus(), 0);
+}

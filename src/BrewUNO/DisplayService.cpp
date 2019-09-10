@@ -78,7 +78,6 @@ void DisplayService::loop()
 void DisplayService::printHead()
 {
     _lcd->setCursor(0, 0);
-    String head = "";
     wl_status_t status = WiFi.status();
     WiFiMode_t currentWiFiMode = WiFi.getMode();
     if (status == WL_CONNECTED)
@@ -87,20 +86,14 @@ void DisplayService::printHead()
         _lcd->write(apmode_icon);
     if (_activeStatus->BrewStarted && !_activeStatus->StepLocked)
     {
-        head = " BrewUNO   " + GetCount(true);
-        _lcd->print(head);
+        _lcd->print(" BrewUNO   " + GetCount(true));
     }
     else if (_activeStatus->StepLocked)
     {
-        head = " BrewUNO  " + GetCount(false) + "L";
-        _lcd->print(head);
+        _lcd->print(" BrewUNO  " + GetCount(false) + "L");
     }
     else
-    {
-        head = " BrewUNO  v" + String(Version);
-        _lcd->print(head);
-    }
-    RemoveLastChars(head.length());
+        _lcd->print(" BrewUNO   v" + String(Version) + "  ");
 }
 
 void DisplayService::printBody(int line, byte heatIcon, byte pwmIcon, double temperature, double targetTemperature,
