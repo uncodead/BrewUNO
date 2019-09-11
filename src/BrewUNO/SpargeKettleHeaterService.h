@@ -18,6 +18,7 @@ protected:
   double GetPidSetPoint();
   uint8_t GetBus();
   void TurnOff();
+  bool InvertedPWM();
   void SetPidParameters(double input, double setpoint);
 };
 #endif

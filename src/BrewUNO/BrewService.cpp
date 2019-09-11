@@ -127,7 +127,6 @@ void BrewService::startBoil(AsyncWebServerRequest *request)
     _activeStatus->BoilTime = _brewSettingsService->BoilTime * 60;
     _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
     _activeStatus->BoilPowerPercentage = _brewSettingsService->BoilPowerPercentage;
-    _activeStatus->TargetTemperature = _brewSettingsService->BoilTemperature;
     _activeStatus->SaveActiveStatus();
     _boilKettleHeaterService->StartPID(100, 100, 100);
     _boilService->LoadBoilSettings();
@@ -171,9 +170,13 @@ void BrewService::begin()
     if (_temperatureService->DeviceCount == 1)
     {
         _brewSettingsService->MainSensor = _temperatureService->GetFirstSensorAddress();
+        _brewSettingsService->BoilSensor = _brewSettingsService->MainSensor;
         _activeStatus->MainSensor = _brewSettingsService->MainSensor;
+        _activeStatus->BoilSensor = _brewSettingsService->BoilSensor;
         _brewSettingsService->writeToFS();
     }
+    if (_temperatureService->DeviceCount > 1 && _brewSettingsService->BoilSensor == "")
+        _brewSettingsService->BoilSensor = _temperatureService->GetFirstSensorAddress();
 }
 
 time_t lastReadTemperature = now();

@@ -414,8 +414,8 @@ class BrewSettingsForm extends Component {
 
                 </Grid>
 
-                <div style={{ marginTop: 20, marginLeft: 5, padding: 0 }}>
-                  <Button variant="raised" color="secondary" type="submit" margin="20">
+                <div style={{ marginTop: 20, }}>
+                  <Button variant="raised" fullWidth color="secondary" type="submit">
                     {<IntText text="Save" />}
                   </Button>
                 </div>

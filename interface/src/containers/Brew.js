@@ -70,9 +70,13 @@ class Brew extends Component {
 
       if (splice_data.length >= 200)
         splice_data.splice(0, 1);
-
+        
       this.setState({
-        data: [...splice_data, { name: time, Target: this.state.status.target_temperature, Current: this.state.status.temperature }],
+        data: [...splice_data, {
+          name: time,
+          Target: this.getActiveStep().props.text === 'Mash' ? this.state.status.target_temperature : this.state.status.boil_target_temperature,
+          Current: this.getActiveStep().props.text === 'Mash' ? this.state.status.temperature :this.state.status.boil_temperature
+        }],
         boilPower: this.state.status.boil_power_percentage
       })
     }
@@ -286,6 +290,7 @@ class Brew extends Component {
               AuxThreeTemperature={this.state.status.auxthree_temperature}
               SpargeTargetTemperature={this.state.status.sparge_target_temperature > 0 ? this.state.status.sparge_target_temperature : ''}
               EnableSparge={this.state.status.enable_sparge}
+              EnableBoilKettle={this.state.status.enable_boilkettle === 1}
               TempUnit={this.state.status.temp_unit}
             />
           </CardContent>

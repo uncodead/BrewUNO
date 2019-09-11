@@ -60,6 +60,11 @@ void MashKettleHeaterService::SetUP()
 {
 }
 
+bool MashKettleHeaterService::InvertedPWM()
+{
+  return false;
+}
+
 boolean MashKettleHeaterService::StopCompute()
 {
   return !_activeStatus->BrewStarted ||

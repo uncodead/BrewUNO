@@ -57,6 +57,11 @@ void SpargeKettleHeaterService::SetUP()
   _activeStatus->SpargeTargetTemperature = _brewSettingsService->SpargeTemperature;
 }
 
+bool SpargeKettleHeaterService::InvertedPWM()
+{
+  return false;
+}
+
 boolean SpargeKettleHeaterService::StopCompute()
 {
   return !_activeStatus->BrewStarted || !_activeStatus->EnableSparge || _activeStatus->ActiveStep != mash || _activeStatus->PWM > 100;

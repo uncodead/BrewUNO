@@ -56,7 +56,7 @@ public:
       status.PIDActing = false;
       status.PWM = ((1023 * _activeStatus->BoilPowerPercentage) / 100);
       status.PWMPercentage = (status.PWM * 100) / 1023;
-      analogWrite(_heaterBus, status.PWM);
+      analogWrite(_heaterBus, InvertedPWM() ? abs(status.PWM - 1023) : status.PWM);
       return status;
     }
 
@@ -105,6 +105,7 @@ protected:
   virtual double GetPidSetPoint();
   virtual uint8_t GetBus();
   virtual void TurnOff();
+  virtual bool InvertedPWM();
   virtual void SetPidParameters(double input, double setpoint);
 
   TemperatureService *_temperatureService;
