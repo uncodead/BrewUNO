@@ -162,6 +162,7 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     StepLocked = false;
     PIDTuning = false;
     BoilPowerPercentage = 0;
+    Count = "00:00:00";
 
     SaveActiveStatus();
 }
