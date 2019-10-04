@@ -6,6 +6,8 @@
 #include <TimeLib.h>
 #include <NtpClientLib.h>
 
+#include <BrewUNO/ActiveStatus.h>
+
 // default time server
 #define NTP_SETTINGS_SERVICE_DEFAULT_SERVER "pool.ntp.org"
 #define NTP_SETTINGS_SERVICE_DEFAULT_INTERVAL 3600
@@ -17,44 +19,43 @@
 #define NTP_SETTINGS_FILE "/config/ntpSettings.json"
 #define NTP_SETTINGS_SERVICE_PATH "/rest/ntpSettings"
 
-class NTPSettingsService : public AdminSettingsService {
+class NTPSettingsService : public AdminSettingsService
+{
 
-  public:
+public:
+  NTPSettingsService(AsyncWebServer *server, FS *fs, SecurityManager *securityManager, ActiveStatus *activeStatus);
+  ~NTPSettingsService();
 
-    NTPSettingsService(AsyncWebServer* server, FS* fs, SecurityManager* securityManager);
-    ~NTPSettingsService();
+  void loop();
 
-    void loop();
+  ActiveStatus *_activeStatus;
 
-  protected:
+protected:
+  void readFromJsonObject(JsonObject &root);
+  void writeToJsonObject(JsonObject &root);
+  void onConfigUpdated();
 
-    void readFromJsonObject(JsonObject& root);
-    void writeToJsonObject(JsonObject& root);
-    void onConfigUpdated();
+private:
+  String _server;
+  int _interval;
 
-  private:
-
-    String _server;
-    int _interval;
-
-    bool _reconfigureNTP = false;
-    bool _syncEventTriggered = false;
-    NTPSyncEvent_t _ntpEvent;
+  bool _reconfigureNTP = false;
+  bool _syncEventTriggered = false;
+  NTPSyncEvent_t _ntpEvent;
 
 #if defined(ESP8266)
-    WiFiEventHandler _onStationModeDisconnectedHandler;
-    WiFiEventHandler _onStationModeGotIPHandler;
+  WiFiEventHandler _onStationModeDisconnectedHandler;
+  WiFiEventHandler _onStationModeGotIPHandler;
 
-    void onStationModeGotIP(const WiFiEventStationModeGotIP& event);
-    void onStationModeDisconnected(const WiFiEventStationModeDisconnected& event);
+  void onStationModeGotIP(const WiFiEventStationModeGotIP &event);
+  void onStationModeDisconnected(const WiFiEventStationModeDisconnected &event);
 #elif defined(ESP_PLATFORM)
-    void onStationModeGotIP(WiFiEvent_t event, WiFiEventInfo_t info);
-    void onStationModeDisconnected(WiFiEvent_t event, WiFiEventInfo_t info);
+  void onStationModeGotIP(WiFiEvent_t event, WiFiEventInfo_t info);
+  void onStationModeDisconnected(WiFiEvent_t event, WiFiEventInfo_t info);
 #endif
 
-    void configureNTP();
-    void processSyncEvent(NTPSyncEvent_t ntpEvent);
-
+  void configureNTP();
+  void processSyncEvent(NTPSyncEvent_t ntpEvent);
 };
 
 #endif // end NTPSettingsService_h

@@ -39,6 +39,8 @@ boolean ActiveStatus::LoadActiveStatusSettings()
                 StepLock = _activeStatus["step_lock"];
                 BoilPowerPercentage = _activeStatus["boil_power_percentage"];
                 PIDTuning = _activeStatus["pid_tuning"];
+                TimeNotSet = _activeStatus["time_not_set"];
+                Count = _activeStatus["count"] | "";
                 TempUnit = _activeStatus["temp_unit"] | "";
                 configFile.close();
             }
@@ -46,6 +48,30 @@ boolean ActiveStatus::LoadActiveStatusSettings()
         configFile.close();
     }
     return true;
+}
+
+void ActiveStatus::TimeNotSetted()
+{
+    if (!TimeNotSet)
+    {
+        TimeNotSet = true;
+        LastReadTemperature = 0;
+        LastDisplayUpdate = 0;
+        LastLockBeep = 0;
+        Serial.println("Time NOT setted");
+    }
+}
+
+void ActiveStatus::TimeSetted()
+{
+    if (TimeNotSet)
+    {
+        TimeNotSet = false;
+        LastReadTemperature = 0;
+        LastDisplayUpdate = 0;
+        LastLockBeep = 0;
+        Serial.println("Time setted");
+    }
 }
 
 String ActiveStatus::GetJson()
@@ -91,8 +117,10 @@ String ActiveStatus::GetJson()
            "\"pid_tuning\":" + String(PIDTuning) + "," +
            "\"pump_on\":" + String(PumpOn) + "," +
            "\"pump_is_resting\":" + String(PumpIsResting) + "," +
+           "\"time_not_set\":" + String(TimeNotSet) + "," +
            "\"temp_unit\": \"" + TempUnit + "\"," +
            "\"version\": \"" + String(Version) + "\"," +
+           "\"count\": \"" + Count + "\"," +
            "\"boil_power_percentage\":" + String(BoilPowerPercentage) +
            "}";
 }
@@ -177,6 +205,8 @@ void ActiveStatus::SaveActiveStatus()
     _activeStatus["boil_power_percentage"] = BoilPowerPercentage;
     _activeStatus["pid_tuning"] = PIDTuning;
     _activeStatus["temp_unit"] = TempUnit;
+    _activeStatus["time_not_set"] = TimeNotSet;
+    _activeStatus["count"] = Count;
 
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "w");
     if (configFile)

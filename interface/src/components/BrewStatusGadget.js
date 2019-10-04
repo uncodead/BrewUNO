@@ -79,21 +79,19 @@ class BrewStatusGadget extends Component {
 
   brewProgress() {
     if (!this.props.BrewStarted || this.props.StartTime <= 0 || this.props.EndTime <= 0) {
-      this.setState({
-        countdown: '00:00:00',
-        progressCompleted: 0
-      })
+      this.setState({ countdown: '00:00:00', progressCompleted: 0 })
+      return;
+    }
+    if (this.props.TimeNotSet === 1) {
+      this.setState({ countdown: this.props.Count })
       return;
     }
     var dateEntered = getDateTime(this.props.EndTime);
     var now = new Date();
     var difference = !this.props.StepLocked ? dateEntered.getTime() - now.getTime() : now.getTime() - dateEntered.getTime();
-    if (difference <= 0 && !this.props.StepLocked) {
-      this.setState({
-        countdown: '00:00:00',
-        progressCompleted: 100
-      })
-    } else {
+    if (difference <= 0 && !this.props.StepLocked)
+      this.setState({ countdown: '00:00:00', progressCompleted: 100 })
+    else {
       var seconds = Math.floor(difference / 1000);
       var minutes = Math.floor(seconds / 60);
       var hours = Math.floor(minutes / 60);
@@ -120,7 +118,7 @@ class BrewStatusGadget extends Component {
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={16}>
-          {this.props.ActiveStep.props.text === 'Mash' || this.props.ActiveStep.props.text === 'Stopped' || this.props.EnableBoilKettle ?
+            {this.props.ActiveStep.props.text === 'Mash' || this.props.ActiveStep.props.text === 'Stopped' || this.props.EnableBoilKettle ?
               <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main"} colorPWM={"#83f316"} PWM={this.props.PWM} TempUnit={this.props.TempUnit} titlesufix={this.props.TargetTemperature} colors={TEMPERATURECOLORS} value={this.props.Temperature} data={getProgressData(this.props.Temperature)} />
               : null}
             {this.props.EnableSparge ?

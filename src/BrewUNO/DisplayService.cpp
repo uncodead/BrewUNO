@@ -1,6 +1,5 @@
 #include <BrewUNO/DisplayService.h>
 
-time_t lastUpdate = now();
 String blankline = "                    ";
 byte apmode[] = {B01010, B00100, B01010, B00100, B00100, B00100, B01110, B11111};
 byte stmode[] = {B01110, B10001, B00100, B01010, B00000, B00100, B00000, B00000};
@@ -57,9 +56,9 @@ void DisplayService::begin()
 
 void DisplayService::loop()
 {
-    if (now() - lastUpdate > 0.8)
+    if (now() - _activeStatus->LastDisplayUpdate > 0.8)
     {
-        lastUpdate = now();
+        _activeStatus->LastDisplayUpdate = now();
         printHead();
 
         if (_activeStatus->ActiveStep == mash || _activeStatus->ActiveStep == none)
@@ -86,11 +85,13 @@ void DisplayService::printHead()
         _lcd->write(apmode_icon);
     if (_activeStatus->BrewStarted && !_activeStatus->StepLocked)
     {
-        _lcd->print(" BrewUNO   " + GetCount(true));
+        _activeStatus->Count = GetCount(true);
+        _lcd->print(" BrewUNO   " + _activeStatus->Count);
     }
     else if (_activeStatus->StepLocked)
     {
-        _lcd->print(" BrewUNO  " + GetCount(false) + "L");
+        _activeStatus->Count = GetCount(false);
+        _lcd->print(" BrewUNO  " + _activeStatus->Count + "L");
     }
     else
         _lcd->print(" BrewUNO  v" + String(Version) + "  ");

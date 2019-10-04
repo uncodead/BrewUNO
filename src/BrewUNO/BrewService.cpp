@@ -169,20 +169,16 @@ void BrewService::begin()
     _activeStatus->BrewStarted = false;
     if (_temperatureService->DeviceCount == 1)
     {
-        _brewSettingsService->MainSensor = _temperatureService->GetFirstSensorAddress();
-        _brewSettingsService->BoilSensor = _brewSettingsService->MainSensor;
         _activeStatus->MainSensor = _brewSettingsService->MainSensor;
         _activeStatus->BoilSensor = _brewSettingsService->BoilSensor;
-        _brewSettingsService->writeToFS();
     }
     if (_temperatureService->DeviceCount > 1 && _brewSettingsService->BoilSensor == "")
         _brewSettingsService->BoilSensor = _temperatureService->GetFirstSensorAddress();
 }
 
-time_t lastReadTemperature = now();
 void BrewService::loop()
 {
-    if (now() - lastReadTemperature > 1)
+    if (now() - _activeStatus->LastReadTemperature > 1)
     {
         Temperatures temps = _temperatureService->GetTemperatures();
         _activeStatus->SetTemperature(temps);
@@ -193,7 +189,7 @@ void BrewService::loop()
         _activeStatus->AuxTwoSensor = _brewSettingsService->AuxTwoSensor;
         _activeStatus->AuxThreeSensor = _brewSettingsService->AuxThreeSensor;
         _activeStatus->TempUnit = _brewSettingsService->TempUnit;
-        lastReadTemperature = now();
+        _activeStatus->LastReadTemperature = now();
     }
     _mashService->loop(_activeStatus);
     _boilService->loop(_activeStatus);

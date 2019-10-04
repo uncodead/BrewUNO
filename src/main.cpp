@@ -55,7 +55,6 @@ AsyncWebServer server(80);
 SecuritySettingsService securitySettingsService = SecuritySettingsService(&server, &SPIFFS);
 WiFiSettingsService wifiSettingsService = WiFiSettingsService(&server, &SPIFFS, &securitySettingsService);
 APSettingsService apSettingsService = APSettingsService(&server, &SPIFFS, &securitySettingsService);
-NTPSettingsService ntpSettingsService = NTPSettingsService(&server, &SPIFFS, &securitySettingsService);
 OTASettingsService otaSettingsService = OTASettingsService(&server, &SPIFFS, &securitySettingsService);
 AuthenticationService authenticationService = AuthenticationService(&server, &securitySettingsService);
 
@@ -67,6 +66,7 @@ SystemStatus systemStatus = SystemStatus(&server, &securitySettingsService);
 
 //brewUNO
 ActiveStatus activeStatus = ActiveStatus(&SPIFFS);
+NTPSettingsService ntpSettingsService = NTPSettingsService(&server, &SPIFFS, &securitySettingsService, &activeStatus);
 
 BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS, &activeStatus);
 TemperatureService temperatureService = TemperatureService(&server, &SPIFFS, DS18B20, &brewSettingsService);

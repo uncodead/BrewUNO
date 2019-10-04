@@ -68,15 +68,21 @@ public:
   String AuxTwoSensor;
   String AuxThreeSensor;
 
+  String Count;
+
   time_t EndTime;
   time_t StartTime;
   time_t TimeNow;
+  time_t LastReadTemperature;
+  time_t LastDisplayUpdate;
+  time_t LastLockBeep;
 
   boolean Recirculation;
   boolean PIDTuning;
   boolean PumpOn;
   boolean PumpIsResting;
   boolean PIDSettingsUpdated;
+  boolean TimeNotSet;
 
   String TempUnit;
 
@@ -101,6 +107,8 @@ public:
   void SetTemperature(Temperatures temps);
   void SetJsonTemperatures(String json);
   String GetJson();
+  void TimeNotSetted();
+  void TimeSetted();
 
 private:
   FS *_fs;
