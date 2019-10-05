@@ -1,7 +1,7 @@
 #include <BrewUNO/BrewSettingsService.h>
 
-BrewSettingsService::BrewSettingsService(AsyncWebServer *server, FS *fs, ActiveStatus *activeStatus)
-    : _activeStatus(activeStatus), SettingsService(server, fs, BREW_SETTINGS_SERVICE_PATH, BREW_SETTINGS_FILE) {}
+BrewSettingsService::BrewSettingsService(AsyncWebServer *server, FS *fs, ActiveStatus *activeStatus) : _activeStatus(activeStatus),
+                                                                                                       SettingsService(server, fs, BREW_SETTINGS_SERVICE_PATH, BREW_SETTINGS_FILE) {}
 
 BrewSettingsService::~BrewSettingsService() {}
 
@@ -77,4 +77,8 @@ void BrewSettingsService::onConfigUpdated()
 void BrewSettingsService::begin()
 {
     SettingsService::begin();
+}
+
+void BrewSettingsService::Update() {
+    SettingsService::writeToFS();
 }

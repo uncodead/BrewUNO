@@ -169,6 +169,8 @@ void BrewService::begin()
     _activeStatus->BrewStarted = false;
     if (_temperatureService->DeviceCount == 1)
     {
+        _brewSettingsService->MainSensor = _temperatureService->GetFirstSensorAddress();
+        _brewSettingsService->BoilSensor = _brewSettingsService->MainSensor;
         _activeStatus->MainSensor = _brewSettingsService->MainSensor;
         _activeStatus->BoilSensor = _brewSettingsService->BoilSensor;
     }
