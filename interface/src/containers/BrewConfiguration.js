@@ -5,8 +5,8 @@ import BoilSettings from './BoilSettings';
 import BrewSettings from './BrewSettings'
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-
 import IntText from '../components/IntText'
+import { PageView, initGA, Event } from '../components/Tracking'
 
 class BrewConfiguration extends Component {
   constructor() {
@@ -14,6 +14,11 @@ class BrewConfiguration extends Component {
     this.state = {
       selectedTab: 'MashSettings'
     }
+  }
+
+  componentDidMount() {
+    initGA('UA-149477072-2');
+    PageView();
   }
 
   handleTabChange = (event, selectedTab) => {

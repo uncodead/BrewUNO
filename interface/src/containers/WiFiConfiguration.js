@@ -7,11 +7,10 @@ import MenuAppBar from '../components/MenuAppBar';
 import WiFiNetworkScanner from './WiFiNetworkScanner';
 import WiFiSettings from './WiFiSettings';
 import WiFiStatus from './WiFiStatus';
-
+import { PageView, initGA, Event } from '../components/Tracking'
 import IntText from '../components/IntText'
 
 class WiFiConfiguration extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -20,6 +19,11 @@ class WiFiConfiguration extends Component {
     };
     this.selectNetwork = this.selectNetwork.bind(this);
     this.deselectNetwork = this.deselectNetwork.bind(this);
+  }
+
+  componentDidMount() {
+    initGA('UA-149477072-2');
+    PageView();
   }
 
   // TODO - slightly inapproperate use of callback ref possibly.

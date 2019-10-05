@@ -19,6 +19,7 @@
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.8.6",
     "react-form-validator-core": "^0.6.2",
+    "react-ga": "^2.7.0",
     "react-input-mask": "^2.0.4",
     "react-jss": "^8.6.1",
     "react-material-ui-form-validator": "^2.0.7",

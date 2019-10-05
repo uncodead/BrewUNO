@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-
 import MenuAppBar from '../components/MenuAppBar';
 import APSettings from './APSettings';
 import APStatus from './APStatus';
+import { PageView, initGA, Event } from '../components/Tracking'
 
 class APConfiguration extends Component {
 
@@ -15,6 +14,11 @@ class APConfiguration extends Component {
         selectedTab: "apStatus",
         selectedNetwork: null
     };
+  }
+
+  componentDidMount() {
+    initGA('UA-149477072-2');
+    PageView();
   }
 
   handleTabChange = (event, selectedTab) => {

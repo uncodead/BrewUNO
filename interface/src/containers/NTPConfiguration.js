@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import MenuAppBar from '../components/MenuAppBar';
 import NTPSettings from './NTPSettings';
 import NTPStatus from './NTPStatus';
-
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-
 import IntText from '../components/IntText'
+import { PageView, initGA, Event } from '../components/Tracking'
 
 class NTPConfiguration extends Component {
 
@@ -15,6 +14,11 @@ class NTPConfiguration extends Component {
     this.state = {
         selectedTab: "ntpStatus"
     };
+  }
+
+  componentDidMount() {
+    initGA('UA-149477072-2');
+    PageView();
   }
 
   handleTabChange = (event, selectedTab) => {

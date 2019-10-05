@@ -43,6 +43,7 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import { withSnackbar } from 'notistack';
 import BrewStyles from '../style/BrewStyle'
 import IntText from '../components/IntText'
+import { PageView, initGA, Event } from '../components/Tracking'
 
 let interval;
 
@@ -155,6 +156,7 @@ class Brew extends Component {
   }
 
   actionBrew = (message, url, callback) => {
+    Event("Brew", url, "/brew")
     if (message !== '')
       this.setState({
         confirmDialogOpen: true,
