@@ -18,6 +18,10 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 * The ability to perform OTA updates
 * 20x4 LCD display
 
+## Support me:
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=492TNNF63C9WG&source=url)
+
+
 ## Getting Started
 
 ### Simple Wiring and construction:
