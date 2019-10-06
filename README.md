@@ -126,4 +126,4 @@ The default settings configure the device to bring up an access point on start u
 
 ## Donation
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=492TNNF63C9WG&source=url)
-[![apoiese](http://i.imgur.com/7Gsn761.png)](https://apoia.se/brewuno)
+[![apoiese](https://apoia.se/img/logoRed.svg)](https://apoia.se/brewuno)
