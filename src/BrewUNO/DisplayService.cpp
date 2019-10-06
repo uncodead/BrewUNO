@@ -1,6 +1,5 @@
 #include <BrewUNO/DisplayService.h>
 
-time_t lastUpdate = now();
 String blankline = "                    ";
 byte apmode[] = {B01010, B00100, B01010, B00100, B00100, B00100, B01110, B11111};
 byte stmode[] = {B01110, B10001, B00100, B01010, B00000, B00100, B00000, B00000};
@@ -57,12 +56,18 @@ void DisplayService::begin()
 
 void DisplayService::loop()
 {
-    if (now() - lastUpdate > 0.8)
+    if (now() - _activeStatus->LastDisplayUpdate > 0.8)
     {
-        lastUpdate = now();
+        _activeStatus->LastDisplayUpdate = now();
         printHead();
-        printBody(1, pheater_icon, gwm_icon, _activeStatus->Temperature, _activeStatus->TargetTemperature, _activeStatus->PWMPercentage,
-                  _activeStatus->PumpOn, _activeStatus->BrewStarted, true, false, _activeStatus->EnableSparge);
+
+        if (_activeStatus->ActiveStep == mash || _activeStatus->ActiveStep == none)
+            printBody(1, pheater_icon, gwm_icon, _activeStatus->Temperature, _activeStatus->TargetTemperature, _activeStatus->PWMPercentage,
+                      _activeStatus->PumpOn, _activeStatus->BrewStarted, true, false, _activeStatus->EnableSparge);
+        if (_activeStatus->ActiveStep == boil)
+            printBody(1, pheater_icon, gwm_icon, _activeStatus->BoilTemperature, _activeStatus->BoilTargetTemperature, _activeStatus->BoilPWMPercentage,
+                      _activeStatus->PumpOn, _activeStatus->BrewStarted, true, false, _activeStatus->EnableSparge);
+
         printBody(2, sheater_icon, gpw_icon, _activeStatus->SpargeTemperature, _activeStatus->SpargeTargetTemperature, _activeStatus->SpargePWMPercentage,
                   _activeStatus->PumpOn, _activeStatus->BrewStarted, false, true, _activeStatus->EnableSparge);
         printFooter();
@@ -75,16 +80,21 @@ void DisplayService::printHead()
     wl_status_t status = WiFi.status();
     WiFiMode_t currentWiFiMode = WiFi.getMode();
     if (status == WL_CONNECTED)
-        _lcd->write(2);
+        _lcd->write(stmode_icon);
     else if (currentWiFiMode == WIFI_AP || currentWiFiMode == WIFI_AP_STA)
-        _lcd->write(1);
-    _lcd->print(" BrewUNO  ");
+        _lcd->write(apmode_icon);
     if (_activeStatus->BrewStarted && !_activeStatus->StepLocked)
-        _lcd->print(" " + GetCount(true));
+    {
+        _activeStatus->Count = GetCount(true);
+        _lcd->print(" BrewUNO   " + _activeStatus->Count);
+    }
     else if (_activeStatus->StepLocked)
-        _lcd->print(GetCount(false) + 'L');
+    {
+        _activeStatus->Count = GetCount(false);
+        _lcd->print(" BrewUNO  " + _activeStatus->Count + "L");
+    }
     else
-        _lcd->print("         ");
+        _lcd->print(" BrewUNO  v" + String(Version) + "  ");
 }
 
 void DisplayService::printBody(int line, byte heatIcon, byte pwmIcon, double temperature, double targetTemperature,
@@ -100,7 +110,10 @@ void DisplayService::printBody(int line, byte heatIcon, byte pwmIcon, double tem
                     ">" + (brewStarted ? getTemperature(targetTemperature, true) : "00"));
 
     _lcd->setCursor(10, line);
-    _lcd->write(gcelsius_icon);
+    if (_activeStatus->TempUnit == "C")
+        _lcd->write(gcelsius_icon);
+    else
+        _lcd->print("F");
     _lcd->setCursor(13, line);
     _lcd->write(pwmIcon);
     _lcd->setCursor(14, line);
@@ -138,8 +151,8 @@ void DisplayService::printFooter()
     }
     else if (_activeStatus->ActiveStep == mash)
     {
-        String step = _activeStatus->ActiveMashStepName.substring(0, 13) + " " + _activeStatus->ActiveMashStepSufixName.substring(0, 6);
-        _lcd->print(step);
+        String step = _activeStatus->ActiveMashStepName.substring(0, 12) + " " + _activeStatus->ActiveMashStepSufixName.substring(0, 7);
+        _lcd->print(step.substring(0, 20));
         RemoveLastChars(step.length());
     }
     else if (_activeStatus->ActiveStep == boil && _activeStatus->ActiveBoilStepName != "")

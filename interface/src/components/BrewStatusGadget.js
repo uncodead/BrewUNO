@@ -7,13 +7,31 @@ import { PieChart, Pie, Cell, } from 'recharts';
 import { withStyles } from '@material-ui/core/styles';
 import { getDateTime, pad } from '../components/Utils';
 import { Line } from 'rc-progress';
-import {
-  MuiThemeProvider,
-  createMuiTheme,
-} from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
+import IntText from './IntText'
 
 const themeMain = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#b5b5b5',
+    },
+    secondary: {
+      main: '#ffca28',
+    },
+  },
+});
+const themeSparge = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#b5b5b5',
+    },
+    secondary: {
+      main: '#ff7301',
+    },
+  },
+});
+const themeBoil = createMuiTheme({
   palette: {
     primary: {
       main: '#b5b5b5',
@@ -23,7 +41,7 @@ const themeMain = createMuiTheme({
     },
   },
 });
-const themeSparge = createMuiTheme({
+const themeAuxiliary = createMuiTheme({
   palette: {
     primary: {
       main: '#b5b5b5',
@@ -61,21 +79,19 @@ class BrewStatusGadget extends Component {
 
   brewProgress() {
     if (!this.props.BrewStarted || this.props.StartTime <= 0 || this.props.EndTime <= 0) {
-      this.setState({
-        countdown: '00:00:00',
-        progressCompleted: 0
-      })
+      this.setState({ countdown: '00:00:00', progressCompleted: 0 })
+      return;
+    }
+    if (this.props.TimeNotSet === 1) {
+      this.setState({ countdown: this.props.Count })
       return;
     }
     var dateEntered = getDateTime(this.props.EndTime);
     var now = new Date();
     var difference = !this.props.StepLocked ? dateEntered.getTime() - now.getTime() : now.getTime() - dateEntered.getTime();
-    if (difference <= 0 && !this.props.StepLocked) {
-      this.setState({
-        countdown: '00:00:00',
-        progressCompleted: 100
-      })
-    } else {
+    if (difference <= 0 && !this.props.StepLocked)
+      this.setState({ countdown: '00:00:00', progressCompleted: 100 })
+    else {
       var seconds = Math.floor(difference / 1000);
       var minutes = Math.floor(seconds / 60);
       var hours = Math.floor(minutes / 60);
@@ -88,28 +104,35 @@ class BrewStatusGadget extends Component {
   }
 
   render() {
-    const SPARGEPWMCOLORS = ['#ffca28', '#424242'];
-    const TEMPERATURECOLORS = ['#f44336', '#424242'];
+    const SPARGEPWMCOLORS = ['#ff7301', '#424242'];
+    const BOILPWMCOLORS = ['#f44336', '#424242'];
+    const TEMPERATURECOLORS = ['#ffca28', '#424242'];
     const { classes } = this.props
 
     const getProgressData = (progress) => {
       return [{ name: 'A', value: progress }, { name: 'B', value: 100 - progress }]
     }
 
+
     return (
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={16}>
-            <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main:"} colorPWM={"#83f316"} PWM={this.props.PWM} titlesufix={this.props.TargetTemperature + 'ºC'} colors={TEMPERATURECOLORS} value={this.props.Temperature + 'ºC'} data={getProgressData(this.props.Temperature)} />
+            {this.props.ActiveStep.props.text === 'Mash' || this.props.ActiveStep.props.text === 'Stopped' || this.props.EnableBoilKettle ?
+              <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeMain} title={"Main"} colorPWM={"#83f316"} PWM={this.props.PWM} TempUnit={this.props.TempUnit} titlesufix={this.props.TargetTemperature} colors={TEMPERATURECOLORS} value={this.props.Temperature} data={getProgressData(this.props.Temperature)} />
+              : null}
             {this.props.EnableSparge ?
-              <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Sparge:"} colorPWM={"#2196f3"} PWM={this.props.SpargePWM} titlesufix={this.props.SpargeTargetTemperature + 'ºC'} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature + 'ºC'} data={getProgressData(this.props.SpargeTemperature)} />
+              <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeSparge} title={"Secondary"} colorPWM={"#2892ff"} PWM={this.props.SpargePWM} TempUnit={this.props.TempUnit} titlesufix={this.props.SpargeTargetTemperature} colors={SPARGEPWMCOLORS} value={this.props.SpargeTemperature} data={getProgressData(this.props.SpargeTemperature)} />
+              : null}
+            {this.props.EnableBoilKettle || this.props.ActiveStep.props.text === 'Boil' ?
+              <BrewStatusGadgetItem className={classes.temperatureCard} theme={themeBoil} title={"Boil"} colorPWM={"#ffca28"} PWM={this.props.BoilPWM} TempUnit={this.props.TempUnit} titlesufix={this.props.BoilTargetTemperature} colors={BOILPWMCOLORS} value={this.props.BoilTemperature} data={getProgressData(this.props.BoilTemperature)} />
               : null}
 
             <Grid item>
               <Card className={this.props.className} style={cardStyle}>
                 <CardContent>
                   <div>
-                    <Typography color="textSecondary" variant="subtitle2" gutterBottom>Timer</Typography>
+                    <Typography color="textSecondary" variant="subtitle2" gutterBottom><IntText text="Timer" /></Typography>
                     <Typography variant="h4">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
                   </div>
                   &nbsp;
@@ -118,12 +141,23 @@ class BrewStatusGadget extends Component {
                   </div>
                   &nbsp;
                     <div style={{ paddingTop: 7 }}>
-                    <Typography color="textSecondary" variant="caption" gutterBottom>Active Step{/*} - {this.props.ActiveStep}*/}</Typography>
+                    <Typography color="textSecondary" variant="caption" gutterBottom><IntText text="Brew.ActiveStep" /></Typography>
                     <Typography variant="subtitle1">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
                   </div>
                 </CardContent>
               </Card>
             </Grid>
+          </Grid>
+          <Grid container justify="center" spacing={16}>
+            {this.props.AuxOneSendorEnabled ?
+              <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Aux 1"} TempUnit={this.props.TempUnit} titlesufix={this.props.AuxOneTemperature} colors={TEMPERATURECOLORS} value={this.props.AuxOneTemperature} />
+              : null}
+            {this.props.AuxTwoSendorEnabled ?
+              <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Aux 2"} TempUnit={this.props.TempUnit} titlesufix={this.props.AuxTwoTemperature} colors={TEMPERATURECOLORS} value={this.props.AuxTwoTemperature} />
+              : null}
+            {this.props.AuxThreeSendorEnabled ?
+              <BrewStatusAuxItem className={classes.temperatureCard} theme={themeAuxiliary} title={"Aux 3"} TempUnit={this.props.TempUnit} titlesufix={this.props.AuxThreeTemperature} colors={TEMPERATURECOLORS} value={this.props.AuxThreeTemperature} />
+              : null}
           </Grid>
         </Grid>
       </Grid>
@@ -139,9 +173,9 @@ class BrewStatusGadgetItem extends Component {
           <CardContent >
             <MuiThemeProvider theme={this.props.theme}>
               <div style={{ display: "flex" }}>
-                <Typography color="primary" variant="subtitle2" gutterBottom noWrap>{this.props.title}</Typography>
+                <Typography color="primary" variant="subtitle2" gutterBottom noWrap><IntText text={this.props.title} /></Typography>
                 &nbsp;&nbsp;
-              <Typography color="secondary" variant="subtitle2">{this.props.titlesufix}</Typography>
+              <Typography color="secondary" variant="subtitle2">{this.props.titlesufix} º{this.props.TempUnit}</Typography>
               </div>
             </MuiThemeProvider>
             <PieChart width={100} height={50}>
@@ -157,7 +191,7 @@ class BrewStatusGadgetItem extends Component {
                 {this.props.data.map((entry, index) => <Cell fill={this.props.colors[index % this.props.colors.length]} />)}
               </Pie>
             </PieChart>
-            <Typography top="20" align="center" variant="h5" >{this.props.value}</Typography>
+            <Typography top="20" align="center" variant="h5" >{this.props.value} º{this.props.TempUnit}</Typography>
             &nbsp;
             <div style={{ display: "flex" }}>
               <Typography color="textSecondary" variant="subtitle2">PWM:</Typography>
@@ -169,6 +203,27 @@ class BrewStatusGadgetItem extends Component {
         </Card>
       </Grid>
 
+    )
+  }
+}
+
+class BrewStatusAuxItem extends Component {
+  render() {
+    return (
+      <Grid item>
+        <Card className={this.props.className} style={cardStyle}>
+          <CardContent >
+            <MuiThemeProvider theme={this.props.theme}>
+              <div style={{ display: "flex" }}>
+                <Typography color="primary" variant="subtitle2" gutterBottom noWrap><IntText text={this.props.title} /></Typography>
+              </div>
+              <div style={{ display: "flex" }}>
+                <Typography color="secondary" variant="subtitle2">{this.props.titlesufix} º{this.props.TempUnit}</Typography>
+              </div>
+            </MuiThemeProvider>
+          </CardContent>
+        </Card>
+      </Grid>
     )
   }
 }

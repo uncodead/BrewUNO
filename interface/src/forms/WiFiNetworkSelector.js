@@ -21,6 +21,8 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 import { isNetworkOpen, networkSecurityMode } from '../constants/WiFiSecurityModes';
 
+import IntText from '../components/IntText'
+
 const styles = theme => ({
   scanningProgress: {
     margin: theme.spacing.unit * 4,
@@ -50,7 +52,7 @@ class WiFiNetworkSelector extends Component {
         </ListItemAvatar>
         <ListItemText
           primary={network.ssid}
-          secondary={"Security: "+ networkSecurityMode(network) + ", Ch: " + network.channel}
+          secondary={<IntText text="Security" /> + ": " + networkSecurityMode(network) + ", Ch: " + network.channel}
         />
         <ListItemIcon>
           <Badge badgeContent={network.rssi + "db"}>
@@ -67,27 +69,27 @@ class WiFiNetworkSelector extends Component {
       <div>
         {
           scanningForNetworks ?
-          <div>
-            <LinearProgress className={classes.scanningProgress}/>
-            <Typography variant="display1" className={classes.scanningProgress}>
-              Scanning...
+            <div>
+              <LinearProgress className={classes.scanningProgress} />
+              <Typography variant="display1" className={classes.scanningProgress}>
+                <IntText text="Scanning" />...
             </Typography>
-          </div>
-          :
-          networkList ?
-          <List>
-            {networkList.networks.map(this.renderNetwork)}
-          </List>
-          :
-          <div>
-            <Typography variant="display1" className={classes.scanningProgress}>
-              {errorMessage}
-            </Typography>
-          </div>
+            </div>
+            :
+            networkList ?
+              <List>
+                {networkList.networks.map(this.renderNetwork)}
+              </List>
+              :
+              <div>
+                <Typography variant="display1" className={classes.scanningProgress}>
+                  {errorMessage}
+                </Typography>
+              </div>
         }
 
         <Button variant="raised" color="secondary" className={classes.button} onClick={requestNetworkScan} disabled={scanningForNetworks}>
-          Scan again...
+          <IntText text="WiFiSettings.ScanAgain" />...
         </Button>
       </div>
     );

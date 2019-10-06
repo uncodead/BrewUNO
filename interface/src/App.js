@@ -1,35 +1,18 @@
 import React, { Component } from 'react';
-
 import AppRouting from './AppRouting';
-import SnackbarNotification from './components/SnackbarNotification';
-
 import CssBaseline from '@material-ui/core/CssBaseline';
-
 import { SnackbarProvider } from 'notistack';
-
 import JssProvider from 'react-jss/lib/JssProvider';
 import { create } from 'jss';
-
 import {
   MuiThemeProvider,
   createMuiTheme,
   createGenerateClassName,
   jssPreset,
 } from '@material-ui/core/styles';
-
-// Our theme
-/*
-const theme = createMuiTheme({
-  palette: {
-    primary: indigo,
-    secondary: blueGrey,
-    highlight_idle: blueGrey[900],
-    highlight_warn: orange[500],
-    highlight_error: red[500],
-    highlight_success: green[500],
-  },
-});
-*/
+import { ExecuteRestCall } from './components/Utils'
+import { BREW_SETTINGS_ENDPOINT } from './constants/Endpoints';
+import IntText from "./components/IntText"
 
 const theme = createMuiTheme({
   palette: {
@@ -68,7 +51,16 @@ const jss = create(jssPreset());
 // Class name generator.
 const generateClassName = createGenerateClassName();
 
+
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.child = React.createRef();
+    ExecuteRestCall(BREW_SETTINGS_ENDPOINT, 'GET', json => {
+      this.child.current.SetText(json.language)
+    })
+  }
+
   render() {
     return (
       <JssProvider jss={jss} generateClassName={generateClassName}>
@@ -79,6 +71,7 @@ class App extends Component {
             variantWarning: styles.warning,
             variantInfo: styles.info
           }}>
+            <IntText ref={this.child} />
             <CssBaseline />
             <AppRouting />
           </SnackbarProvider>

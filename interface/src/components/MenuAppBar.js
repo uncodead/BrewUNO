@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
 import Divider from '@material-ui/core/Divider';
@@ -24,6 +23,8 @@ import SettingsInputAntennaIcon from '@material-ui/icons/SettingsInputAntenna';
 import LocalDrink from '@material-ui/icons/LocalDrink'
 import Assignment from '@material-ui/icons/Assignment'
 import ContactSupport from '@material-ui/icons/ContactSupport'
+
+import IntText from '../components/IntText'
 
 const drawerWidth = 250;
 const drawerWidthPermanent = 60
@@ -119,7 +120,7 @@ class MenuAppBar extends React.Component {
               <LocalDrink />
             </ListItemIcon>
             {this.state.mobileOpen ?
-              <ListItemText primary="Brew" />
+              <ListItemText primary={<IntText text="Brew.Title" />} />
               : null}
           </ListItem>
           <ListItem button component={Link} to='/brew-configuration'>
@@ -127,7 +128,7 @@ class MenuAppBar extends React.Component {
               <Assignment />
             </ListItemIcon>
             {this.state.mobileOpen ?
-              <ListItemText primary="Brew Settings" />
+              <ListItemText primary={<IntText text="BrewSettings.Settings" />} />
               : null}
           </ListItem>
           <ListItem button component={Link} to='/wifi-configuration'>
@@ -135,7 +136,7 @@ class MenuAppBar extends React.Component {
               <WifiIcon />
             </ListItemIcon>
             {this.state.mobileOpen ?
-              <ListItemText primary="WiFi Settings" />
+              <ListItemText primary={<IntText text="WiFiSettings.Settings" />} />
               : null}
           </ListItem>
           <ListItem button component={Link} to='/ap-configuration'>
@@ -143,7 +144,7 @@ class MenuAppBar extends React.Component {
               <SettingsInputAntennaIcon />
             </ListItemIcon>
             {this.state.mobileOpen ?
-              <ListItemText primary="AP Mode" />
+              <ListItemText primary={<IntText text="APSettings.Settings" />} />
               : null}
           </ListItem>
           <ListItem button component={Link} to='/ntp-configuration'>
@@ -151,7 +152,7 @@ class MenuAppBar extends React.Component {
               <AccessTimeIcon />
             </ListItemIcon>
             {this.state.mobileOpen ?
-              <ListItemText primary="NTP Settings" />
+              <ListItemText primary={<IntText text="NTPSettings.Settings" />} />
               : null}
           </ListItem>
           <ListItem button component={Link} to='/ota-configuration'>
@@ -159,7 +160,7 @@ class MenuAppBar extends React.Component {
               <SystemUpdateIcon />
             </ListItemIcon>
             {this.state.mobileOpen ?
-              <ListItemText primary="OTA Settings" />
+              <ListItemText primary={<IntText text="OTASettings.Settings" />} />
               : null}
           </ListItem>
           <ListItem button component={Link} to='/about'>
@@ -167,7 +168,7 @@ class MenuAppBar extends React.Component {
               <ContactSupport />
             </ListItemIcon>
             {this.state.mobileOpen ?
-              <ListItemText primary="About" />
+              <ListItemText primary={<IntText text="About" />} />
               : null}
           </ListItem>
         </List>

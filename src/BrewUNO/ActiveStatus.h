@@ -15,6 +15,7 @@
 #include <TimeLib.h>
 #include <NtpClientLib.h>
 #include <BrewUNO/enum.h>
+#include <BrewUNO/enum.h>
 
 #define MAX_ACTIVESTATUS_SIZE 2024
 #define ACTIVE_STATUS_FILE "/config/activeStatus.json"
@@ -35,12 +36,14 @@ public:
   int ActiveMashStepIndex;
   String ActiveMashStepName;
   String ActiveMashStepSufixName;
-  
+
   int BoilTime;
   double PWM;
   double PWMPercentage;
   double SpargePWM;
   double SpargePWMPercentage;
+  double BoilPWM;
+  double BoilPWMPercentage;
   boolean PIDActing;
 
   double BoilTargetTemperature;
@@ -48,26 +51,43 @@ public:
 
   double TargetTemperature;
   double Temperature;
+  double BoilTemperature;
   double SpargeTemperature;
-  String Temperatures;
+  double AuxOneTemperature;
+  double AuxTwoTemperature;
+  double AuxThreeTemperature;
 
   bool EnableSparge;
+  bool EnableBoilKettle;
   double SpargeTargetTemperature;
 
   String MainSensor;
   String SpargeSensor;
+  String BoilSensor;
+  String AuxOneSensor;
+  String AuxTwoSensor;
+  String AuxThreeSensor;
+
+  String Count;
 
   time_t EndTime;
   time_t StartTime;
   time_t TimeNow;
+  time_t LastReadTemperature;
+  time_t LastDisplayUpdate;
+  time_t LastLockBeep;
 
   boolean Recirculation;
   boolean PIDTuning;
   boolean PumpOn;
   boolean PumpIsResting;
   boolean PIDSettingsUpdated;
+  boolean TimeNotSet;
+
+  String TempUnit;
 
   boolean HeaterOn;
+  boolean FullPower;
   boolean StepLock;
   boolean StepLocked;
 
@@ -84,10 +104,11 @@ public:
                         boolean brewStarted);
   void SaveActiveStatus();
   void SaveActiveStatusLoop();
-  void SetTemperature(float);
-  void SetSpargeTemperature(float);
+  void SetTemperature(Temperatures temps);
   void SetJsonTemperatures(String json);
   String GetJson();
+  void TimeNotSetted();
+  void TimeSetted();
 
 private:
   FS *_fs;

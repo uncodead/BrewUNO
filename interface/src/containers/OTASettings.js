@@ -5,6 +5,8 @@ import {restComponent} from '../components/RestComponent';
 import SectionContent from '../components/SectionContent';
 import OTASettingsForm from '../forms/OTASettingsForm';
 
+import IntText from '../components/IntText'
+
 class OTASettings extends Component {
 
   componentDidMount() {
@@ -14,7 +16,7 @@ class OTASettings extends Component {
   render() {
     const { data, fetched, errorMessage } = this.props;
     return (
-      <SectionContent title="OTA Settings">
+      <SectionContent title={<IntText text="OTASettings.Settings" />}>
       	<OTASettingsForm
           otaSettings={data}
           otaSettingsFetched={fetched}

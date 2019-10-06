@@ -1,11 +1,20 @@
-.PHONY : push build pull push all
+.PHONY : push build pull push release setversion
 
 build: | pull
 	platformio run
 	cd interface;npm run build
 	platformio run -v -t buildfs
 
-deploy: | build
+uploadfs:
+	platformio run -t uploadfs
+
+uploadfw:
+	platformio run -t upload
+
+monitor: 
+	platformio device monitor
+
+upload: | build
 	platformio run -t uploadfs
 	platformio run -t upload
 
@@ -23,4 +32,7 @@ push:
 	git commit -am '$(message)'
 	git push
 
-all:  | build publish push
+setversion:
+	python set_version.py $(version)
+
+release:  | build publish setversion push

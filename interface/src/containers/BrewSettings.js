@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import SectionContent from '../components/SectionContent';
 import BrewSettingsForm from '../forms/BrewSettingsForm';
 import { restComponent } from '../components/RestComponent';
-import {
-  GET_SENSORS
-} from '../constants/Endpoints';
+import { GET_SENSORS } from '../constants/Endpoints';
 import { ExecuteRestCall } from '../components/Utils';
-
 import { BREW_SETTINGS_ENDPOINT } from '../constants/Endpoints';
+import IntText from '../components/IntText'
 
 class BrewSettings extends Component {
   constructor(props) {
@@ -17,11 +15,7 @@ class BrewSettings extends Component {
   }
 
   getSensors() {
-    ExecuteRestCall(GET_SENSORS, 'GET', (json) => {
-      this.setState({
-        sensors: json.sensors
-      })
-    }, null, this.props)
+    ExecuteRestCall(GET_SENSORS, 'GET', json => this.setState({ sensors: json.sensors }), null, this.props)
   }
 
   componentDidMount() {
@@ -32,7 +26,7 @@ class BrewSettings extends Component {
     const { data, fetched, errorMessage } = this.props;
     console.log(data)
     return (
-      <SectionContent title="Brew Settings">
+      <SectionContent title={<IntText text="BrewSettings.Settings" />}>
         <BrewSettingsForm
           brewSettings={data}
           brewSettingsFetched={fetched}

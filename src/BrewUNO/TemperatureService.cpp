@@ -27,11 +27,11 @@ String json = "";
 String TemperatureService::GetSensorsJson()
 {
     if (json == "")
-        GetTemperatures("", "");
+        GetTemperatures();
     return json;
 }
 
-Temperatures TemperatureService::GetTemperatures(String main, String sparge)
+Temperatures TemperatureService::GetTemperatures()
 {
     Temperatures temps;
     temps.Main = 0;
@@ -43,17 +43,23 @@ Temperatures TemperatureService::GetTemperatures(String main, String sparge)
     for (int i = 0; i < DeviceCount; i++)
     {
         _dallasTemperature.getAddress(Thermometer, i);
-        float temp = _dallasTemperature.getTempC(Thermometer);
-        _json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",\"value\": \"" + String(_dallasTemperature.getTempC(Thermometer)) + "\"}";
+        float temp = _brewSettingsService->TempUnit == "C" ? _dallasTemperature.getTempC(Thermometer) : _dallasTemperature.getTempF(Thermometer);
+        _json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",\"value\": \"" + String(temp) + "\"}";
         if (i < DeviceCount - 1)
             _json += ',';
-
         addr = GetAddressToString(Thermometer);
-        if (main != "" && addr == main)
+        if (addr == _brewSettingsService->MainSensor)
             temps.Main = temp + _brewSettingsService->MainSensorOffset;
-
-        if (sparge != "" && addr == sparge)
+        if (addr == _brewSettingsService->SpargeSensor)
             temps.Sparge = temp + _brewSettingsService->SpargeSensorOffset;
+        if (addr == _brewSettingsService->BoilSensor)
+            temps.Boil = temp + _brewSettingsService->BoilSensorOffset;
+        if (addr == _brewSettingsService->AuxOneSensor)
+            temps.AuxOne = temp + _brewSettingsService->AuxSensorOneOffset;
+        if (addr == _brewSettingsService->AuxTwoSensor)
+            temps.AuxTwo = temp + _brewSettingsService->AuxSensorTwoOffset;
+        if (addr == _brewSettingsService->AuxThreeSensor)
+            temps.AuxThree = temp + _brewSettingsService->AuxSensorThreeOffset;
     }
     json = _json + "]}";
     temps.Json = json;

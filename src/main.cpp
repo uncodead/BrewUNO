@@ -41,6 +41,7 @@
 #include <BrewUNO/Buzzer.h>
 #include <BrewUNO/Pump.h>
 #include <BrewUNO/DisplayService.h>
+#include <BrewUNO/InternationalizationService.h>
 
 #define SERIAL_BAUD_RATE 115200
 
@@ -54,7 +55,6 @@ AsyncWebServer server(80);
 SecuritySettingsService securitySettingsService = SecuritySettingsService(&server, &SPIFFS);
 WiFiSettingsService wifiSettingsService = WiFiSettingsService(&server, &SPIFFS, &securitySettingsService);
 APSettingsService apSettingsService = APSettingsService(&server, &SPIFFS, &securitySettingsService);
-NTPSettingsService ntpSettingsService = NTPSettingsService(&server, &SPIFFS, &securitySettingsService);
 OTASettingsService otaSettingsService = OTASettingsService(&server, &SPIFFS, &securitySettingsService);
 AuthenticationService authenticationService = AuthenticationService(&server, &securitySettingsService);
 
@@ -66,6 +66,7 @@ SystemStatus systemStatus = SystemStatus(&server, &securitySettingsService);
 
 //brewUNO
 ActiveStatus activeStatus = ActiveStatus(&SPIFFS);
+NTPSettingsService ntpSettingsService = NTPSettingsService(&server, &SPIFFS, &securitySettingsService, &activeStatus);
 
 BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS, &activeStatus);
 TemperatureService temperatureService = TemperatureService(&server, &SPIFFS, DS18B20, &brewSettingsService);
@@ -74,11 +75,13 @@ BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, 
 
 Pump pump = Pump(&server, &activeStatus, &brewSettingsService);
 DisplayService display = DisplayService(&activeStatus, &wifiStatus, &lcd);
-MashKettleHeaterService mashKettleHeaterService = MashKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService, HEATER_BUS);
-SpargeKettleHeaterService spargeKettleHeaterService = SpargeKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService, SPARGE_HEATER_BUS);
+MashKettleHeaterService mashKettleHeaterService = MashKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
+SpargeKettleHeaterService spargeKettleHeaterService = SpargeKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
+BoilKettleHeaterService boilKettleHeaterService = BoilKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
 MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService, &brewSettingsService);
-BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &activeStatus, &temperatureService, &pump);
+BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &boilKettleHeaterService, &activeStatus, &temperatureService, &pump);
+InternationalizationService internationalizationService = InternationalizationService(&server, &SPIFFS, &brewSettingsService);
 
 void setup()
 {
@@ -135,9 +138,12 @@ void setup()
   //BrewUNO
   pinMode(PUMP_BUS, OUTPUT);
   pinMode(BUZZER_BUS, OUTPUT);
+  pinMode(BOIL_HEATER_BUS, OUTPUT);
   digitalWrite(BUZZER_BUS, LOW);
   pinMode(HEATER_BUS, OUTPUT);
   pinMode(SPARGE_HEATER_BUS, OUTPUT);
+  pinMode(BOIL_HEATER_BUS, OUTPUT);
+  digitalWrite(BOIL_HEATER_BUS, HIGH);
 
   pump.TurnPumpOff();
   DS18B20.begin();

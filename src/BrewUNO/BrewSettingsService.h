@@ -26,7 +26,10 @@ public:
   double BoilPowerPercentage;
   double SpargePowerPercentage;
   double SpargeTemperature;
+
   bool EnableSparge;
+  bool EnableBoilKettle;
+
   double BoilTemperature;
   double PIDStart;
   double MashHeaterPercentage;
@@ -36,9 +39,22 @@ public:
 
   double MainSensorOffset;
   double SpargeSensorOffset;
+  double BoilSensorOffset;
+  double AuxSensorOneOffset;
+  double AuxSensorTwoOffset;
+  double AuxSensorThreeOffset;
 
   String MainSensor;
   String SpargeSensor;
+  String BoilSensor;
+  String AuxOneSensor;
+  String AuxTwoSensor;
+  String AuxThreeSensor;
+
+  String Language;
+  String TempUnit;
+
+  void Update();
 
 protected:
   void readFromJsonObject(JsonObject &root);

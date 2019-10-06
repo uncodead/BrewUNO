@@ -1,4 +1,5 @@
 {
+    "language": "en",
     "boilPowerPercentage": 100,
     "boilTemperature": 99.1,
     "boilTime": 60,
@@ -13,5 +14,7 @@
     "spargePowerPercentage": 100,
     "pidStart": 0.5,
     "mainSensorOffset": 0,
-    "spargeSensorOffset": 0
+    "spargeSensorOffset": 0,
+    "boilSensorOffset": 0,
+    "tempUnit": "C"
 }

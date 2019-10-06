@@ -5,9 +5,9 @@ PID _mashKettlePID = PID(&_mashKettleInput, &_mashKettleOutput, &_mashKettleSetp
 
 MashKettleHeaterService::MashKettleHeaterService(TemperatureService *temperatureService,
                                                  ActiveStatus *activeStatus,
-                                                 BrewSettingsService *brewSettingsService,
-                                                 int heaterBus) : HeaterService(temperatureService,
-                                                                                activeStatus, brewSettingsService, heaterBus)
+                                                 BrewSettingsService *brewSettingsService) : HeaterService(temperatureService,
+                                                                                                           activeStatus,
+                                                                                                           brewSettingsService)
 {
 }
 
@@ -24,6 +24,11 @@ double MashKettleHeaterService::GetPidInput()
 double MashKettleHeaterService::GetPidSetPoint()
 {
   return _mashKettleSetpoint;
+}
+
+uint8_t MashKettleHeaterService::GetBus()
+{
+  return HEATER_BUS;
 }
 
 void MashKettleHeaterService::PidCompute()
@@ -51,11 +56,28 @@ void MashKettleHeaterService::SetPidParameters(double input, double setpoint)
   _mashKettleSetpoint = setpoint;
 }
 
+void MashKettleHeaterService::SetUP()
+{
+}
+
+bool MashKettleHeaterService::InvertedPWM()
+{
+  return false;
+}
+
 boolean MashKettleHeaterService::StopCompute()
 {
   return !_activeStatus->BrewStarted ||
-         _activeStatus->ActiveStep == none ||
-         _activeStatus->ActiveStep == anticavitation ||
+         _activeStatus->ActiveStep != mash ||
          _activeStatus->PumpIsResting ||
          !_activeStatus->HeaterOn;
+}
+
+void MashKettleHeaterService::TurnOff()
+{
+  if (!_activeStatus->BrewStarted ||
+      (_activeStatus->ActiveStep == boil && _activeStatus->EnableBoilKettle) ||
+      (_activeStatus->ActiveStep == mash && _activeStatus->PumpIsResting) ||
+      (_activeStatus->ActiveStep == mash && !_activeStatus->HeaterOn))
+    analogWrite(GetBus(), 0);
 }

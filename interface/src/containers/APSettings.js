@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 
-import { AP_SETTINGS_ENDPOINT }  from  '../constants/Endpoints';
+import { AP_SETTINGS_ENDPOINT } from '../constants/Endpoints';
 import { restComponent } from '../components/RestComponent';
 import SectionContent from '../components/SectionContent';
 import APSettingsForm from '../forms/APSettingsForm';
+
+import IntText from '../components/IntText'
 
 class APSettings extends Component {
 
@@ -14,8 +16,8 @@ class APSettings extends Component {
   render() {
     const { data, fetched, errorMessage } = this.props;
     return (
-      <SectionContent title="AP Settings">
-      	<APSettingsForm          
+      <SectionContent title={<IntText text="APSettings.Settings" />}>
+        <APSettingsForm
           apSettings={data}
           apSettingsFetched={fetched}
           errorMessage={errorMessage}

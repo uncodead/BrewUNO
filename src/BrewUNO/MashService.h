@@ -40,6 +40,6 @@ private:
   void StepStarted(ActiveStatus *activeStatus, JsonArray steps, time_t timeNow);
   void BoilTime(ActiveStatus *activeStatus);
   void NextStep(ActiveStatus *activeStatus, JsonArray steps, time_t timeNow, int nextMashStep);
-  String getMashName(JsonObject step);
+  String getMashName(ActiveStatus *activeStatus, JsonObject step);
 };
 #endif

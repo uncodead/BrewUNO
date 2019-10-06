@@ -5,9 +5,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import SectionContent from '../components/SectionContent';
-
 import { withStyles } from '@material-ui/core/styles';
 
+import IntText from '../components/IntText'
 
 const styles = theme => ({
   card: {
@@ -34,11 +34,11 @@ class About extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <SectionContent title="About">
+      <SectionContent title={<IntText text="About" />}>
         <Card className={this.props.className}>
           <CardContent>
             <Typography variant="h6" component="h1" className={classes.pos}>
-              Author:
+              <IntText text="Author" />:
             </Typography>
             <Typography className={classes.pos} variant="h7" color="textSecondary">
               Bruno Leitão de Oliveira
@@ -47,7 +47,7 @@ class About extends Component {
               uncodead@gmail.com
             </Typography>
             <Typography variant="h6" component="h1" className={classes.pos}>
-              Thanks:
+              <IntText text="Thanks" />:
             </Typography>
             <Typography className={classes.pos} variant="h8" color="textSecondary">
               Luciano Rampanelli

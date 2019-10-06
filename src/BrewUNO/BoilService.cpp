@@ -28,13 +28,11 @@ void BoilService::loop(ActiveStatus *activeStatus)
 
     time_t timeNow = now();
     activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
-    activeStatus->TargetTemperature = _brewSettingsService->BoilTemperature;
 
-    if (activeStatus->StartTime == 0 && activeStatus->Temperature >= activeStatus->BoilTargetTemperature)
+    if (activeStatus->StartTime == 0 && activeStatus->BoilTemperature >= activeStatus->BoilTargetTemperature)
     {
         activeStatus->StartTime = timeNow;
         activeStatus->EndTime = activeStatus->StartTime + activeStatus->BoilTime;
-        activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
         activeStatus->ActiveBoilStepName = "";
         Serial.println("Boil started");
         Serial.println(activeStatus->StartTime);
@@ -68,8 +66,10 @@ void BoilService::SetBoiIndexStep(ActiveStatus *activeStatus, int second)
             String time = step["tm"];
             String amount = step["a"];
             currentStep = currentStep == "" ? String(index) : currentStep + "," + String(index);
-            currentStepName +=
-                currentStepName == "" ? getStepName(name, time, amount) : currentStepName + " / " + getStepName(name, time, amount);
+            if (currentStepName == "")
+                currentStepName = getStepName(name, time, amount);
+            else
+                currentStepName += "/" + getStepName(name, time, amount);
         }
         index++;
     }

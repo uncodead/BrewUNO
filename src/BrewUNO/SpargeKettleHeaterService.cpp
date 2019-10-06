@@ -5,10 +5,9 @@ PID _spargeKettlePID = PID(&_spargeKettleInput, &_spargeKettleOutput, &_spargeKe
 
 SpargeKettleHeaterService::SpargeKettleHeaterService(TemperatureService *temperatureService,
                                                      ActiveStatus *activeStatus,
-                                                     BrewSettingsService *brewSettingsService,
-                                                     int heaterBus) : HeaterService(temperatureService,
-                                                                                    activeStatus,
-                                                                                    brewSettingsService, heaterBus)
+                                                     BrewSettingsService *brewSettingsService) : HeaterService(temperatureService,
+                                                                                                               activeStatus,
+                                                                                                               brewSettingsService)
 {
 }
 
@@ -25,6 +24,11 @@ double SpargeKettleHeaterService::GetPidInput()
 double SpargeKettleHeaterService::GetPidSetPoint()
 {
   return _spargeKettleSetpoint;
+}
+
+uint8_t SpargeKettleHeaterService::GetBus()
+{
+  return SPARGE_HEATER_BUS;
 }
 
 void SpargeKettleHeaterService::PidCompute()
@@ -47,10 +51,23 @@ void SpargeKettleHeaterService::SetPidParameters(double input, double setpoint)
   _spargeKettleSetpoint = setpoint;
 }
 
-boolean SpargeKettleHeaterService::StopCompute()
+void SpargeKettleHeaterService::SetUP()
 {
   _activeStatus->EnableSparge = _brewSettingsService->EnableSparge;
   _activeStatus->SpargeTargetTemperature = _brewSettingsService->SpargeTemperature;
+}
 
+bool SpargeKettleHeaterService::InvertedPWM()
+{
+  return false;
+}
+
+boolean SpargeKettleHeaterService::StopCompute()
+{
   return !_activeStatus->BrewStarted || !_activeStatus->EnableSparge || _activeStatus->ActiveStep != mash || _activeStatus->PWM > 100;
+}
+
+void SpargeKettleHeaterService::TurnOff()
+{
+  analogWrite(GetBus(), 0);
 }

@@ -9,4 +9,16 @@ enum StepType
   anticavitation
 };
 
+
+struct Temperatures
+{
+  float Main;
+  float Sparge;
+  float Boil;
+  float AuxOne;
+  float AuxTwo;
+  float AuxThree;
+  String Json;
+};
+
 #endif
