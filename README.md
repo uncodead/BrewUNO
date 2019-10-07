@@ -17,6 +17,8 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 * Synchronization with NTP
 * The ability to perform OTA updates
 * 20x4 LCD display
+* Three vessel limited support
+* Up to 5 ds18b20 sensors
 
 ## Getting Started
 
