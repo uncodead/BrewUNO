@@ -60,6 +60,7 @@ class Brew extends Component {
       statusInitialized: false,
       copyDialogMessage: false
     }
+    this.getStatus();
     interval = setInterval(() => { this.getStatus(); }, 5000);
   }
 

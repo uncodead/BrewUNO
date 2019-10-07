@@ -59,7 +59,7 @@ class BrewSettingsForm extends Component {
             : brewSettings ?
               <ValidatorForm onSubmit={
                 () => {
-                  this.child.current.SetText(brewSettings.language)
+                  this.child.current.SetText(brewSettings.lg)
                   onSubmit()
                 }} ref="BrewSettingsForm" className={classes.root}>
                 <IntText ref={this.child} />
@@ -69,8 +69,8 @@ class BrewSettingsForm extends Component {
                     <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="Language" /></Typography>
                       <Select className={classes.formControl}
-                        value={brewSettings.language}
-                        onChange={handleValueChange("language")}
+                        value={brewSettings.lg}
+                        onChange={handleValueChange("lg")}
                         fullWidth
                         inputProps={{ required: true }}
                       >
@@ -80,8 +80,8 @@ class BrewSettingsForm extends Component {
                       </Select>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="TemperatureUnit" /></Typography>
                       <Select className={classes.formControl}
-                        value={brewSettings.tempUnit}
-                        onChange={handleValueChange("tempUnit")}
+                        value={brewSettings.tu}
+                        onChange={handleValueChange("tu")}
                         fullWidth
                         inputProps={{ required: true }}
                       >
@@ -96,8 +96,8 @@ class BrewSettingsForm extends Component {
                     <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="MainSensor" /></Typography>
                       <Select className={classes.formControl}
-                        value={brewSettings.mainSensor}
-                        onChange={handleValueChange("mainSensor")}
+                        value={brewSettings.ms}
+                        onChange={handleValueChange("ms")}
                         fullWidth
                         inputProps={{ required: true }}
                       >
@@ -106,13 +106,13 @@ class BrewSettingsForm extends Component {
                         ))}
                       </Select>
                       <TextValidator className={classes.formControl}
-                        name="MainSensorOffset"
+                        name="mso"
                         validators={['required', 'isFloat']}
                         label={<IntText text="BrewSettings.OffSetCalibration" />}
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
-                        value={brewSettings.mainSensorOffset}
-                        onChange={handleFloatValueChange("mainSensorOffset")}
+                        value={brewSettings.mso}
+                        onChange={handleFloatValueChange("mso")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                     </Paper>
@@ -122,46 +122,46 @@ class BrewSettingsForm extends Component {
                     <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="BrewSettings.MashBoilPWM" /></Typography>
                       <TextValidator className={classes.formControl}
-                        name="MashHeaterPercentage"
+                        name="mhp"
                         validators={['required']}
                         label={<IntText text="BrewSettings.MashHeaterPercentage" />}
                         type="number"
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start">%</InputAdornment> }}
-                        value={brewSettings.mashHeaterPercentage}
-                        onChange={handleValueChange("mashHeaterPercentage")}
+                        value={brewSettings.mhp}
+                        onChange={handleValueChange("mhp")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                       <TextValidator className={classes.formControl}
-                        name="boilTime"
+                        name="bt"
                         validators={['required']}
                         label={<IntText text="BrewSettings.BoilTime" />}
                         type="number"
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start">min</InputAdornment> }}
-                        value={brewSettings.boilTime}
-                        onChange={handleValueChange("boilTime")}
+                        value={brewSettings.bt}
+                        onChange={handleValueChange("bt")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                       <TextValidator className={classes.formControl}
-                        name="boilPowerPercentage"
+                        name="bpp"
                         validators={['required']}
                         label={<IntText text="BrewSettings.BoilPowerPercentage" />}
                         type="number"
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start">%</InputAdornment> }}
-                        value={brewSettings.boilPowerPercentage}
-                        onChange={handleValueChange("boilPowerPercentage")}
+                        value={brewSettings.bpp}
+                        onChange={handleValueChange("bpp")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                       <TextValidator className={classes.formControl}
-                        name="boilTemperature"
+                        name="btemp"
                         validators={['required', 'isFloat']}
                         label={<IntText text="BrewSettings.BoilTemperature" />}
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
-                        value={brewSettings.boilTemperature}
-                        onChange={handleValueChange("boilTemperature")}
+                        value={brewSettings.btemp}
+                        onChange={handleValueChange("btemp")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                     </Paper>
@@ -174,9 +174,9 @@ class BrewSettingsForm extends Component {
                         <FormControlLabel
                           control={
                             <Switch
-                              checked={brewSettings.enableSparge}
-                              value={'enableSparge'}
-                              onChange={handleCheckboxChange('enableSparge')}
+                              checked={brewSettings.es}
+                              value={'es'}
+                              onChange={handleCheckboxChange('es')}
                               color="secondary"
                               margin
                             />
@@ -185,8 +185,8 @@ class BrewSettingsForm extends Component {
                         />
                       </div>
                       <Select className={classes.formControl}
-                        value={brewSettings.spargeSensor}
-                        onChange={handleValueChange("spargeSensor")}
+                        value={brewSettings.ss}
+                        onChange={handleValueChange("ss")}
                         fullWidth
                         inputProps={{ required: true }}
                       >
@@ -196,34 +196,34 @@ class BrewSettingsForm extends Component {
                         ))}
                       </Select>
                       <TextValidator className={classes.formControl}
-                        name="SpargeSensorOffset"
+                        name="sso"
                         validators={['required', 'isFloat']}
                         label={<IntText text="BrewSettings.OffSetCalibration" />}
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
-                        value={brewSettings.spargeSensorOffset}
-                        onChange={handleFloatValueChange("spargeSensorOffset")}
+                        value={brewSettings.sso}
+                        onChange={handleFloatValueChange("sso")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                       <TextValidator className={classes.formControl}
-                        name="spargePowerPercentage"
+                        name="spp"
                         validators={['required']}
                         label={<IntText text="BrewSettings.SpargePowerPercentage" />}
                         type="number"
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start">%</InputAdornment> }}
-                        value={brewSettings.spargePowerPercentage}
-                        onChange={handleValueChange("spargePowerPercentage")}
+                        value={brewSettings.spp}
+                        onChange={handleValueChange("spp")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                       <TextValidator className={classes.formControl}
-                        name="spargeTemperature"
+                        name="st"
                         validators={['required', 'isFloat']}
                         label={<IntText text="BrewSettings.SpargeTemperature" />}
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
-                        value={brewSettings.spargeTemperature}
-                        onChange={handleValueChange("spargeTemperature")}
+                        value={brewSettings.st}
+                        onChange={handleValueChange("st")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                     </Paper>
@@ -236,9 +236,9 @@ class BrewSettingsForm extends Component {
                         <FormControlLabel
                           control={
                             <Switch
-                              checked={brewSettings.enableBoilKettle}
-                              value={'enableBoilKettle'}
-                              onChange={handleCheckboxChange('enableBoilKettle')}
+                              checked={brewSettings.ebk}
+                              value={'ebk'}
+                              onChange={handleCheckboxChange('ebk')}
                               color="secondary"
                               margin
                             />
@@ -247,8 +247,8 @@ class BrewSettingsForm extends Component {
                         />
                       </div>
                       <Select className={classes.formControl}
-                        value={brewSettings.boilSensor}
-                        onChange={handleValueChange("boilSensor")}
+                        value={brewSettings.bs}
+                        onChange={handleValueChange("bs")}
                         fullWidth
                         inputProps={{ required: true }}
                       >
@@ -258,13 +258,13 @@ class BrewSettingsForm extends Component {
                         ))}
                       </Select>
                       <TextValidator className={classes.formControl}
-                        name="BoilSensorOffset"
+                        name="bso"
                         validators={['required', 'isFloat']}
                         label={<IntText text="BrewSettings.OffSetCalibration" />}
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
-                        value={brewSettings.boilSensorOffset}
-                        onChange={handleFloatValueChange("boilSensorOffset")}
+                        value={brewSettings.bso}
+                        onChange={handleFloatValueChange("bso")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                     </Paper>
@@ -274,25 +274,25 @@ class BrewSettingsForm extends Component {
                     <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary">{<IntText text="BrewSettings.PumpCycle" />}</Typography>
                       <TextValidator className={classes.formControl}
-                        name="pumpRestInterval"
+                        name="pri"
                         validators={['required']}
                         label={<IntText text="BrewSettings.PumpRestInterval" />}
                         type="number"
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
-                        value={brewSettings.pumpRestInterval}
-                        onChange={handleValueChange("pumpRestInterval")}
+                        value={brewSettings.pri}
+                        onChange={handleValueChange("pri")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                       <TextValidator className={classes.formControl}
-                        name="pumpRestTime"
+                        name="prt"
                         validators={['required']}
                         label={<IntText text="BrewSettings.PumpRestTime" />}
                         type="number"
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start">sec</InputAdornment> }}
-                        value={brewSettings.pumpRestTime}
-                        onChange={handleValueChange("pumpRestTime")}
+                        value={brewSettings.prt}
+                        onChange={handleValueChange("prt")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                     </Paper>
@@ -329,13 +329,13 @@ class BrewSettingsForm extends Component {
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                       <TextValidator className={classes.formControl}
-                        name="pidStart"
+                        name="ps"
                         validators={['required', 'isFloat']}
                         label={<IntText text="BrewSettings.PIDStartAt" />}
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
-                        value={brewSettings.pidStart}
-                        onChange={handleValueChange("pidStart")}
+                        value={brewSettings.ps}
+                        onChange={handleValueChange("ps")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                     </Paper>
@@ -345,8 +345,8 @@ class BrewSettingsForm extends Component {
                     <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary">{<IntText text="BrewSettings.AuxiliarySensor1" />}</Typography>
                       <Select className={classes.formControl}
-                        value={brewSettings.auxSensorOne}
-                        onChange={handleValueChange("auxSensorOne")}
+                        value={brewSettings.aso}
+                        onChange={handleValueChange("aso")}
                         fullWidth
                         inputProps={{ required: true }}
                       >
@@ -356,19 +356,19 @@ class BrewSettingsForm extends Component {
                         ))}
                       </Select>
                       <TextValidator className={classes.formControl}
-                        name="auxSensorOneOffset"
+                        name="asoo"
                         validators={['isFloat']}
                         label={<IntText text="BrewSettings.OffSetCalibration" />}
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
-                        value={brewSettings.auxSensorOneOffset}
-                        onChange={handleFloatValueChange("auxSensorOneOffset")}
+                        value={brewSettings.asoo}
+                        onChange={handleFloatValueChange("asoo")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                       <Typography className={classes.formControl} color="textSecondary">{<IntText text="BrewSettings.AuxiliarySensor2" />}</Typography>
                       <Select className={classes.formControl}
-                        value={brewSettings.auxSensorTwo}
-                        onChange={handleValueChange("auxSensorTwo")}
+                        value={brewSettings.ast}
+                        onChange={handleValueChange("ast")}
                         fullWidth
                         inputProps={{ required: true }}
                       >
@@ -383,14 +383,14 @@ class BrewSettingsForm extends Component {
                         label={<IntText text="BrewSettings.OffSetCalibration" />}
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
-                        value={brewSettings.auxSensorTwoOffset}
-                        onChange={handleFloatValueChange("auxSensorTwoOffset")}
+                        value={brewSettings.asto}
+                        onChange={handleFloatValueChange("asto")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                       <Typography className={classes.formControl} color="textSecondary">{<IntText text="BrewSettings.AuxiliarySensor3" />}</Typography>
                       <Select className={classes.formControl}
-                        value={brewSettings.auxSensorThree}
-                        onChange={handleValueChange("auxSensorThree")}
+                        value={brewSettings.asth}
+                        onChange={handleValueChange("asth")}
                         fullWidth
                         inputProps={{ required: true }}
                       >
@@ -400,13 +400,13 @@ class BrewSettingsForm extends Component {
                         ))}
                       </Select>
                       <TextValidator className={classes.formControl}
-                        name="auxSensorThreeOffset"
+                        name="astho"
                         validators={['isFloat']}
                         label={<IntText text="BrewSettings.OffSetCalibration" />}
                         fullWidth
                         InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
-                        value={brewSettings.auxSensorThreeOffset}
-                        onChange={handleFloatValueChange("auxSensorThreeOffset")}
+                        value={brewSettings.astho}
+                        onChange={handleFloatValueChange("astho")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
                     </Paper>

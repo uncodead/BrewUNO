@@ -7,66 +7,66 @@ BrewSettingsService::~BrewSettingsService() {}
 
 void BrewSettingsService::readFromJsonObject(JsonObject &root)
 {
-    BoilTemperature = root["boilTemperature"];
-    BoilPowerPercentage = root["boilPowerPercentage"];
-    SpargePowerPercentage = root["spargePowerPercentage"];
-    SpargeTemperature = root["spargeTemperature"];
-    EnableSparge = root["enableSparge"];
-    EnableBoilKettle = root["enableBoilKettle"];
-    BoilTime = root["boilTime"];
+    BoilTemperature = root["btemp"];
+    BoilPowerPercentage = root["bpp"];
+    SpargePowerPercentage = root["spp"];
+    SpargeTemperature = root["st"];
+    EnableSparge = root["es"];
+    EnableBoilKettle = root["ebk"];
+    BoilTime = root["bt"];
     KP = root["kP"];
     KI = root["kI"];
     KD = root["kD"];
-    PumpRestInterval = root["pumpRestInterval"];
-    PumpRestTime = root["pumpRestTime"];
-    PIDStart = root["pidStart"];
-    MashHeaterPercentage = root["mashHeaterPercentage"];
-    MainSensor = root["mainSensor"] | "";
-    SpargeSensor = root["spargeSensor"] | "";
-    BoilSensor = root["boilSensor"] | "";
-    AuxOneSensor = root["auxSensorOne"] | "";
-    AuxTwoSensor = root["auxSensorTwo"] | "";
-    AuxThreeSensor = root["auxSensorThree"] | "";
-    AuxSensorOneOffset = root["auxSensorOneOffset"];
-    AuxSensorTwoOffset = root["auxSensorTwoOffset"];
-    AuxSensorThreeOffset = root["auxSensorThreeOffset"];
-    MainSensorOffset = root["mainSensorOffset"];
-    SpargeSensorOffset = root["spargeSensorOffset"];
-    BoilSensorOffset = root["boilSensorOffset"];
-    Language = root["language"] | "";
-    TempUnit = root["tempUnit"] | "";
+    PumpRestInterval = root["pri"];
+    PumpRestTime = root["prt"];
+    PIDStart = root["ps"];
+    MashHeaterPercentage = root["mhp"];
+    MainSensor = root["ms"] | "";
+    SpargeSensor = root["ss"] | "";
+    BoilSensor = root["bs"] | "";
+    AuxOneSensor = root["aso"] | "";
+    AuxTwoSensor = root["ast"] | "";
+    AuxThreeSensor = root["asth"] | "";
+    AuxSensorOneOffset = root["asoo"];
+    AuxSensorTwoOffset = root["asto"];
+    AuxSensorThreeOffset = root["astho"];
+    MainSensorOffset = root["mso"];
+    SpargeSensorOffset = root["sso"];
+    BoilSensorOffset = root["bso"];
+    Language = root["lg"] | "";
+    TempUnit = root["tu"] | "";
 }
 
 void BrewSettingsService::writeToJsonObject(JsonObject &root)
 {
-    root["boilTemperature"] = BoilTemperature;
-    root["boilPowerPercentage"] = BoilPowerPercentage;
-    root["spargePowerPercentage"] = SpargePowerPercentage;
-    root["enableSparge"] = EnableSparge;
-    root["enableBoilKettle"] = EnableBoilKettle;
-    root["spargeTemperature"] = SpargeTemperature;
-    root["boilTime"] = BoilTime;
+    root["btemp"] = BoilTemperature;
+    root["bpp"] = BoilPowerPercentage;
+    root["spp"] = SpargePowerPercentage;
+    root["es"] = EnableSparge;
+    root["ebk"] = EnableBoilKettle;
+    root["st"] = SpargeTemperature;
+    root["bt"] = BoilTime;
     root["kP"] = KP;
     root["kI"] = KI;
     root["kD"] = KD;
-    root["pumpRestInterval"] = PumpRestInterval;
-    root["pumpRestTime"] = PumpRestTime;
-    root["pidStart"] = PIDStart;
-    root["mashHeaterPercentage"] = MashHeaterPercentage;
-    root["mainSensor"] = MainSensor;
-    root["spargeSensor"] = SpargeSensor;
-    root["boilSensor"] = BoilSensor;
-    root["mainSensorOffset"] = MainSensorOffset;
-    root["spargeSensorOffset"] = SpargeSensorOffset;
-    root["boilSensorOffset"] = BoilSensorOffset;
-    root["language"] = Language;
-    root["tempUnit"] = TempUnit;
-    root["auxSensorOne"] = AuxOneSensor;
-    root["auxSensorTwo"] = AuxTwoSensor;
-    root["auxSensorThree"] = AuxThreeSensor;
-    root["auxSensorOneOffset"] = AuxSensorOneOffset;
-    root["auxSensorTwoOffset"] = AuxSensorTwoOffset;
-    root["auxSensorThreeOffset"] = AuxSensorThreeOffset;
+    root["pri"] = PumpRestInterval;
+    root["prt"] = PumpRestTime;
+    root["ps"] = PIDStart;
+    root["mhp"] = MashHeaterPercentage;
+    root["ms"] = MainSensor;
+    root["ss"] = SpargeSensor;
+    root["bs"] = BoilSensor;
+    root["mso"] = MainSensorOffset;
+    root["sso"] = SpargeSensorOffset;
+    root["bso"] = BoilSensorOffset;
+    root["lg"] = Language;
+    root["tu"] = TempUnit;
+    root["aso"] = AuxOneSensor;
+    root["ast"] = AuxTwoSensor;
+    root["asth"] = AuxThreeSensor;
+    root["asoo"] = AuxSensorOneOffset;
+    root["asto"] = AuxSensorTwoOffset;
+    root["astho"] = AuxSensorThreeOffset;
     _activeStatus->PIDSettingsUpdated = true;
 }
 
@@ -77,8 +77,4 @@ void BrewSettingsService::onConfigUpdated()
 void BrewSettingsService::begin()
 {
     SettingsService::begin();
-}
-
-void BrewSettingsService::Update() {
-    SettingsService::writeToFS();
 }
