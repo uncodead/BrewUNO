@@ -26,7 +26,11 @@ void DisplayService::autoScan()
     for (address = 1; address < 127; address++)
     {
         if (address == PCF8574_ADDRESS)
+        {
+            Serial.print("Found not display addr: ");
+            Serial.println(address, HEX);
             continue;
+        }
         Wire.beginTransmission(address);
         error = Wire.endTransmission();
         if (error == 0)

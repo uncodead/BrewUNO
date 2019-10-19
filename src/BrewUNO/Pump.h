@@ -26,8 +26,7 @@ public:
   void antiCavitation();
   void startPumpHttpService(AsyncWebServerRequest *request);
   void stopPumpHttpService(AsyncWebServerRequest *request);
-
-private:
+  
   void TurnPump(bool on);
 };
 

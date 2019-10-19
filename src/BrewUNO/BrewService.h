@@ -61,6 +61,14 @@ public:
   void loop();
   void begin();
 
+  void startBrew();
+  void stopBrew();
+  void nextStep();
+  void resumeBrew();
+  void unLockBrew();
+  void startBoil();
+  void pauseBrew();
+
 private:
   FS *_fs;
   AsyncWebServer *_server;
@@ -77,13 +85,13 @@ private:
   AsyncJsonWebHandler _updateHandler;
 
   void getActiveStatus(AsyncWebServerRequest *request);
-  void startBrew(AsyncWebServerRequest *request);
-  void stopBrew(AsyncWebServerRequest *request);
-  void nextStep(AsyncWebServerRequest *request);
-  void resumeBrew(AsyncWebServerRequest *request);
-  void unLockBrew(AsyncWebServerRequest *request);
-  void startBoil(AsyncWebServerRequest *request);
-  void pauseBrew(AsyncWebServerRequest *request);
+  void startBrewHttp(AsyncWebServerRequest *request);
+  void stopBrewHttp(AsyncWebServerRequest *request);
+  void nextStepHttp(AsyncWebServerRequest *request);
+  void resumeBrewHttp(AsyncWebServerRequest *request);
+  void unLockBrewHttp(AsyncWebServerRequest *request);
+  void startBoilHttp(AsyncWebServerRequest *request);
+  void pauseBrewHttp(AsyncWebServerRequest *request);
   void startAnticavitation(AsyncWebServerRequest *request);
   void changeBoilPercentage(AsyncWebServerRequest *request, JsonDocument &json);
 
