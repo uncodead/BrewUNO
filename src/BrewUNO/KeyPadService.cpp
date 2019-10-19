@@ -27,14 +27,15 @@ void KeyPadService::loop()
     else if (_activeStatus->ActiveStep > 0 && _activeStatus->ActiveStep != 3)
       _brewService->resumeBrew();
   }
-  if (_button2->pressed)
-    _brewService->stopBrew();
 
-  if (_button2->pressed_long)
-    _brewService->startBoil();
+  if (_button2->pressed_long && _activeStatus->BrewStarted)
+    _brewService->stopBrew();
 
   if (_button3->pressed && _activeStatus->BrewStarted)
     _brewService->nextStep();
+
+  if (_button3->pressed_long)
+    _brewService->startBoil();
 
   if (_button4->pressed)
     _pump->TurnPump(!_activeStatus->PumpOn);
