@@ -22,14 +22,14 @@ BrewService::BrewService(AsyncWebServer *server,
                                        _temperatureService(temperatureService),
                                        _pump(pump)
 {
-    _server->on(START_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBrew, this, std::placeholders::_1));
-    _server->on(STOP_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::stopBrew, this, std::placeholders::_1));
+    _server->on(START_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBrewHttp, this, std::placeholders::_1));
+    _server->on(STOP_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::stopBrewHttp, this, std::placeholders::_1));
     _server->on(GET_ACTIVE_STATUS_SERVICE_PATH, HTTP_GET, std::bind(&BrewService::getActiveStatus, this, std::placeholders::_1));
-    _server->on(NEXT_STEP_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::nextStep, this, std::placeholders::_1));
-    _server->on(PAUSE_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::pauseBrew, this, std::placeholders::_1));
-    _server->on(RESUME_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::resumeBrew, this, std::placeholders::_1));
-    _server->on(UNLOCK_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::unLockBrew, this, std::placeholders::_1));
-    _server->on(START_BOIL_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBoil, this, std::placeholders::_1));
+    _server->on(NEXT_STEP_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::nextStepHttp, this, std::placeholders::_1));
+    _server->on(PAUSE_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::pauseBrewHttp, this, std::placeholders::_1));
+    _server->on(RESUME_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::resumeBrewHttp, this, std::placeholders::_1));
+    _server->on(UNLOCK_BREW_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::unLockBrewHttp, this, std::placeholders::_1));
+    _server->on(START_BOIL_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startBoilHttp, this, std::placeholders::_1));
     _server->on(START_ANTICAVITATION_SERVICE_PATH, HTTP_POST, std::bind(&BrewService::startAnticavitation, this, std::placeholders::_1));
     _updateHandler.setUri(CHANGE_BOIL_PERCENTAGE_SERVICE_PATH);
     _updateHandler.setMethod(HTTP_POST);
@@ -40,7 +40,13 @@ BrewService::BrewService(AsyncWebServer *server,
 
 BrewService::~BrewService() {}
 
-void BrewService::startBrew(AsyncWebServerRequest *request)
+void BrewService::startBrewHttp(AsyncWebServerRequest *request)
+{
+    startBrew();
+    request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
+}
+
+void BrewService::startBrew()
 {
     _activeStatus->TimeNow = now();
     _activeStatus->ActiveStep = mash;
@@ -56,18 +62,28 @@ void BrewService::startBrew(AsyncWebServerRequest *request)
     _boilKettleHeaterService->StartPID(100, 100, 100);
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
+}
+
+void BrewService::pauseBrewHttp(AsyncWebServerRequest *request)
+{
+    pauseBrew();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
-void BrewService::pauseBrew(AsyncWebServerRequest *request)
+void BrewService::pauseBrew()
 {
     _activeStatus->BrewStarted = false;
     _pump->TurnPumpOff();
     _activeStatus->SaveActiveStatus();
+}
+
+void BrewService::resumeBrewHttp(AsyncWebServerRequest *request)
+{
+    resumeBrew();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
-void BrewService::resumeBrew(AsyncWebServerRequest *request)
+void BrewService::resumeBrew()
 {
     if (_activeStatus->StartTime > 0 && _activeStatus->EndTime > 0)
     {
@@ -88,36 +104,55 @@ void BrewService::resumeBrew(AsyncWebServerRequest *request)
         _pump->TurnPumpOn();
     else
         _pump->TurnPumpOff();
+}
+
+void BrewService::unLockBrewHttp(AsyncWebServerRequest *request)
+{
+    unLockBrew();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
-void BrewService::unLockBrew(AsyncWebServerRequest *request)
+void BrewService::unLockBrew()
 {
     _activeStatus->StepLock = false;
     _activeStatus->SaveActiveStatus();
+}
+
+void BrewService::stopBrewHttp(AsyncWebServerRequest *request)
+{
+    stopBrew();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
-void BrewService::stopBrew(AsyncWebServerRequest *request)
+void BrewService::stopBrew()
 {
     _activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
     _pump->TurnPumpOff();
     _mashKettleHeaterService->Compute(_activeStatus->Temperature, _activeStatus->TargetTemperature, _brewSettingsService->MashHeaterPercentage);
     _spargeKettleHeaterService->Compute(_activeStatus->SpargeTemperature, _brewSettingsService->SpargeTemperature, _brewSettingsService->SpargePowerPercentage);
     _boilKettleHeaterService->Compute(_activeStatus->BoilTemperature, _brewSettingsService->BoilTemperature, _brewSettingsService->BoilPowerPercentage);
+}
 
+void BrewService::nextStepHttp(AsyncWebServerRequest *request)
+{
+    nextStep();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
-void BrewService::nextStep(AsyncWebServerRequest *request)
+void BrewService::nextStep()
 {
     _activeStatus->StepLock = false;
     _activeStatus->EndTime = now();
     _activeStatus->SaveActiveStatus();
+}
+
+void BrewService::startBoilHttp(AsyncWebServerRequest *request)
+{
+    startBoil();
     request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
-void BrewService::startBoil(AsyncWebServerRequest *request)
+void BrewService::startBoil()
 {
     _activeStatus->TimeNow = now();
     _activeStatus->ActiveStep = boil;
@@ -131,7 +166,6 @@ void BrewService::startBoil(AsyncWebServerRequest *request)
     _boilKettleHeaterService->StartPID(100, 100, 100);
     _boilService->LoadBoilSettings();
     _pump->TurnPumpOff();
-    request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
 }
 
 void BrewService::startAnticavitation(AsyncWebServerRequest *request)

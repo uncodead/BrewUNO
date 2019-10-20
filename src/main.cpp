@@ -26,6 +26,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <LiquidCrystal_I2C.h>
+#include <pcf8574_esp.h>
 
 #include <BrewUNO/MashSettingsService.h>
 #include <BrewUNO/BoilSettingsService.h>
@@ -42,14 +43,21 @@
 #include <BrewUNO/Pump.h>
 #include <BrewUNO/DisplayService.h>
 #include <BrewUNO/InternationalizationService.h>
+#include <BrewUNO/KeyPadService.h>
+#include <BrewUNO/KeyButton.h>
 
 #define SERIAL_BAUD_RATE 115200
+#define PCF8574_ADDRESS 0x20
 
 OneWire oneWire(TEMPERATURE_BUS);
 DallasTemperature DS18B20(&oneWire);
 int deviceCount = 0;
 
 LiquidCrystal_I2C lcd(0x0, 20, 4);
+
+TwoWire pcfWire;
+PCF857x pcf8574(PCF8574_ADDRESS, &pcfWire);
+
 AsyncWebServer server(80);
 
 SecuritySettingsService securitySettingsService = SecuritySettingsService(&server, &SPIFFS);
@@ -82,6 +90,16 @@ MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService, &brewSettingsService);
 BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &boilKettleHeaterService, &activeStatus, &temperatureService, &pump);
 InternationalizationService internationalizationService = InternationalizationService(&server, &SPIFFS, &brewSettingsService);
+
+const int btn1 = BUTTONUP_BUS;
+const int btn2 = BUTTONDOWN_BUS;
+const int btn3 = BUTTONSTART_BUS;
+const int btn4 = BUTTONENTER_BUS;
+KeyButton button1(btn1, pcf8574);
+KeyButton button2(btn2, pcf8574);
+KeyButton button3(btn3, pcf8574);
+KeyButton button4(btn4, pcf8574);
+KeyPadService keypad = KeyPadService(&activeStatus, &pcf8574, &brewService, &pump, &button1, &button2, &button3, &button4);
 
 void setup()
 {
@@ -148,7 +166,9 @@ void setup()
   pump.TurnPumpOff();
   DS18B20.begin();
   // locate devices on the bus
-  Serial.print("Locating devices...");
+  Serial.println("");
+  Serial.println("Hello! I'm BrewUNO =)");
+  Serial.println("Locating DS18B20 devices...");
   Serial.print("Found ");
   deviceCount = DS18B20.getDeviceCount();
   Serial.print(deviceCount, DEC);
@@ -158,6 +178,12 @@ void setup()
   brewSettingsService.begin();
   brewService.begin();
   display.begin();
+
+  pcfWire.begin(D2, D1);
+  //Specsheets say PCF8574 is officially rated only for 100KHz I2C-bus
+  //PCF8575 is rated for 400KHz
+  pcfWire.setClock(100000L);
+  pcf8574.begin();
 }
 
 void loop()
@@ -168,4 +194,5 @@ void loop()
   otaSettingsService.loop();
   brewService.loop();
   display.loop();
+  keypad.loop();
 }
