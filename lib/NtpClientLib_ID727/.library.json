@@ -1,0 +1,39 @@
+{
+    "name": "NtpClientLib", 
+    "frameworks": [
+        "arduino"
+    ], 
+    "version": "2.5.1", 
+    "keywords": [
+        "time", 
+        "date", 
+        "hour", 
+        "minute", 
+        "second", 
+        "day", 
+        "week", 
+        "month", 
+        "year", 
+        "rtc", 
+        "ntp"
+    ], 
+    "description": "Library to get system sync from a NTP server", 
+    "authors": [
+        {
+            "email": null, 
+            "url": null, 
+            "maintainer": false, 
+            "name": "Germ\u00e1n Mart\u00edn"
+        }
+    ], 
+    "repository": {
+        "type": "git", 
+        "url": "https://github.com/gmag11/NtpClient"
+    }, 
+    "dependencies": {
+        "Time": "PaulStoffregen/Time"
+    }, 
+    "homepage": "https://github.com/gmag11/NtpClient", 
+    "platforms": [], 
+    "id": 727
+}

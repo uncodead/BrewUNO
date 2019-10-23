@@ -50,7 +50,6 @@ let interval;
 class Brew extends Component {
   constructor(props) {
     super(props)
-    this.getStatus();
     this.state = {
       status: { temperature: '' },
       data: [],
@@ -60,7 +59,6 @@ class Brew extends Component {
       statusInitialized: false,
       copyDialogMessage: false
     }
-    this.getStatus();
     interval = setInterval(() => { this.getStatus(); }, 5000);
   }
 
