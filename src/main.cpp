@@ -156,12 +156,10 @@ void setup()
   //BrewUNO
   pinMode(PUMP_BUS, OUTPUT);
   pinMode(BUZZER_BUS, OUTPUT);
-  pinMode(BOIL_HEATER_BUS, OUTPUT);
   digitalWrite(BUZZER_BUS, LOW);
   pinMode(HEATER_BUS, OUTPUT);
   pinMode(SPARGE_HEATER_BUS, OUTPUT);
   pinMode(BOIL_HEATER_BUS, OUTPUT);
-  digitalWrite(BOIL_HEATER_BUS, HIGH);
 
   pump.TurnPumpOff();
   DS18B20.begin();
