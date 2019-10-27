@@ -54,7 +54,7 @@ public:
     if (_activeStatus->ActiveStep == boil)
     {
       status.PIDActing = false;
-      status.PWM = ((1023 * _activeStatus->BoilPowerPercentage) / 100);
+      status.PWM = ((1023 * _brewSettingsService->BoilPowerPercentage) / 100);
       status.PWMPercentage = (status.PWM * 100) / 1023;
       analogWrite(_heaterBus, InvertedPWM() ? abs(status.PWM - 1023) : status.PWM);
       return status;
