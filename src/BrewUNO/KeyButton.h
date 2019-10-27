@@ -11,7 +11,7 @@ private:
   PCF857x &pcf;
   const uint16_t pin;
   unsigned long timer = 0;
-  unsigned long long_timer = 2000;
+  unsigned long long_timer = 1500;
   boolean state = false;
   boolean state_long = false;
 
