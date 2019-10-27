@@ -61,7 +61,7 @@ void DisplayService::begin()
 
 void DisplayService::loop()
 {
-    if (now() - lastUpdate > 0.8)
+    if (now() - lastUpdate > 1)
     {
         lastUpdate = now();
         printHead();

@@ -99,7 +99,7 @@ KeyButton button1(btn1, pcf8574);
 KeyButton button2(btn2, pcf8574);
 KeyButton button3(btn3, pcf8574);
 KeyButton button4(btn4, pcf8574);
-KeyPadService keypad = KeyPadService(&activeStatus, &pcf8574, &brewService, &pump, &button1, &button2, &button3, &button4);
+KeyPadService keypad = KeyPadService(&activeStatus, &pcf8574, &brewService, &brewSettingsService, &pump, &button1, &button2, &button3, &button4);
 
 void setup()
 {
@@ -180,7 +180,7 @@ void setup()
   pcfWire.begin(D2, D1);
   //Specsheets say PCF8574 is officially rated only for 100KHz I2C-bus
   //PCF8575 is rated for 400KHz
-  pcfWire.setClock(100000L);
+  pcfWire.setClock(400000L);
   pcf8574.begin();
 }
 
@@ -192,5 +192,5 @@ void loop()
   otaSettingsService.loop();
   brewService.loop();
   display.loop();
-  //keypad.loop();
+  keypad.loop();
 }

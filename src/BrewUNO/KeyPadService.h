@@ -7,16 +7,18 @@
 #include <BrewUNO/Buzzer.h>
 #include <BrewUNO/Pump.h>
 #include <BrewUNO/BrewService.h>
+#include <BrewUNO/BrewSettingsService.h>
 
 #include <pcf8574_esp.h>
 
 class KeyPadService
 {
 public:
-  KeyPadService(ActiveStatus *activeStatus, PCF857x *pcf, BrewService *brewService, Pump *pump,
+  KeyPadService(ActiveStatus *activeStatus, PCF857x *pcf, BrewService *brewService, BrewSettingsService *brewSettingsService, Pump *pump,
                 KeyButton *button1, KeyButton *button2, KeyButton *button3, KeyButton *button4);
 
   ActiveStatus *_activeStatus;
+  BrewSettingsService *_brewSettingsService;
   PCF857x *_pcf;
 
   KeyButton *_button1;

@@ -55,7 +55,6 @@ void BrewService::startBrew()
     _activeStatus->ActiveBoilStepIndex = "";
     _activeStatus->BoilTime = _brewSettingsService->BoilTime * 60;
     _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
-    _activeStatus->BoilPowerPercentage = _brewSettingsService->BoilPowerPercentage;
     _activeStatus->SaveActiveStatus();
     _mashKettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
     _spargeKettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
@@ -92,7 +91,6 @@ void BrewService::resumeBrew()
         int timeLeft = timeTotal - timeSpent;
         _activeStatus->EndTime = now() + timeLeft;
     }
-    _activeStatus->BoilPowerPercentage = _brewSettingsService->BoilPowerPercentage;
     _activeStatus->BrewStarted = true;
     _activeStatus->SaveActiveStatus();
     _mashKettleHeaterService->StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
@@ -161,7 +159,6 @@ void BrewService::startBoil()
     _activeStatus->ActiveBoilStepIndex = "";
     _activeStatus->BoilTime = _brewSettingsService->BoilTime * 60;
     _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
-    _activeStatus->BoilPowerPercentage = _brewSettingsService->BoilPowerPercentage;
     _activeStatus->SaveActiveStatus();
     _boilKettleHeaterService->StartPID(100, 100, 100);
     _boilService->LoadBoilSettings();
@@ -182,7 +179,7 @@ void BrewService::changeBoilPercentage(AsyncWebServerRequest *request, JsonDocum
 {
     if (json.is<JsonObject>())
     {
-        _activeStatus->BoilPowerPercentage = json["boil_power_percentage"];
+        _brewSettingsService->BoilPowerPercentage = json["boil_power_percentage"];
         _activeStatus->SaveActiveStatus();
         request->send(200, APPLICATION_JSON_TYPE, _activeStatus->GetJson());
     }
@@ -250,4 +247,5 @@ void BrewService::HeaterCompute()
     _activeStatus->BoilPWM = boilStatus.PWM;
     _activeStatus->BoilPWMPercentage = boilStatus.PWMPercentage;
     _activeStatus->PIDActing = mashStatus.PIDActing;
+    _activeStatus->BoilPowerPercentage = _brewSettingsService->BoilPowerPercentage;
 }
