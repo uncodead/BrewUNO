@@ -3,6 +3,7 @@ import T from 'i18n-react';
 import en from "../language/en.json"
 import ptBR from "../language/pt-BR.json"
 import ruRU from "../language/ru-RU.json"
+import esES from "../language/es-ES.json"
 
 class IntText extends Component {
   constructor(props) {
@@ -19,6 +20,9 @@ class IntText extends Component {
         break
       case "ru-RU":
         T.setTexts(ruRU);
+        break
+      case "es-ES":
+        T.setTexts(esES);
         break
       default:
         T.setTexts(en)
