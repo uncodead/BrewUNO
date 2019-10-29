@@ -57,7 +57,7 @@ class App extends Component {
     super(props)
     this.child = React.createRef();
     ExecuteRestCall(BREW_SETTINGS_ENDPOINT, 'GET', json => {
-      this.child.current.SetText(json.language)
+      this.child.current.SetText(json.lg)
     })
   }
 
