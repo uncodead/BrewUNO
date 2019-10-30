@@ -13,14 +13,8 @@ import {
   START_BOIL, PAUSE_BREW,
   START_ANTICAVITATION
 } from '../constants/Endpoints';
-import { getDateTime, ExecuteRestCall } from '../components/Utils';
-import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
-import LineChart from 'recharts/lib/chart/LineChart';
-import Line from 'recharts/lib/cartesian/Line';
-import XAxis from 'recharts/lib/cartesian/XAxis';
-import YAxis from 'recharts/lib/cartesian/YAxis';
-import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
-import Tooltip from 'recharts/lib/component/Tooltip';
+import { ExecuteRestCall } from '../components/Utils';
+import { Event } from '../components/Tracking'
 import Typography from '@material-ui/core/Typography';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -43,7 +37,6 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import { withSnackbar } from 'notistack';
 import BrewStyles from '../style/BrewStyle'
 import IntText from '../components/IntText'
-import { PageView, initGA, Event } from '../components/Tracking'
 
 let interval;
 
@@ -324,20 +317,6 @@ class Brew extends Component {
             </Grid>
           </Grid>
           : null}
-        <Card className={classes.chartCard}>
-          <CardContent>
-            <ResponsiveContainer width="90%" height={320} >
-              <LineChart data={this.state.data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <XAxis dataKey="name" tick={{ fill: '#707070', fontSize: "12px", fontFamily: "Montserrat", }} />
-                <YAxis yAxisId="left" tick={{ fill: '#707070', fontSize: "12px", fontFamily: "Montserrat", }} />
-                <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                <Tooltip />
-                <Line type="monotone" yAxisId="left" dataKey="Target" stroke="#f9a825" dot={null} />
-                <Line type="monotone" yAxisId="left" dataKey="Current" stroke="#c62828" dot={null} activeDot={{ r: 10 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
         <Paper className={classes.brewSettingsCard}>
           <Grid container justify="center">
             <Grid item>

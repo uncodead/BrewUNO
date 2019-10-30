@@ -127,11 +127,13 @@ void setup()
   wifiSettingsService.begin();
 
   // Serving static resources from /www/
-  server.serveStatic("/js/", SPIFFS, "/www/js/");
-  server.serveStatic("/css/", SPIFFS, "/www/css/");
-  server.serveStatic("/fonts/", SPIFFS, "/www/fonts/");
-  server.serveStatic("/app/", SPIFFS, "/www/app/");
-  server.serveStatic("/favicon.ico", SPIFFS, "/www/favicon.ico");
+  server.serveStatic("/js/", SPIFFS, "/www/js/", "max-age=86400");
+  server.serveStatic("/css/", SPIFFS, "/www/css/", "max-age=86400");
+  server.serveStatic("/fonts/", SPIFFS, "/www/fonts/", "max-age=86400");
+  server.serveStatic("/app/", SPIFFS, "/www/app/", "max-age=86400");
+  server.serveStatic("/favicon.ico", SPIFFS, "/www/favicon.ico", "max-age=86400");
+  server.serveStatic("/app/logo.png", SPIFFS, "/www/app/logo.png", "max-age=86400");
+  
 
   // Serving all other get requests with "/www/index.htm"
   // OPTIONS get a straight up 200 response
