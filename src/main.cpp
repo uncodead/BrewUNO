@@ -182,7 +182,7 @@ void setup()
   pcfWire.begin(D2, D1);
   //Specsheets say PCF8574 is officially rated only for 100KHz I2C-bus
   //PCF8575 is rated for 400KHz
-  pcfWire.setClock(400000L);
+  pcfWire.setClock(600000L);
   pcf8574.begin();
 }
 
