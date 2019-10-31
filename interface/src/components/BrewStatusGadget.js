@@ -83,7 +83,10 @@ class BrewStatusGadget extends Component {
       return;
     }
     if (this.props.TimeNotSet === 1) {
-      this.setState({ countdown: this.props.Count })
+      if (this.props.Count !== null && this.props.Count !== undefined && this.props.Count !== '')
+        this.setState({ countdown: this.props.Count })
+      else
+        this.setState({ countdown: '00:00:00' })
       return;
     }
     var dateEntered = getDateTime(this.props.EndTime);
