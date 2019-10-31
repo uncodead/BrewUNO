@@ -200,6 +200,11 @@ void ActiveStatus::SaveActiveStatus()
     File configFile = _fs->open(ACTIVE_STATUS_FILE, "w");
     if (configFile)
         serializeJson(_activeStatus, configFile);
+    else
+    {
+        Serial.println("Error mounting the file system");
+        return;
+    }
 
     configFile.close();
 }
