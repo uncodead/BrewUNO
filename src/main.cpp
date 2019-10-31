@@ -101,6 +101,12 @@ KeyButton button3(btn3, pcf8574);
 KeyButton button4(btn4, pcf8574);
 KeyPadService keypad = KeyPadService(&activeStatus, &pcf8574, &brewService, &brewSettingsService, &pump, &button1, &button2, &button3, &button4);
 
+volatile bool PCFInterruptFlag = false;
+
+void ICACHE_RAM_ATTR PCFInterrupt() {
+  PCFInterruptFlag = true;
+}
+
 void setup()
 {
   // Disable wifi config persistance and auto reconnect
@@ -133,7 +139,6 @@ void setup()
   server.serveStatic("/app/", SPIFFS, "/www/app/", "max-age=86400");
   server.serveStatic("/favicon.ico", SPIFFS, "/www/favicon.ico", "max-age=86400");
   server.serveStatic("/app/logo.png", SPIFFS, "/www/app/logo.png", "max-age=86400");
-  
 
   // Serving all other get requests with "/www/index.htm"
   // OPTIONS get a straight up 200 response
@@ -184,6 +189,9 @@ void setup()
   //PCF8575 is rated for 400KHz
   pcfWire.setClock(600000L);
   pcf8574.begin();
+  pinMode(D3, INPUT_PULLUP);
+  pcf8574.resetInterruptPin();
+  attachInterrupt(digitalPinToInterrupt(D3), PCFInterrupt, FALLING);
 }
 
 void loop()
@@ -194,5 +202,5 @@ void loop()
   otaSettingsService.loop();
   brewService.loop();
   display.loop();
-  keypad.loop();
+  keypad.loop(PCFInterruptFlag);
 }
