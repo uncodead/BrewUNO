@@ -49,13 +49,12 @@ class Brew extends Component {
       data: [],
       confirmDialogOpen: false,
       boilPower: 0,
-      activeStepName: "",
+      activeStepName: "-",
       statusInitialized: false,
       copyDialogMessage: false,
       renderMashSettings: false,
       renderBoilSettings: false
     }
-    this.getStatus()
     interval = setInterval(() => { this.getStatus(); }, 5000);
   }
 
