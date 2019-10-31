@@ -106,10 +106,6 @@ void WiFiSettingsService::loop()
       manageSTA();
     }
   }
-  else
-  {
-    Serial.println("Max connection attempts reached.");
-  }
 }
 
 void WiFiSettingsService::manageSTA()
