@@ -52,26 +52,14 @@ boolean ActiveStatus::LoadActiveStatusSettings()
 
 void ActiveStatus::TimeNotSetted()
 {
-    if (!TimeNotSet)
-    {
-        TimeNotSet = true;
-        LastReadTemperature = 0;
-        LastDisplayUpdate = 0;
-        LastLockBeep = 0;
-        Serial.println("Time NOT setted");
-    }
+    TimeNotSet = true;
+    Serial.println("Time NOT setted");
 }
 
 void ActiveStatus::TimeSetted()
 {
-    if (TimeNotSet)
-    {
-        TimeNotSet = false;
-        LastReadTemperature = 0;
-        LastDisplayUpdate = 0;
-        LastLockBeep = 0;
-        Serial.println("Time setted");
-    }
+    TimeNotSet = false;
+    Serial.println("Time setted");
 }
 
 String ActiveStatus::GetJson()

@@ -37,6 +37,7 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import { withSnackbar } from 'notistack';
 import BrewStyles from '../style/BrewStyle'
 import IntText from '../components/IntText'
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 let interval;
 
@@ -50,26 +51,30 @@ class Brew extends Component {
       boilPower: 0,
       activeStepName: "",
       statusInitialized: false,
-      copyDialogMessage: false
+      copyDialogMessage: false,
+      renderMashSettings: false,
+      renderBoilSettings: false
     }
     this.getStatus()
-    interval = setInterval(() => { this.getStatus(); }, 3000);
+    interval = setInterval(() => { this.getStatus(); }, 5000);
+  }
+
+  componentDidMount() {
+    setTimeout(function () { //Start the timer
+      this.setState({ renderMashSettings: true }) //After 1 second, set render to true
+    }.bind(this), 2000)
+    setTimeout(function () { //Start the timer
+      this.setState({ renderBoilSettings: true }) //After 1 second, set render to true
+    }.bind(this), 3000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(interval);
   }
 
   updateStatus() {
-    if (this.state.status.active_step > 0 && this.state.status.brew_started == 1) {
-      var splice_data = this.state.data;
-      if (splice_data.length >= 200)
-        splice_data.splice(0, 1);
-      this.setState({
-        data: [...splice_data, {
-          name: "",
-          Target: this.getActiveStep().props.text === 'Mash' ? this.state.status.target_temperature : this.state.status.boil_target_temperature,
-          Current: this.getActiveStep().props.text === 'Mash' ? this.state.status.temperature : this.state.status.boil_temperature
-        }],
-        boilPower: this.state.status.boil_power_percentage
-      })
-    }
+    if (this.state.status.active_step > 0 && this.state.status.brew_started == 1)
+      this.setState({ boilPower: this.state.status.boil_power_percentage })
 
     if (this.state.statusInitialized) {
       this.notification(this.getActiveStep(), this.state.status.active_mash_step_name + ' ' + this.state.status.active_mash_step_sufix_name, <IntText text="Mash" />)
@@ -169,14 +174,6 @@ class Brew extends Component {
     }
   }
 
-  componentDidMount() {
-    this.getStatus();
-  }
-
-  componentWillUnmount() {
-    clearInterval(interval);
-  }
-
   render() {
     const { classes } = this.props;
     return (
@@ -200,7 +197,7 @@ class Brew extends Component {
           : null}
         {this.state.status.active_step > 0 && this.state.status.active_step !== 3 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew(<IntText text="Brew.StopConfirmation" />, STOP_BREW, () => { this.setState({ data: [] }) }) }}><Stop size="small" color="action" className={classes.button_icons} /></Button>
+            onClick={() => { this.actionBrew(<IntText text="Brew.StopConfirmation" />, STOP_BREW, () => { this.setState({ data: [], activeStepName: '-' }) }) }}><Stop size="small" color="action" className={classes.button_icons} /></Button>
           : null}
         {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.pid_tuning === 0 && this.state.status.step_locked === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
@@ -322,10 +319,22 @@ class Brew extends Component {
             <Grid item>
               <Grid container >
                 <Grid item>
-                  <MashSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_mash_step_index} />
+                  {this.state.renderMashSettings ?
+                    <MashSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_mash_step_index} />
+                    : <div className={classes.loadingSettings}>
+                      <LinearProgress className={classes.loadingSettingsDetails} />
+                      <Typography variant="display1"><IntText text="Loading" />...</Typography>
+                    </div>
+                  }
                 </Grid>
                 <Grid item>
-                  <BoilSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_boil_step_index} />
+                  {this.state.renderBoilSettings ?
+                    <BoilSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_boil_step_index} />
+                    : <div className={classes.loadingSettings}>
+                      <LinearProgress className={classes.loadingSettingsDetails} />
+                      <Typography variant="display1"><IntText text="Loading" />...</Typography>
+                    </div>
+                  }
                 </Grid>
               </Grid>
             </Grid>

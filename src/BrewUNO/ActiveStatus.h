@@ -73,9 +73,6 @@ public:
   time_t EndTime;
   time_t StartTime;
   time_t TimeNow;
-  time_t LastReadTemperature;
-  time_t LastDisplayUpdate;
-  time_t LastLockBeep;
 
   boolean Recirculation;
   boolean PIDTuning;

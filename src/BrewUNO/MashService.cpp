@@ -21,6 +21,7 @@ void MashService::LoadMashSettings()
     configFile.close();
 }
 
+time_t lastBeep = now();
 void MashService::loop(ActiveStatus *activeStatus)
 {
     if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
@@ -50,10 +51,10 @@ void MashService::loop(ActiveStatus *activeStatus)
         if (activeStatus->StepLock)
         {
             _pump->CheckRest();
-            if (timeNow - activeStatus->LastLockBeep > 15)
+            if (timeNow - lastBeep > 15)
             {
                 Buzzer().Ring(1, 1000);
-                activeStatus->LastLockBeep = now();
+                lastBeep = now();
             }
             return;
         }

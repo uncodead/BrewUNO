@@ -1,4 +1,11 @@
 const BrewStyles = theme => ({
+  loadingSettings: {
+    margin: theme.spacing.unit,
+  },
+  loadingSettingsDetails: {
+    margin: theme.spacing.unit * 4,
+    textAlign: "center"
+  },
   button: {
     margin: theme.spacing.unit * 0.45,
     padding: theme.spacing.unit * 0.7,

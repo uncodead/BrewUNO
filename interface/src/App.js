@@ -56,9 +56,11 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.child = React.createRef();
-    ExecuteRestCall(BREW_SETTINGS_ENDPOINT, 'GET', json => {
-      this.child.current.SetText(json.lg)
-    })
+    setTimeout(function () { //Start the timer
+      ExecuteRestCall(BREW_SETTINGS_ENDPOINT, 'GET', json => {
+        this.child.current.SetText(json.lg)
+      })
+    }.bind(this), 4000)
   }
 
   render() {

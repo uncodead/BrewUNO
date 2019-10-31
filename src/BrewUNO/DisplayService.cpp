@@ -1,6 +1,5 @@
 #include <BrewUNO/DisplayService.h>
 
-time_t lastUpdate = now();
 String blankline = "                    ";
 byte apmode[] = {B01010, B00100, B01010, B00100, B00100, B00100, B01110, B11111};
 byte stmode[] = {B01110, B10001, B00100, B01010, B00000, B00100, B00000, B00000};
@@ -59,6 +58,7 @@ void DisplayService::begin()
     _lcd->createChar(gpw_icon, gpw);
 }
 
+time_t lastUpdate = now();
 void DisplayService::loop()
 {
     if (now() - lastUpdate > 1)
