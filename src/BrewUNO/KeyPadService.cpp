@@ -74,7 +74,5 @@ void KeyPadService::loop(bool PCFInterruptFlag)
 
     if (_button4->pressed)
       _pump->TurnPump(!_activeStatus->PumpOn);
-
-    PCFInterruptFlag = false;
   }
 }

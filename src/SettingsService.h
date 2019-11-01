@@ -89,18 +89,16 @@ protected:
 class AdminSettingsService : public SettingsService
 {
 public:
-  AdminSettingsService(AsyncWebServer *server, FS *fs, SecurityManager *securityManager, char const *servicePath, char const *filePath) : SettingsService(server, fs, servicePath, filePath), _securityManager(securityManager)
+  AdminSettingsService(AsyncWebServer *server, FS *fs, char const *servicePath, char const *filePath) : SettingsService(server, fs, servicePath, filePath)
   {
   }
 
 protected:
-  // will validate the requests with the security manager
-  SecurityManager *_securityManager;
 
   void fetchConfig(AsyncWebServerRequest *request)
   {
     // verify the request against the predicate
-    Authentication authentication = _securityManager->authenticateRequest(request);
+    //Authentication authentication = _securityManager->authenticateRequest(request);
     /* 
       if (!getAuthenticationPredicate()(authentication)) {
         request->send(401);
@@ -114,7 +112,7 @@ protected:
   void updateConfig(AsyncWebServerRequest *request, JsonDocument &jsonDocument)
   {
     // verify the request against the predicate
-    Authentication authentication = _securityManager->authenticateRequest(request);
+    //Authentication authentication = _securityManager->authenticateRequest(request);
     /*
     if (!getAuthenticationPredicate()(authentication))
     {

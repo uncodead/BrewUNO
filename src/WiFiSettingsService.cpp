@@ -1,6 +1,6 @@
 #include <WiFiSettingsService.h>
 
-WiFiSettingsService::WiFiSettingsService(AsyncWebServer *server, FS *fs, SecurityManager *securityManager) : AdminSettingsService(server, fs, securityManager, WIFI_SETTINGS_SERVICE_PATH, WIFI_SETTINGS_FILE)
+WiFiSettingsService::WiFiSettingsService(AsyncWebServer *server, FS *fs) : AdminSettingsService(server, fs, WIFI_SETTINGS_SERVICE_PATH, WIFI_SETTINGS_FILE)
 {
 #if defined(ESP8266)
   _onStationModeDisconnectedHandler = WiFi.onStationModeDisconnected(std::bind(&WiFiSettingsService::onStationModeDisconnected, this, std::placeholders::_1));

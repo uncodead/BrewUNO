@@ -17,6 +17,10 @@
 #include <BrewUNO/enum.h>
 #include <BrewUNO/enum.h>
 
+#define PGM_P       const char *
+#define PGM_VOID_P  const void *
+#define PSTR(s) (__extension__({static const char __c[] PROGMEM = (s); &__c[0];}))
+
 #define MAX_ACTIVESTATUS_SIZE 2024
 #define ACTIVE_STATUS_FILE "/config/activeStatus.json"
 

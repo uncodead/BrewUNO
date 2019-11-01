@@ -13,7 +13,7 @@ class WiFiSettingsService : public AdminSettingsService {
 
   public:
 
-    WiFiSettingsService(AsyncWebServer* server, FS* fs, SecurityManager* securityManager);
+    WiFiSettingsService(AsyncWebServer* server, FS* fs);
     ~WiFiSettingsService();
 
     void begin();
