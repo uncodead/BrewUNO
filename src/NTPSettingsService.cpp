@@ -119,7 +119,7 @@ void NTPSettingsService::configureNTP()
 
   // enable sync
   NTP.begin(_server);
-  //NTP.setInterval(_interval);
+  NTP.setInterval(_interval);
 }
 
 void NTPSettingsService::processSyncEvent(NTPSyncEvent_t ntpEvent)

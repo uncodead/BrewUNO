@@ -99,7 +99,10 @@ void BrewService::resumeBrew()
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
     if (_activeStatus->Recirculation || _activeStatus->StartTime <= 0)
-        _pump->TurnPumpOn();
+    {
+        if (_activeStatus->ActiveStep == mash)
+            _pump->TurnPumpOn();
+    }
     else
         _pump->TurnPumpOff();
 }

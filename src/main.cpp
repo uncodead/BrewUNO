@@ -47,7 +47,6 @@
 #include <BrewUNO/KeyButton.h>
 
 #define SERIAL_BAUD_RATE 115200
-#define PCF8574_ADDRESS 0x20
 
 OneWire oneWire(TEMPERATURE_BUS);
 DallasTemperature DS18B20(&oneWire);
@@ -91,6 +90,7 @@ BoilService boilService = BoilService(&SPIFFS, &temperatureService, &brewSetting
 BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &boilKettleHeaterService, &activeStatus, &temperatureService, &pump);
 //InternationalizationService internationalizationService = InternationalizationService(&server, &SPIFFS, &brewSettingsService);
 
+time_t lastReadButton = now();
 KeyButton button1(BUTTONUP_BUS, pcf8574);
 KeyButton button2(BUTTONDOWN_BUS, pcf8574);
 KeyButton button3(BUTTONSTART_BUS, pcf8574);
@@ -199,10 +199,9 @@ void loop()
   brewService.loop();
   display.loop();
   keypad.loop(PCFInterruptFlag);
-  /*
-  if (PCFInterruptFlag)
+  if (now() - lastReadButton > 5 && PCFInterruptFlag)
   {
     PCFInterruptFlag = false;
+    lastReadButton = now();
   }
-  */
 }

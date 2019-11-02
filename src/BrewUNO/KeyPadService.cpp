@@ -15,6 +15,7 @@ void KeyPadService::loop(bool PCFInterruptFlag)
 {
   if (PCFInterruptFlag)
   {
+    Serial.println("Button pressed");
     _button1->Update();
     _button2->Update();
     _button3->Update();

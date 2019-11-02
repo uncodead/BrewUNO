@@ -62,7 +62,7 @@ void ActiveStatus::TimeSetted()
     Serial.println("Time setted");
 }
 
-static const char ACTIVE_STATUS[] PROGMEM = "{\"active_step\":{{ActiveStep}},\"active_mash_step_index\":{{ActiveMashStepIndex}},\"active_mash_step_name\":\"{{ActiveMashStepName}}\",\"active_mash_step_sufix_name\":\"{{ActiveMashStepSufixName}}\",\"active_boil_step_index\":\"{{ActiveBoilStepIndex}}\",\"active_boil_step_name\":\"{{ActiveBoilStepName}}\",\"boil_time\":{{BoilTime}},\"boil_target_temperature\":{{BoilTargetTemperature}},\"target_temperature\":{{TargetTemperature}},\"start_time\":{{StartTime}},\"end_time\":{{EndTime}},\"time_now\":{{TimeNow}},\"brew_started\":{{BrewStarted}},\"temperature\":{{Temperature}},\"sparge_temperature\":{{SpargeTemperature}},\"boil_temperature\":{{BoilTemperature}},\"auxone_temperature\":{{AuxOneTemperature}},\"auxtwo_temperature\":{{AuxTwoTemperature}},\"auxthree_temperature\":{{AuxThreeTemperature}},\"main_sensor\": \"{{MainSensor}}\",\"sparge_sensor\": \"{{SpargeSensor}}\",\"boil_sensor\": \"{{BoilSensor}}\",\"auxone_sensor\": \"{{AuxOneSensor}}\",\"auxtwo_sensor\": \"{{AuxTwoSensor}}\",\"auxthree_sensor\": \"{{AuxThreeSensor}}\",\"pwm\":{{PWM}},\"pwm_percentage\":{{PWMPercentage}},\"sparge_pwm\":{{SpargePWM}},\"sparge_pwm_percentage\":{{SpargePWMPercentage}},\"boil_pwm\":{{BoilPWM}},\"boil_pwm_percentage\":{{BoilPWMPercentage}},\"enable_sparge\":{{EnableSparge}},\"enable_boilkettle\":{{EnableBoilKettle}},\"sparge_target_temperature\":{{SpargeTargetTemperature}},\"recirculation\":{{Recirculation}},\"heater_on\":{{HeaterOn}},\"step_lock\":{{StepLock}},\"step_locked\":{{StepLocked}},\"pid_tuning\":{{PIDTuning}},\"pump_on\":{{PumpOn}},\"pump_is_resting\":{{PumpIsResting}},\"time_not_set\":{{TimeNotSet}},\"temp_unit\": \"{{TempUnit}}\",\"version\": \"{{Version}}\",\"count\": \"{{Count}}\",\"boil_power_percentage\":{{BoilPowerPercentage}} }";
+static const char ACTIVE_STATUS[] PROGMEM = "{\"as\":{{ActiveStep}},\"amsi\":{{ActiveMashStepIndex}},\"masn\":\"{{ActiveMashStepName}}\",\"amssn\":\"{{ActiveMashStepSufixName}}\",\"absi\":\"{{ActiveBoilStepIndex}}\",\"absn\":\"{{ActiveBoilStepName}}\",\"btt\":{{BoilTargetTemperature}},\"ttp\":{{TargetTemperature}},\"st\":{{StartTime}},\"et\":{{EndTime}},\"tn\":{{TimeNow}},\"bs\":{{BrewStarted}},\"tp\":{{Temperature}},\"stp\":{{SpargeTemperature}},\"btp\":{{BoilTemperature}},\"atp\":{{AuxOneTemperature}},\"attp\":{{AuxTwoTemperature}},\"atttp\":{{AuxThreeTemperature}},\"axs\": \"{{AuxOneSensor}}\",\"axss\": \"{{AuxTwoSensor}}\",\"axsss\": \"{{AuxThreeSensor}}\",\"pp\":{{PWMPercentage}},\"spp\":{{SpargePWMPercentage}},\"bppt\":{{BoilPWMPercentage}},\"es\":{{EnableSparge}},\"eb\":{{EnableBoilKettle}},\"stt\":{{SpargeTargetTemperature}},\"sl\":{{StepLocked}},\"po\":{{PumpOn}},\"pir\":{{PumpIsResting}},\"tns\":{{TimeNotSet}},\"tu\": \"{{TempUnit}}\",\"v\": \"{{Version}}\",\"c\": \"{{Count}}\",\"bpp\":{{BoilPowerPercentage}} }";
 
 String ActiveStatus::GetJson()
 {
@@ -73,7 +73,6 @@ String ActiveStatus::GetJson()
     active_status.replace("{{ActiveMashStepSufixName}}", String(ActiveMashStepSufixName));
     active_status.replace("{{ActiveBoilStepIndex}}", String(ActiveBoilStepIndex));
     active_status.replace("{{ActiveBoilStepName}}", String(ActiveBoilStepName));
-    active_status.replace("{{BoilTime}}", String(BoilTime));
     active_status.replace("{{BoilTargetTemperature}}", String(BoilTargetTemperature));
     active_status.replace("{{TargetTemperature}}", String(TargetTemperature));
     active_status.replace("{{StartTime}}", String(StartTime));
@@ -86,26 +85,16 @@ String ActiveStatus::GetJson()
     active_status.replace("{{AuxOneTemperature}}", String(AuxOneTemperature));
     active_status.replace("{{AuxTwoTemperature}}", String(AuxTwoTemperature));
     active_status.replace("{{AuxThreeTemperature}}", String(AuxThreeTemperature));
-    active_status.replace("{{MainSensor}}", MainSensor);
-    active_status.replace("{{SpargeSensor}}", SpargeSensor);
-    active_status.replace("{{BoilSensor}}", BoilSensor);
     active_status.replace("{{AuxOneSensor}}", AuxOneSensor);
     active_status.replace("{{AuxTwoSensor}}", AuxTwoSensor);
     active_status.replace("{{AuxThreeSensor}}", AuxThreeSensor);
-    active_status.replace("{{PWM}}", String(PWM, 2));
     active_status.replace("{{PWMPercentage}}", String(PWMPercentage, 2));
-    active_status.replace("{{SpargePWM}}", String(SpargePWM, 2));
     active_status.replace("{{SpargePWMPercentage}}", String(SpargePWMPercentage, 2));
-    active_status.replace("{{BoilPWM}}", String(BoilPWM, 2));
     active_status.replace("{{BoilPWMPercentage}}", String(BoilPWMPercentage, 2));
     active_status.replace("{{EnableSparge}}", String(EnableSparge));
     active_status.replace("{{EnableBoilKettle}}", String(EnableBoilKettle));
     active_status.replace("{{SpargeTargetTemperature}}", String(SpargeTargetTemperature));
-    active_status.replace("{{Recirculation}}", String(Recirculation));
-    active_status.replace("{{HeaterOn}}", String(HeaterOn));
-    active_status.replace("{{StepLock}}", String(StepLock));
     active_status.replace("{{StepLocked}}", String(StepLocked));
-    active_status.replace("{{PIDTuning}}", String(PIDTuning));
     active_status.replace("{{PumpOn}}", String(PumpOn));
     active_status.replace("{{PumpIsResting}}", String(PumpIsResting));
     active_status.replace("{{TimeNotSet}}", String(TimeNotSet));
