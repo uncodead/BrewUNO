@@ -6,9 +6,9 @@
 class Buzzer
 {
 public:
-  void Ring();
-  void Ring(int);
-  void Ring(int count, int duration);
+  static void Ring();
+  static void Ring(int);
+  static void Ring(int count, int duration);
 };
 
 #endif

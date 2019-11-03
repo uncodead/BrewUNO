@@ -100,7 +100,21 @@ KeyPadService keypad = KeyPadService(&activeStatus, &pcf8574, &brewService, &bre
 volatile bool PCFInterruptFlag = false;
 void ICACHE_RAM_ATTR PCFInterrupt()
 {
+  if (!PCFInterruptFlag)
+  {
+    Serial.println("Button pressed");
+    lastReadButton = now();
+  }
   PCFInterruptFlag = true;
+}
+void KeyPadLoop()
+{
+  keypad.loop(PCFInterruptFlag);
+  if (now() - lastReadButton > 10 && PCFInterruptFlag)
+  {
+    PCFInterruptFlag = false;
+    Serial.println("Button released by time");
+  }
 }
 
 void setup()
@@ -198,10 +212,5 @@ void loop()
   otaSettingsService.loop();
   brewService.loop();
   display.loop();
-  keypad.loop(PCFInterruptFlag);
-  if (now() - lastReadButton > 5 && PCFInterruptFlag)
-  {
-    PCFInterruptFlag = false;
-    lastReadButton = now();
-  }
+  KeyPadLoop();
 }

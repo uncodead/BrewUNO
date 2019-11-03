@@ -15,7 +15,6 @@ void KeyPadService::loop(bool PCFInterruptFlag)
 {
   if (PCFInterruptFlag)
   {
-    Serial.println("Button pressed");
     _button1->Update();
     _button2->Update();
     _button3->Update();
@@ -27,6 +26,7 @@ void KeyPadService::loop(bool PCFInterruptFlag)
         _brewService->startBrew();
       else
         _brewService->stopBrew();
+      Buzzer().Ring(1, 100);
     }
 
     if (_button1->pressed)
@@ -35,10 +35,14 @@ void KeyPadService::loop(bool PCFInterruptFlag)
         _brewService->pauseBrew();
       else if (_activeStatus->ActiveStep > 0 && _activeStatus->ActiveStep != 3)
         _brewService->resumeBrew();
+      Buzzer().Ring(1, 100);
     }
 
     if (_button2->pressed_long)
+    {
       _brewService->startBoil();
+      Buzzer().Ring(1, 100);
+    }
 
     if (_button2->pressed)
     {
@@ -54,12 +58,17 @@ void KeyPadService::loop(bool PCFInterruptFlag)
         if (_brewSettingsService->BoilPowerPercentage < 0)
           _brewSettingsService->BoilPowerPercentage = 0;
       }
+      Buzzer().Ring(1, 100);
     }
 
     if (_button3->pressed_long && _activeStatus->BrewStarted)
+    {
       _brewService->nextStep();
+      Buzzer().Ring(1, 100);
+    }
 
     if (_button3->pressed)
+    {
       if (_activeStatus->BrewStarted && _activeStatus->ActiveStep == mash)
       {
         _brewSettingsService->MashHeaterPercentage += 10;
@@ -72,8 +81,13 @@ void KeyPadService::loop(bool PCFInterruptFlag)
         if (_brewSettingsService->BoilPowerPercentage > 100)
           _brewSettingsService->BoilPowerPercentage = 100;
       }
+      Buzzer().Ring(1, 100);
+    }
 
     if (_button4->pressed)
+    {
       _pump->TurnPump(!_activeStatus->PumpOn);
+      Buzzer().Ring(1, 100);
+    }
   }
 }
