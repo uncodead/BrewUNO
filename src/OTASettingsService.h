@@ -23,7 +23,7 @@ class OTASettingsService : public AdminSettingsService {
 
   public:
 
-    OTASettingsService(AsyncWebServer* server, FS* fs, SecurityManager* securityManager);
+    OTASettingsService(AsyncWebServer* server, FS* fs);
     ~OTASettingsService();
 
     void loop();

@@ -29,7 +29,7 @@ public:
   BrewService *_brewService;
   Pump *_pump;
 
-  void loop();
+  void loop(bool PCFInterruptFlag);
 };
 
 #endif

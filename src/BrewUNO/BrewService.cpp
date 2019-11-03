@@ -99,7 +99,10 @@ void BrewService::resumeBrew()
     _mashService->LoadMashSettings();
     _boilService->LoadBoilSettings();
     if (_activeStatus->Recirculation || _activeStatus->StartTime <= 0)
-        _pump->TurnPumpOn();
+    {
+        if (_activeStatus->ActiveStep == mash)
+            _pump->TurnPumpOn();
+    }
     else
         _pump->TurnPumpOff();
 }
@@ -209,9 +212,10 @@ void BrewService::begin()
         _brewSettingsService->BoilSensor = _temperatureService->GetFirstSensorAddress();
 }
 
+time_t lastReadTemperature = now();
 void BrewService::loop()
 {
-    if (now() - _activeStatus->LastReadTemperature > 1)
+    if (now() - lastReadTemperature > 1)
     {
         Temperatures temps = _temperatureService->GetTemperatures();
         _activeStatus->SetTemperature(temps);
@@ -222,7 +226,7 @@ void BrewService::loop()
         _activeStatus->AuxTwoSensor = _brewSettingsService->AuxTwoSensor;
         _activeStatus->AuxThreeSensor = _brewSettingsService->AuxThreeSensor;
         _activeStatus->TempUnit = _brewSettingsService->TempUnit;
-        _activeStatus->LastReadTemperature = now();
+        lastReadTemperature = now();
     }
     _mashService->loop(_activeStatus);
     _boilService->loop(_activeStatus);

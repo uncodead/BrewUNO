@@ -24,7 +24,7 @@ class WiFiScanner {
 
   public:
 
-    WiFiScanner(AsyncWebServer *server, SecurityManager* securityManager);
+    WiFiScanner(AsyncWebServer *server);
 
   private:
 

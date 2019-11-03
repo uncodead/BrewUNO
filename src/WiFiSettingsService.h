@@ -7,12 +7,13 @@
 #define WIFI_SETTINGS_FILE "/config/wifiSettings.json"
 #define WIFI_SETTINGS_SERVICE_PATH "/rest/wifiSettings"
 #define WIFI_RECONNECTION_DELAY 1000 * 10
+#define WIFI_RECONNECTION_ATTEMPT 5
 
 class WiFiSettingsService : public AdminSettingsService {
 
   public:
 
-    WiFiSettingsService(AsyncWebServer* server, FS* fs, SecurityManager* securityManager);
+    WiFiSettingsService(AsyncWebServer* server, FS* fs);
     ~WiFiSettingsService();
 
     void begin();
@@ -33,6 +34,7 @@ class WiFiSettingsService : public AdminSettingsService {
 
     // for the mangement delay loop
     unsigned long _lastConnectionAttempt;
+    unsigned long _lastConnectionAttemptNumber;
 
     // optional configuration for static IP address
     IPAddress _localIP;

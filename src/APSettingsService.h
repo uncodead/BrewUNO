@@ -23,7 +23,7 @@ class APSettingsService : public AdminSettingsService {
 
   public:
 
-    APSettingsService(AsyncWebServer* server, FS* fs, SecurityManager* securityManager);
+    APSettingsService(AsyncWebServer* server, FS* fs);
     ~APSettingsService();
 
     void loop();

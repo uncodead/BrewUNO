@@ -13,14 +13,8 @@ import {
   START_BOIL, PAUSE_BREW,
   START_ANTICAVITATION
 } from '../constants/Endpoints';
-import { getDateTime, ExecuteRestCall } from '../components/Utils';
-import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
-import LineChart from 'recharts/lib/chart/LineChart';
-import Line from 'recharts/lib/cartesian/Line';
-import XAxis from 'recharts/lib/cartesian/XAxis';
-import YAxis from 'recharts/lib/cartesian/YAxis';
-import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
-import Tooltip from 'recharts/lib/component/Tooltip';
+import { ExecuteRestCall } from '../components/Utils';
+import { Event } from '../components/Tracking'
 import Typography from '@material-ui/core/Typography';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -43,7 +37,7 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import { withSnackbar } from 'notistack';
 import BrewStyles from '../style/BrewStyle'
 import IntText from '../components/IntText'
-import { PageView, initGA, Event } from '../components/Tracking'
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 let interval;
 
@@ -55,32 +49,35 @@ class Brew extends Component {
       data: [],
       confirmDialogOpen: false,
       boilPower: 0,
-      activeStepName: "",
+      activeStepName: "-",
       statusInitialized: false,
-      copyDialogMessage: false
+      copyDialogMessage: false,
+      renderMashSettings: false,
+      renderBoilSettings: false
     }
-    this.getStatus()
-    interval = setInterval(() => { this.getStatus(); }, 3000);
+    interval = setInterval(() => { this.getStatus(); }, 5000);
+  }
+
+  componentDidMount() {
+    setTimeout(function () { //Start the timer
+      this.setState({ renderMashSettings: true }) //After 1 second, set render to true
+    }.bind(this), 2000)
+    setTimeout(function () { //Start the timer
+      this.setState({ renderBoilSettings: true }) //After 1 second, set render to true
+    }.bind(this), 3000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(interval);
   }
 
   updateStatus() {
-    if (this.state.status.active_step > 0 && this.state.status.brew_started == 1) {
-      var splice_data = this.state.data;
-      if (splice_data.length >= 200)
-        splice_data.splice(0, 1);
-      this.setState({
-        data: [...splice_data, {
-          name: "",
-          Target: this.getActiveStep().props.text === 'Mash' ? this.state.status.target_temperature : this.state.status.boil_target_temperature,
-          Current: this.getActiveStep().props.text === 'Mash' ? this.state.status.temperature : this.state.status.boil_temperature
-        }],
-        boilPower: this.state.status.boil_power_percentage
-      })
-    }
+    if (this.state.status.as > 0 && this.state.status.bs == 1)
+      this.setState({ boilPower: this.state.status.bpp })
 
     if (this.state.statusInitialized) {
-      this.notification(this.getActiveStep(), this.state.status.active_mash_step_name + ' ' + this.state.status.active_mash_step_sufix_name, <IntText text="Mash" />)
-      this.notification(this.getActiveStep(), this.state.status.active_boil_step_name, <IntText text="Boil" />)
+      this.notification(this.getActiveStep(), this.state.status.masn + ' ' + this.state.status.amssn, <IntText text="Mash" />)
+      this.notification(this.getActiveStep(), this.state.status.absn, <IntText text="Boil" />)
 
       if (this.getActiveStep() == "Stopped")
         this.setState({ activeStepName: '-' })
@@ -114,7 +111,7 @@ class Brew extends Component {
   }
 
   getActiveStep() {
-    switch (this.state.status.active_step) {
+    switch (this.state.status.as) {
       case 1:
         return <IntText text="Mash" />
       case 2:
@@ -176,59 +173,51 @@ class Brew extends Component {
     }
   }
 
-  componentDidMount() {
-    this.getStatus();
-  }
-
-  componentWillUnmount() {
-    clearInterval(interval);
-  }
-
   render() {
     const { classes } = this.props;
     return (
       <SectionContent title="">
-        {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
+        {this.state.status.as === 0 && this.state.status.bs === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew(<IntText text="Brew.StartConfirmation" />, START_BREW)
             }}><IntText text="Start" /></Button> : null}
-        {this.state.status.active_step > 0 && this.state.status.brew_started === 1 ?
+        {this.state.status.as > 0 && this.state.status.bs === 1 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew(<IntText text="Brew.PauseConfirmation" />, PAUSE_BREW)
             }}><PauseCircleFilled size="small" color="action" className={classes.button_icons} /></Button>
           : null}
-        {this.state.status.active_step > 0 && this.state.status.active_step !== 3 && this.state.status.brew_started === 0 ?
+        {this.state.status.as > 0 && this.state.status.as !== 3 && this.state.status.bs === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => {
               this.actionBrew(<IntText text="Brew.ResumeConfirmation" />, RESUME_BREW)
             }}><IntText text="Resume" /></Button>
           : null}
-        {this.state.status.active_step > 0 && this.state.status.active_step !== 3 ?
+        {this.state.status.as > 0 && this.state.status.as !== 3 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew(<IntText text="Brew.StopConfirmation" />, STOP_BREW, () => { this.setState({ data: [] }) }) }}><Stop size="small" color="action" className={classes.button_icons} /></Button>
+            onClick={() => { this.actionBrew(<IntText text="Brew.StopConfirmation" />, STOP_BREW, () => { this.setState({ data: [], activeStepName: '-' }) }) }}><Stop size="small" color="action" className={classes.button_icons} /></Button>
           : null}
-        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.pid_tuning === 0 && this.state.status.step_locked === 0 ?
+        {this.state.status.as === 1 && this.state.status.bs === 1 && this.state.status.sl === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew(<IntText text="Brew.NextConfirmation" />, NEXT_STEP_BREW) }}><SkipNext size="small" color="action" className={classes.button_icons} /></Button>
           : null}
-        {this.state.status.active_step === 1 && this.state.status.brew_started === 1 && this.state.status.step_locked === 1 ?
+        {this.state.status.as === 1 && this.state.status.bs === 1 && this.state.status.sl === 1 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew(<IntText text="Brew.UnLockconfirmation" />, UNLOCK_STEP_BREW) }}><LockOpen size="small" color="action" className={classes.button_icons} /></Button>
           : null}
-        {this.state.status.active_step === 0 && this.state.status.brew_started === 0 ?
+        {this.state.status.as === 0 && this.state.status.bs === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}
             onClick={() => { this.actionBrew(<IntText text="Brew.BoilConfirmation" />, START_BOIL) }}><IntText text="Boil" /></Button>
           : null}
         <Button variant="contained" color="secondary" className={classes.button}
-          onClick={() => { this.actionBrew('', this.state.status.pump_on ? STOP_PUMP : START_PUMP) }}>
-          {this.state.status.pump_on ?
+          onClick={() => { this.actionBrew('', this.state.status.po ? STOP_PUMP : START_PUMP) }}>
+          {this.state.status.po ?
             <SvgIcon {...this.props} color="action">
               <path d="M20 13.641c0 2-.779 4.109-2.34 5.67a7.992 7.992 0 0 1-11.32-.002C4.78 17.75 4 15.641 4 13.641A8.02 8.02 0 0 1 6.34 8L12 2.35 17.66 8A8.016 8.016 0 0 1 20 13.641z" />
             </SvgIcon>
             : //pause icon
-            this.state.status.pump_is_resting ?
+            this.state.status.pir ?
               <SvgIcon {...this.props} color="disabled">
                 <path d="M17.66 8L12 2.35 6.34 8A8.02 8.02 0 0 0 4 13.641c0 2 .78 4.109 2.34 5.668a7.987 7.987 0 0 0 11.32.001c1.561-1.561 2.34-3.67 2.34-5.67S19.221 9.56 17.66 8zm-6.359 9.922H8.604V8.855h2.697v9.067zm4.068 0h-2.682V8.855h2.682v9.067z" />
               </SvgIcon>
@@ -247,7 +236,7 @@ class Brew extends Component {
               </IconButton>
               <Menu {...bindMenu(popupState)}>
                 <MenuItem key="placeholder" style={{ display: "none" }} />
-                {this.state.status.active_step === 0 ?
+                {this.state.status.as === 0 ?
                   <MenuItem onClick={() => {
                     this.actionBrew(<IntText text="Brew.PumpPrimeConfirmation" />, START_ANTICAVITATION,
                       () => {
@@ -265,39 +254,39 @@ class Brew extends Component {
         <Card className={classes.gadgetCard}>
           <CardContent>
             <BrewStatusGadget
-              BrewStarted={this.state.status.brew_started}
-              Temperature={this.state.status.temperature}
-              TargetTemperature={this.state.status.target_temperature > 0 ? this.state.status.target_temperature : ''}
-              BoilTemperature={this.state.status.boil_temperature}
-              BoilTargetTemperature={this.state.status.boil_target_temperature}
-              PWM={this.state.status.pwm_percentage}
-              SpargePWM={this.state.status.sparge_pwm_percentage}
-              BoilPWM={this.state.status.boil_pwm_percentage}
-              TimeNotSet={this.state.status.time_not_set}
-              Count={this.state.status.count}
+              BrewStarted={this.state.status.bs}
+              Temperature={this.state.status.tp}
+              TargetTemperature={this.state.status.ttp > 0 ? this.state.status.ttp : ''}
+              BoilTemperature={this.state.status.btp}
+              BoilTargetTemperature={this.state.status.btt}
+              PWM={this.state.status.pp}
+              SpargePWM={this.state.status.spp}
+              BoilPWM={this.state.status.bppt}
+              TimeNotSet={this.state.status.tns}
+              Count={this.state.status.c}
               ActiveStep={this.getActiveStep()}
-              TimeNow={this.state.status.time_now > 0 ? this.state.status.time_now : null}
-              StartTime={this.state.status.start_time > 0 ? this.state.status.start_time : null}
+              TimeNow={this.state.status.tn > 0 ? this.state.status.tn : null}
+              StartTime={this.state.status.st > 0 ? this.state.status.st : null}
               ElapsedTime={this.state.status.elapsed_time > 0 ? this.state.status.elapsed_time : null}
-              EndTime={this.state.status.end_time > 0 ? this.state.status.end_time : null}
+              EndTime={this.state.status.et > 0 ? this.state.status.et : null}
               ActiveStepName={this.state.activeStepName}
-              StepLocked={this.state.status.step_locked > 0}
-              SpargeTemperature={this.state.status.sparge_temperature}
-              AuxOneSendorEnabled={this.state.status.auxone_sensor !== ''}
-              AuxTwoSendorEnabled={this.state.status.auxtwo_sensor !== ''}
-              AuxThreeSendorEnabled={this.state.status.auxthree_sensor !== ''}
-              AuxOneTemperature={this.state.status.auxone_temperature}
-              AuxTwoTemperature={this.state.status.auxtwo_temperature}
-              AuxThreeTemperature={this.state.status.auxthree_temperature}
-              SpargeTargetTemperature={this.state.status.sparge_target_temperature > 0 ? this.state.status.sparge_target_temperature : ''}
-              EnableSparge={this.state.status.enable_sparge}
-              EnableBoilKettle={this.state.status.enable_boilkettle === 1}
-              TempUnit={this.state.status.temp_unit}
+              StepLocked={this.state.status.sl > 0}
+              SpargeTemperature={this.state.status.stp}
+              AuxOneSendorEnabled={this.state.status.axs !== ''}
+              AuxTwoSendorEnabled={this.state.status.axss !== ''}
+              AuxThreeSendorEnabled={this.state.status.axsss !== ''}
+              AuxOneTemperature={this.state.status.atp}
+              AuxTwoTemperature={this.state.status.attp}
+              AuxThreeTemperature={this.state.status.atttp}
+              SpargeTargetTemperature={this.state.status.stt > 0 ? this.state.status.stt : ''}
+              EnableSparge={this.state.status.es}
+              EnableBoilKettle={this.state.status.eb === 1}
+              TempUnit={this.state.status.tu}
             />
           </CardContent>
         </Card>
         <Divider />
-        {this.state.status.active_step === 2 && this.state.status.brew_started === 1 ?
+        {this.state.status.as === 2 && this.state.status.bs === 1 ?
           <Grid item xs={12}>
             <Grid container justify="center" spacing={16}></Grid>
             <Grid item>
@@ -324,29 +313,27 @@ class Brew extends Component {
             </Grid>
           </Grid>
           : null}
-        <Card className={classes.chartCard}>
-          <CardContent>
-            <ResponsiveContainer width="90%" height={320} >
-              <LineChart data={this.state.data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <XAxis dataKey="name" tick={{ fill: '#707070', fontSize: "12px", fontFamily: "Montserrat", }} />
-                <YAxis yAxisId="left" tick={{ fill: '#707070', fontSize: "12px", fontFamily: "Montserrat", }} />
-                <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                <Tooltip />
-                <Line type="monotone" yAxisId="left" dataKey="Target" stroke="#f9a825" dot={null} />
-                <Line type="monotone" yAxisId="left" dataKey="Current" stroke="#c62828" dot={null} activeDot={{ r: 10 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
         <Paper className={classes.brewSettingsCard}>
           <Grid container justify="center">
             <Grid item>
               <Grid container >
                 <Grid item>
-                  <MashSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_mash_step_index} />
+                  {this.state.renderMashSettings ?
+                    <MashSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.amsi} />
+                    : <div className={classes.loadingSettings}>
+                      <LinearProgress className={classes.loadingSettingsDetails} />
+                      <Typography variant="display1"><IntText text="Loading" />...</Typography>
+                    </div>
+                  }
                 </Grid>
                 <Grid item>
-                  <BoilSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.active_boil_step_index} />
+                  {this.state.renderBoilSettings ?
+                    <BoilSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.absi} />
+                    : <div className={classes.loadingSettings}>
+                      <LinearProgress className={classes.loadingSettingsDetails} />
+                      <Typography variant="display1"><IntText text="Loading" />...</Typography>
+                    </div>
+                  }
                 </Grid>
               </Grid>
             </Grid>

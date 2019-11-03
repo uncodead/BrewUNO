@@ -1,6 +1,6 @@
 #include <NTPSettingsService.h>
 
-NTPSettingsService::NTPSettingsService(AsyncWebServer *server, FS *fs, SecurityManager *securityManager, ActiveStatus *activeStatus) : AdminSettingsService(server, fs, securityManager, NTP_SETTINGS_SERVICE_PATH, NTP_SETTINGS_FILE),
+NTPSettingsService::NTPSettingsService(AsyncWebServer *server, FS *fs, ActiveStatus *activeStatus) : AdminSettingsService(server, fs, NTP_SETTINGS_SERVICE_PATH, NTP_SETTINGS_FILE),
                                                                                                                                        _activeStatus(activeStatus)
 {
 
@@ -119,7 +119,7 @@ void NTPSettingsService::configureNTP()
 
   // enable sync
   NTP.begin(_server);
-  //NTP.setInterval(_interval);
+  NTP.setInterval(_interval);
 }
 
 void NTPSettingsService::processSyncEvent(NTPSyncEvent_t ntpEvent)

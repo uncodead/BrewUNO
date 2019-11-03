@@ -47,7 +47,6 @@
 #include <BrewUNO/KeyButton.h>
 
 #define SERIAL_BAUD_RATE 115200
-#define PCF8574_ADDRESS 0x20
 
 OneWire oneWire(TEMPERATURE_BUS);
 DallasTemperature DS18B20(&oneWire);
@@ -60,21 +59,21 @@ PCF857x pcf8574(PCF8574_ADDRESS, &pcfWire);
 
 AsyncWebServer server(80);
 
-SecuritySettingsService securitySettingsService = SecuritySettingsService(&server, &SPIFFS);
-WiFiSettingsService wifiSettingsService = WiFiSettingsService(&server, &SPIFFS, &securitySettingsService);
-APSettingsService apSettingsService = APSettingsService(&server, &SPIFFS, &securitySettingsService);
-OTASettingsService otaSettingsService = OTASettingsService(&server, &SPIFFS, &securitySettingsService);
-AuthenticationService authenticationService = AuthenticationService(&server, &securitySettingsService);
+//SecuritySettingsService securitySettingsService = SecuritySettingsService(&server, &SPIFFS);
+WiFiSettingsService wifiSettingsService = WiFiSettingsService(&server, &SPIFFS);
+APSettingsService apSettingsService = APSettingsService(&server, &SPIFFS);
+OTASettingsService otaSettingsService = OTASettingsService(&server, &SPIFFS);
+//AuthenticationService authenticationService = AuthenticationService(&server, &securitySettingsService);
 
-WiFiScanner wifiScanner = WiFiScanner(&server, &securitySettingsService);
-WiFiStatus wifiStatus = WiFiStatus(&server, &securitySettingsService);
-NTPStatus ntpStatus = NTPStatus(&server, &securitySettingsService);
-APStatus apStatus = APStatus(&server, &securitySettingsService);
-SystemStatus systemStatus = SystemStatus(&server, &securitySettingsService);
+WiFiScanner wifiScanner = WiFiScanner(&server);
+WiFiStatus wifiStatus = WiFiStatus(&server);
+NTPStatus ntpStatus = NTPStatus(&server);
+APStatus apStatus = APStatus(&server);
+SystemStatus systemStatus = SystemStatus(&server);
 
 //brewUNO
 ActiveStatus activeStatus = ActiveStatus(&SPIFFS);
-NTPSettingsService ntpSettingsService = NTPSettingsService(&server, &SPIFFS, &securitySettingsService, &activeStatus);
+NTPSettingsService ntpSettingsService = NTPSettingsService(&server, &SPIFFS, &activeStatus);
 
 BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS, &activeStatus);
 TemperatureService temperatureService = TemperatureService(&server, &SPIFFS, DS18B20, &brewSettingsService);
@@ -89,17 +88,34 @@ BoilKettleHeaterService boilKettleHeaterService = BoilKettleHeaterService(&tempe
 MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService, &brewSettingsService);
 BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &boilKettleHeaterService, &activeStatus, &temperatureService, &pump);
-InternationalizationService internationalizationService = InternationalizationService(&server, &SPIFFS, &brewSettingsService);
+//InternationalizationService internationalizationService = InternationalizationService(&server, &SPIFFS, &brewSettingsService);
 
-const int btn1 = BUTTONUP_BUS;
-const int btn2 = BUTTONDOWN_BUS;
-const int btn3 = BUTTONSTART_BUS;
-const int btn4 = BUTTONENTER_BUS;
-KeyButton button1(btn1, pcf8574);
-KeyButton button2(btn2, pcf8574);
-KeyButton button3(btn3, pcf8574);
-KeyButton button4(btn4, pcf8574);
+time_t lastReadButton = now();
+KeyButton button1(BUTTONUP_BUS, pcf8574);
+KeyButton button2(BUTTONDOWN_BUS, pcf8574);
+KeyButton button3(BUTTONSTART_BUS, pcf8574);
+KeyButton button4(BUTTONENTER_BUS, pcf8574);
 KeyPadService keypad = KeyPadService(&activeStatus, &pcf8574, &brewService, &brewSettingsService, &pump, &button1, &button2, &button3, &button4);
+
+volatile bool PCFInterruptFlag = false;
+void ICACHE_RAM_ATTR PCFInterrupt()
+{
+  if (!PCFInterruptFlag)
+  {
+    Serial.println("Button pressed");
+    lastReadButton = now();
+  }
+  PCFInterruptFlag = true;
+}
+void KeyPadLoop()
+{
+  keypad.loop(PCFInterruptFlag);
+  if (now() - lastReadButton > 10 && PCFInterruptFlag)
+  {
+    PCFInterruptFlag = false;
+    Serial.println("Button released by time");
+  }
+}
 
 void setup()
 {
@@ -118,7 +134,7 @@ void setup()
   //SPIFFS.format();
 
   // Start security settings service first
-  securitySettingsService.begin();
+  //securitySettingsService.begin();
 
   // Start services
   ntpSettingsService.begin();
@@ -127,11 +143,12 @@ void setup()
   wifiSettingsService.begin();
 
   // Serving static resources from /www/
-  server.serveStatic("/js/", SPIFFS, "/www/js/");
-  server.serveStatic("/css/", SPIFFS, "/www/css/");
-  server.serveStatic("/fonts/", SPIFFS, "/www/fonts/");
-  server.serveStatic("/app/", SPIFFS, "/www/app/");
-  server.serveStatic("/favicon.ico", SPIFFS, "/www/favicon.ico");
+  server.serveStatic("/js/", SPIFFS, "/www/js/", "max-age=86400");
+  server.serveStatic("/css/", SPIFFS, "/www/css/", "max-age=86400");
+  server.serveStatic("/fonts/", SPIFFS, "/www/fonts/", "max-age=86400");
+  server.serveStatic("/app/", SPIFFS, "/www/app/", "max-age=86400");
+  server.serveStatic("/favicon.ico", SPIFFS, "/www/favicon.ico", "max-age=86400");
+  server.serveStatic("/app/logo.png", SPIFFS, "/www/app/logo.png", "max-age=86400");
 
   // Serving all other get requests with "/www/index.htm"
   // OPTIONS get a straight up 200 response
@@ -180,8 +197,11 @@ void setup()
   pcfWire.begin(D2, D1);
   //Specsheets say PCF8574 is officially rated only for 100KHz I2C-bus
   //PCF8575 is rated for 400KHz
-  pcfWire.setClock(400000L);
+  pcfWire.setClock(600000L);
   pcf8574.begin();
+  pinMode(D3, INPUT_PULLUP);
+  pcf8574.resetInterruptPin();
+  attachInterrupt(digitalPinToInterrupt(D3), PCFInterrupt, FALLING);
 }
 
 void loop()
@@ -192,5 +212,5 @@ void loop()
   otaSettingsService.loop();
   brewService.loop();
   display.loop();
-  keypad.loop();
+  KeyPadLoop();
 }

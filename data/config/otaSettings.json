@@ -1,5 +1,5 @@
 {
-   "enabled":true,
+   "enabled": false,
    "port": 8266,
    "password": "brewuno"
 }

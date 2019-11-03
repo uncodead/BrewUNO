@@ -23,7 +23,7 @@ class NTPSettingsService : public AdminSettingsService
 {
 
 public:
-  NTPSettingsService(AsyncWebServer *server, FS *fs, SecurityManager *securityManager, ActiveStatus *activeStatus);
+  NTPSettingsService(AsyncWebServer *server, FS *fs, ActiveStatus *activeStatus);
   ~NTPSettingsService();
 
   void loop();
