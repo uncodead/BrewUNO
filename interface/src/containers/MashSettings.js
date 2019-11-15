@@ -7,23 +7,45 @@ import { withSnackbar } from 'notistack';
 import { SAVE_MASH_SETTINGS_SERVICE_PATH, GET_MASH_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
 import { ExecuteRestCall } from '../components/Utils';
 import IntText from '../components/IntText'
+import Cookies from 'js-cookie';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@material-ui/core/Typography';
 
 class MashSettings extends Component {
   constructor(props) {
     super(props)
     this.state = { items: [] }
-    this.getMashSettings();
     this.child = React.createRef();
   }
 
+  componentDidMount() {
+    if (Cookies.get('mashSettings') === undefined) {
+      setTimeout(function () {
+        this.getMashSettings();
+      }.bind(this), 2000)
+    }
+    else {
+      this.getMashSettings();
+    }
+  }
+
   getMashSettings = () => {
-    ExecuteRestCall(GET_MASH_SETTINGS_SERVICE_PATH, 'GET', (json) => {
-      if (json.st != undefined && json.st != null)
-        this.setState({ items: json.st })
-    }, this.setState({ items: [] }), this.props)
+    if (Cookies.get('mashSettings') === undefined) {
+      ExecuteRestCall(GET_MASH_SETTINGS_SERVICE_PATH, 'GET', (json) => {
+        if (json.st !== undefined && json.st !== null) {
+          this.setState({ items: json.st })
+          Cookies.set('mashSettings', json.st)
+        }
+      }, this.setState({ items: [] }), this.props)
+    }
+    else {
+      var json = JSON.parse(Cookies.get('mashSettings'))
+      this.setState({ items: json })
+    }
   }
 
   saveMashSettings = () => {
+    Cookies.set('mashSettings', this.state.items)
     fetch(SAVE_MASH_SETTINGS_SERVICE_PATH, {
       method: 'POST',
       body: JSON.stringify({ "st": this.state.items }),
@@ -102,6 +124,14 @@ class MashSettings extends Component {
           <MashSettingsForm callbackItemAdded={this.itemAdded} ref={this.child} />
           : null}
         <Divider />
+        {
+          this.state.items === null || this.state.items === undefined || this.state.items.length <= 0 ?
+            <div>
+              <LinearProgress />
+              <Typography variant="display1">{<IntText text="Loading" />}...</Typography>
+            </div>
+            : null
+        }
         <SortableList
           items={this.state.items}
           callbackItemsSorted={this.itemsSorted}

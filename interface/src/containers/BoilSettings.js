@@ -7,24 +7,45 @@ import { withSnackbar } from 'notistack';
 import { SAVE_BOIL_SETTINGS_SERVICE_PATH, GET_BOIL_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
 import { ExecuteRestCall } from '../components/Utils';
 import IntText from '../components/IntText'
+import Cookies from 'js-cookie';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@material-ui/core/Typography';
 
 class BoilSettings extends Component {
   constructor() {
     super()
-
     this.state = { items: [] }
-    this.getBoilSettings();
     this.child = React.createRef();
   }
 
+  componentDidMount() {
+    if (Cookies.get('boilSettings') === undefined) {
+      setTimeout(function () {
+        this.getBoilSettings();
+      }.bind(this), 3000)
+    }
+    else {
+      this.getBoilSettings();
+    }
+  }
+
   getBoilSettings = () => {
-    ExecuteRestCall(GET_BOIL_SETTINGS_SERVICE_PATH, 'GET', (json) => {
-      if (json.st != undefined && json.st != null)
-        this.setState({ items: json.st })
-    }, this.setState({ items: [] }), this.props)
+    if (Cookies.get('boilSettings') === undefined) {
+      ExecuteRestCall(GET_BOIL_SETTINGS_SERVICE_PATH, 'GET', (json) => {
+        if (json.st != undefined && json.st != null) {
+          this.setState({ items: json.st })
+          Cookies.set('boilSettings', json.st)
+        }
+      }, this.setState({ items: [] }), this.props)
+    }
+    else {
+      var json = JSON.parse(Cookies.get('boilSettings'))
+      this.setState({ items: json })
+    }
   }
 
   saveBoilSettings = () => {
+    Cookies.set('boilSettings', this.state.items)
     fetch(SAVE_BOIL_SETTINGS_SERVICE_PATH, {
       method: 'POST',
       body: JSON.stringify({ "st": this.state.items }),
@@ -88,6 +109,14 @@ class BoilSettings extends Component {
         {!this.props.listOnly ?
           <BoilSettingsForm callbackItemAdded={this.itemAdded} boil={true} ref={this.child} /> : null}
         <Divider />
+        {
+          this.state.items === null || this.state.items === undefined || this.state.items.length <= 0 ?
+            <div>
+              <LinearProgress />
+              <Typography variant="display1">{<IntText text="Loading" />}...</Typography>
+            </div>
+            : null
+        }
         <SortableList
           items={this.state.items}
           callbackItemDeleted={this.itemDeleted}

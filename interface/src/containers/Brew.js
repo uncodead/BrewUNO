@@ -37,7 +37,7 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import { withSnackbar } from 'notistack';
 import BrewStyles from '../style/BrewStyle'
 import IntText from '../components/IntText'
-import LinearProgress from '@material-ui/core/LinearProgress';
+import Cookies from 'js-cookie';
 
 let interval;
 
@@ -52,19 +52,13 @@ class Brew extends Component {
       activeStepName: "-",
       statusInitialized: false,
       copyDialogMessage: false,
-      renderMashSettings: false,
-      renderBoilSettings: false
     }
     interval = setInterval(() => { this.getStatus(); }, 5000);
   }
 
   componentDidMount() {
-    setTimeout(function () { //Start the timer
-      this.setState({ renderMashSettings: true }) //After 1 second, set render to true
-    }.bind(this), 2000)
-    setTimeout(function () { //Start the timer
-      this.setState({ renderBoilSettings: true }) //After 1 second, set render to true
-    }.bind(this), 3000)
+    if (Cookies.get('status') !== undefined)
+      this.setState({ status: JSON.parse(Cookies.get('status')) }, this.updateStatus)
   }
 
   componentWillUnmount() {
@@ -79,7 +73,7 @@ class Brew extends Component {
       this.notification(this.getActiveStep(), this.state.status.masn + ' ' + this.state.status.amssn, <IntText text="Mash" />)
       this.notification(this.getActiveStep(), this.state.status.absn, <IntText text="Boil" />)
 
-      if (this.getActiveStep() == "Stopped")
+      if (this.getActiveStep() === "Stopped")
         this.setState({ activeStepName: '-' })
     }
     this.setState({ statusInitialized: true })
@@ -97,16 +91,21 @@ class Brew extends Component {
         this.props.enqueueSnackbar(stepName, {
           persist: true,
           action,
-          variant: step.props.text == "Boil" ? 'success' : 'warning'
+          variant: step.props.text === "Boil" ? 'success' : 'warning'
         });
       }
     }
   }
 
   getStatus() {
+    if (Cookies.get('status') !== undefined && this.state.status === null)
+      this.setState({ status: JSON.parse(Cookies.get('status')) }, this.updateStatus)
+
     ExecuteRestCall(GET_ACTIVE_STATUS, 'GET', json => {
-      if (json != null && json != undefined && json != '')
+      if (json !== null && json !== undefined && json !== '') {
+        Cookies.set('status', json)
         this.setState({ status: json }, this.updateStatus)
+      }
     })
   }
 
@@ -153,6 +152,7 @@ class Brew extends Component {
   }
 
   actionBrew = (message, url, callback) => {
+    Cookies.remove('status')
     Event("Brew", url, "/brew")
     if (message !== '')
       this.setState({
@@ -161,14 +161,20 @@ class Brew extends Component {
         confirmDialogMessage: message,
         confirmAction: (confirm) => {
           if (confirm) {
-            ExecuteRestCall(url, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
+            ExecuteRestCall(url, 'POST', (json) => {
+              Cookies.set('status', json)
+              this.setState({ status: json })
+            }, null, this.props)
             if (callback) callback()
           }
           this.setState({ confirmDialogOpen: false })
         }
       });
     else {
-      ExecuteRestCall(url, 'POST', (json) => { this.setState({ status: json }) }, null, this.props)
+      ExecuteRestCall(url, 'POST', (json) => {
+        Cookies.set('status', json)
+        this.setState({ status: json })
+      }, null, this.props)
       if (callback) callback()
     }
   }
@@ -318,22 +324,10 @@ class Brew extends Component {
             <Grid item>
               <Grid container >
                 <Grid item>
-                  {this.state.renderMashSettings ?
-                    <MashSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.amsi} />
-                    : <div className={classes.loadingSettings}>
-                      <LinearProgress className={classes.loadingSettingsDetails} />
-                      <Typography variant="display1"><IntText text="Loading" />...</Typography>
-                    </div>
-                  }
+                  <MashSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.amsi} />
                 </Grid>
                 <Grid item>
-                  {this.state.renderBoilSettings ?
-                    <BoilSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.absi} />
-                    : <div className={classes.loadingSettings}>
-                      <LinearProgress className={classes.loadingSettingsDetails} />
-                      <Typography variant="display1"><IntText text="Loading" />...</Typography>
-                    </div>
-                  }
+                  <BoilSettings listOnly={true} brewDay={true} selectedIndex={this.state.status.absi} />
                 </Grid>
               </Grid>
             </Grid>

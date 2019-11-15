@@ -13,6 +13,7 @@ import {
 import { ExecuteRestCall } from './components/Utils'
 import { BREW_SETTINGS_ENDPOINT } from './constants/Endpoints';
 import IntText from "./components/IntText"
+import Cookies from 'js-cookie';
 
 const theme = createMuiTheme({
   palette: {
@@ -61,6 +62,9 @@ class App extends Component {
         this.child.current.SetText(json.lg)
       })
     }.bind(this), 4000)
+    Cookies.remove('mashSettings')
+    Cookies.remove('boilSettings')
+    Cookies.remove('status')
   }
 
   render() {
