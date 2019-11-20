@@ -18,7 +18,6 @@ struct Temperatures
   float AuxOne;
   float AuxTwo;
   float AuxThree;
-  String Json;
 };
 
 #endif

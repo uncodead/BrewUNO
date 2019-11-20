@@ -44,10 +44,10 @@ Temperatures TemperatureService::GetTemperatures()
     {
         _dallasTemperature.getAddress(Thermometer, i);
         float temp = _brewSettingsService->TempUnit == "C" ? _dallasTemperature.getTempC(Thermometer) : _dallasTemperature.getTempF(Thermometer);
-        _json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",\"value\": \"" + String(temp) + "\"}";
+        addr = GetAddressToString(Thermometer);
+        _json += "{ \"address\": \"" + addr + "\",\"value\": \"" + String(temp) + "\"}";
         if (i < DeviceCount - 1)
             _json += ',';
-        addr = GetAddressToString(Thermometer);
         if (addr == _brewSettingsService->MainSensor)
             temps.Main = temp + _brewSettingsService->MainSensorOffset;
         if (addr == _brewSettingsService->SpargeSensor)
@@ -62,7 +62,6 @@ Temperatures TemperatureService::GetTemperatures()
             temps.AuxThree = temp + _brewSettingsService->AuxSensorThreeOffset;
     }
     json = _json + "]}";
-    temps.Json = json;
     return temps;
 }
 

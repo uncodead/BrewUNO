@@ -2,7 +2,7 @@
 
 build: | pull
 	platformio run
-	cd interface;npm run build
+	cd interface;npm install;npm run build
 	platformio run -v -t buildfs
 
 uploadfs:
