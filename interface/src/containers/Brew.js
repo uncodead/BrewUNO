@@ -11,7 +11,7 @@ import {
   NEXT_STEP_BREW, STOP_BREW, RESUME_BREW,
   CHANGE_BOIL_PERCENTAGE,
   START_BOIL, PAUSE_BREW,
-  START_ANTICAVITATION
+  START_ANTICAVITATION, START_BOIL_COUNTER
 } from '../constants/Endpoints';
 import { ExecuteRestCall } from '../components/Utils';
 import { Event } from '../components/Tracking'
@@ -51,7 +51,7 @@ class Brew extends Component {
       boilPower: 0,
       activeStepName: "-",
       statusInitialized: false,
-      copyDialogMessage: false,
+      copyDialogMessage: false
     }
     interval = setInterval(() => { this.getStatus(); }, 5000);
   }
@@ -73,8 +73,6 @@ class Brew extends Component {
       this.notification(this.getActiveStep(), this.state.status.masn + ' ' + this.state.status.amssn, <IntText text="Mash" />)
       this.notification(this.getActiveStep(), this.state.status.absn, <IntText text="Boil" />)
 
-      if (this.getActiveStep() === "Stopped")
-        this.setState({ activeStepName: '-' })
     }
     this.setState({ statusInitialized: true })
   }
@@ -82,7 +80,7 @@ class Brew extends Component {
   notification(getActiveStep, stepName, step) {
     if (getActiveStep.props.text === step.props.text && this.state.activeStepName !== stepName) {
       this.setState({ activeStepName: stepName });
-      if (stepName !== "" && stepName !== undefined) {
+      if (stepName !== "" && stepName !== " " && stepName !== undefined) {
         const action = (key) => (
           <Button color="Primary" onClick={() => { this.props.closeSnackbar(key) }}>
             <IntText text="Dismiss" />
@@ -123,11 +121,11 @@ class Brew extends Component {
   }
 
   handleChangeBoilPowerPercentage = (value) => {
-    this.setState({ boilPower: value });
+    this.setState({ boilPower: value }, this.updateStatus);
   }
 
   handleSaveChangeBoilPowerPercentage = (value) => {
-    this.setState({ boilPower: value });
+    this.setState({ boilPower: value }, this.updateStatus);
     fetch(CHANGE_BOIL_PERCENTAGE, {
       method: 'POST',
       body: JSON.stringify({ "boil_power_percentage": this.state.boilPower }),
@@ -163,7 +161,7 @@ class Brew extends Component {
           if (confirm) {
             ExecuteRestCall(url, 'POST', (json) => {
               Cookies.set('status', json)
-              this.setState({ status: json })
+              this.setState({ status: json }, this.updateStatus)
             }, null, this.props)
             if (callback) callback()
           }
@@ -173,7 +171,7 @@ class Brew extends Component {
     else {
       ExecuteRestCall(url, 'POST', (json) => {
         Cookies.set('status', json)
-        this.setState({ status: json })
+        this.setState({ status: json }, this.updateStatus)
       }, null, this.props)
       if (callback) callback()
     }
@@ -242,6 +240,10 @@ class Brew extends Component {
               </IconButton>
               <Menu {...bindMenu(popupState)}>
                 <MenuItem key="placeholder" style={{ display: "none" }} />
+                {this.state.status.as === 2 ?
+                  <MenuItem onClick={() => { this.actionBrew(<IntText text="Brew.StartBoilCounterConfirmation" />, START_BOIL_COUNTER) }}><IntText text="StartBoilCounter" /></MenuItem>
+                  : null
+                }
                 {this.state.status.as === 0 ?
                   <MenuItem onClick={() => {
                     this.actionBrew(<IntText text="Brew.PumpPrimeConfirmation" />, START_ANTICAVITATION,

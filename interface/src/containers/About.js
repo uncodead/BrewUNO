@@ -6,8 +6,8 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import SectionContent from '../components/SectionContent';
 import { withStyles } from '@material-ui/core/styles';
-
 import IntText from '../components/IntText'
+import Cookies from 'js-cookie';
 
 const styles = theme => ({
   card: {
@@ -29,6 +29,15 @@ const styles = theme => ({
 class About extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      version: ''
+    }
+  }
+
+  componentDidMount() {
+    var status = Cookies.get('status')
+    if (status !== undefined)
+      this.setState({ version: JSON.parse(status).v });
   }
 
   render() {
@@ -37,6 +46,12 @@ class About extends Component {
       <SectionContent title={<IntText text="About" />}>
         <Card className={this.props.className}>
           <CardContent>
+            {this.state.version !== '' ?
+              <Typography className={classes.pos} variant="h6" color="textSecondary">
+                Version: {this.state.version}
+              </Typography>
+              : null
+            }
             <Typography variant="h6" component="h1" className={classes.pos}>
               <IntText text="Author" />:
             </Typography>
