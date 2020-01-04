@@ -136,7 +136,7 @@ class BrewStatusGadget extends Component {
                 <CardContent>
                   <div>
                     <Typography color="textSecondary" variant="subtitle2" gutterBottom><IntText text="Timer" /></Typography>
-                    <Typography variant="h4">{this.state.countdown != undefined ? this.state.countdown : '-'}</Typography>
+                    <Typography variant="h4">{this.state.countdown !== undefined ? this.state.countdown : '-'}</Typography>
                   </div>
                   &nbsp;
                     <div style={{ paddingTop: 7, paddingBotton: 0 }}>
@@ -145,7 +145,7 @@ class BrewStatusGadget extends Component {
                   &nbsp;
                     <div style={{ paddingTop: 7 }}>
                     <Typography color="textSecondary" variant="caption" gutterBottom><IntText text="Brew.ActiveStep" /></Typography>
-                    <Typography variant="subtitle1">{this.props.ActiveStepName != "" ? this.props.ActiveStepName : '-'}</Typography>
+                    <Typography variant="subtitle1">{this.props.ActiveStepName !== "" ? this.props.ActiveStepName : '-'}</Typography>
                   </div>
                 </CardContent>
               </Card>

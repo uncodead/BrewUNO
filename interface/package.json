@@ -8,6 +8,7 @@
     "@material-ui/lab": "^3.0.0-alpha.30",
     "compression-webpack-plugin": "^2.0.0",
     "i18n-react": "^0.7.0",
+    "js-cookie": "^2.2.1",
     "material-ui-popup-state": "^1.4.0",
     "moment": "^2.24.0",
     "notistack": "^0.8.6",
