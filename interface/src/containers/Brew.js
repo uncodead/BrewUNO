@@ -121,11 +121,11 @@ class Brew extends Component {
   }
 
   handleChangeBoilPowerPercentage = (value) => {
-    this.setState({ boilPower: value }, this.updateStatus);
+    this.setState({ boilPower: value });
   }
 
   handleSaveChangeBoilPowerPercentage = (value) => {
-    this.setState({ boilPower: value }, this.updateStatus);
+    this.setState({ boilPower: value });
     fetch(CHANGE_BOIL_PERCENTAGE, {
       method: 'POST',
       body: JSON.stringify({ "boil_power_percentage": this.state.boilPower }),
