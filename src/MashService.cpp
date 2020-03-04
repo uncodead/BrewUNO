@@ -37,7 +37,10 @@ void MashService::loop(ActiveStatus *activeStatus)
         activeStatus->FullPower = ((int)steps[0]["fp"]) == 1;
         activeStatus->ActiveMashStepName = steps[0]["n"].as<String>();
         activeStatus->ActiveMashStepSufixName = getMashName(activeStatus, steps[0]);
+        activeStatus->Recirculation = ((int)steps[0]["r"]) == 1;
+        if (activeStatus->Recirculation) {
         _pump->TurnPumpOn();
+        }
 
         // brew was stopped during anti cavitatiton
         if (!activeStatus->BrewStarted || activeStatus->ActiveStep != mash)
