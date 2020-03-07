@@ -120,7 +120,6 @@ The default settings configure the device to bring up an access point on start u
 
 # Thanks to:
 
-* Luciano Rampanelli
 * Eduardo 'Dumpa' Sanches
 * Guilherme Wood
 * Paiakan
