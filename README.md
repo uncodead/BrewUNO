@@ -6,7 +6,7 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 
 ## Features:
 
-![BrewUNO](https://i.imgur.com/6Zki2pi_d.jpg)
+![BrewUNO](https://i.imgur.com/6Zki2pi_d.jpg?maxwidth=840)
 
 * 100% mobile interface
 * Brew with Start/Stop/Resume 
