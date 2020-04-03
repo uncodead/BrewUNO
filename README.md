@@ -29,7 +29,7 @@ High precision and accuracy, open source, online, extensible and low cost homebr
 
 ### Simple Wiring and construction:
 
-![WireUP](https://i.imgur.com/pgD974z.png)
+![WireUP](https://i.imgur.com/IRfGEfY.png)
 
 This is the easiest way to mount your brewuno, you can improve it!
 
