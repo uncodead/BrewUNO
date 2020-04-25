@@ -233,6 +233,7 @@ class BrewSettingsForm extends Component {
                   <Grid item xs={6}>
                     <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="BoilSensor" /></Typography>
+                      {/*
                       <div style={{ marginTop: 0, marginLeft: 20, padding: 0 }}>
                         <FormControlLabel
                           control={
@@ -247,6 +248,7 @@ class BrewSettingsForm extends Component {
                           label={<IntText text="BrewSettings.EnableBoilKettle" />}
                         />
                       </div>
+                      */}
                       <Select className={classes.formControl}
                         value={brewSettings.bs}
                         onChange={handleValueChange("bs")}
