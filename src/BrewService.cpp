@@ -236,7 +236,7 @@ void BrewService::loop()
         _activeStatus->SetTemperature(temps);
         _activeStatus->MainSensor = _brewSettingsService->MainSensor;
         _activeStatus->SpargeSensor = _brewSettingsService->SpargeSensor;
-        _activeStatus->BoilSensor = _brewSettingsService->EnableBoilKettle ? _brewSettingsService->BoilSensor : _activeStatus->MainSensor;
+        _activeStatus->BoilSensor = _brewSettingsService->BoilSensor;
         _activeStatus->AuxOneSensor = _brewSettingsService->AuxOneSensor;
         _activeStatus->AuxTwoSensor = _brewSettingsService->AuxTwoSensor;
         _activeStatus->AuxThreeSensor = _brewSettingsService->AuxThreeSensor;

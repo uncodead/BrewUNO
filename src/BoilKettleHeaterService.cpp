@@ -62,8 +62,6 @@ void BoilKettleHeaterService::SetUP()
 {
   _activeStatus->EnableBoilKettle = _brewSettingsService->EnableBoilKettle;
   _activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
-  if (!_activeStatus->EnableBoilKettle)
-    _activeStatus->BoilTemperature = _activeStatus->Temperature;
 }
 
 bool BoilKettleHeaterService::InvertedPWM()
