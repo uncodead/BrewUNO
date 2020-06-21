@@ -175,6 +175,8 @@ void setup()
   pinMode(HEATER_BUS, OUTPUT);
   pinMode(SPARGE_HEATER_BUS, OUTPUT);
   pinMode(BOIL_HEATER_BUS, OUTPUT);
+  pinMode(D4, OUTPUT);
+  pinMode(D4, LOW);
 
   pump.TurnPumpOff();
   DS18B20.begin();

@@ -104,7 +104,8 @@
     "PumpRestInterval": "Intervalo reposo bomba",
     "PumpRestTime": "Tiempo descanso bomba",
     "PumpCycle": "Ciclo de bomba",
-    "EnableBoilKettle": "Habilitar hervidor de agua"
+    "EnableBoilKettle": "Habilitar hervidor de agua",
+    "BoilAttention": "Attention: enable only for systems with a separated boil kettle."
   },
   "WiFiSettings": {
     "Settings": "Configuración",
