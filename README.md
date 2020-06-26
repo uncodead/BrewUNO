@@ -2,6 +2,24 @@
 
 High precision and accuracy, open source, online, extensible and low cost homebrew automation on top of ESP8266 microchip.
 
+# BrewUNO Pro [novo]
+
+Conforme o [licenciamento](https://github.com/uncodead/BrewUNO/blob/master/LICENSE.txt) do BrewUNO, é expressamente proibido a venda ou distribuição comercial deste projeto sem permissão do Bruno Leitão.
+
+*(According to the BrewUNO [license](https://github.com/uncodead/BrewUNO/blob/master/LICENSE.txt), the sale or commercial distribution of this project without the permission of Bruno Leitão is prohibited.)*
+
+Copyright (C) 2019 Bruno Leitão Todos os direitos reservados. Este projeto é gratuito para uso. É permitido modificar para uso pessoal. Não é permitido distribuir o projeto modificado. A modificação pode ser distribuída apenas através do lançamento oficial do BrewUNO. Não é permitido distribuir comercialmente sem permissão.
+
+*(Copyright (C) 2019 Bruno Leitão All rights reserved. This project is free to use. It's permitted to modify for personal use. It's not permitted to distribute the modified project. Modification can be distributed via the official BrewUNO release only. It's not permitted to distribute in a commercial way without permission.)*
+
+Caso você tenha comprado o BrewUNO (instalado) de alguma empresa ou fornecedor comercial, por favor, entre em contato comigo no email: uncodead@gmail.com
+
+*(If you have purchased BrewUNO (installed) from any company or commercial supplier, please contact me at email: uncodead@gmail.com)*
+
+Estou preparando uma versão 'PRO' com novas funcionalidades para atender a demanda comercial do BrewUNO. Apenas fornecedores cadastrados poderão vender a versão PRO. A versão gratuita/free continuará existindo e sendo mantida, tanto por mim como pela comunidade. Caso você queira comercializar a versão PRO envie um email para uncodead@gmail.com
+
+*(I am preparing a 'PRO' version with new features to meet the commercial demand of BrewUNO. Only registered suppliers can sell the PRO version. The free version will continue to exist and be maintained, both by me and the community. If you want to sell the PRO version send an email to uncodead@gmail.com)*
+
 ![BrewUNO](http://brewuno.com/images/home-brewuno.png)
 
 ## Features:
