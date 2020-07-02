@@ -104,7 +104,8 @@
     "PumpRestInterval": "Pump Rest Interval",
     "PumpRestTime": "Pump Rest Time",
     "PumpCycle": "Pump Cycle",
-    "EnableBoilKettle": "Enable Boil Kettle"
+    "EnableBoilKettle": "Enable Boil Kettle",
+    "BoilAttention": "Attention: enable only for systems with a separated boil kettle."
   },
   "WiFiSettings": {
     "Settings": "WiFi Settings",

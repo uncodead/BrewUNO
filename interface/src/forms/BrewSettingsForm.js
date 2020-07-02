@@ -27,7 +27,7 @@ const styles = theme => ({
   },
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 120,
+    minWidth: '95%'
   },
   formControlTypography: {
     minWidth: '100%'
@@ -233,22 +233,6 @@ class BrewSettingsForm extends Component {
                   <Grid item xs={6}>
                     <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="BoilSensor" /></Typography>
-                      {/*
-                      <div style={{ marginTop: 0, marginLeft: 20, padding: 0 }}>
-                        <FormControlLabel
-                          control={
-                            <Switch
-                              checked={brewSettings.ebk}
-                              value={'ebk'}
-                              onChange={handleCheckboxChange('ebk')}
-                              color="secondary"
-                              margin
-                            />
-                          }
-                          label={<IntText text="BrewSettings.EnableBoilKettle" />}
-                        />
-                      </div>
-                      */}
                       <Select className={classes.formControl}
                         value={brewSettings.bs}
                         onChange={handleValueChange("bs")}
@@ -270,6 +254,21 @@ class BrewSettingsForm extends Component {
                         onChange={handleFloatValueChange("bso")}
                         errorMessages={[<IntText text="FieldRequired" />]}
                       />
+                      <Typography className={classes.formControl}><IntText text="BrewSettings.BoilAttention" /></Typography>
+                      <div style={{ marginTop: 0, marginLeft: 20, padding: 0 }}>
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={brewSettings.ebk}
+                              value={'ebk'}
+                              onChange={handleCheckboxChange('ebk')}
+                              color="secondary"
+                              margin
+                            />
+                          }
+                          label={<IntText text="BrewSettings.EnableBoilKettle" />}
+                        />
+                      </div>
                     </Paper>
                   </Grid>
 

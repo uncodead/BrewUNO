@@ -103,7 +103,8 @@
     "AuxiliarySensor3": "Сенсор 3",
     "PumpRestInterval": "Отдых насоса",
     "PumpRestTime": "Время отдыха насоса",
-    "EnableBoilKettle": "Enable Boil Kettle"
+    "EnableBoilKettle": "Enable Boil Kettle",
+    "BoilAttention": "Attention: enable only for systems with a separated boil kettle."
   },
   "WiFiSettings": {
     "Settings": "WiFi Settings",

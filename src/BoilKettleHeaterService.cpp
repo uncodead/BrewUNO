@@ -66,7 +66,7 @@ void BoilKettleHeaterService::SetUP()
 
 bool BoilKettleHeaterService::InvertedPWM()
 {
-  return _brewSettingsService->EnableBoilKettle;
+  return false;
 }
 
 boolean BoilKettleHeaterService::StopCompute()
@@ -78,7 +78,6 @@ void BoilKettleHeaterService::TurnOff()
 {
   if (!_activeStatus->BrewStarted || _activeStatus->EnableBoilKettle)
   {
-    analogWrite(BOIL_HEATER_BUS, 1023);
-    digitalWrite(BOIL_HEATER_BUS, HIGH);
+    analogWrite(BOIL_HEATER_BUS, 0);
   }
 }

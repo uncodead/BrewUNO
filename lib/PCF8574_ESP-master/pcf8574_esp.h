@@ -11,58 +11,58 @@
 #include <WProgram.h>
 #endif
 
-#if defined (ARDUINO_AVR_DIGISPARK) || defined (ARDUINO_AVR_ATTINYX5)
+#if defined(ARDUINO_AVR_DIGISPARK) || defined(ARDUINO_AVR_ATTINYX5)
 #include <TinyWireM.h>
 #else
 #include <Wire.h>
 #endif
 
-#define PCF857x_OK          0x00
-#define PCF857x_PIN_ERROR   0x81
-#define PCF857x_I2C_ERROR   0x82
+#define PCF857x_OK 0x00
+#define PCF857x_PIN_ERROR 0x81
+#define PCF857x_I2C_ERROR 0x82
 
 class PCF857x
 {
-  public:
-    // Defaults to 8574, set is8575 to true if you have a 8575 instead.
-    #if defined (ARDUINO_AVR_DIGISPARK) || defined (ARDUINO_AVR_ATTINYX5)
-    PCF857x(uint8_t address, bool is8575 = false);
-    #else
-    PCF857x(uint8_t address, TwoWire *UseWire, bool is8575 = false);
-    #endif
+public:
+// Defaults to 8574, set is8575 to true if you have a 8575 instead.
+#if defined(ARDUINO_AVR_DIGISPARK) || defined(ARDUINO_AVR_ATTINYX5)
+  PCF857x(uint8_t address, bool is8575 = false);
+#else
+  PCF857x(uint8_t address, TwoWire *UseWire, bool is8575 = false);
+#endif
 
-    void begin(uint16_t defaultValues=0xffff);
-    uint8_t read8();
-    uint16_t read16();
-    uint8_t read(uint8_t pin);
+  void begin(uint16_t defaultValues = 0xffff);
+  uint8_t read8();
+  uint16_t read16();
+  uint8_t read(uint8_t pin);
 
-    void write8(uint8_t value);
-    void write16(uint16_t value);
-    void write(uint8_t pin, uint8_t value);
+  void write8(uint8_t value);
+  void write16(uint16_t value);
+  void write(uint8_t pin, uint8_t value);
 
-    void toggle(uint8_t pin);
-    void toggleAll();
-    void shiftRight(uint8_t n=1);
-    void shiftLeft(uint8_t n=1);
-    void rotateRight(uint8_t n=1);
-    void rotateLeft(uint8_t n=1);
-    void resetInterruptPin();
+  void toggle(uint8_t pin);
+  void toggleAll();
+  void shiftRight(uint8_t n = 1);
+  void shiftLeft(uint8_t n = 1);
+  void rotateRight(uint8_t n = 1);
+  void rotateLeft(uint8_t n = 1);
+  void resetInterruptPin();
 
-    int lastError();
+  int lastError();
 
-  protected:
-    uint16_t _data;
-    uint16_t _pinModeMask;
-    bool _is8575;
+protected:
+  uint16_t _data;
+  uint16_t _pinModeMask;
+  bool _is8575;
 
-  private:
-    #if defined (ARDUINO_AVR_DIGISPARK) || defined (ARDUINO_AVR_ATTINYX5)
-    USI_TWI *_Wire;
-    #else
-    TwoWire *_Wire;
-    #endif
-    uint8_t _address;
-    int _error;
+private:
+#if defined(ARDUINO_AVR_DIGISPARK) || defined(ARDUINO_AVR_ATTINYX5)
+  USI_TWI *_Wire;
+#else
+  TwoWire *_Wire;
+#endif
+  uint8_t _address;
+  int _error;
 };
 
 #endif

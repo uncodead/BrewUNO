@@ -3,13 +3,13 @@
    Library modified by WereCatf */
 
 #include "pcf8574_esp.h"
-#if defined (ARDUINO_AVR_DIGISPARK) || defined (ARDUINO_AVR_ATTINYX5)
+#if defined(ARDUINO_AVR_DIGISPARK) || defined(ARDUINO_AVR_ATTINYX5)
 #include <TinyWireM.h>
 #else
 #include <Wire.h>
 #endif
 
-#if defined (ARDUINO_AVR_DIGISPARK) || defined (ARDUINO_AVR_ATTINYX5)
+#if defined(ARDUINO_AVR_DIGISPARK) || defined(ARDUINO_AVR_ATTINYX5)
 PCF857x::PCF857x(uint8_t address, bool is8575)
 {
   _Wire = &TinyWireM;
@@ -19,8 +19,10 @@ PCF857x::PCF857x(uint8_t address, bool is8575)
 
 void PCF857x::begin(uint16_t defaultValues)
 {
-  if(_is8575) PCF857x::write16(defaultValues);
-  else PCF857x::write8(defaultValues);
+  if (_is8575)
+    PCF857x::write16(defaultValues);
+  else
+    PCF857x::write8(defaultValues);
 }
 
 #else
@@ -33,25 +35,27 @@ PCF857x::PCF857x(uint8_t address, TwoWire *UseWire, bool is8575)
 
 void PCF857x::begin(uint16_t defaultValues)
 {
-  if(_is8575) PCF857x::write16(defaultValues);
-  else PCF857x::write8(defaultValues);
+  if (_is8575)
+    PCF857x::write16(defaultValues);
+  else
+    PCF857x::write8(defaultValues);
 }
 
 #endif
 
 uint8_t PCF857x::read8()
 {
-  if(_is8575)
+  if (_is8575)
   {
     PCF857x::read16();
-    return (uint8_t) _data;
+    return (uint8_t)_data;
   }
 
-  _Wire->requestFrom(_address, (uint8_t) 1);
-  if(_Wire->available() < 1)
+  _Wire->requestFrom(_address, (uint8_t)1);
+  if (_Wire->available() < 1)
   {
     _error = PCF857x_I2C_ERROR;
-    return (uint8_t) _data;
+    return (uint8_t)_data;
   }
 #if (ARDUINO < 100)
   _data = _Wire->receive();
@@ -63,13 +67,14 @@ uint8_t PCF857x::read8()
 
 uint16_t PCF857x::read16()
 {
-  if(!_is8575){
+  if (!_is8575)
+  {
     PCF857x::read8();
-    return (uint16_t) _data;
+    return (uint16_t)_data;
   }
 
-  _Wire->requestFrom(_address, (uint8_t) 2);
-  if(_Wire->available() < 2)
+  _Wire->requestFrom(_address, (uint8_t)2);
+  if (_Wire->available() < 2)
   {
     _error = PCF857x_I2C_ERROR;
     return _data;
@@ -87,37 +92,41 @@ uint16_t PCF857x::read16()
 
 void PCF857x::resetInterruptPin()
 {
-  if(_is8575) PCF857x::read16();
-  else PCF857x::read8();
+  if (_is8575)
+    PCF857x::read16();
+  else
+    PCF857x::read8();
 }
 
 void PCF857x::write8(uint8_t value)
 {
   _Wire->beginTransmission(_address);
-  _pinModeMask &=0xff00;
+  _pinModeMask &= 0xff00;
   _pinModeMask |= value;
   _data = _pinModeMask;
-  _Wire->write((uint8_t) _data);
-  if(_is8575) _Wire->write((uint8_t) (_data >> 8));
+  _Wire->write((uint8_t)_data);
+  if (_is8575)
+    _Wire->write((uint8_t)(_data >> 8));
   _error = _Wire->endTransmission();
 }
 
 void PCF857x::write16(uint16_t value)
 {
-  if(!_is8575) return;
+  if (!_is8575)
+    return;
   _Wire->beginTransmission(_address);
   _pinModeMask = value;
   _data = _pinModeMask;
-  _Wire->write((uint8_t) _data);
-  _Wire->write((uint8_t) (_data >> 8));
+  _Wire->write((uint8_t)_data);
+  _Wire->write((uint8_t)(_data >> 8));
   _error = _Wire->endTransmission();
 }
 
 uint8_t PCF857x::read(uint8_t pin)
 {
-  if(_is8575)
+  if (_is8575)
   {
-    if(pin > 15)
+    if (pin > 15)
     {
       _error = PCF857x_PIN_ERROR;
       return 0;
@@ -126,106 +135,127 @@ uint8_t PCF857x::read(uint8_t pin)
   }
   else
   {
-    if(pin > 7)
+    if (pin > 7)
     {
       _error = PCF857x_PIN_ERROR;
       return 0;
     }
     PCF857x::read8();
   }
-  return (_data & (1<<pin)) > 0;
+  return (_data & (1 << pin)) > 0;
 }
 
 void PCF857x::write(uint8_t pin, uint8_t value)
 {
-  if(_is8575)
+  if (_is8575)
   {
-    if(pin > 15)
+    if (pin > 15)
     {
       _error = PCF857x_PIN_ERROR;
       return;
     }
   }
-  else if(pin > 7)
+  else if (pin > 7)
   {
     _error = PCF857x_PIN_ERROR;
     return;
   }
   uint8_t _val = value & 1;
-  if(_val) _pinModeMask |= _val << pin;
-  else _pinModeMask &= ~(1 << pin);
-  if(_is8575) PCF857x::write16(_pinModeMask);
-  else PCF857x::write8(_pinModeMask);
+  if (_val)
+    _pinModeMask |= _val << pin;
+  else
+    _pinModeMask &= ~(1 << pin);
+  if (_is8575)
+    PCF857x::write16(_pinModeMask);
+  else
+    PCF857x::write8(_pinModeMask);
 }
 
 void PCF857x::toggle(uint8_t pin)
 {
-  if(_is8575)
+  if (_is8575)
   {
-    if(pin > 15)
+    if (pin > 15)
     {
       _error = PCF857x_PIN_ERROR;
       return;
     }
   }
-  else if(pin > 7)
+  else if (pin > 7)
   {
     _error = PCF857x_PIN_ERROR;
     return;
   }
   _pinModeMask ^= 1 << pin;
-  if(_is8575) PCF857x::write16(_pinModeMask);
-  else PCF857x::write8(_pinModeMask);
+  if (_is8575)
+    PCF857x::write16(_pinModeMask);
+  else
+    PCF857x::write8(_pinModeMask);
 }
 
 void PCF857x::toggleAll()
 {
   _pinModeMask = ~_pinModeMask;
-  if(_is8575) PCF857x::write16(_pinModeMask);
-  else PCF857x::write8(_pinModeMask);
+  if (_is8575)
+    PCF857x::write16(_pinModeMask);
+  else
+    PCF857x::write8(_pinModeMask);
 }
 
 void PCF857x::shiftRight(uint8_t n)
 {
-  if(_is8575)
+  if (_is8575)
   {
-    if (n == 0 || n > 15 ) return;
+    if (n == 0 || n > 15)
+      return;
   }
-  else if (n == 0 || n > 7 ) return;
+  else if (n == 0 || n > 7)
+    return;
   _pinModeMask >>= n;
-  if(_is8575) PCF857x::write16(_pinModeMask);
-  else PCF857x::write8(_pinModeMask);
+  if (_is8575)
+    PCF857x::write16(_pinModeMask);
+  else
+    PCF857x::write8(_pinModeMask);
 }
 
 void PCF857x::shiftLeft(uint8_t n)
 {
-  if(_is8575)
+  if (_is8575)
   {
-    if (n == 0 || n > 15 ) return;
+    if (n == 0 || n > 15)
+      return;
   }
-  else if (n == 0 || n > 7 ) return;
+  else if (n == 0 || n > 7)
+    return;
   _pinModeMask <<= n;
-  if(_is8575) PCF857x::write16(_pinModeMask);
-  else PCF857x::write8(_pinModeMask);
+  if (_is8575)
+    PCF857x::write16(_pinModeMask);
+  else
+    PCF857x::write8(_pinModeMask);
 }
 
 void PCF857x::rotateRight(uint8_t n)
 {
-  if(_is8575){
+  if (_is8575)
+  {
     uint8_t r = n & 15;
-    _pinModeMask = (_pinModeMask >> r) | (_pinModeMask << (16-r));
+    _pinModeMask = (_pinModeMask >> r) | (_pinModeMask << (16 - r));
     PCF857x::write16(_pinModeMask);
-  } else {
+  }
+  else
+  {
     uint8_t r = n & 7;
-    _pinModeMask = (_pinModeMask >> r) | (_pinModeMask << (8-r));
+    _pinModeMask = (_pinModeMask >> r) | (_pinModeMask << (8 - r));
     PCF857x::write8(_pinModeMask);
   }
 }
 
 void PCF857x::rotateLeft(uint8_t n)
 {
-  if(_is8575) PCF857x::rotateRight(16- (n & 15));
-  else PCF857x::rotateRight(8- (n & 7));
+  if (_is8575)
+    PCF857x::rotateRight(16 - (n & 15));
+  else
+    PCF857x::rotateRight(8 - (n & 7));
 }
 
 int PCF857x::lastError()

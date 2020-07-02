@@ -106,7 +106,8 @@
     "PumpRestInterval": "Ciclo da bomba ligada",
     "PumpRestTime": "Tempo de descanso da bomba",
     "PumpCycle": "CICLO DA BOMBA",
-    "EnableBoilKettle": "Habilitar panela de fervura"
+    "EnableBoilKettle": "Habilitar panela de fervura",
+    "BoilAttention": "Atenção: habilite apenas se a panela de fervura for independente."
   },
   "WiFiSettings": {
     "Settings": "WiFi - Definições",
