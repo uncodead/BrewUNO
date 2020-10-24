@@ -55,11 +55,11 @@ class MashSettings extends Component {
       },
     }).then(response => {
       if (response.ok) {
-        this.props.enqueueSnackbar(<IntText text="Mash.SavedAlert" />, { variant: 'info', autoHideDuration: 500, });
+        this.props.enqueueSnackbar(<IntText text="MashSettings.SavedAlert" />, { variant: 'info', autoHideDuration: 500, });
         return;
       }
       response.text().then(function (data) {
-        throw Error(<IntText text="Mash.ErrorAlert" /> + response.status + " - " + data);
+        throw Error(<IntText text="MashSettings.ErrorAlert" /> + response.status + " - " + data);
       }).catch(error => {
         this.props.enqueueSnackbar(error.message, { variant: 'error', autoHideDuration: 2000, });
         this.getMashSettings();
