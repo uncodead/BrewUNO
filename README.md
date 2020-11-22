@@ -47,7 +47,7 @@ Estou preparando uma versão 'PRO' com novas funcionalidades para atender a dema
 
 ### Simple Wiring and construction:
 
-![WireUP](https://i.imgur.com/dMNXA0a.png)
+![WireUP](https://i.imgur.com/NsDjUTW.png)
 
 This is the easiest way to mount your brewuno, you can improve it!
 
