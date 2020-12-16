@@ -20,11 +20,17 @@ Estou preparando uma versão 'PRO' com novas funcionalidades para atender a dema
 
 *(I am preparing a 'PRO' version with new features to meet the commercial demand of BrewUNO. Only registered suppliers can sell the PRO version. The free version will continue to exist and be maintained, both by me and the community. If you want to sell the PRO version send an email to uncodead@gmail.com)*
 
+## PRO features:
+* Brewfather recipe import / *Importação de receita do Brewfather*
+* Exporting and importing brewing configurations / *Exportação e importação das configurações de brassagem*
+* Post-boil heating additions and control (Whirlpool / Hop Stand) / *Adições e controle de aquecimento pós-fervura (whirlpool/hop stand)*
+* Persistent temperature chart / *Gráfico de temperatura persistente*
+* Reverse pump relay in settings / *Melhorias de performance*
+
+
 ![BrewUNO](http://brewuno.com/images/home-brewuno.png)
 
 ## Features:
-
-
 
 * 100% mobile interface
 * Brew with Start/Stop/Resume 
