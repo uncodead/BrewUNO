@@ -104,7 +104,8 @@
     "PumpRestInterval": "Отдых насоса",
     "PumpRestTime": "Время отдыха насоса",
     "EnableBoilKettle": "Enable Boil Kettle",
-    "BoilAttention": "Attention: enable only for systems with a separated boil kettle."
+    "BoilAttention": "Attention: enable only for systems with a separated boil kettle.",
+    "PCFAddress": "PCF Address"
   },
   "WiFiSettings": {
     "Settings": "WiFi Settings",

@@ -89,7 +89,23 @@ class BrewSettingsForm extends Component {
                         <MenuItem value={'C'}><IntText text="Celsius" /></MenuItem>
                         <MenuItem value={'F'}><IntText text="Fahrenheit" /></MenuItem>
                       </Select>
-
+                      <Typography className={classes.formControl} color="textSecondary"><IntText text="BrewSettings.PCFAddress" /></Typography>
+                      <Select className={classes.formControl}
+                        value={brewSettings.pa}
+                        onChange={handleValueChange("pa")}
+                        fullWidth
+                        inputProps={{ required: true }}
+                      >
+                        <MenuItem value={0}><IntText text="0x20" /></MenuItem>
+                        <MenuItem value={1}><IntText text="0x21" /></MenuItem>
+                        <MenuItem value={2}><IntText text="0x22" /></MenuItem>
+                        <MenuItem value={3}><IntText text="0x23" /></MenuItem>
+                        <MenuItem value={4}><IntText text="0x24" /></MenuItem>
+                        <MenuItem value={5}><IntText text="0x25" /></MenuItem>
+                        <MenuItem value={6}><IntText text="0x26" /></MenuItem>
+                        <MenuItem value={7}><IntText text="0x27" /></MenuItem>
+                        <MenuItem value={8}><IntText text="0x38" /></MenuItem>
+                      </Select>
                     </Paper>
                   </Grid>
 
@@ -275,6 +291,20 @@ class BrewSettingsForm extends Component {
                   <Grid item xs={6}>
                     <Paper className={classes.root} style={PaperStyle}>
                       <Typography className={classes.formControl} color="textSecondary">{<IntText text="BrewSettings.PumpCycle" />}</Typography>
+                      <div style={{ marginTop: 0, marginLeft: 20, padding: 0 }}>
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={brewSettings.ip}
+                              value={'ip'}
+                              onChange={handleCheckboxChange('ip')}
+                              color="secondary"
+                              margin
+                            />
+                          }
+                          label={<IntText text="BrewSettings.InvertPump" />}
+                        />
+                      </div>
                       <TextValidator className={classes.formControl}
                         name="pri"
                         validators={['required']}

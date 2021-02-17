@@ -36,6 +36,9 @@ public:
 
   int PumpRestInterval;
   int PumpRestTime;
+  bool InvertPump;
+
+  int PCFAddress;
 
   double MainSensorOffset;
   double SpargeSensorOffset;

@@ -24,13 +24,13 @@ Lcd::Lcd(ActiveStatus *activeStatus, WiFiStatus *wifiStatus, LiquidCrystal_I2C *
 
 Lcd::~Lcd() {}
 
-void Lcd::autoScan()
+void Lcd::autoScan(uint8 pcfAddress)
 {
     byte error, address;
     Serial.println("Scanning I2C bus...");
     for (address = 1; address < 127; address++)
     {
-        if (address == PCF8574_ADDRESS)
+        if (address == pcfAddress)
         {
             Serial.print("Found not display addr: ");
             Serial.println(address, HEX);
@@ -50,7 +50,6 @@ void Lcd::autoScan()
 
 void Lcd::begin()
 {
-    autoScan();
     _lcd->init();
     _lcd->backlight();
     _lcd->createChar(apmode_icon, apmode);
