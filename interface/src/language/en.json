@@ -106,7 +106,9 @@
     "PumpCycle": "Pump Cycle",
     "EnableBoilKettle": "Enable Boil Kettle",
     "BoilAttention": "Attention: enable only for systems with a separated boil kettle.",
-    "PCFAddress": "PCF Address"
+    "PCFAddress": "PCF Address",
+    "InvertPump": "Invert Pump",
+    "RestartAttention": "Attention: Save and restart the system to apply the change."
   },
   "WiFiSettings": {
     "Settings": "WiFi Settings",
