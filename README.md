@@ -25,7 +25,8 @@ Estou preparando uma versão 'PRO' com novas funcionalidades para atender a dema
 * Exporting and importing brewing configurations / *Exportação e importação das configurações de brassagem*
 * Post-boil heating additions and control (Whirlpool / Hop Stand) / *Adições e controle de aquecimento pós-fervura (whirlpool/hop stand)*
 * Persistent temperature chart / *Gráfico de temperatura persistente*
-* Reverse pump relay in settings / *Melhorias de performance*
+* Reverse pump relay in settings / *Configuração para inverter o relé da bomba*
+* Performance improvements / *Melhorias de performance*
 
 
 ![BrewUNO](http://brewuno.com/images/home-brewuno.png)

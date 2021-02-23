@@ -105,7 +105,10 @@
     "PumpRestTime": "זמן מנוחת משאבה",
     "PumpCycle": "מחזור משאבה",
     "EnableBoilKettle": "אפשר סיר רתיחה",
-    "BoilAttention": "שימו לב: הפעילו רק במידה ויש לכם סיר רתיחה נפרד"
+    "BoilAttention": "שימו לב: הפעילו רק במידה ויש לכם סיר רתיחה נפרד",
+    "PCFAddress": "PCF Address",
+    "InvertPump": "Invert Pump",
+    "RestartAttention": "Attention: Save and restart the system to apply the change."
   },
   "WiFiSettings": {
     "Settings": "תצורה רשת אלחוטית",

@@ -54,7 +54,6 @@ int deviceCount = 0;
 LiquidCrystal_I2C lcd_i2c(0x0, 20, 4);
 
 TwoWire pcfWire;
-PCF857x pcf8574(PCF8574_ADDRESS, &pcfWire);
 
 AsyncWebServer server(80);
 
@@ -79,6 +78,33 @@ TemperatureService temperatureService = TemperatureService(&server, &SPIFFS, DS1
 MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
 
+uint8_t getPCFAddress()
+{
+  SPIFFS.begin();
+  brewSettingsService.begin();
+  uint8_t pcfAddress = PCF8574_ADDRESS;
+  if (brewSettingsService.PCFAddress == 0)
+    pcfAddress = 0x20;
+  else if (brewSettingsService.PCFAddress == 1)
+    pcfAddress = 0x21;
+  else if (brewSettingsService.PCFAddress == 2)
+    pcfAddress = 0x22;
+  else if (brewSettingsService.PCFAddress == 3)
+    pcfAddress = 0x23;
+  else if (brewSettingsService.PCFAddress == 4)
+    pcfAddress = 0x24;
+  else if (brewSettingsService.PCFAddress == 5)
+    pcfAddress = 0x25;
+  else if (brewSettingsService.PCFAddress == 6)
+    pcfAddress = 0x26;
+  else if (brewSettingsService.PCFAddress == 7)
+    pcfAddress = 0x27;
+else if (brewSettingsService.PCFAddress == 8)
+    pcfAddress = 0x38;
+
+  return pcfAddress;
+}
+
 Pump pump = Pump(&server, &activeStatus, &brewSettingsService);
 Lcd lcd = Lcd(&activeStatus, &wifiStatus, &lcd_i2c);
 MashKettleHeaterService mashKettleHeaterService = MashKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
@@ -87,6 +113,9 @@ BoilKettleHeaterService boilKettleHeaterService = BoilKettleHeaterService(&tempe
 MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService, &brewSettingsService);
 BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &boilKettleHeaterService, &activeStatus, &temperatureService, &pump, &lcd);
+
+uint8_t pcfAddress = getPCFAddress();
+PCF857x pcf8574(pcfAddress, &pcfWire);
 
 time_t lastReadButton = now();
 KeyButton button1(BUTTONUP_BUS, pcf8574);
@@ -190,6 +219,7 @@ void setup()
   temperatureService.DeviceCount = deviceCount;
   brewSettingsService.begin();
   brewService.begin();
+  lcd.autoScan(pcfAddress);
   lcd.begin();
 
   pcfWire.begin(D2, D1);

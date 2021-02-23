@@ -107,7 +107,10 @@
     "PumpRestTime": "Tempo de descanso da bomba",
     "PumpCycle": "CICLO DA BOMBA",
     "EnableBoilKettle": "Habilitar panela de fervura",
-    "BoilAttention": "Atenção: habilite apenas se a panela de fervura for independente."
+    "BoilAttention": "Atenção: habilite apenas se a panela de fervura for independente.",
+    "PCFAddress": "Endereço PCF",
+    "InvertPump": "Invert Pump",
+    "RestartAttention": "Atenção: Salve e reinicie o sistema para aplicar a alteração."
   },
   "WiFiSettings": {
     "Settings": "WiFi - Definições",
