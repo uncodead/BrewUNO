@@ -78,6 +78,7 @@ class BrewSettingsForm extends Component {
                         <MenuItem value={'pt-BR'}><IntText text="Portuguese" /></MenuItem>
                         <MenuItem value={'ru-RU'}><IntText text="Russian" /></MenuItem>
                         <MenuItem value={'es-ES'}><IntText text="Spanish" /></MenuItem>
+                        <MenuItem value={'nl-NL'}><IntText text="Dutch" /></MenuItem>
                       </Select>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="TemperatureUnit" /></Typography>
                       <Select className={classes.formControl}

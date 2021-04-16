@@ -42,24 +42,26 @@ Temperatures TemperatureService::GetTemperatures()
     String addr = "";
     for (int i = 0; i < DeviceCount; i++)
     {
-        _dallasTemperature.getAddress(Thermometer, i);
-        float temp = _brewSettingsService->TempUnit == "C" ? _dallasTemperature.getTempC(Thermometer) : _dallasTemperature.getTempF(Thermometer);
-        _json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",\"value\": \"" + String(temp) + "\"}";
-        if (i < DeviceCount - 1)
-            _json += ',';
-        addr = GetAddressToString(Thermometer);
-        if (addr == _brewSettingsService->MainSensor)
-            temps.Main = temp + _brewSettingsService->MainSensorOffset;
-        if (addr == _brewSettingsService->SpargeSensor)
-            temps.Sparge = temp + _brewSettingsService->SpargeSensorOffset;
-        if (addr == _brewSettingsService->BoilSensor)
-            temps.Boil = temp + _brewSettingsService->BoilSensorOffset;
-        if (addr == _brewSettingsService->AuxOneSensor)
-            temps.AuxOne = temp + _brewSettingsService->AuxSensorOneOffset;
-        if (addr == _brewSettingsService->AuxTwoSensor)
-            temps.AuxTwo = temp + _brewSettingsService->AuxSensorTwoOffset;
-        if (addr == _brewSettingsService->AuxThreeSensor)
-            temps.AuxThree = temp + _brewSettingsService->AuxSensorThreeOffset;
+        if (_dallasTemperature.getAddress(Thermometer, i))
+        {
+            float temp = _brewSettingsService->TempUnit == "C" ? _dallasTemperature.getTempC(Thermometer) : _dallasTemperature.getTempF(Thermometer);
+            _json += "{ \"address\": \"" + GetAddressToString(Thermometer) + "\",\"value\": \"" + String(temp) + "\"}";
+            if (i < DeviceCount - 1)
+                _json += ',';
+            addr = GetAddressToString(Thermometer);
+            if (addr == _brewSettingsService->MainSensor)
+                temps.Main = temp + _brewSettingsService->MainSensorOffset;
+            if (addr == _brewSettingsService->SpargeSensor)
+                temps.Sparge = temp + _brewSettingsService->SpargeSensorOffset;
+            if (addr == _brewSettingsService->BoilSensor)
+                temps.Boil = temp + _brewSettingsService->BoilSensorOffset;
+            if (addr == _brewSettingsService->AuxOneSensor)
+                temps.AuxOne = temp + _brewSettingsService->AuxSensorOneOffset;
+            if (addr == _brewSettingsService->AuxTwoSensor)
+                temps.AuxTwo = temp + _brewSettingsService->AuxSensorTwoOffset;
+            if (addr == _brewSettingsService->AuxThreeSensor)
+                temps.AuxThree = temp + _brewSettingsService->AuxSensorThreeOffset;
+        }
     }
     json = _json + "]}";
     return temps;

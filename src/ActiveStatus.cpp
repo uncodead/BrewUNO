@@ -204,16 +204,16 @@ void ActiveStatus::SaveActiveStatus()
 
 void ActiveStatus::SetTemperature(Temperatures temps)
 {
-    if (temps.Main >= 0)
+    if (temps.Main > 0)
         Temperature = temps.Main;
-    if (temps.Sparge >= 0)
+    if (temps.Sparge > 0)
         SpargeTemperature = temps.Sparge;
-    if (temps.Boil >= 0)
+    if (temps.Boil > 0)
         BoilTemperature = temps.Boil;
-    if (temps.AuxOne >= 0)
+    if (temps.AuxOne > 0)
         AuxOneTemperature = temps.AuxOne;
-    if (temps.AuxTwo >= 0)
+    if (temps.AuxTwo > 0)
         AuxTwoTemperature = temps.AuxTwo;
-    if (temps.AuxThree >= 0)
+    if (temps.AuxThree > 0)
         AuxThreeTemperature = temps.AuxThree;
 }

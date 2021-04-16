@@ -4,6 +4,7 @@ import en from "../language/en.json"
 import ptBR from "../language/pt-BR.json"
 import ruRU from "../language/ru-RU.json"
 import esES from "../language/es-ES.json"
+import nlNL from "../language/nl-NL.json"
 
 class IntText extends Component {
   constructor(props) {
@@ -24,7 +25,10 @@ class IntText extends Component {
       case "es-ES":
         T.setTexts(esES);
         break
-      default:
+      case "nl-NL":
+        T.setTexts(nlNL);
+        break
+        default:
         T.setTexts(en)
         break
     }

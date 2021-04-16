@@ -230,7 +230,7 @@ time_t lastReadTemperature = now();
 void BrewService::loop()
 {
     _lcd->update();
-    if (now() - lastReadTemperature > 1)
+    if (now() - lastReadTemperature > 3)
     {
         Temperatures temps = _temperatureService->GetTemperatures();
         _activeStatus->SetTemperature(temps);
