@@ -16,9 +16,9 @@ Caso você tenha comprado o BrewUNO (instalado) de alguma empresa ou fornecedor 
 
 *(If you have purchased BrewUNO (installed) from any company or commercial supplier, please contact me at email: uncodead@gmail.com)*
 
-Estou preparando uma versão 'PRO' com novas funcionalidades para atender a demanda comercial do BrewUNO. Apenas fornecedores cadastrados poderão vender a versão PRO. A versão gratuita/free continuará existindo e sendo mantida, tanto por mim como pela comunidade. Caso você queira comercializar a versão PRO envie um email para uncodead@gmail.com
+A versão 'PRO' está disponível com novas funcionalidades para atender a demanda comercial do BrewUNO. Apenas fornecedores cadastrados poderão vender a versão PRO. A versão gratuita/free continuará existindo e sendo mantida, tanto por mim como pela comunidade. Caso você queira comercializar ou comprar a versão PRO envie um email para uncodead@gmail.com
 
-*(I am preparing a 'PRO' version with new features to meet the commercial demand of BrewUNO. Only registered suppliers can sell the PRO version. The free version will continue to exist and be maintained, both by me and the community. If you want to sell the PRO version send an email to uncodead@gmail.com)*
+*(The 'PRO' version is avaliabe with new features to meet the commercial demand of BrewUNO. Only registered suppliers can sell the PRO version. The free version will continue to exist and be maintained, both by me and the community. If you want to sell or buy the PRO version send an email to uncodead@gmail.com)*
 
 ## BrewUNO PRO features:
 * Brewfather recipe import / *Importação de receita do Brewfather*
