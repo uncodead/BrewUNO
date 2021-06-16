@@ -108,7 +108,10 @@
     "PumpRestTime": "Pumpenpause Dauer",
     "PumpCycle": "Pumpzyklus",
     "EnableBoilKettle": "Kochkessel aktivieren",
-    "BoilAttention": "Achtung: nur bei Anlagen mit separatem Kochkessel aktivieren."
+    "BoilAttention": "Achtung: nur bei Anlagen mit separatem Kochkessel aktivieren.",
+    "PCFAddress": "PCF Address",
+    "InvertPump": "Invert Pump",
+    "RestartAttention": "Achtung: Speichern und Restart des Systems zur Aktivierung der Änderung."
   },
   "WiFiSettings": {
     "Settings": "Wlan Einstellungen",
