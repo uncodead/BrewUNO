@@ -9,8 +9,6 @@
 #include <WiFiStatus.h>
 #include <APStatus.h>
 
-#define PCF8574_ADDRESS 0x20
-
 #define apmode_icon 1
 #define stmode_icon 2
 #define gpump_icon 3
@@ -39,6 +37,7 @@ public:
     ~Lcd();
     void update();
     void begin();
+    void autoScan(uint8 pcfAddress);
 
 private:
     LiquidCrystal_I2C *_lcd;
@@ -57,7 +56,6 @@ private:
         bool sparge;
     };
 
-    void autoScan();
     void printHead();
     void printFooter();
     String GetCount(bool down);

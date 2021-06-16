@@ -16,15 +16,22 @@ Caso você tenha comprado o BrewUNO (instalado) de alguma empresa ou fornecedor 
 
 *(If you have purchased BrewUNO (installed) from any company or commercial supplier, please contact me at email: uncodead@gmail.com)*
 
-Estou preparando uma versão 'PRO' com novas funcionalidades para atender a demanda comercial do BrewUNO. Apenas fornecedores cadastrados poderão vender a versão PRO. A versão gratuita/free continuará existindo e sendo mantida, tanto por mim como pela comunidade. Caso você queira comercializar a versão PRO envie um email para uncodead@gmail.com
+A versão 'PRO' está disponível com novas funcionalidades para atender a demanda comercial do BrewUNO. Apenas fornecedores cadastrados poderão vender a versão PRO. A versão gratuita/free continuará existindo e sendo mantida, tanto por mim como pela comunidade. Caso você queira comercializar ou comprar a versão PRO envie um email para uncodead@gmail.com
 
-*(I am preparing a 'PRO' version with new features to meet the commercial demand of BrewUNO. Only registered suppliers can sell the PRO version. The free version will continue to exist and be maintained, both by me and the community. If you want to sell the PRO version send an email to uncodead@gmail.com)*
+*(The 'PRO' version is avaliabe with new features to meet the commercial demand of BrewUNO. Only registered suppliers can sell the PRO version. The free version will continue to exist and be maintained, both by me and the community. If you want to sell or buy the PRO version send an email to uncodead@gmail.com)*
+
+## BrewUNO PRO features:
+* Brewfather recipe import / *Importação de receita do Brewfather*
+* Exporting and importing brewing configurations / *Exportação e importação das configurações de brassagem*
+* Post-boil heating additions and control (Whirlpool / Hop Stand) / *Adições e controle de aquecimento pós-fervura (whirlpool/hop stand)*
+* Persistent temperature chart / *Gráfico de temperatura persistente*
+* Reverse pump relay in settings / *Configuração para inverter o relé da bomba*
+* Performance improvements / *Melhorias de performance*
+
 
 ![BrewUNO](http://brewuno.com/images/home-brewuno.png)
 
 ## Features:
-
-
 
 * 100% mobile interface
 * Brew with Start/Stop/Resume 
@@ -47,7 +54,7 @@ Estou preparando uma versão 'PRO' com novas funcionalidades para atender a dema
 
 ### Simple Wiring and construction:
 
-![WireUP](https://i.imgur.com/dMNXA0a.png)
+![WireUP](https://i.imgur.com/NsDjUTW.png)
 
 This is the easiest way to mount your brewuno, you can improve it!
 

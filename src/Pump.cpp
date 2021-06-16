@@ -47,9 +47,9 @@ void Pump::TurnPumpOff()
 
 void Pump::TurnPump(bool on)
 {
-    on = INVERT_PUMP ? !on : on;
+    on = _brewSettingsService->InvertPump ? !on : on;
     digitalWrite(PUMP_BUS, on ? HIGH : LOW);
-    _activeStatus->PumpOn = INVERT_PUMP ? !on : on;
+    _activeStatus->PumpOn = _brewSettingsService->InvertPump ? !on : on;
 }
 
 void Pump::CheckRest()

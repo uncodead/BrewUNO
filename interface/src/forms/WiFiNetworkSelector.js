@@ -72,7 +72,7 @@ class WiFiNetworkSelector extends Component {
             <div>
               <LinearProgress className={classes.scanningProgress} />
               <Typography variant="display1" className={classes.scanningProgress}>
-                <IntText text="Scanning" />...
+                <IntText text="WiFiSettings.Scanning" />...
             </Typography>
             </div>
             :
