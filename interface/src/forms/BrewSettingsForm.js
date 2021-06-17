@@ -75,6 +75,7 @@ class BrewSettingsForm extends Component {
                         inputProps={{ required: true }}
                       >
                         <MenuItem value={'en'}><IntText text="English" /></MenuItem>
+                        <MenuItem value={'de-DE'}><IntText text="German" /></MenuItem>
                         <MenuItem value={'pt-BR'}><IntText text="Portuguese" /></MenuItem>
                         <MenuItem value={'ru-RU'}><IntText text="Russian" /></MenuItem>
                         <MenuItem value={'es-ES'}><IntText text="Spanish" /></MenuItem>
