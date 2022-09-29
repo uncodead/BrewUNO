@@ -28,7 +28,7 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "react-sortable-hoc": "^0.8.4",
-    "recharts": "^1.4.2"
+    "recharts": "^2.1.14"
   },
   "scripts": {
     "start": "react-app-rewired start",
