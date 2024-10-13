@@ -1,31 +1,26 @@
-.PHONY : push build pull push release setversion
+.PHONY : push build push release setversion
 
-build: | pull
-	platformio run
+build:
+	platformio run -e $(plat_env)
 	cd interface;npm install;npm run build
-	platformio run -v -t buildfs
+	platformio run -e $(plat_env) -v -t buildfs 
 
 uploadfs:
-	platformio run -t uploadfs
+	platformio run -e $(plat_env) -t uploadfs
 
 uploadfw:
-	platformio run -t upload
+	platformio run -e $(plat_env) -t upload
 
 monitor: 
 	platformio device monitor
 
 upload: | build
-	platformio run -t uploadfs
-	platformio run -t upload
+	platformio run -e $(plat_env) -t uploadfs
+	platformio run -e $(plat_env) -t upload
 
 publish:
-	rm -rf bin/
-	mkdir bin/
-	cp .pio/build/esp12e/firmware.bin bin/firmware_$(version).bin
-	cp .pio/build/esp12e/spiffs.bin bin/spiffs_$(version).bin
-
-pull:
-	git pull
+	yes | cp -rf .pio/build/$(plat_env)/firmware.bin bin/firmware_$(version)$(plat_env).bin
+	yes | cp -rf .pio/build/$(plat_env)/spiffs.bin bin/spiffs_$(version)$(plat_env).bin
 
 push:
 	git add .
@@ -35,4 +30,4 @@ push:
 setversion:
 	python set_version.py $(version)
 
-release:  | build publish setversion push
+release:  | build publish setversion

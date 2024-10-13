@@ -5,6 +5,7 @@
   "Stopped": "Parar",
   "Mash": "Macerado",
   "Boil": "Hervir",
+  "Cooling": "Whirlpool",
   "BoilStarted": "Hervir iniciada",
   "StartBoilCounter": "Start boil counter",
   "Dismiss": "Cancelar",
@@ -60,6 +61,18 @@
   "Uptime": "Tiempo de actividad",
   "Synchronized": "Sincronizado",
   "About": "Acerca de",
+  "ImportRecipe": "Receta de importación",
+  "ExportRecipe": "Receta de exportación",
+  "BrewUNOActivationAlert": "BrewUNO necesita ser activado",
+  "BrewUNOActivation": "Activar BrewUNO",
+  "Activation": "Activación",
+  "ActivationId": "ID de Activación",
+  "ActivationKey": "Clave de Activación",
+  "ActivationPass": "Contraseña de Activación",
+  "NewActivation": "Nova Activación",
+  "ReActivation": "Reactivación",
+  "ImportFromBrewfather": "Importar de Brewfather",
+  "GetRecipes": "Obter Recetas",
   "Brew": {
     "Title": "Elaborar",
     "StartConfirmation": "¿Comenzar a cocinar? Revise el agua en la olla",
@@ -86,6 +99,11 @@
     "ErrorAlert": "Error de datos configuración de ebullición: ",
     "Settings": "Tiempo de ebullición"
   },
+  "CoolingSettings": {
+    "Settings": "Whirlpool",
+    "SavedAlert": "Whirlpool settings saved.",
+    "ErrorAlert": "Whirlpool Setings service returned unexpected response code: "
+  },
   "BrewSettings": {
     "Settings": "Ajuste de macerado",
     "OffSetCalibration": "Precisión (Calibración)",
@@ -106,9 +124,9 @@
     "PumpCycle": "Ciclo de bomba",
     "EnableBoilKettle": "Habilitar hervidor de agua",
     "BoilAttention": "Attention: enable only for systems with a separated boil kettle.",
-    "PCFAddress": "PCF Address",
-    "InvertPump": "Invert Pump",
-    "RestartAttention": "Attention: Save and restart the system to apply the change."
+    "Export": "Export",
+    "Import": "Import",
+    "InvertPump": "Invert Pump"
   },
   "WiFiSettings": {
     "Settings": "Configuración",

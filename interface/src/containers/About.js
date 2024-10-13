@@ -65,9 +65,6 @@ class About extends Component {
               <IntText text="Thanks" />:
             </Typography>
             <Typography className={classes.pos} variant="h8" color="textSecondary">
-              Luciano Rampanelli
-            </Typography>
-            <Typography className={classes.pos} variant="h8" color="textSecondary">
               Eduardo 'Dumpa' Sanches
             </Typography>
             <Typography className={classes.pos} variant="h8" color="textSecondary">

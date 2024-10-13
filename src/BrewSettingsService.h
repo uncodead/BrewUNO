@@ -29,6 +29,7 @@ public:
 
   bool EnableSparge;
   bool EnableBoilKettle;
+  bool InvertPump;
 
   double BoilTemperature;
   double PIDStart;
@@ -36,9 +37,6 @@ public:
 
   int PumpRestInterval;
   int PumpRestTime;
-  bool InvertPump;
-
-  int PCFAddress;
 
   double MainSensorOffset;
   double SpargeSensorOffset;
@@ -53,6 +51,9 @@ public:
   String AuxOneSensor;
   String AuxTwoSensor;
   String AuxThreeSensor;
+
+  String BrewfatherId;
+  String BrewfatherKey;
 
   String Language;
   String TempUnit;

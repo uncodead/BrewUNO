@@ -1,7 +1,17 @@
 #include <ActiveStatus.h>
 
-ActiveStatus::ActiveStatus(FS *fs) : _fs(fs)
+bool logStarted = false;
+time_t lastWrite = now();
+time_t lastWriteWebSocket = now();
+static const char ACTIVE_STATUS[] PROGMEM = "{\"as\":{{ActiveStep}},\"acsi\":{{ActiveCoolingStepIndex}},\"amsi\":{{ActiveMashStepIndex}},\"masn\":\"{{ActiveMashStepName}}\",\"casn\":\"{{ActiveCoolingStepName}}\",\"acssn\":\"{{ActiveCoolingStepSufixName}}\",\"amssn\":\"{{ActiveMashStepSufixName}}\",\"absi\":\"{{ActiveBoilStepIndex}}\",\"absn\":\"{{ActiveBoilStepName}}\",\"ctt\":{{CoolingTargetTemperature}},\"btt\":{{BoilTargetTemperature}},\"ttp\":{{TargetTemperature}},\"st\":{{StartTime}},\"et\":{{EndTime}},\"tn\":{{TimeNow}},\"bs\":{{BrewStarted}},\"tp\":{{Temperature}},\"stp\":{{SpargeTemperature}},\"ct\":{{BoilTemperature}},\"btp\":{{BoilTemperature}},\"atp\":{{AuxOneTemperature}},\"attp\":{{AuxTwoTemperature}},\"atttp\":{{AuxThreeTemperature}},\"axs\": \"{{AuxOneSensor}}\",\"axss\": \"{{AuxTwoSensor}}\",\"axsss\": \"{{AuxThreeSensor}}\",\"pp\":{{PWMPercentage}},\"spp\":{{SpargePWMPercentage}},\"cppt\":{{CoolingPWMPercentage}},\"bppt\":{{BoilPWMPercentage}},\"es\":{{EnableSparge}},\"eb\":{{EnableBoilKettle}},\"stt\":{{SpargeTargetTemperature}},\"sl\":{{StepLocked}},\"po\":{{PumpOn}},\"pir\":{{PumpIsResting}},\"tns\":{{TimeNotSet}},\"tu\": \"{{TempUnit}}\",\"v\": \"{{Version}}\",\"c\": \"{{Count}}\",\"bpp\":{{BoilPowerPercentage}},\"am\":\"{{ActivationMessage}}\",\"bfid\":\"{{BrewfatherId}}\",\"bfkey\":\"{{BrewfatherKey}}\"  }";
+
+ActiveStatus::ActiveStatus(AsyncWebServer *server, FS *fs) : _fs(fs),
+                                                             _webSocketStatus("/ws/brew/status")
 {
+    ActiveCoolingStepIndex = -1;
+    ActiveMashStepIndex = -1;
+    server->addHandler(&_webSocketStatus);
+    server->on("/rest/getLogTemperature", HTTP_GET, std::bind(&ActiveStatus::GetLogTemperature, this, std::placeholders::_1));
 }
 
 ActiveStatus::~ActiveStatus() {}
@@ -22,11 +32,15 @@ boolean ActiveStatus::LoadActiveStatusSettings()
                 ActiveStep = _activeStatus["active_step"];
                 ActiveMashStepIndex = _activeStatus["active_mash_step_index"];
                 ActiveMashStepName = _activeStatus["active_mash_step_name"] | "";
-                ActiveMashStepSufixName = _activeStatus["active_mash_step_sufix_name"] | "";
+                ActiveMashStepSufixName = _activeStatus["active_cooling_step_sufix_name"] | "";
+                ActiveCoolingStepIndex = _activeStatus["active_cooling_step_index"];
+                ActiveCoolingStepName = _activeStatus["active_cooling_step_name"] | "";
+                ActiveCoolingStepSufixName = _activeStatus["active_mash_step_sufix_name"] | "";
                 ActiveBoilStepIndex = _activeStatus["active_boil_step_index"] | "";
                 ActiveBoilStepName = _activeStatus["active_boil_step_name"] | "";
                 BoilTime = _activeStatus["boil_time"];
                 BoilTargetTemperature = _activeStatus["boil_target_temperature"];
+                CoolingTargetTemperature = _activeStatus["cooling_target_temperature"];
                 TargetTemperature = _activeStatus["target_temperature"];
                 EndTime = _activeStatus["end_time"];
                 StartTime = _activeStatus["start_time"];
@@ -62,8 +76,6 @@ void ActiveStatus::TimeSetted()
     Serial.println("Time setted");
 }
 
-static const char ACTIVE_STATUS[] PROGMEM = "{\"as\":{{ActiveStep}},\"amsi\":{{ActiveMashStepIndex}},\"masn\":\"{{ActiveMashStepName}}\",\"amssn\":\"{{ActiveMashStepSufixName}}\",\"absi\":\"{{ActiveBoilStepIndex}}\",\"absn\":\"{{ActiveBoilStepName}}\",\"btt\":{{BoilTargetTemperature}},\"ttp\":{{TargetTemperature}},\"st\":{{StartTime}},\"et\":{{EndTime}},\"tn\":{{TimeNow}},\"bs\":{{BrewStarted}},\"tp\":{{Temperature}},\"stp\":{{SpargeTemperature}},\"btp\":{{BoilTemperature}},\"atp\":{{AuxOneTemperature}},\"attp\":{{AuxTwoTemperature}},\"atttp\":{{AuxThreeTemperature}},\"axs\": \"{{AuxOneSensor}}\",\"axss\": \"{{AuxTwoSensor}}\",\"axsss\": \"{{AuxThreeSensor}}\",\"pp\":{{PWMPercentage}},\"spp\":{{SpargePWMPercentage}},\"bppt\":{{BoilPWMPercentage}},\"es\":{{EnableSparge}},\"eb\":{{EnableBoilKettle}},\"stt\":{{SpargeTargetTemperature}},\"sl\":{{StepLocked}},\"po\":{{PumpOn}},\"pir\":{{PumpIsResting}},\"tns\":{{TimeNotSet}},\"tu\": \"{{TempUnit}}\",\"v\": \"{{Version}}\",\"c\": \"{{Count}}\",\"bpp\":{{BoilPowerPercentage}} }";
-
 String ActiveStatus::GetJson()
 {
     String active_status = FPSTR(ACTIVE_STATUS);
@@ -71,6 +83,9 @@ String ActiveStatus::GetJson()
     active_status.replace("{{ActiveMashStepIndex}}", String(ActiveMashStepIndex));
     active_status.replace("{{ActiveMashStepName}}", String(ActiveMashStepName));
     active_status.replace("{{ActiveMashStepSufixName}}", String(ActiveMashStepSufixName));
+    active_status.replace("{{ActiveCoolingStepIndex}}", String(ActiveCoolingStepIndex));
+    active_status.replace("{{ActiveCoolingStepName}}", String(ActiveCoolingStepName));
+    active_status.replace("{{ActiveCoolingStepSufixName}}", String(ActiveCoolingStepSufixName));
     active_status.replace("{{ActiveBoilStepIndex}}", String(ActiveBoilStepIndex));
     active_status.replace("{{ActiveBoilStepName}}", String(ActiveBoilStepName));
     active_status.replace("{{BoilTargetTemperature}}", String(BoilTargetTemperature));
@@ -82,6 +97,8 @@ String ActiveStatus::GetJson()
     active_status.replace("{{Temperature}}", String(Temperature));
     active_status.replace("{{SpargeTemperature}}", String(SpargeTemperature));
     active_status.replace("{{BoilTemperature}}", String(BoilTemperature));
+    active_status.replace("{{CoolingTemperature}}", String(CoolingTemperature));
+    active_status.replace("{{CoolingTargetTemperature}}", String(CoolingTargetTemperature));
     active_status.replace("{{AuxOneTemperature}}", String(AuxOneTemperature));
     active_status.replace("{{AuxTwoTemperature}}", String(AuxTwoTemperature));
     active_status.replace("{{AuxThreeTemperature}}", String(AuxThreeTemperature));
@@ -91,6 +108,7 @@ String ActiveStatus::GetJson()
     active_status.replace("{{PWMPercentage}}", String(PWMPercentage, 2));
     active_status.replace("{{SpargePWMPercentage}}", String(SpargePWMPercentage, 2));
     active_status.replace("{{BoilPWMPercentage}}", String(BoilPWMPercentage, 2));
+    active_status.replace("{{CoolingPWMPercentage}}", String(CoolingPWMPercentage, 2));
     active_status.replace("{{EnableSparge}}", String(EnableSparge));
     active_status.replace("{{EnableBoilKettle}}", String(EnableBoilKettle));
     active_status.replace("{{SpargeTargetTemperature}}", String(SpargeTargetTemperature));
@@ -102,7 +120,59 @@ String ActiveStatus::GetJson()
     active_status.replace("{{Version}}", String(Version));
     active_status.replace("{{Count}}", Count);
     active_status.replace("{{BoilPowerPercentage}}", String(BoilPowerPercentage));
+    active_status.replace("{{BrewfatherId}}", BrewfatherId);
+    active_status.replace("{{BrewfatherKey}}", BrewfatherKey);
     return active_status;
+}
+
+void ActiveStatus::RestartLogTemperature()
+{
+    SPIFFS.remove("/temps.json");
+    logStarted = false;
+}
+
+void ActiveStatus::LogTemperature()
+{
+    File tempLog = SPIFFS.open("/temps.json", "a");
+    if (logStarted)
+        tempLog.print(",");
+
+    logStarted = true;
+    tempLog.print("{\"ttp\":");
+    tempLog.print(TargetTemperature);
+    tempLog.print(",\"tp\":");
+    tempLog.print(Temperature);
+    tempLog.print(",\"stt\":");
+    tempLog.print(SpargeTargetTemperature);
+    tempLog.print(",\"st\":");
+    tempLog.print(SpargeTargetTemperature);
+    tempLog.print(",\"time\":");
+    tempLog.print(TimeNow);
+    tempLog.print("}");
+    tempLog.close();
+}
+
+void ActiveStatus::GetLogTemperature(AsyncWebServerRequest *request)
+{
+    request->send(SPIFFS, "/temps.json", "text/plain", false);
+}
+
+void ActiveStatus::SaveActiveStatusLoop()
+{
+    if ((now() - lastWriteWebSocket > 1))
+    {
+        lastWriteWebSocket = now();
+        _webSocketStatus.textAll(GetJson());
+    }
+
+    if ((!BrewStarted) || (now() - lastWrite < 60))
+        return;
+
+    LogTemperature();
+
+    TimeNow = now();
+
+    SaveActiveStatus();
 }
 
 void ActiveStatus::SaveActiveStatus(time_t startTime,
@@ -121,10 +191,14 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     ActiveMashStepIndex = activeMashStepIndex;
     ActiveMashStepName = "";
     ActiveMashStepSufixName = "";
+    ActiveCoolingStepIndex = -1;
+    ActiveCoolingStepName = "";
+    ActiveCoolingStepSufixName = "";
     ActiveBoilStepIndex = activeBoilStepIndex;
     ActiveBoilStepName = "";
     BoilTime = boilTime;
     BoilTargetTemperature = boilTargetTemperature;
+    CoolingTargetTemperature = 0;
     TargetTemperature = targetTemperature;
     StartTime = startTime;
     EndTime = endTime;
@@ -148,16 +222,6 @@ void ActiveStatus::SaveActiveStatus(time_t startTime,
     SaveActiveStatus();
 }
 
-time_t lastWrite = now();
-
-void ActiveStatus::SaveActiveStatusLoop()
-{
-    if ((!BrewStarted) || (now() - lastWrite < 60))
-        return;
-
-    SaveActiveStatus();
-}
-
 void ActiveStatus::SaveActiveStatus()
 {
     lastWrite = now();
@@ -169,10 +233,14 @@ void ActiveStatus::SaveActiveStatus()
     _activeStatus["active_mash_step_index"] = ActiveMashStepIndex;
     _activeStatus["active_mash_step_name"] = ActiveMashStepName;
     _activeStatus["active_mash_step_sufix_name"] = ActiveMashStepSufixName;
+    _activeStatus["active_cooling_step_index"] = ActiveCoolingStepIndex;
+    _activeStatus["active_cooling_step_name"] = ActiveCoolingStepName;
+    _activeStatus["active_cooling_step_sufix_name"] = ActiveCoolingStepSufixName;
     _activeStatus["active_boil_step_index"] = ActiveBoilStepIndex;
     _activeStatus["active_boil_step_name"] = ActiveBoilStepName;
     _activeStatus["boil_time"] = BoilTime;
     _activeStatus["boil_target_temperature"] = BoilTargetTemperature;
+    _activeStatus["cooling_target_temperature"] = CoolingTargetTemperature;
     _activeStatus["target_temperature"] = TargetTemperature;
     _activeStatus["start_time"] = StartTime;
     _activeStatus["end_time"] = EndTime;
@@ -210,6 +278,8 @@ void ActiveStatus::SetTemperature(Temperatures temps)
         SpargeTemperature = temps.Sparge;
     if (temps.Boil >= 0)
         BoilTemperature = temps.Boil;
+    if (temps.Cooling >= 0)
+        CoolingTemperature = temps.Cooling;
     if (temps.AuxOne >= 0)
         AuxOneTemperature = temps.AuxOne;
     if (temps.AuxTwo >= 0)

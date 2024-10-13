@@ -6,7 +6,7 @@
 #include <KeyButton.h>
 #include <Buzzer.h>
 #include <Pump.h>
-#include <BrewService.h>
+#include <BrewUnoService.h>
 #include <BrewSettingsService.h>
 
 #include <pcf8574_esp.h>
@@ -14,7 +14,7 @@
 class Keyboard
 {
 public:
-  Keyboard(ActiveStatus *activeStatus, PCF857x *pcf, BrewService *brewService, BrewSettingsService *brewSettingsService, Pump *pump,
+  Keyboard(ActiveStatus *activeStatus, PCF857x *pcf, BrewUnoService *brewService, BrewSettingsService *brewSettingsService, Pump *pump,
            KeyButton *button1, KeyButton *button2, KeyButton *button3, KeyButton *button4);
 
   ActiveStatus *_activeStatus;
@@ -26,7 +26,7 @@ public:
   KeyButton *_button3;
   KeyButton *_button4;
 
-  BrewService *_brewService;
+  BrewUnoService *_brewService;
   Pump *_pump;
 
   void update(bool PCFInterruptFlag);

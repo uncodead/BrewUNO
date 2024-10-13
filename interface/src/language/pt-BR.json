@@ -5,6 +5,7 @@
   "Stopped": "Parado",
   "Mash": "Mostura",
   "Boil": "Fervura",
+  "Cooling": "Resfriamento",
   "BoilStarted": "Fervura iniciada",
   "StartBoilCounter": "Iniciar contador de fervura",
   "Dismiss": "Dispensar",
@@ -62,6 +63,18 @@
   "About": "Sobre",
   "Author": "Criador",
   "Thanks": "Agradecimento",
+  "ImportRecipe": "Importar Receita",
+  "ExportRecipe": "Exportar Receita",
+  "BrewUNOActivationAlert": "BrewUNO precisa ser ativado antes do uso",
+  "BrewUNOActivation": "Ativar BrewUNO",
+  "Activation": "Ativação",
+  "ActivationId": "ID de Ativação",
+  "ActivationKey": "Chave de Ativação",
+  "ActivationPass": "Senha de Ativação",
+  "NewActivation": "Nova Ativação",
+  "ReActivation": "Reativação",
+  "ImportFromBrewfather": "Importar do Brewfather",
+  "GetRecipes": "Obter Receitas",
   "Brew": {
     "Title": "Brassagem",
     "StartConfirmation": "Deseja iniciar a brassagem? Verifique o volume de água na panela.",
@@ -88,6 +101,11 @@
     "ErrorAlert": "A configuração da fervura apresentou o seguinte código inesperado de erro: ",
     "Settings": "Adições na Fervura"
   },
+  "CoolingSettings": {
+    "Settings": "Resfriamento",
+    "SavedAlert": "Resfriamento - definições salvas!",
+    "ErrorAlert": "A configuração da resfriamento apresentou o seguinte código inesperado de erro: "
+  },
   "BrewSettings": {
     "Settings": "Configurações",
     "OffSetCalibration": "Ajuste de offset",
@@ -108,9 +126,9 @@
     "PumpCycle": "CICLO DA BOMBA",
     "EnableBoilKettle": "Habilitar panela de fervura",
     "BoilAttention": "Atenção: habilite apenas se a panela de fervura for independente.",
-    "PCFAddress": "Endereço PCF",
-    "InvertPump": "Invert Pump",
-    "RestartAttention": "Atenção: Salve e reinicie o sistema para aplicar a alteração."
+    "Export": "Exportar",
+    "Import": "Importar",
+    "InvertPump": "Inverter Bomba"
   },
   "WiFiSettings": {
     "Settings": "WiFi - Definições",

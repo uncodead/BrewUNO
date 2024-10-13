@@ -15,24 +15,27 @@
 #include <TimeLib.h>
 #include <NtpClientLib.h>
 #include <enum.h>
-#include <enum.h>
 
-#define PGM_P       const char *
-#define PGM_VOID_P  const void *
-#define PSTR(s) (__extension__({static const char __c[] PROGMEM = (s); &__c[0];}))
+#define PGM_P const char *
+#define PGM_VOID_P const void *
+#define PSTR(s) (__extension__({static const char __c[] PROGMEM = (s); &__c[0]; }))
 
 #define MAX_ACTIVESTATUS_SIZE 2024
 #define ACTIVE_STATUS_FILE "/config/activeStatus.json"
+#define APPLICATION_JSON_TYPE "application/json"
 
 class ActiveStatus
 {
 public:
-  ActiveStatus(FS *f);
+  ActiveStatus(AsyncWebServer *server, FS *f);
   ~ActiveStatus();
 
   int ActiveStep;
   int LastActiveStep;
   boolean BrewStarted;
+
+  String BrewfatherId;
+  String BrewfatherKey;
 
   String ActiveBoilStepIndex;
   String ActiveBoilStepName;
@@ -41,6 +44,10 @@ public:
   String ActiveMashStepName;
   String ActiveMashStepSufixName;
 
+  int ActiveCoolingStepIndex;
+  String ActiveCoolingStepName;
+  String ActiveCoolingStepSufixName;
+
   int BoilTime;
   double PWM;
   double PWMPercentage;
@@ -48,15 +55,20 @@ public:
   double SpargePWMPercentage;
   double BoilPWM;
   double BoilPWMPercentage;
+  double CoolingPWM;
+  double CoolingPWMPercentage;
   boolean PIDActing;
   boolean StartBoilCounter;
 
   double BoilTargetTemperature;
   double BoilPowerPercentage;
 
+  double CoolingTargetTemperature;
+
   double TargetTemperature;
   double Temperature;
   double BoilTemperature;
+  double CoolingTemperature;
   double SpargeTemperature;
   double AuxOneTemperature;
   double AuxTwoTemperature;
@@ -107,12 +119,24 @@ public:
   void SaveActiveStatus();
   void SaveActiveStatusLoop();
   void SetTemperature(Temperatures temps);
-  void SetJsonTemperatures(String json);
   String GetJson();
   void TimeNotSetted();
   void TimeSetted();
+  void RestartLogTemperature();
 
 private:
   FS *_fs;
+
+  void onWSEventStatus(AsyncWebSocket *server,
+                       AsyncWebSocketClient *client,
+                       AwsEventType type,
+                       void *arg,
+                       uint8_t *data,
+                       size_t len);
+  void LogTemperature();
+  void GetLogTemperature(AsyncWebServerRequest *request);
+
+protected:
+  AsyncWebSocket _webSocketStatus;
 };
 #endif

@@ -18,9 +18,9 @@ function SectionContent(props) {
   const { children, classes, title } = props;
   return (
     <div>
-      {title != '' ?
+      {title !== undefined && title !== '' ?
         <Paper className={classes.content}>
-          <Typography color="textSecondaryLight" variant="button">
+          <Typography color="textSecondary" variant="button">
             {title}
           </Typography>
         </Paper>
