@@ -1,6 +1,6 @@
 #include <Keyboard.h>
 
-Keyboard::Keyboard(ActiveStatus *activeStatus, PCF857x *pcf, BrewService *brewService, BrewSettingsService *brewSettingsService, Pump *pump,
+Keyboard::Keyboard(ActiveStatus *activeStatus, PCF857x *pcf, BrewUnoService *brewService, BrewSettingsService *brewSettingsService, Pump *pump,
                              KeyButton *button1, KeyButton *button2, KeyButton *button3, KeyButton *button4)
     : _pcf(pcf),
       _activeStatus(activeStatus),
@@ -23,18 +23,18 @@ void Keyboard::update(bool PCFInterruptFlag)
     if (_button1->pressed_long)
     {
       if (!_activeStatus->BrewStarted)
-        _brewService->startBrew();
+        _brewService->start();
       else
-        _brewService->stopBrew();
+        _brewService->stop();
       Buzzer().Ring(1, 100);
     }
 
     if (_button1->pressed)
     {
       if (_activeStatus->BrewStarted)
-        _brewService->pauseBrew();
+        _brewService->pause();
       else if (_activeStatus->ActiveStep > 0 && _activeStatus->ActiveStep != 3)
-        _brewService->resumeBrew();
+        _brewService->resume();
       Buzzer().Ring(1, 100);
     }
 

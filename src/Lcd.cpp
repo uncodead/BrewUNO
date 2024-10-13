@@ -24,13 +24,13 @@ Lcd::Lcd(ActiveStatus *activeStatus, WiFiStatus *wifiStatus, LiquidCrystal_I2C *
 
 Lcd::~Lcd() {}
 
-void Lcd::autoScan(uint8 pcfAddress)
+void Lcd::autoScan()
 {
     byte error, address;
     Serial.println("Scanning I2C bus...");
     for (address = 1; address < 127; address++)
     {
-        if (address == pcfAddress)
+        if (address == PCF8574_ADDRESS)
         {
             Serial.print("Found not display addr: ");
             Serial.println(address, HEX);
@@ -50,6 +50,7 @@ void Lcd::autoScan(uint8 pcfAddress)
 
 void Lcd::begin()
 {
+    autoScan();
     _lcd->init();
     _lcd->backlight();
     _lcd->createChar(apmode_icon, apmode);
@@ -71,6 +72,7 @@ void Lcd::update()
         printHead();
         printMashBody();
         printBoilBody();
+        printCoolingBody();
         printSpargeBody();
         printFooter();
     }
@@ -87,6 +89,23 @@ void Lcd::printMashBody()
         line.temperature = _activeStatus->Temperature;
         line.targetTemperature = _activeStatus->TargetTemperature;
         line.pwm = _activeStatus->PWMPercentage;
+        line.showPump = true;
+        line.sparge = false;
+        printBody(line);
+    }
+}
+
+void Lcd::printCoolingBody()
+{
+    if (_activeStatus->ActiveStep == cooling)
+    {
+        BodyLine line;
+        line.line = 1;
+        line.heatIcon = pheater_icon;
+        line.pwmIcon = gwm_icon;
+        line.temperature = _activeStatus->CoolingTemperature;
+        line.targetTemperature = _activeStatus->CoolingTargetTemperature;
+        line.pwm = _activeStatus->CoolingPWMPercentage;
         line.showPump = true;
         line.sparge = false;
         printBody(line);
@@ -235,6 +254,8 @@ void Lcd::printFooter()
         printMashFooter();
     else if (_activeStatus->ActiveStep == boil && _activeStatus->ActiveBoilStepName != "")
         printBoilFooter();
+    else if (_activeStatus->ActiveStep == cooling)
+        printCoolingFooter();
     else
         _lcd->print(blankline);
 }
@@ -250,6 +271,14 @@ void Lcd::printMashFooter()
 {
     String step = _activeStatus->ActiveMashStepName.substring(0, 12) + " " +
                   _activeStatus->ActiveMashStepSufixName.substring(0, 7);
+    _lcd->print(step.substring(0, 20));
+    RemoveLastChars(step.length());
+}
+
+void Lcd::printCoolingFooter()
+{
+    String step = _activeStatus->ActiveCoolingStepName.substring(0, 12) + " " +
+                  _activeStatus->ActiveCoolingStepSufixName.substring(0, 7);
     _lcd->print(step.substring(0, 20));
     RemoveLastChars(step.length());
 }

@@ -35,12 +35,13 @@ void BrewSettingsService::readFromJsonObject(JsonObject &root)
     BoilSensorOffset = root["bso"];
     Language = root["lg"] | "";
     TempUnit = root["tu"] | "";
+    BrewfatherId = root["bfid"] | "";
+    BrewfatherKey = root["bfkey"] | "";
     InvertPump = root["ip"];
-    PCFAddress = root["pa"];
 }
 
 void BrewSettingsService::writeToJsonObject(JsonObject &root)
-{
+{   
     root["btemp"] = BoilTemperature;
     root["bpp"] = BoilPowerPercentage;
     root["spp"] = SpargePowerPercentage;
@@ -69,8 +70,9 @@ void BrewSettingsService::writeToJsonObject(JsonObject &root)
     root["asoo"] = AuxSensorOneOffset;
     root["asto"] = AuxSensorTwoOffset;
     root["astho"] = AuxSensorThreeOffset;
+    root["bfid"] = BrewfatherId;
+    root["bfkey"] = BrewfatherKey;
     root["ip"] = InvertPump;
-    root["pa"] = PCFAddress;
     _activeStatus->PIDSettingsUpdated = true;
 }
 

@@ -2,37 +2,15 @@
 
 High precision and accuracy, open source, online, extensible and low cost homebrew automation on top of ESP8266 microchip.
 
-# BrewUNO Pro [novo]
+![BrewUNO](http://brewuno.com/images/home-brewuno.png)
 
-Conforme o [licenciamento](https://github.com/uncodead/BrewUNO/blob/master/LICENSE.txt) do BrewUNO, é expressamente proibido a venda ou distribuição comercial deste projeto sem permissão do Bruno Leitão.
-
-*(According to the BrewUNO [license](https://github.com/uncodead/BrewUNO/blob/master/LICENSE.txt), the sale or commercial distribution of this project without the permission of Bruno Leitão is prohibited.)*
-
-Copyright (C) 2019 Bruno Leitão Todos os direitos reservados. Este projeto é gratuito para uso. É permitido modificar para uso pessoal. Não é permitido distribuir o projeto modificado. A modificação pode ser distribuída apenas através do lançamento oficial do BrewUNO. Não é permitido distribuir comercialmente sem permissão.
-
-*(Copyright (C) 2019 Bruno Leitão All rights reserved. This project is free to use. It's permitted to modify for personal use. It's not permitted to distribute the modified project. Modification can be distributed via the official BrewUNO release only. It's not permitted to distribute in a commercial way without permission.)*
-
-Caso você tenha comprado o BrewUNO (instalado) de alguma empresa ou fornecedor comercial, por favor, entre em contato comigo no email: uncodead@gmail.com
-
-*(If you have purchased BrewUNO (installed) from any company or commercial supplier, please contact me at email: uncodead@gmail.com)*
-
-A versão 'PRO' está disponível com novas funcionalidades para atender a demanda comercial do BrewUNO. Apenas fornecedores cadastrados poderão vender a versão PRO. A versão gratuita/free continuará existindo e sendo mantida, tanto por mim como pela comunidade. Caso você queira comercializar ou comprar a versão PRO envie um email para uncodead@gmail.com
-
-*(The 'PRO' version is avaliabe with new features to meet the commercial demand of BrewUNO. Only registered suppliers can sell the PRO version. The free version will continue to exist and be maintained, both by me and the community. If you want to sell or buy the PRO version send an email to uncodead@gmail.com)*
-
-## BrewUNO PRO features:
+## Features:
 * Brewfather recipe import / *Importação de receita do Brewfather*
 * Exporting and importing brewing configurations / *Exportação e importação das configurações de brassagem*
 * Post-boil heating additions and control (Whirlpool / Hop Stand) / *Adições e controle de aquecimento pós-fervura (whirlpool/hop stand)*
 * Persistent temperature chart / *Gráfico de temperatura persistente*
 * Reverse pump relay in settings / *Configuração para inverter o relé da bomba*
 * Performance improvements / *Melhorias de performance*
-
-
-![BrewUNO](http://brewuno.com/images/home-brewuno.png)
-
-## Features:
-
 * 100% mobile interface
 * Brew with Start/Stop/Resume 
 * Responsive interface with stats
@@ -54,7 +32,7 @@ A versão 'PRO' está disponível com novas funcionalidades para atender a deman
 
 ### Simple Wiring and construction:
 
-![WireUP](https://i.imgur.com/NsDjUTW.png)
+![WireUP](https://i.imgur.com/4sjvBCr.png)
 
 This is the easiest way to mount your brewuno, you can improve it!
 

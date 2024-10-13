@@ -12,6 +12,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { Grid, Paper } from '@material-ui/core';
 import IntText from '../components/IntText'
+import PasswordValidator from '../components/PasswordValidator';
 
 const styles = theme => ({
   root: {
@@ -31,6 +32,10 @@ const styles = theme => ({
   },
   formControlTypography: {
     minWidth: '100%'
+  },
+  textField: {
+    margin: theme.spacing.unit * 1,
+    minWidth: '95%'
   }
 })
 var PaperStyle = {
@@ -75,10 +80,10 @@ class BrewSettingsForm extends Component {
                         inputProps={{ required: true }}
                       >
                         <MenuItem value={'en'}><IntText text="English" /></MenuItem>
-                        <MenuItem value={'de-DE'}><IntText text="German" /></MenuItem>
                         <MenuItem value={'pt-BR'}><IntText text="Portuguese" /></MenuItem>
                         <MenuItem value={'ru-RU'}><IntText text="Russian" /></MenuItem>
                         <MenuItem value={'es-ES'}><IntText text="Spanish" /></MenuItem>
+                        <MenuItem value={'he-IL'}><IntText text="Israel" /></MenuItem>
                       </Select>
                       <Typography className={classes.formControl} color="textSecondary"><IntText text="TemperatureUnit" /></Typography>
                       <Select className={classes.formControl}
@@ -90,6 +95,7 @@ class BrewSettingsForm extends Component {
                         <MenuItem value={'C'}><IntText text="Celsius" /></MenuItem>
                         <MenuItem value={'F'}><IntText text="Fahrenheit" /></MenuItem>
                       </Select>
+
                     </Paper>
                   </Grid>
 
@@ -289,7 +295,6 @@ class BrewSettingsForm extends Component {
                           label={<IntText text="BrewSettings.InvertPump" />}
                         />
                       </div>
-                      <Typography className={classes.formControl}><IntText text="BrewSettings.RestartAttention" /></Typography>
                       <TextValidator className={classes.formControl}
                         name="pri"
                         validators={['required']}
@@ -315,66 +320,6 @@ class BrewSettingsForm extends Component {
                     </Paper>
                   </Grid>
 
-                  <Grid item xs={6}>
-                    <Paper className={classes.root} style={PaperStyle}>
-                      <Typography className={classes.formControl} color="textSecondary">PID</Typography>
-                      <TextValidator className={classes.formControl}
-                        name="kp"
-                        label="kP"
-                        validators={['required', 'isFloat']}
-                        fullWidth
-                        value={brewSettings.kP}
-                        onChange={handleValueChange("kP")}
-                        errorMessages={[<IntText text="FieldRequired" />]}
-                      />
-                      <TextValidator className={classes.formControl}
-                        name="ki"
-                        label="kI"
-                        validators={['required', 'isFloat']}
-                        fullWidth
-                        value={brewSettings.kI}
-                        onChange={handleValueChange("kI")}
-                        errorMessages={[<IntText text="FieldRequired" />]}
-                      />
-                      <TextValidator className={classes.formControl}
-                        name="kd"
-                        label="kD"
-                        validators={['required', 'isFloat']}
-                        fullWidth
-                        value={brewSettings.kD}
-                        onChange={handleValueChange("kD")}
-                        errorMessages={[<IntText text="FieldRequired" />]}
-                      />
-                      <TextValidator className={classes.formControl}
-                        name="ps"
-                        validators={['required', 'isFloat']}
-                        label={<IntText text="BrewSettings.PIDStartAt" />}
-                        fullWidth
-                        InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
-                        value={brewSettings.ps}
-                        onChange={handleValueChange("ps")}
-                        errorMessages={[<IntText text="FieldRequired" />]}
-                      />
-                      <Typography className={classes.formControl} color="textSecondary"><IntText text="BrewSettings.PCFAddress" /></Typography>
-                      <Select className={classes.formControl}
-                        value={brewSettings.pa}
-                        onChange={handleValueChange("pa")}
-                        fullWidth
-                        inputProps={{ required: true }}
-                      >
-                        <MenuItem value={0}><IntText text="0x20" /></MenuItem>
-                        <MenuItem value={1}><IntText text="0x21" /></MenuItem>
-                        <MenuItem value={2}><IntText text="0x22" /></MenuItem>
-                        <MenuItem value={3}><IntText text="0x23" /></MenuItem>
-                        <MenuItem value={4}><IntText text="0x24" /></MenuItem>
-                        <MenuItem value={5}><IntText text="0x25" /></MenuItem>
-                        <MenuItem value={6}><IntText text="0x26" /></MenuItem>
-                        <MenuItem value={7}><IntText text="0x27" /></MenuItem>
-                        <MenuItem value={8}><IntText text="0x38" /></MenuItem>
-                      </Select>
-                      <Typography className={classes.formControl}><IntText text="BrewSettings.RestartAttention" /></Typography>
-                    </Paper>
-                  </Grid>
 
                   <Grid item xs={6}>
                     <Paper className={classes.root} style={PaperStyle}>
@@ -447,6 +392,73 @@ class BrewSettingsForm extends Component {
                     </Paper>
                   </Grid>
 
+
+                  <Grid item xs={6}>
+                    <Paper className={classes.root} style={PaperStyle}>
+                      <Typography className={classes.formControl} color="textSecondary">PID</Typography>
+                      <TextValidator className={classes.formControl}
+                        name="kp"
+                        label="kP"
+                        validators={['required', 'isFloat']}
+                        fullWidth
+                        value={brewSettings.kP}
+                        onChange={handleValueChange("kP")}
+                        errorMessages={[<IntText text="FieldRequired" />]}
+                      />
+                      <TextValidator className={classes.formControl}
+                        name="ki"
+                        label="kI"
+                        validators={['required', 'isFloat']}
+                        fullWidth
+                        value={brewSettings.kI}
+                        onChange={handleValueChange("kI")}
+                        errorMessages={[<IntText text="FieldRequired" />]}
+                      />
+                      <TextValidator className={classes.formControl}
+                        name="kd"
+                        label="kD"
+                        validators={['required', 'isFloat']}
+                        fullWidth
+                        value={brewSettings.kD}
+                        onChange={handleValueChange("kD")}
+                        errorMessages={[<IntText text="FieldRequired" />]}
+                      />
+                      <TextValidator className={classes.formControl}
+                        name="ps"
+                        validators={['required', 'isFloat']}
+                        label={<IntText text="BrewSettings.PIDStartAt" />}
+                        fullWidth
+                        InputProps={{ endAdornment: <InputAdornment position="start"></InputAdornment> }}
+                        value={brewSettings.ps}
+                        onChange={handleValueChange("ps")}
+                        errorMessages={[<IntText text="FieldRequired" />]}
+                      />
+                    </Paper>
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    <Paper className={classes.root} style={PaperStyle}>
+                      <Typography className={classes.formControl} color="textSecondary">Brewfather</Typography>
+                      <PasswordValidator
+                        validators={['matchRegexp:^.{0,64}$']}
+                        name="bfid"
+                        label={<IntText text="ID" />}
+                        className={classes.textField}
+                        value={brewSettings.bfid}
+                        onChange={handleValueChange('bfid')}
+                        margin="normal"
+                      />
+                      <PasswordValidator
+                        validators={['matchRegexp:^.{0,64}$']}
+                        name="bfkey"
+                        label={<IntText text="API Key" />}
+                        className={classes.textField}
+                        value={brewSettings.bfkey}
+                        onChange={handleValueChange('bfkey')}
+                        margin="normal"
+                      />
+                    </Paper>
+                  </Grid>
                 </Grid>
 
                 <div style={{ marginTop: 20, }}>

@@ -5,6 +5,7 @@
   "Stopped": "Остановить",
   "Mash": "Затор",
   "Boil": "Кипячение",
+  "Cooling": "Whirlpool",
   "BoilStarted": "Boil Started",
   "StartBoilCounter": "Start Boil Counter",
   "Dismiss": "Отменить",
@@ -60,6 +61,18 @@
   "Uptime": "Пройдено",
   "Synchronized": "Синхронно",
   "About": "Об этом",
+  "ImportRecipe": "Импортный рецепт",
+  "ExportRecipe": "Экспортный рецепт",
+  "BrewUNOActivationAlert": "BrewUNO должен быть активирован",
+  "BrewUNOActivation": "Активировать BrewUNO",
+  "Activation": "активация",
+  "ActivationId": "ID активации",
+  "ActivationKey": "Ключ активации",
+  "ActivationPass": "Пароль активации",
+  "NewActivation": "Новая Активация",
+  "ReActivation": "Активировав",
+  "ImportFromBrewfather": "Импорт из Brewfather",
+  "GetRecipes": "получить рецепты",
   "Brew": {
     "Title": "Brew",
     "StartConfirmation": "Начать варку? Проверьте воду в кубе.",
@@ -86,6 +99,11 @@
     "ErrorAlert": "Ошибка настройки кипячения: ",
     "Settings": "Время кипячения"
   },
+  "CoolingSettings": {
+    "Settings": "Whirlpool",
+    "SavedAlert": "Whirlpool settings saved.",
+    "ErrorAlert": "Whirlpool Setings service returned unexpected response code: "
+  },
   "BrewSettings": {
     "Settings": "Настройка затора",
     "OffSetCalibration": "Погрешность (Калибровки)",
@@ -105,9 +123,9 @@
     "PumpRestTime": "Время отдыха насоса",
     "EnableBoilKettle": "Enable Boil Kettle",
     "BoilAttention": "Attention: enable only for systems with a separated boil kettle.",
-    "PCFAddress": "PCF Address",
-    "InvertPump": "Invert Pump",
-    "RestartAttention": "Attention: Save and restart the system to apply the change."
+    "Export": "Export",
+    "Import": "Import",
+    "InvertPump": "InvertPump"
   },
   "WiFiSettings": {
     "Settings": "WiFi Settings",

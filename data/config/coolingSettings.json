@@ -1,0 +1,37 @@
+{
+    "st": [
+        {
+            "n": "FlameOut",
+            "t": "",
+            "tm": "10",
+            "a": "",
+            "fp": false,
+            "r": true,
+            "sl": false,
+            "ho": false,
+            "index": null
+        },
+        {
+            "n": "1stSteepHop",
+            "t": "80",
+            "tm": "10",
+            "a": "100",
+            "fp": false,
+            "r": true,
+            "sl": false,
+            "ho": true,
+            "index": null
+        },
+        {
+            "n": "Whirpool",
+            "t": "",
+            "tm": "10",
+            "a": "",
+            "fp": false,
+            "r": true,
+            "sl": false,
+            "ho": false,
+            "index": null
+        }
+    ]
+}

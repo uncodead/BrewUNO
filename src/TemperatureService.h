@@ -9,7 +9,6 @@
 #include <BrewSettingsService.h>
 #include <enum.h>
 
-#define APPLICATION_JSON_TYPE "application/json"
 #define GET_SENSORS_SERVICE_PATH "/rest/getsensors"
 
 class TemperatureService

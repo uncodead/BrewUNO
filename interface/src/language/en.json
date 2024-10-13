@@ -5,6 +5,7 @@
   "Stopped": "Stopped",
   "Mash": "Mash",
   "Boil": "Boil",
+  "Cooling": "Whirlpool",
   "BoilStarted": "Boil Started",
   "StartBoilCounter": "Start boil counter",
   "Dismiss": "Dismiss",
@@ -60,6 +61,18 @@
   "Uptime": "Uptime",
   "Synchronized": "Synchronized",
   "About": "About",
+  "ImportRecipe": "Import Recipe",
+  "ExportRecipe": "Export Recipe",
+  "BrewUNOActivationAlert": "BrewUNO needs to be activated",
+  "BrewUNOActivation": "Activate BrewUNO",
+  "Activation": "Activation",
+  "ActivationId": "Activation ID",
+  "ActivationKey": "Activation Key",
+  "ActivationPass": "Activation Password",
+  "NewActivation": "New Activation",
+  "ReActivation": "Reactivation",
+  "ImportFromBrewfather": "Import from Brewfather",
+  "GetRecipes": "Get Recipes",
   "Brew": {
     "Title": "Brew",
     "StartConfirmation": "Do you want start brew? Check if you've secure water volume at kettle.",
@@ -86,6 +99,11 @@
     "ErrorAlert": "Boil Setings service returned unexpected response code: ",
     "Settings": "Boil Timing"
   },
+  "CoolingSettings": {
+    "Settings": "Whirlpool",
+    "SavedAlert": "Whirlpool settings saved.",
+    "ErrorAlert": "Whirlpool Setings service returned unexpected response code: "
+  },
   "BrewSettings": {
     "Settings": "Brew Settings",
     "OffSetCalibration": "Offset (Calibration)",
@@ -106,9 +124,9 @@
     "PumpCycle": "Pump Cycle",
     "EnableBoilKettle": "Enable Boil Kettle",
     "BoilAttention": "Attention: enable only for systems with a separated boil kettle.",
-    "PCFAddress": "PCF Address",
-    "InvertPump": "Invert Pump",
-    "RestartAttention": "Attention: Save and restart the system to apply the change."
+    "Export": "Export",
+    "Import": "Import",
+    "InvertPump": "Invert Pump"
   },
   "WiFiSettings": {
     "Settings": "WiFi Settings",
