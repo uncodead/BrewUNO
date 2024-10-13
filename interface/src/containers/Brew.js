@@ -6,7 +6,6 @@ import CoolingSettings from './CoolingSettings';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import ConfirmDialog from '../components/ConfirmDialog';
-import ActivationDialog from '../components/ActivationDialog';
 import BrewFatherDialog from '../components/BrewFatherDialog';
 import {
   START_PUMP, STOP_PUMP,
@@ -64,7 +63,6 @@ class Brew extends Component {
       status: { temperature: '' },
       data: [],
       confirmDialogOpen: false,
-      confirmActivationDialogOpen: false,
       brewFatherDialogOpen: false,
       boilPower: 0,
       activeStepName: "-",
@@ -125,7 +123,6 @@ class Brew extends Component {
         status: jsonData,
         temperatures: temperatures,
         activeStepName: stepName,
-        alertActivation: false
       })
 
       Cookies.set('status', jsonData)
@@ -480,10 +477,6 @@ class Brew extends Component {
           confirmDialogOpen={this.state.confirmDialogOpen}
           confirmDialogMessage={this.state.confirmDialogMessage}
           copy={this.state.copyDialogMessage}
-        />
-        <ActivationDialog
-          confirmActivationDialogOpen={this.state.confirmActivationDialogOpen}
-          confirmAction={() => { this.state.confirmActivationDialogOpen = false }}
         />
         <BrewFatherDialog
           ref={this.brewFatherRecipe}
