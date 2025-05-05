@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 const styles = theme => ({
   content: {
     padding: theme.spacing.unit * 1.5,
-    margin: theme.spacing.unit * 1.5,
+    margin: theme.spacing.unit * 0.8,
     minWidth: 350,
   }
 

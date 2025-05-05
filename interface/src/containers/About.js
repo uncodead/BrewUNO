@@ -19,7 +19,7 @@ const styles = theme => ({
     transform: 'scale(0.8)',
   },
   pos: {
-    marginBottom: 12,
+    marginBottom: 18,
   },
   pos2x: {
     marginBottom: 20,

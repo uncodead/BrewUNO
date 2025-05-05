@@ -33,8 +33,8 @@
     "reconnecting-websocket": "^4.4.0"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build && rm -rf ../data/www && cp -r build ../data/www",
+    "start": "react-app-rewired --openssl-legacy-provider start",
+    "build": "react-app-rewired --openssl-legacy-provider build && rm -rf ../data/www && cp -r build ../data/www",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject"
   },

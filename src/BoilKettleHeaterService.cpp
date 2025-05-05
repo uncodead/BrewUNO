@@ -80,7 +80,7 @@ void BoilKettleHeaterService::TurnOff()
   {
     if (!_brewSettingsService->EnableBoilKettle)
     {
-      digitalWrite(BOIL_HEATER_BUS, HIGH);
+      digitalWrite(BOIL_HEATER_BUS, LOW);
     }
     analogWrite(GetBus(), 0);
   }
