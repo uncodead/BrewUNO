@@ -55,25 +55,25 @@ class About extends Component {
             <Typography variant="h6" component="h1" className={classes.pos}>
               <IntText text="Author" />:
             </Typography>
-            <Typography className={classes.pos} variant="h7" color="textSecondary">
+            <Typography className={classes.pos} variant="body1" color="textSecondary">
               Bruno Leitão de Oliveira
             </Typography>
-            <Typography className={classes.pos2x} variant="h7" color="textSecondary">
+            <Typography className={classes.pos2x} variant="body1" color="textSecondary">
               uncodead@gmail.com
             </Typography>
             <Typography variant="h6" component="h1" className={classes.pos}>
               <IntText text="Thanks" />:
             </Typography>
-            <Typography className={classes.pos} variant="h8" color="textSecondary">
+            <Typography className={classes.pos} variant="body1" color="textSecondary">
               Eduardo 'Dumpa' Sanches
             </Typography>
-            <Typography className={classes.pos} variant="h8" color="textSecondary">
+            <Typography className={classes.pos} variant="body1" color="textSecondary">
               Guilherme Wood
             </Typography>
-            <Typography className={classes.pos} variant="h8" color="textSecondary">
+            <Typography className={classes.pos} variant="body1" color="textSecondary">
               Paiakan
             </Typography>
-            <Typography className={classes.pos} variant="h8" color="textSecondary">
+            <Typography className={classes.pos} variant="body1" color="textSecondary">
               rjwats/esp8266-react
             </Typography>
           </CardContent>
