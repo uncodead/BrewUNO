@@ -54,6 +54,8 @@ Temperatures TemperatureService::GetTemperatures()
             temps.Sparge = temp + _brewSettingsService->SpargeSensorOffset;
         if (addr == _brewSettingsService->BoilSensor)
             temps.Boil = temp + _brewSettingsService->BoilSensorOffset;
+        if (addr == _brewSettingsService->BoilSensor)
+            temps.Cooling = temp + _brewSettingsService->BoilSensorOffset;
         if (addr == _brewSettingsService->AuxOneSensor)
             temps.AuxOne = temp + _brewSettingsService->AuxSensorOneOffset;
         if (addr == _brewSettingsService->AuxTwoSensor)

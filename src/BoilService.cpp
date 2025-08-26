@@ -28,6 +28,7 @@ void BoilService::loop(ActiveStatus *activeStatus)
 
     time_t timeNow = now();
     activeStatus->BoilTargetTemperature = _brewSettingsService->BoilTemperature;
+    activeStatus->TargetTemperature = activeStatus->BoilTargetTemperature;
 
     if (activeStatus->StartTime == 0)
         activeStatus->ActiveBoilStepName = "Heating to Boil";
@@ -48,7 +49,16 @@ void BoilService::loop(ActiveStatus *activeStatus)
     {
         Serial.println("Boil ended");
         Buzzer().Ring(1, 2000);
-        activeStatus->SaveActiveStatus(0, 0, 0, 0, -1, "", 0, 0, none, false);
+        activeStatus->CoolingTargetTemperature = 0;
+        activeStatus->ActiveStep = cooling;
+        activeStatus->StartTime = 0;
+        activeStatus->EndTime = 0;
+        activeStatus->ActiveCoolingStepIndex = -1;
+        activeStatus->ActiveCoolingStepName = "";
+        activeStatus->ActiveCoolingStepSufixName = "";
+        activeStatus->ActiveBoilStepIndex = "";
+        activeStatus->ActiveBoilStepName = "";
+        activeStatus->SaveActiveStatus();
         return;
     }
 

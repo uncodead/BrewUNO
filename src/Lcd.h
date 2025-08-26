@@ -37,7 +37,6 @@ public:
     ~Lcd();
     void update();
     void begin();
-    void autoScan(uint8 pcfAddress);
 
 private:
     LiquidCrystal_I2C *_lcd;
@@ -56,6 +55,7 @@ private:
         bool sparge;
     };
 
+    void autoScan();
     void printHead();
     void printFooter();
     String GetCount(bool down);
@@ -64,11 +64,13 @@ private:
     void printBody(BodyLine line);
     void printMashBody();
     void printBoilBody();
+    void printCoolingBody();
     void printSpargeBody();
     void printPWM(BodyLine line);
     void printPump(BodyLine line);
     void printIpFooter();
     void printMashFooter();
     void printBoilFooter();
+    void printCoolingFooter();
 };
 #endif

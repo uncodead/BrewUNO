@@ -31,7 +31,8 @@
 #include <MashSettingsService.h>
 #include <BoilSettingsService.h>
 #include <BrewSettingsService.h>
-#include <BrewService.h>
+#include <CoolingSettingsService.h>
+#include <BrewUnoService.h>
 #include <MashService.h>
 #include <BoilService.h>
 #include <TemperatureService.h>
@@ -54,14 +55,13 @@ int deviceCount = 0;
 LiquidCrystal_I2C lcd_i2c(0x0, 20, 4);
 
 TwoWire pcfWire;
+PCF857x pcf8574(PCF8574_ADDRESS, &pcfWire);
 
 AsyncWebServer server(80);
 
-//SecuritySettingsService securitySettingsService = SecuritySettingsService(&server, &SPIFFS);
 WiFiSettingsService wifiSettingsService = WiFiSettingsService(&server, &SPIFFS);
 APSettingsService apSettingsService = APSettingsService(&server, &SPIFFS);
 OTASettingsService otaSettingsService = OTASettingsService(&server, &SPIFFS);
-//AuthenticationService authenticationService = AuthenticationService(&server, &securitySettingsService);
 
 WiFiScanner wifiScanner = WiFiScanner(&server);
 WiFiStatus wifiStatus = WiFiStatus(&server);
@@ -70,52 +70,25 @@ APStatus apStatus = APStatus(&server);
 SystemStatus systemStatus = SystemStatus(&server);
 
 //brewUNO
-ActiveStatus activeStatus = ActiveStatus(&SPIFFS);
+ActiveStatus activeStatus = ActiveStatus(&server, &SPIFFS);
 NTPSettingsService ntpSettingsService = NTPSettingsService(&server, &SPIFFS, &activeStatus);
 
 BrewSettingsService brewSettingsService = BrewSettingsService(&server, &SPIFFS, &activeStatus);
 TemperatureService temperatureService = TemperatureService(&server, &SPIFFS, DS18B20, &brewSettingsService);
 MashSettingsService mashSettings = MashSettingsService(&server, &SPIFFS);
+CoolingSettingsService coolingSettingsService = CoolingSettingsService(&server, &SPIFFS);
 BoilSettingsService boilSettingsService = BoilSettingsService(&server, &SPIFFS, &brewSettingsService);
-
-uint8_t getPCFAddress()
-{
-  SPIFFS.begin();
-  brewSettingsService.begin();
-  uint8_t pcfAddress = PCF8574_ADDRESS;
-  if (brewSettingsService.PCFAddress == 0)
-    pcfAddress = 0x20;
-  else if (brewSettingsService.PCFAddress == 1)
-    pcfAddress = 0x21;
-  else if (brewSettingsService.PCFAddress == 2)
-    pcfAddress = 0x22;
-  else if (brewSettingsService.PCFAddress == 3)
-    pcfAddress = 0x23;
-  else if (brewSettingsService.PCFAddress == 4)
-    pcfAddress = 0x24;
-  else if (brewSettingsService.PCFAddress == 5)
-    pcfAddress = 0x25;
-  else if (brewSettingsService.PCFAddress == 6)
-    pcfAddress = 0x26;
-  else if (brewSettingsService.PCFAddress == 7)
-    pcfAddress = 0x27;
-else if (brewSettingsService.PCFAddress == 8)
-    pcfAddress = 0x38;
-
-  return pcfAddress;
-}
 
 Pump pump = Pump(&server, &activeStatus, &brewSettingsService);
 Lcd lcd = Lcd(&activeStatus, &wifiStatus, &lcd_i2c);
 MashKettleHeaterService mashKettleHeaterService = MashKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
 SpargeKettleHeaterService spargeKettleHeaterService = SpargeKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
 BoilKettleHeaterService boilKettleHeaterService = BoilKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
+CoolingKettleHeaterService coolingKettleHeaterService = CoolingKettleHeaterService(&temperatureService, &activeStatus, &brewSettingsService);
 MashService mashService = MashService(&SPIFFS, &temperatureService, &pump);
 BoilService boilService = BoilService(&SPIFFS, &temperatureService, &brewSettingsService);
-BrewService brewService = BrewService(&server, &SPIFFS, &mashService, &boilService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &boilKettleHeaterService, &activeStatus, &temperatureService, &pump, &lcd);
-
-uint8_t pcfAddress = getPCFAddress();
-PCF857x pcf8574(pcfAddress, &pcfWire);
+CoolingService coolingService = CoolingService(&SPIFFS, &temperatureService);
+BrewUnoService brewService = BrewUnoService(&server, &SPIFFS, &mashService, &boilService, &coolingService, &brewSettingsService, &mashKettleHeaterService, &spargeKettleHeaterService, &boilKettleHeaterService, &coolingKettleHeaterService, &activeStatus, &temperatureService, &pump, &lcd);
 
 time_t lastReadButton = now();
 KeyButton button1(BUTTONUP_BUS, pcf8574);
@@ -195,8 +168,6 @@ void setup()
   DefaultHeaders::Instance().addHeader("Access-Control-Allow-Credentials", "true");
 #endif
 
-  server.begin();
-
   //BrewUNO
   pinMode(PUMP_BUS, OUTPUT);
   pinMode(BUZZER_BUS, OUTPUT);
@@ -219,7 +190,6 @@ void setup()
   temperatureService.DeviceCount = deviceCount;
   brewSettingsService.begin();
   brewService.begin();
-  lcd.autoScan(pcfAddress);
   lcd.begin();
 
   pcfWire.begin(D2, D1);
@@ -230,6 +200,8 @@ void setup()
   pinMode(D3, INPUT_PULLUP);
   pcf8574.resetInterruptPin();
   attachInterrupt(digitalPinToInterrupt(D3), PCFInterrupt, FALLING);
+
+  server.begin();
 }
 
 void loop()

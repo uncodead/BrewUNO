@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
 import MashSettingsForm from '../forms/MashBoilSettingsForm';
+import ImportConfig from './ImportConfig'
 import SortableList from '../components/SortableList';
 import { withSnackbar } from 'notistack';
 import { SAVE_MASH_SETTINGS_SERVICE_PATH, GET_MASH_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
@@ -55,16 +56,22 @@ class MashSettings extends Component {
       },
     }).then(response => {
       if (response.ok) {
-        this.props.enqueueSnackbar(<IntText text="MashSettings.SavedAlert" />, { variant: 'info', autoHideDuration: 500, });
+        this.props.enqueueSnackbar(<IntText text="Mash.SavedAlert" />, { variant: 'info', autoHideDuration: 500, });
         return;
       }
       response.text().then(function (data) {
-        throw Error(<IntText text="MashSettings.ErrorAlert" /> + response.status + " - " + data);
+        throw Error(<IntText text="Mash.ErrorAlert" /> + response.status + " - " + data);
       }).catch(error => {
         this.props.enqueueSnackbar(error.message, { variant: 'error', autoHideDuration: 2000, });
         this.getMashSettings();
       });
     });
+  }
+
+  onImport = (items) => {
+    this.setState({
+      items: items
+    }, this.saveMashSettings)
   }
 
   itemAdded = (newelement) => {
@@ -121,11 +128,11 @@ class MashSettings extends Component {
     return (
       <SectionContent title={<IntText text="MashSettings.Settings" />} selected={this.props.selectedIndex >= 0}>
         {!this.props.listOnly ?
-          <MashSettingsForm callbackItemAdded={this.itemAdded} ref={this.child} />
+          <MashSettingsForm mash={true} callbackItemAdded={this.itemAdded} ref={this.child} />
           : null}
         <Divider />
         {
-          this.state.items === null || this.state.items === undefined || this.state.items.length <= 0 ?
+          this.props.listOnly && (this.state.items === null || this.state.items === undefined || this.state.items.length <= 0) ?
             <div>
               <LinearProgress />
               <Typography variant="display1">{<IntText text="Loading" />}...</Typography>
@@ -140,10 +147,13 @@ class MashSettings extends Component {
           callbackFormEdited={this.itemFormEdited}
           editItem
           dragHandle={!this.props.brewDay}
-          boil={false}
+          mash={true}
           brewDay={this.props.brewDay}
           selectedIndex={this.props.selectedIndex}
         />
+        {!this.props.brewDay ?
+          <ImportConfig name='mash' items={this.state.items} onImport={this.onImport} />
+          : null}
       </SectionContent>
     )
   }

@@ -27,7 +27,7 @@ import ContactSupport from '@material-ui/icons/ContactSupport'
 import IntText from '../components/IntText'
 
 const drawerWidth = 250;
-const drawerWidthPermanent = 60
+const drawerWidthPermanent = 55
 
 const styles = theme => ({
   root: {
@@ -54,7 +54,7 @@ const styles = theme => ({
     position: 'absolute',
     marginLeft: drawerWidth,
     [theme.breakpoints.up('md')]: {
-      width: `calc(100% - 80px)`,
+      width: `calc(100% - 62px)`,
     },
   },
   navIconHide: {
@@ -93,8 +93,8 @@ const styles = theme => ({
       paddingLeft: drawerWidthPermanent
     },
     [theme.breakpoints.up('sm')]: {
-      height: 'calc(100% - 64px)',
-      marginTop: 64,
+      height: 'calc(100% - 60px)',
+      marginTop: 60,
     },
   },
 });

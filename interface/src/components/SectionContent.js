@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 const styles = theme => ({
   content: {
     padding: theme.spacing.unit * 1.5,
-    margin: theme.spacing.unit * 1.5,
+    margin: theme.spacing.unit * 0.8,
     minWidth: 350,
   }
 
@@ -18,9 +18,9 @@ function SectionContent(props) {
   const { children, classes, title } = props;
   return (
     <div>
-      {title != '' ?
+      {title !== undefined && title !== '' ?
         <Paper className={classes.content}>
-          <Typography color="textSecondaryLight" variant="button">
+          <Typography color="textSecondary" variant="button">
             {title}
           </Typography>
         </Paper>

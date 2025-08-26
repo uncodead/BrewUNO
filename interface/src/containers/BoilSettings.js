@@ -3,6 +3,7 @@ import { Divider } from '@material-ui/core';
 import SectionContent from '../components/SectionContent';
 import BoilSettingsForm from '../forms/MashBoilSettingsForm';
 import SortableList from '../components/SortableList';
+import ImportConfig from './ImportConfig'
 import { withSnackbar } from 'notistack';
 import { SAVE_BOIL_SETTINGS_SERVICE_PATH, GET_BOIL_SETTINGS_SERVICE_PATH } from '../constants/Endpoints';
 import { ExecuteRestCall } from '../components/Utils';
@@ -67,6 +68,12 @@ class BoilSettings extends Component {
     });
   }
 
+  onImport = (items) => {
+    this.setState({
+      items: items
+    }, this.saveBoilSettings)
+  }
+
   itemAdded = (newelement) => {
     if (newelement.index !== null) {
       var array = this.state.items.slice();
@@ -110,7 +117,7 @@ class BoilSettings extends Component {
           <BoilSettingsForm callbackItemAdded={this.itemAdded} boil={true} ref={this.child} /> : null}
         <Divider />
         {
-          this.state.items === null || this.state.items === undefined || this.state.items.length <= 0 ?
+          this.props.listOnly && (this.state.items === null || this.state.items === undefined || this.state.items.length <= 0) ?
             <div>
               <LinearProgress />
               <Typography variant="display1">{<IntText text="Loading" />}...</Typography>
@@ -126,6 +133,9 @@ class BoilSettings extends Component {
           brewDay={this.props.brewDay}
           selectedIndex={this.props.selectedIndex}
         />
+        {!this.props.brewDay ?
+          <ImportConfig name='boil' items={this.state.items} onImport={this.onImport} />
+          : null}
       </SectionContent>
     )
   }

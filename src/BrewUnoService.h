@@ -1,5 +1,5 @@
-#ifndef BrewService_h
-#define BrewService_h
+#ifndef BrewUnoService_h
+#define BrewUnoService_h
 
 #if defined(ESP8266)
 #include <ESP8266WiFi.h>
@@ -18,6 +18,7 @@
 #include <enum.h>
 #include <MashService.h>
 #include <BoilService.h>
+#include <CoolingService.h>
 #include <MashKettleHeaterService.h>
 #include <SpargeKettleHeaterService.h>
 #include <BrewSettingsService.h>
@@ -25,6 +26,7 @@
 #include <Pump.h>
 #include <BoilKettleHeaterService.h>
 #include <Lcd.h>
+#include <BrewCommands.h>
 
 #define START_BREW_SERVICE_PATH "/rest/startbrew"
 #define STOP_BREW_SERVICE_PATH "/rest/stopbrew"
@@ -43,52 +45,33 @@
 #define NPT_JSON_ERROR_MESSAGE "{ \"error\": true, \"message\":\"NTP server not reachable\"}"
 #define INVALID_JSON_ERROR "Error validating json."
 
-class BrewService
+class BrewUnoService : public BrewCommands
 {
 public:
-  BrewService(AsyncWebServer *server,
+  BrewUnoService(AsyncWebServer *server,
               FS *fs,
               MashService *mashService,
               BoilService *boilService,
+              CoolingService *coolingService,
               BrewSettingsService *brewSettingsService,
               MashKettleHeaterService *kettleHeaterService,
               SpargeKettleHeaterService *spargeKettleHeaterService,
               BoilKettleHeaterService *boilKettleHeaterService,
+              CoolingKettleHeaterService *coolingKettleHeaterService,
               ActiveStatus *activeStatus,
               TemperatureService *temperatureService,
               Pump *pump,
               Lcd * lcd);
 
-  ~BrewService();
+  ~BrewUnoService();
 
   void loop();
   void begin();
 
-  void startBrew();
-  void stopBrew();
-  void nextStep();
-  void resumeBrew();
-  void unLockBrew();
-  void startBoil();
-  void startBoilCounter();
-  void pauseBrew();
-
 private:
-  FS *_fs;
-  AsyncWebServer *_server;
-  BoilService *_boilService;
-  MashService *_mashService;
-  BrewSettingsService *_brewSettingsService;
-  MashKettleHeaterService *_mashKettleHeaterService;
-  SpargeKettleHeaterService *_spargeKettleHeaterService;
-  BoilKettleHeaterService *_boilKettleHeaterService;
-  TemperatureService *_temperatureService;
-  Pump *_pump;
-  ActiveStatus *_activeStatus;
-  Lcd *_lcd;
-
   AsyncJsonWebHandler _updateHandler;
 
+  void onWSEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len);
   void getActiveStatus(AsyncWebServerRequest *request);
   void startBrewHttp(AsyncWebServerRequest *request);
   void stopBrewHttp(AsyncWebServerRequest *request);
@@ -98,9 +81,10 @@ private:
   void startBoilHttp(AsyncWebServerRequest *request);
   void startBoilCounterHttp(AsyncWebServerRequest *request);
   void pauseBrewHttp(AsyncWebServerRequest *request);
-  void startAnticavitation(AsyncWebServerRequest *request);
-  void changeBoilPercentage(AsyncWebServerRequest *request, JsonDocument &json);
+  void startAnticavitationHttp(AsyncWebServerRequest *request);
+  void changeBoilPercentageHttp(AsyncWebServerRequest *request, JsonDocument &json);
 
   void HeaterCompute();
+  void LoadSettingsToStatus();
 };
 #endif

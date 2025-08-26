@@ -10,6 +10,11 @@ const BrewStyles = theme => ({
     margin: theme.spacing.unit * 0.45,
     padding: theme.spacing.unit * 0.7,
   },
+  button_activation: {
+    margin: theme.spacing.unit * 0.45,
+    padding: theme.spacing.unit * 0.7,
+    backgroundColor: '#c05c5c4d',
+  },
   button_icons: {
     marginRight: theme.spacing.unit * 0,
     padding: 0,

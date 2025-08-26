@@ -20,8 +20,12 @@ void SystemStatus::systemStatus(AsyncWebServerRequest *request)
   root["sketch_size"] = ESP.getSketchSize();
   root["free_sketch_space"] = ESP.getFreeSketchSpace();
   root["sdk_version"] = ESP.getSdkVersion();
+  root["mac"] = WiFi.macAddress();
   root["flash_chip_size"] = ESP.getFlashChipSize();
   root["flash_chip_speed"] = ESP.getFlashChipSpeed();
+  root["chip_id"] = ESP.getChipId();
+  root["flash_chip_id"] = ESP.getFlashChipId();
+
   response->setLength();
   request->send(response);
 }

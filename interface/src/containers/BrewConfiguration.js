@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import MenuAppBar from '../components/MenuAppBar';
 import MashSettings from './MashSettings';
 import BoilSettings from './BoilSettings';
+import CoolingSettings from './CoolingSettings';
 import BrewSettings from './BrewSettings'
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -34,10 +35,12 @@ class BrewConfiguration extends Component {
         <Tabs value={selectedTab} onChange={this.handleTabChange} indicatorColor="secondary" textColor="contrastText" fullWidth scrollable>
           <Tab value="MashSettings" label={<IntText text="Mash" />} />
           <Tab value="BoilSettings" label={<IntText text="Boil" />} />
+          <Tab value="CoolingSettings" label={<IntText text="Cooling" />} />
           <Tab value="BrewSettings" label={<IntText text="BrewSettings.Settings" />} />
         </Tabs>
-        {selectedTab === "MashSettings" && <MashSettings />}
+        {selectedTab === "MashSettings" && <MashSettings brewDay={false}/>}
         {selectedTab === "BoilSettings" && <BoilSettings />}
+        {selectedTab === "CoolingSettings" && <CoolingSettings />}
         {selectedTab === "BrewSettings" && <BrewSettings />}
       </MenuAppBar>
     )

@@ -28,9 +28,20 @@ class SortableList extends Component {
 
   getItemText = (item) => {
     if (this.props.boil) {
-      return item.a + 'g@' + item.tm + '\'';
+      var name = ''
+      if (item.a !== undefined && item.a > 0)
+        name += item.a + 'g@'
+      return name + item.tm + '\'';
     }
-    return item.tm + '\'@' + item.t + '°'
+    else if (this.props.cooling) {
+      var name = ''
+      if (item.a !== undefined && item.a > 0)
+        name += item.a + 'g@'
+      name += item.tm + '\'@' + item.t + '°'
+      return name
+    }
+    else
+      return item.tm + '\'@' + item.t + '°'
   }
 
 
@@ -41,7 +52,7 @@ class SortableList extends Component {
         <ListItem
           selected={
             !this.props.boil && this.props.selectedIndex === itemIndex ||
-            this.props.boil && this.props.selectedIndex && this.props.selectedIndex.includes(itemIndex)
+              this.props.boil && this.props.selectedIndex && this.props.selectedIndex.includes(itemIndex) ? true : false
           }
         >
           {this.props.dragHandle ? <DragHandle /> : null}
@@ -49,10 +60,10 @@ class SortableList extends Component {
             onDoubleClick={this.props.callbackFormEdited(itemIndex)}
             primary={value.n}
             secondary={<Typography>{this.getItemText(value)}
-              {this.props.brewDay && !this.props.boil && value.r ? <IntText text="Recirculation" spaceBefore={true} spaceAfter={true} /> : null}
-              {this.props.brewDay && !this.props.boil && value.ho ? <IntText text="Heater" spaceBefore={true} spaceAfter={true} /> : null}
-              {this.props.brewDay && !this.props.boil && value.fp ? <IntText text="FullPower" spaceBefore={true} spaceAfter={true} /> : null}
-              {this.props.brewDay && !this.props.boil && value.sl ? <IntText text="StepLockON" spaceBefore={true} spaceAfter={true} /> : null}
+              {this.props.brewDay && this.props.mash  && value.r ? <IntText text="Recirculation" spaceBefore={true} spaceAfter={true} /> : null}
+              {this.props.brewDay && (this.props.mash || this.props.cooling) && value.ho ? <IntText text="Heater" spaceBefore={true} spaceAfter={true} /> : null}
+              {this.props.brewDay && this.props.mash && value.fp ? <IntText text="FullPower" spaceBefore={true} spaceAfter={true} /> : null}
+              {this.props.brewDay && this.props.mash && value.sl ? <IntText text="StepLockON" spaceBefore={true} spaceAfter={true} /> : null}
             </Typography>}
           />
           {!this.props.brewDay ?
@@ -69,8 +80,8 @@ class SortableList extends Component {
             : null}
         </ListItem>
         {!this.props.brewDay ?
-          <ListItem color="black">
-            {!this.props.boil ?
+          <ListItem>
+            {this.props.mash ?
               <FormControlLabel
                 control={
                   <Checkbox
@@ -80,7 +91,7 @@ class SortableList extends Component {
                 }
                 label={<IntText text="Pump" />}
               /> : null}
-            {!this.props.boil ?
+            {this.props.mash || this.props.cooling ?
               <FormControlLabel
                 control={
                   <Checkbox
@@ -90,12 +101,12 @@ class SortableList extends Component {
                 }
                 label={<IntText text="Heater" />}
               /> : null}
-            
+
           </ListItem>
           : null}
         {!this.props.brewDay ?
           <ListItem color="black">
-            {!this.props.boil ?
+            {this.props.mash ?
               <FormControlLabel
                 control={
                   <Checkbox
@@ -105,7 +116,7 @@ class SortableList extends Component {
                 }
                 label={<IntText text="FullPower" />}
               /> : null}
-            {!this.props.boil ?
+            {this.props.mash ?
               <FormControlLabel
                 control={
                   <Checkbox
@@ -117,7 +128,7 @@ class SortableList extends Component {
               /> : null}
           </ListItem>
           : null}
-        <Divider middle />
+        <Divider />
       </List>
     );
 

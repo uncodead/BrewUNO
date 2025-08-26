@@ -35,7 +35,7 @@ class MashBoilSettingsForm extends Component {
       fp: false,
       r: true,
       sl: false,
-      ho: true,
+      ho: !this.props.cooling,
       index: null
     }
   }
@@ -46,7 +46,7 @@ class MashBoilSettingsForm extends Component {
   }
 
   cancel = () => {
-    this.setState({ n: '', t: '', tm: '', a: '', r: true, sl: false, ho: true, fp: false, index: null })
+    this.setState({ n: '', t: '', tm: '', a: '', r: true, sl: false, ho: !this.props.cooling, fp: false, index: null })
   }
 
   handleIndexChange = (index) => {
@@ -101,10 +101,10 @@ class MashBoilSettingsForm extends Component {
           validators={['required']}
           errorMessages={[<IntText text="FieldRequired" />]} />
         {
-          !this.props.boil ?
+          this.props.mash || this.props.cooling ?
             <TextValidator
               name="t"
-              validators={['required']}
+              validators={ this.props.mash ? ['required'] : []}
               label={<IntText text="Temperature" />}
               type="number"
               fullWidth
@@ -126,23 +126,21 @@ class MashBoilSettingsForm extends Component {
           errorMessages={[<IntText text="FieldRequired" />]}
         />
         {
-          this.props.boil ?
+          this.props.boil || this.props.cooling ?
             <TextValidator
               name="a"
-              validators={['required']}
               label={<IntText text="Amount" />}
               type="number"
               fullWidth
               value={this.state.a}
               onChange={this.handleAmountChange}
-              errorMessages={[<IntText text="FieldRequired" />]}
             />
             : null
         }
-        {!this.props.boil ? <FormControlLabel control={<ONCSwitch ref="r" checked={this.state.r} onChange={this.handleRecirculationChange} />} label={<IntText text="Pump" />}/> : null}
-        {!this.props.boil ? <FormControlLabel control={<ONCSwitch ref="ho" checked={this.state.ho} onChange={this.handleHeaterOn} />} label={<IntText text="Heater" />} /> : null}
-        {!this.props.boil ? <FormControlLabel control={<ONCSwitch ref="fp" checked={this.state.fp} onChange={this.handleFullPower} />} label={<IntText text="FullPowerHeater" />} /> : null}
-        {!this.props.boil ? <FormControlLabel control={<ONCSwitch ref="sl" checked={this.state.sl} onChange={this.handleStepLock} />} label={<IntText text="StepLock" />}/> : null}
+        {this.props.mash ? <FormControlLabel control={<ONCSwitch ref="r" checked={this.state.r} onChange={this.handleRecirculationChange} />} label={<IntText text="Pump" />} /> : null}
+        {this.props.mash || this.props.cooling ? <FormControlLabel control={<ONCSwitch ref="ho" checked={this.state.ho} onChange={this.handleHeaterOn} />} label={<IntText text="Heater" />} /> : null}
+        {this.props.mash ? <FormControlLabel control={<ONCSwitch ref="fp" checked={this.state.fp} onChange={this.handleFullPower} />} label={<IntText text="FullPowerHeater" />} /> : null}
+        {this.props.mash ? <FormControlLabel control={<ONCSwitch ref="sl" checked={this.state.sl} onChange={this.handleStepLock} />} label={<IntText text="StepLock" />} /> : null}
         <Divider />
         <Button type="submit" variant="contained" fullWidth color="secondary">{<IntText text="Save" />}</Button>
         {this.state.index !== null ?
