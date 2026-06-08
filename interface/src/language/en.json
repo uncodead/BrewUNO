@@ -8,6 +8,7 @@
   "Cooling": "Whirlpool",
   "BoilStarted": "Boil Started",
   "StartBoilCounter": "Start boil counter",
+  "HeatingToBoil": "Heating to Boil",
   "Dismiss": "Dismiss",
   "Yes": "Yes",
   "No": "No",
@@ -65,6 +66,8 @@
   "Uptime": "Uptime",
   "Synchronized": "Synchronized",
   "About": "About",
+  "Author": "Author",
+  "Thanks": "Thanks",
   "ImportRecipe": "Import Recipe",
   "ExportRecipe": "Export Recipe",
   "BrewUNOActivationAlert": "BrewUNO needs to be activated",
@@ -77,6 +80,11 @@
   "ReActivation": "Reactivation",
   "ImportFromBrewfather": "Import from Brewfather",
   "GetRecipes": "Get Recipes",
+  "InvalidJson" : "Invalid json result",
+  "SavingSuccess" : "Changes successfully applied.",
+  "SavingProblem" : "Problem saving",
+  "FetchingProblem" : "Problem fetching",
+  "ResourceProblem" : "Problem getting resource",
   "Brew": {
     "Title": "Brew",
     "StartConfirmation": "Do you want start brew? Check if you've secure water volume at kettle.",
@@ -84,7 +92,7 @@
     "ResumeConfirmation": "Do you want resume brew? Check if you've secure water volume at kettle.",
     "StopConfirmation": "Do you want stop brew?",
     "NextConfirmation": "Do you want skip the current step?",
-    "UnLockconfirmation": "Do you want unlock the current step?",
+    "UnLockConfirmation": "Do you want unlock the current step?",
     "StartBoilCounterConfirmation": "Do you want start boil counter?",
     "BoilConfirmation": "Do you want start boil?",
     "BoilPower": "Boil Power",
@@ -95,18 +103,18 @@
   },
   "MashSettings": {
     "SavedAlert": "Mash settings saved.",
-    "ErrorAlert": "Mash Setings service returned unexpected response code: ",
+    "ErrorAlert": "Mash Settings service returned unexpected response code: ",
     "Settings": "Mash Settings"
   },
   "BoilSettings": {
     "SavedAlert": "Boil settings saved.",
-    "ErrorAlert": "Boil Setings service returned unexpected response code: ",
+    "ErrorAlert": "Boil Settings service returned unexpected response code: ",
     "Settings": "Boil Timing"
   },
   "CoolingSettings": {
     "Settings": "Whirlpool",
     "SavedAlert": "Whirlpool settings saved.",
-    "ErrorAlert": "Whirlpool Setings service returned unexpected response code: "
+    "ErrorAlert": "Whirlpool Settings service returned unexpected response code: "
   },
   "BrewSettings": {
     "Settings": "Brew Settings",

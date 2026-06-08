@@ -1,5 +1,6 @@
 import React from 'react';
 import { withSnackbar } from 'notistack';
+import IntText from "./IntText";
 
 /*
 * It is unlikely this application will grow complex enough to require redux.
@@ -52,7 +53,7 @@ export const restComponent = (endpointUrl, FormComponent) => {
           })
           .then(json => { this.setState({ data: json, fetched: true }) })
           .catch(error => {
-            this.props.enqueueSnackbar("Problem fetching: " + error.message, { variant: 'error', autoHideDuration: 2000, });
+            this.props.enqueueSnackbar(<IntText text="FetchingProblem" /> + ": " + error.message, { variant: 'error', autoHideDuration: 2000, });
             this.setState({ data: null, fetched: true, errorMessage: error.message });
           });
       }
@@ -78,10 +79,10 @@ export const restComponent = (endpointUrl, FormComponent) => {
             throw Error("Invalid status code: " + response.status);
           })
           .then(json => {
-            this.props.enqueueSnackbar("Changes successfully applied.", { variant: 'info', autoHideDuration: 2000, });
+            this.props.enqueueSnackbar(<IntText text="SavingSuccess" />, { variant: 'info', autoHideDuration: 2000, });
             this.setState({ data: json, fetched: true });
           }).catch(error => {
-            this.props.enqueueSnackbar("Problem saving: " + error.message, { variant: 'error', autoHideDuration: 2000, });
+            this.props.enqueueSnackbar(<IntText text="SavingProblem" /> + ": " + error.message, { variant: 'error', autoHideDuration: 2000, });
             this.setState({ data: null, fetched: true, errorMessage: error.message });
           });
       }

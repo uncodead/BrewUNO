@@ -1,3 +1,6 @@
+import IntText from "./IntText";
+import React from "react";
+
 export const getDateTime = (seconds) => {
   var date = new Date(0);
   date.setUTCSeconds(seconds);
@@ -22,7 +25,7 @@ export const ExecuteRestCall = (url, method, callback, callbackError, props) => 
       response.json()
         .catch(() => {
           if (props != undefined && props.enqueueSnackbar != undefined)
-            props.enqueueSnackbar("Invalid json result", { variant: 'error', autoHideDuration: 2000, });
+            props.enqueueSnackbar(<IntText text="InvalidJson" />, { variant: 'error', autoHideDuration: 2000, });
         })
         .then(json => callback(json));
       return;
@@ -31,7 +34,7 @@ export const ExecuteRestCall = (url, method, callback, callbackError, props) => 
       response.json().then(json => props.enqueueSnackbar(json.message, { variant: 'info', autoHideDuration: 2000, }));
   }).catch(error => {
     if (props != undefined && props.enqueueSnackbar != undefined)
-      props.enqueueSnackbar("Problem getting resource: " + error.message, { variant: 'error', autoHideDuration: 2000, });
+      props.enqueueSnackbar(<IntText text="ResourceProblem" /> + ": " + error.message, { variant: 'error', autoHideDuration: 2000, });
     if (callbackError) {
       callbackError()
     }

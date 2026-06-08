@@ -145,6 +145,8 @@ class Brew extends Component {
     if (getActiveStep.props.text === step.props.text && this.state.activeStepName !== stepName) {
       this.setState({ activeStepName: stepName });
       if (stepName !== "" && stepName !== " " && stepName !== undefined)
+        if (stepName === 'Heating to Boil')
+          stepName = <IntText text="HeatingToBoil" />
         this.notify(stepName, step.props.text === "Boil" ? 'success' : 'warning', true);
     }
   }
@@ -306,7 +308,7 @@ class Brew extends Component {
           : null}
         {this.state.status.as === 1 && this.state.status.bs === 1 && this.state.status.sl === 1 ?
           <Button variant="contained" color="secondary" className={classes.button}
-            onClick={() => { this.actionBrew(<IntText text="Brew.UnLockconfirmation" />, UNLOCK_STEP_BREW) }}><LockOpen size="small" color="action" className={classes.button_icons} /></Button>
+            onClick={() => { this.actionBrew(<IntText text="Brew.UnLockConfirmation" />, UNLOCK_STEP_BREW) }}><LockOpen size="small" color="action" className={classes.button_icons} /></Button>
           : null}
         {this.state.status.as === 0 && this.state.status.bs === 0 ?
           <Button variant="contained" color="secondary" className={classes.button}

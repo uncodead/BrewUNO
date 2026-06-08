@@ -147,7 +147,7 @@ class BrewStatusGadget extends Component {
                   &nbsp;
                     <div style={{ paddingTop: 7 }}>
                     <Typography color="textSecondary" variant="caption" gutterBottom><IntText text="Brew.ActiveStep" /></Typography>
-                    <Typography variant="subtitle1">{this.props.ActiveStepName !== "" ? this.props.ActiveStepName : '-'}</Typography>
+                    <Typography variant="subtitle1">{this.props.ActiveStepName !== "" ? (this.props.ActiveStepName === "Heating to Boil" ? <IntText text="HeatingToBoil" /> : this.props.ActiveStepName) : '-'}</Typography>
                   </div>
                 </CardContent>
               </Card>
