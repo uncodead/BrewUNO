@@ -4,7 +4,7 @@ import Tab from '@material-ui/core/Tab';
 import MenuAppBar from '../components/MenuAppBar';
 import APSettings from './APSettings';
 import APStatus from './APStatus';
-import { PageView, initGA, Event } from '../components/Tracking'
+import { PageView, initGA } from '../components/Tracking'
 
 class APConfiguration extends Component {
 

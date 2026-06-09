@@ -9,8 +9,6 @@ import { SAVE_COOLING_SETTINGS_SERVICE_PATH, GET_COOLING_SETTINGS_SERVICE_PATH }
 import { ExecuteRestCall } from '../components/Utils';
 import IntText from '../components/IntText'
 import Cookies from 'js-cookie';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Typography from '@material-ui/core/Typography';
 
 class CoolingSettings extends Component {
   constructor(props) {

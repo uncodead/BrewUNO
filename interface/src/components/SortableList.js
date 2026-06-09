@@ -14,9 +14,6 @@ import Divider from '@material-ui/core/Divider';
 import IntText from '../components/IntText'
 
 class SortableList extends Component {
-  constructor(props) {
-    super(props)
-  }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.props.callbackItemsSorted(arrayMove(this.props.items, oldIndex, newIndex))
@@ -28,13 +25,13 @@ class SortableList extends Component {
 
   getItemText = (item) => {
     if (this.props.boil) {
-      var name = ''
+      let name = ''
       if (item.a !== undefined && item.a > 0)
         name += item.a + 'g@'
       return name + item.tm + '\'';
     }
     else if (this.props.cooling) {
-      var name = ''
+      let name = ''
       if (item.a !== undefined && item.a > 0)
         name += item.a + 'g@'
       name += item.tm + '\'@' + item.t + '°'
@@ -51,8 +48,8 @@ class SortableList extends Component {
       <List component="nav">
         <ListItem
           selected={
-            !this.props.boil && this.props.selectedIndex === itemIndex ||
-              this.props.boil && this.props.selectedIndex && this.props.selectedIndex.includes(itemIndex) ? true : false
+            !(this.props.boil && (this.props.selectedIndex === itemIndex)) ||
+              (this.props.boil && this.props.selectedIndex && this.props.selectedIndex.includes(itemIndex))
           }
         >
           {this.props.dragHandle ? <DragHandle /> : null}

@@ -33,7 +33,7 @@ class BoilSettings extends Component {
   getBoilSettings = () => {
     if (Cookies.get('boilSettings') === undefined) {
       ExecuteRestCall(GET_BOIL_SETTINGS_SERVICE_PATH, 'GET', (json) => {
-        if (json.st != undefined && json.st != null) {
+        if (json.st !== undefined && json.st !== null) {
           this.setState({ items: json.st })
           Cookies.set('boilSettings', json.st)
         }
