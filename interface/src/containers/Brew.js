@@ -76,6 +76,17 @@ class Brew extends Component {
     this.brewFatherRecipe = React.createRef();
   }
 
+  formatChartTime = (value) => {
+    if (value === undefined || value === null || value === '') return '';
+
+    const numeric = Number(value);
+    if (Number.isNaN(numeric)) return value;
+
+    // supports seconds- and milliseconds-Timestamps.
+    const timestampMs = numeric < 1000000000000 ? numeric * 1000 : numeric;
+    return new Date(timestampMs).toLocaleTimeString();
+  }
+
   wsStatus = new ReconnectingWebSocket(GET_STATUS_WS, [],
     {
       connectionTimeout: 1000,
@@ -449,7 +460,7 @@ class Brew extends Component {
                   <XAxis dataKey="time" tick={{ fill: '#262626', fontSize: "12px", fontFamily: "Montserrat", }} />
                   <YAxis yAxisId="left" tick={{ fill: '#707070', fontSize: "12px", fontFamily: "Montserrat", }} />
                   <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                  <Tooltip />
+                  <Tooltip labelFormatter={this.formatChartTime}/>
                   <Line type="monotone" yAxisId="left" dataKey="tp" stroke="#f9a125" dot={null} />
                   <Line type="monotone" yAxisId="left" dataKey="ttp" stroke="#c64828" dot={null} />
                 </LineChart>
