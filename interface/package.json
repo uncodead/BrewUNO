@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "react-app-rewired --openssl-legacy-provider start",
-    "build": "react-app-rewired --openssl-legacy-provider build && rm -rf ../data/www && cp -r build ../data/www",
+    "build": "react-app-rewired --openssl-legacy-provider build && node -e \"const fs=require('fs'); fs.rmSync('../data/www', {recursive: true, force: true}); fs.cpSync('build', '../data/www', {recursive: true}); \"",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject"
   },
