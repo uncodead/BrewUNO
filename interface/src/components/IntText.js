@@ -6,6 +6,7 @@ import ruRU from "../language/ru-RU.json"
 import esES from "../language/es-ES.json"
 import heIL from "../language/he-IL.json"
 import deDE from "../language/de-DE.json"
+import nlNL from "../language/nl-NL.json"
 
 class IntText extends Component {
 
@@ -28,6 +29,9 @@ class IntText extends Component {
         break
       case "de-DE":
           T.setTexts(deDE);
+          break
+      case "nl-NL":
+          T.setTexts(nlNL);
           break
       default:
         T.setTexts(en)

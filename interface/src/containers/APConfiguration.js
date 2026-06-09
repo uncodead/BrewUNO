@@ -5,6 +5,7 @@ import MenuAppBar from '../components/MenuAppBar';
 import APSettings from './APSettings';
 import APStatus from './APStatus';
 import { PageView, initGA } from '../components/Tracking'
+import IntText from "../components/IntText";
 
 class APConfiguration extends Component {
 
@@ -30,8 +31,8 @@ class APConfiguration extends Component {
     return (
       <MenuAppBar sectionTitle="AP Configuration">
         <Tabs value={selectedTab} onChange={this.handleTabChange} indicatorColor="secondary" textColor="contrastText" fullWidth scrollable>
-           <Tab value="apStatus" label="AP Status" />
-           <Tab value="apSettings" label="AP Settings" />
+           <Tab value="apStatus" label={<IntText text="APSettings.APStatus" />} />
+           <Tab value="apSettings" label={<IntText text="APSettings.Settings" />} />
          </Tabs>
          {selectedTab === "apStatus" && <APStatus fullDetails={true} />}
          {selectedTab === "apSettings" && <APSettings />}
