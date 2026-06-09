@@ -109,7 +109,7 @@ class MenuAppBar extends React.Component {
   };
 
   render() {
-    const { classes, theme, children, sectionTitle } = this.props;
+    const { classes, theme, children } = this.props;
 
     const drawer = (
       <div>

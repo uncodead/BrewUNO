@@ -16,7 +16,7 @@ import {
   START_ANTICAVITATION, START_BOIL_COUNTER,
   GET_LOGS_TEMPERATURES
 } from '../constants/Endpoints';
-import { ExecuteRestCall, getDateTime } from '../components/Utils';
+import { ExecuteRestCall } from '../components/Utils';
 import { Event } from '../components/Tracking'
 import Typography from '@material-ui/core/Typography';
 import Slider from 'rc-slider';
@@ -41,7 +41,6 @@ import { withSnackbar } from 'notistack';
 import BrewStyles from '../style/BrewStyle'
 import IntText from '../components/IntText'
 import Cookies from 'js-cookie';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer';
 import LineChart from 'recharts/lib/chart/LineChart';
@@ -212,7 +211,7 @@ class Brew extends Component {
     this.mashSettings.current.onImport(recipe.mash)
     this.boilSettings.current.onImport(recipe.boil)
     this.coolingSettings.current.onImport(recipe.cooling)
-    this.state.brewFatherDialogOpen = false
+    this.setState({brewFatherDialogOpen : false})
   }
 
   import = (files) => {
@@ -483,7 +482,7 @@ class Brew extends Component {
         <BrewFatherDialog
           ref={this.brewFatherRecipe}
           brewFatherDialogOpen={this.state.brewFatherDialogOpen}
-          confirmAction={() => { this.state.brewFatherDialogOpen = false }}
+          confirmAction={() => { this.setState({brewFatherDialogOpen: false }) }}
           recipeSelected={this.recipeSelected}
           apiId={this.state.status.bfid}
           apiKey={this.state.status.bfkey}

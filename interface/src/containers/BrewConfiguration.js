@@ -7,7 +7,7 @@ import BrewSettings from './BrewSettings'
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import IntText from '../components/IntText'
-import { PageView, initGA, Event } from '../components/Tracking'
+import { PageView, initGA } from '../components/Tracking'
 
 class BrewConfiguration extends Component {
   constructor() {

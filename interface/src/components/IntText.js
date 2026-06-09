@@ -8,9 +8,6 @@ import heIL from "../language/he-IL.json"
 import deDE from "../language/de-DE.json"
 
 class IntText extends Component {
-  constructor(props) {
-    super(props)
-  }
 
   SetText(lang) {
     switch (lang) {

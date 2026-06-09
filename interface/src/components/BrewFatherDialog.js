@@ -50,14 +50,14 @@ class BrewFatherDialog extends Component {
     };
 
     var url = BREWFATHERAPIURL
-    if (id != undefined)
+    if (id !== undefined)
       url += '/' + id
 
     this.setState({ loading: true })
     fetch(url, requestOptions)
       .then(response => response.json())
       .then(result => {
-        if (id != undefined)
+        if (id !== undefined)
           this.setState({ recipe: result, loading: false }, this.handleImportRecipe)
         else
           this.setState({ recipes: result, loading: false })
@@ -91,7 +91,7 @@ class BrewFatherDialog extends Component {
       })
     });
     this.state.recipe.hops.forEach(hop => {
-      if (hop.use == 'First Wort')
+      if (hop.use === 'First Wort')
         buRecipe.mash.push({
           n: hop.name + ' (First Wort)',
           t: buRecipe.mash[buRecipe.mash.length - 1].t,
@@ -105,23 +105,23 @@ class BrewFatherDialog extends Component {
     });
     i = 0;
     this.state.recipe.hops.forEach(hop => {
-      if (hop.use == 'Boil')
+      if (hop.use === 'Boil')
         buRecipe.boil.push({
           n: hop.name,
           a: hop.amount,
-          tm: hop.time != null ? hop.time : 0,
+          tm: hop.time !== null ? hop.time : 0,
           index: i++
         })
     });
     i = 0;
     this.state.recipe.hops.forEach(hop => {
-      if (hop.use == 'Aroma')
+      if (hop.use === 'Aroma')
         buRecipe.cooling.push({
           n: hop.name,
           a: hop.amount,
-          tm: hop.time != null ? hop.time : 0,
-          t: hop.temp != null ? hop.temp : "",
-          ho: hop.temp != null ? true : false,
+          tm: hop.time !== null ? hop.time : 0,
+          t: hop.temp !== null ? hop.temp : "",
+          ho: hop.temp !== null ? true : false,
           index: i++
         })
     });

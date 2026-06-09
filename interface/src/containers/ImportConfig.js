@@ -5,9 +5,6 @@ import IntText from '../components/IntText'
 import Files from 'react-files'
 
 class ImportConfig extends Component {
-  constructor(props) {
-    super(props)
-  }
 
   import = (files) => {
     this.fileReader = new FileReader();

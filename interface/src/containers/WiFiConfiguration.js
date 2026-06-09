@@ -7,7 +7,7 @@ import MenuAppBar from '../components/MenuAppBar';
 import WiFiNetworkScanner from './WiFiNetworkScanner';
 import WiFiSettings from './WiFiSettings';
 import WiFiStatus from './WiFiStatus';
-import { PageView, initGA, Event } from '../components/Tracking'
+import { PageView, initGA } from '../components/Tracking'
 import IntText from '../components/IntText'
 
 class WiFiConfiguration extends Component {
