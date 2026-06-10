@@ -132,7 +132,7 @@
     "AuxiliarySensor1": "Auxiliary Sensor 1",
     "AuxiliarySensor2": "Auxiliary Sensor 2",
     "AuxiliarySensor3": "Auxiliary Sensor 3",
-    "PumpRestInterval": "Pump Rest Interval",
+    "PumpRestInterval": "Pump Work Time",
     "PumpRestTime": "Pump Rest Time",
     "PumpCycle": "Pump Cycle",
     "EnableBoilKettle": "Enable Boil Kettle",
