@@ -27,73 +27,116 @@ public:
   {
   }
 
-  HeaterServiceStatus Compute(double input, double target, double heaterPercentage)
+
+  void WriteTimeProportionalPWM(uint8_t pin, int pwm)
   {
-    HeaterServiceStatus status;
-    uint8_t _heaterBus = GetBus();
-    SetUP();
-    if (StopCompute())
+    unsigned long now = millis();
+
+    if (now - _windowStartTime >= _windowSize)
     {
-      status.PIDActing = false;
-      status.PWM = 0;
-      status.PWMPercentage = 0;
-      TurnOff();
-      return status;
+      _windowStartTime += _windowSize;
     }
 
-    SetPidParameters(input, target);
+    unsigned long onTime = (pwm * _windowSize) / 1023;
 
-    if (_activeStatus->PIDSettingsUpdated)
-    {
-      _activeStatus->PIDSettingsUpdated = false;
-      StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
-      Serial.println("BrewSettings Updated: " + String(_brewSettingsService->KP) + "/" + String(_brewSettingsService->KI) + "/" + String(_brewSettingsService->KD));
-      return status;
-    }
+    if ((now - _windowStartTime) < onTime)
+      digitalWrite(pin, InvertedPWM() ? LOW : HIGH);
+    else
+      digitalWrite(pin, InvertedPWM() ? HIGH : LOW);
+  }
 
-    if (_activeStatus->ActiveStep == boil)
-    {
-      status.PIDActing = false;
-      status.PWM = ((1023 * _brewSettingsService->BoilPowerPercentage) / 100);
-      status.PWMPercentage = (status.PWM * 100) / 1023;
-      analogWrite(_heaterBus, InvertedPWM() ? abs(status.PWM - 1023) : status.PWM);
-      return status;
-    }
+HeaterServiceStatus Compute(double input, double target, double heaterPercentage)
+{
+  HeaterServiceStatus status = {0, 0, false};
 
-    if (_activeStatus->FullPower)
-      heaterPercentage = 100;
+  uint8_t heaterBus = GetBus();
 
-    if (GetPidSetPoint() - GetPidInput() > _brewSettingsService->PIDStart)
-    {
-      status.PIDActing = false;
-      status.PWM = ((1023 * heaterPercentage) / 100);
-      status.PWMPercentage = (status.PWM * 100) / 1023;
-      analogWrite(_heaterBus, status.PWM);
-      return status;
-    }
+  SetUP();
 
-    // to prevent pid overshoot
-    if (GetPidInput() > GetPidSetPoint() + 0.1)
-    {
-      status.PWM = 0;
-      status.PWMPercentage = 0;
-      status.PIDActing = false;
-      analogWrite(_heaterBus, _activeStatus->PWM);
-      StartPID(_brewSettingsService->KP, _brewSettingsService->KI, _brewSettingsService->KD);
-      return status;
-    }
-
-    PidCompute();
-
-    int maxPWM = ((1023 * heaterPercentage) / 100);
-    status.PWM = GetPidOutput() > maxPWM ? maxPWM : GetPidOutput();
-    status.PWMPercentage = (status.PWM * 100) / 1023;
-
-    analogWrite(_heaterBus, status.PWM);
-
-    status.PIDActing = status.PWM > 0;
+  if (StopCompute())
+  {
+    TurnOff();
     return status;
   }
+
+  SetPidParameters(input, target);
+
+  if (_activeStatus->PIDSettingsUpdated)
+  {
+    _activeStatus->PIDSettingsUpdated = false;
+
+    StartPID(
+      _brewSettingsService->KP,
+      _brewSettingsService->KI,
+      _brewSettingsService->KD
+    );
+
+    Serial.println(
+      "BrewSettings Updated: " +
+      String(_brewSettingsService->KP) + "/" +
+      String(_brewSettingsService->KI) + "/" +
+      String(_brewSettingsService->KD)
+    );
+
+    return status;
+  }
+
+  if (_activeStatus->ActiveStep == boil)
+  {
+    status.PWM = (1023 * _brewSettingsService->BoilPowerPercentage) / 100;
+    status.PWMPercentage = (status.PWM * 100) / 1023;
+
+    WriteTimeProportionalPWM(heaterBus, status.PWM);
+
+    return status;
+  }
+
+  if (_activeStatus->FullPower)
+    heaterPercentage = 100;
+
+  if (GetPidSetPoint() - GetPidInput() > _brewSettingsService->PIDStart)
+  {
+    status.PWM = (1023 * heaterPercentage) / 100;
+    status.PWMPercentage = (status.PWM * 100) / 1023;
+    status.PIDActing = false;
+
+    WriteTimeProportionalPWM(heaterBus, status.PWM);
+
+    return status;
+  }
+
+  // proteção contra overshoot
+  if (GetPidInput() > GetPidSetPoint() + 0.1)
+  {
+    status.PWM = 0;
+    status.PWMPercentage = 0;
+    status.PIDActing = false;
+
+    WriteTimeProportionalPWM(heaterBus, 0);
+
+    StartPID(
+      _brewSettingsService->KP,
+      _brewSettingsService->KI,
+      _brewSettingsService->KD
+    );
+
+    return status;
+  }
+
+  // cálculo PID
+  PidCompute();
+
+  int maxPWM = (1023 * heaterPercentage) / 100;
+
+  status.PWM = GetPidOutput() > maxPWM ? maxPWM : GetPidOutput();
+  status.PWMPercentage = (status.PWM * 100) / 1023;
+
+  WriteTimeProportionalPWM(heaterBus, status.PWM);
+
+  status.PIDActing = status.PWM > 0;
+
+  return status;
+}
 
 protected:
   virtual void SetUP();
@@ -112,5 +155,8 @@ protected:
   ActiveStatus *_activeStatus;
   BrewSettingsService *_brewSettingsService;
   PID *_kettlePID;
+  unsigned long _windowStartTime = 0;
+  const unsigned long _windowSize = 10000; // 10 segundos
+
 };
 #endif
